@@ -21,7 +21,7 @@ package net.automatalib.incremental;
 public class ConflictException extends IllegalArgumentException {
 
     /**
-     * Default constructor.
+     * Creates an exception with no specific error message.
      *
      * @see IllegalArgumentException#IllegalArgumentException()
      */
@@ -30,30 +30,14 @@ public class ConflictException extends IllegalArgumentException {
     }
 
     /**
-     * Constructor.
+     * Creates an exception with a given error message.
      *
-     * @see IllegalArgumentException#IllegalArgumentException(String, Throwable)
-     */
-    public ConflictException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    /**
-     * Constructor.
+     * @param s
+     *         the error message
      *
      * @see IllegalArgumentException#IllegalArgumentException(String)
      */
     public ConflictException(String s) {
         super(s);
     }
-
-    /**
-     * Constructor.
-     *
-     * @see IllegalArgumentException#IllegalArgumentException(Throwable)
-     */
-    public ConflictException(Throwable cause) {
-        super(cause);
-    }
-
 }

@@ -44,9 +44,9 @@ public final class Mappings {
      * Retrieves the <code>null</code> mapping, which maps each domain value to <code>null</code>.
      *
      * @param <D>
-     *         domain class.
+     *         domain type
      * @param <R>
-     *         range class.
+     *         range type
      *
      * @return the <code>null</code> mapping.
      */
@@ -59,7 +59,7 @@ public final class Mappings {
      * Retrieves the identity mapping, which maps each domain value to itself.
      *
      * @param <T>
-     *         domain/range class.
+     *         domain/range type
      *
      * @return the identity mapping.
      */
@@ -72,6 +72,9 @@ public final class Mappings {
      * Returns a mapping that maps objects to their {@link String} representation, as obtained by {@link
      * String#valueOf(Object)}.
      *
+     * @param <D>
+     *         domain type
+     *
      * @return the "{@code toString()}" mapping
      */
     @SuppressWarnings("unchecked")
@@ -82,11 +85,16 @@ public final class Mappings {
     /**
      * Returns a mapping that maps objects to a supertype representation.
      *
+     * @param <D>
+     *         domain type
+     * @param <R>
+     *         range type
+     *
      * @return the "upcast" mapping
      */
     @SuppressWarnings("unchecked")
-    public static <S, T extends S> Mapping<T, S> upcast() {
-        return (Mapping<T, S>) IDENTITY_MAPPING;
+    public static <R, D extends R> Mapping<D, R> upcast() {
+        return (Mapping<D, R>) IDENTITY_MAPPING;
     }
 
     /**
@@ -94,17 +102,17 @@ public final class Mappings {
      * Mapping#get(Object)} method consecutively.
      *
      * @param <D>
-     *         domain class of the first (and resulting) mapping.
+     *         domain type of the first (and resulting) mapping
      * @param <I>
-     *         intermediate object class, range class of the first and domain class of the second mapping.
+     *         intermediate type, range type of the first and domain type of the second mapping
      * @param <R>
-     *         range class of the second (and resulting) mapping.
+     *         range type of the second (and resulting) mapping
      * @param first
-     *         first mapping.
+     *         first mapping
      * @param second
-     *         second mapping.
+     *         second mapping
      *
-     * @return the composed mapping.
+     * @return the composed mapping
      */
     public static <D, I, R> Mapping<D, R> compose(Mapping<D, ? extends I> first, Mapping<? super I, R> second) {
         return new MappingComposition<D, I, R>(first, second);
@@ -118,16 +126,16 @@ public final class Mappings {
      * e.g. a set, and the provided mapping is not bijective, then the resulting collections may contain some values
      * multiple times.
      *
-     * @param <D>
-     *         domain class.
-     * @param <R>
-     *         range class.
      * @param mapping
-     *         the mapping to apply.
+     *         the mapping to apply
      * @param coll
-     *         the collection.
+     *         the collection
+     * @param <D>
+     *         domain type
+     * @param <R>
+     *         range type
      *
-     * @return the mapped collection.
+     * @return the mapped collection
      */
     public static <D, R> Collection<R> apply(Mapping<? super D, R> mapping, Collection<? extends D> coll) {
         return CollectionUtil.map(coll, mapping::get);
@@ -137,16 +145,16 @@ public final class Mappings {
      * Applies a mapping to an iterator. For the behavior, see {@link #apply(Mapping, Iterable)}. The resulting iterator
      * supports each operation which the underlying supports.
      *
-     * @param <D>
-     *         domain class.
-     * @param <R>
-     *         range class.
      * @param mapping
-     *         the mapping to apply.
+     *         the mapping to apply
      * @param baseIt
-     *         the underlying iterator.
+     *         the underlying iterator
+     * @param <D>
+     *         domain type
+     * @param <R>
+     *         range type
      *
-     * @return the mapped iterator.
+     * @return the mapped iterator
      */
     public static <D, R> Iterator<R> apply(Mapping<? super D, R> mapping, Iterator<? extends D> baseIt) {
         return IteratorUtil.map(baseIt, mapping::get);
@@ -156,14 +164,14 @@ public final class Mappings {
      * Applies a mapping to an iterable. The result is an iterable whose iterator returns the results of applying the
      * specified mapping to each of the elements returned by the original iterable.
      *
-     * @param <D>
-     *         domain class.
-     * @param <R>
-     *         range clas.
      * @param mapping
-     *         the mapping to apply.
+     *         the mapping to apply
      * @param it
-     *         the underlying iterable.
+     *         the underlying iterable
+     * @param <D>
+     *         domain type
+     * @param <R>
+     *         range type
      *
      * @return the mapped iterable.
      */
@@ -180,12 +188,15 @@ public final class Mappings {
      * value, the given fallback value is returned.
      *
      * @param mapping
-     *         the mapping.
+     *         the mapping
      * @param key
-     *         the key.
+     *         the key
      * @param fallback
-     *         the fallback value to return if either the mapping or the originally returned value are
-     *         <code>null</code>.
+     *         the fallback value to return if either the mapping or the originally returned value are {@code null}.
+     * @param <D>
+     *         domain type
+     * @param <R>
+     *         range type
      *
      * @return the value returned by the specified mapping, or the fallback value.
      */

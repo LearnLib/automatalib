@@ -94,6 +94,8 @@ public final class Minimizer<S, L> {
      *         edge identifier class.
      * @param graph
      *         the automaton interface.
+     * @param initialNodes
+     *         the initial nodes from which reachable nodes should be determined
      *
      * @return a {@link MinimizationResult} structure, containing the state partition.
      */

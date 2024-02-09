@@ -223,6 +223,10 @@ public class RandomICAutomatonGenerator<SP, TP> {
      *         an {@link AutomatonCreator} for instantiating the result automaton
      * @param r
      *         the randomness source
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
      *
      * @return a randomly-generated IC deterministic automaton
      */
@@ -246,6 +250,10 @@ public class RandomICAutomatonGenerator<SP, TP> {
      *         the result automaton (should be empty)
      * @param r
      *         the randomness source
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
      *
      * @return the result automaton
      */

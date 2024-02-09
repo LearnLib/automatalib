@@ -37,9 +37,9 @@ import net.automatalib.common.util.mapping.Mapping;
  * BlockAutomaton}.
  *
  * @param <S>
- *         state class.
+ *         state type
  * @param <L>
- *         transition label class.
+ *         transition label type
  */
 public final class MinimizationResult<S, L> {
 
@@ -67,6 +67,10 @@ public final class MinimizationResult<S, L> {
      *
      * @param block
      *         the block.
+     * @param <S>
+     *         state type
+     * @param <L>
+     *         transition label type
      *
      * @return a collection containing all original states in this block.
      */

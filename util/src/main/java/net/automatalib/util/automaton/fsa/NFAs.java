@@ -65,6 +65,8 @@ public final class NFAs {
      *         the input alphabet
      * @param combiner
      *         combination method for acceptance values
+     * @param <I>
+     *         input symbol type
      *
      * @return a new NFA representing the combination of the specified NFAs
      */
@@ -89,6 +91,12 @@ public final class NFAs {
      *         the mutable NFA for storing the result
      * @param combiner
      *         combination method for acceptance values
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -112,6 +120,8 @@ public final class NFAs {
      *         the second NFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new NFA representing the conjunction of the specified NFA
      */
@@ -130,6 +140,12 @@ public final class NFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable NFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -149,6 +165,8 @@ public final class NFAs {
      *         the second NFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new NFA representing the conjunction of the specified NFA
      */
@@ -167,6 +185,12 @@ public final class NFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable NFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -186,6 +210,8 @@ public final class NFAs {
      *         the second NFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new NFA representing the conjunction of the specified NFA
      */
@@ -204,6 +230,12 @@ public final class NFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable NFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -223,6 +255,8 @@ public final class NFAs {
      *         the second NFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new NFA representing the conjunction of the specified NFA
      */
@@ -241,6 +275,12 @@ public final class NFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable NFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -260,6 +300,8 @@ public final class NFAs {
      *         the second NFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new NFA representing the conjunction of the specified NFA
      */
@@ -278,6 +320,12 @@ public final class NFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable NFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */

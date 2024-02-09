@@ -62,10 +62,14 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
     /**
      * Constructs a new AbstractLTSminLTLMealy.
      *
+     * @param keepFiles
+     *         whether to keep the files generated during model checking
+     * @param string2Input
+     *         the function that transforms edges in the FSM file to actual input
      * @param string2Output
-     *         the function that transforms edges in the FSM file to actual output.
+     *         the function that transforms edges in the FSM file to actual output
      * @param skipOutputs
-     *         the set of outputs that need to be skipped while writing the Mealy machine to ETF.
+     *         the set of outputs that need to be skipped while writing the Mealy machine to ETF
      *
      * @see AbstractLTSminLTL
      */
@@ -118,8 +122,8 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
      */
     @Override
     public @Nullable MealyMachine<?, I, ?, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
-                                                       Collection<? extends I> inputs,
-                                                       String property) {
+                                                                 Collection<? extends I> inputs,
+                                                                 String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
         if (fsm == null) {

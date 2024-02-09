@@ -28,10 +28,10 @@ import net.automatalib.util.ts.traversal.TSTraversalAction;
 import net.automatalib.util.ts.traversal.TSTraversalVisitor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements TSTraversalVisitor<S1, I1, T1, S2> {
+public class TSCopyVisitor<S1, I1, T1, S2, I2, SP2, TP2> implements TSTraversalVisitor<S1, I1, T1, S2> {
 
     private final MutableMapping<S1, @Nullable S2> stateMapping;
-    private final MutableAutomaton<S2, I2, T2, ? super SP2, @Nullable ? super TP2> out;
+    private final MutableAutomaton<S2, I2, ?, ? super SP2, @Nullable ? super TP2> out;
 
     private final Function<? super I1, ? extends I2> inputMapping;
     private final Function<? super S1, ? extends SP2> spMapping;
@@ -41,7 +41,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements TSTraver
     private final TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter;
 
     public TSCopyVisitor(TransitionSystem<S1, ? super I1, T1> in,
-                         MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
+                         MutableAutomaton<S2, I2, ?, ? super SP2, ? super TP2> out,
                          Function<? super I1, ? extends I2> inputMapping,
                          Function<? super S1, ? extends SP2> spMapping,
                          Function<? super T1, ? extends TP2> tpMapping,

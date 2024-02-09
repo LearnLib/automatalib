@@ -77,6 +77,8 @@ public final class DOT {
 
     /**
      * Checks whether the DOT utility can be successfully invoked.
+     *
+     * @return whether the DOT utility can be successfully invoked
      */
     public static boolean checkUsable() {
         try {
@@ -89,7 +91,16 @@ public final class DOT {
     }
 
     /**
-     * Invokes the DOT utility on a file. Convenience method, see {@link #runDOT(Reader, String, String...)}.
+     * Invokes the DOT utility on a file. Convenience method for {@link #runDOT(Reader, String, String...)}.
+     *
+     * @param dotFile
+     *         the file from which the GraphVIZ description is obtained
+     * @param format
+     *         the output format, as understood by the dot utility, e.g., png, ps, etc.
+     * @param additionalOpts
+     *         additional parameters passed to the dot invocation
+     *
+     * @return an input stream from which the image data can be read
      *
      * @throws IOException
      *         if reading from the file or the call to the DOT utility fails.
@@ -102,11 +113,13 @@ public final class DOT {
      * Invokes the GraphVIZ DOT utility for rendering graphs.
      *
      * @param r
-     *         the reader from which the GraphVIZ description is obtained.
+     *         the reader from which the GraphVIZ description is obtained
      * @param format
-     *         the output format, as understood by the dot utility, e.g., png, ps, ...
+     *         the output format, as understood by the dot utility, e.g., png, ps, etc.
+     * @param additionalOpts
+     *         additional parameters passed to the dot invocation
      *
-     * @return an input stream from which the image data can be read.
+     * @return an input stream from which the image data can be read
      *
      * @throws IOException
      *         if reading from the reader or the call to the DOT utility fails.
@@ -120,7 +133,16 @@ public final class DOT {
     }
 
     /**
-     * Invokes the DOT utility on a string. Convenience method, see {@link #runDOT(Reader, String, String...)}
+     * Invokes the DOT utility on a string. Convenience method for {@link #runDOT(Reader, String, String...)}.
+     *
+     * @param dotText
+     *         the string from which the GraphVIZ description is obtained
+     * @param format
+     *         the output format, as understood by the dot utility, e.g., png, ps, etc.
+     * @param additionalOpts
+     *         additional parameters passed to the dot invocation
+     *
+     * @return an input stream from which the image data can be read
      *
      * @throws IOException
      *         if the call to the DOT utility fails.
@@ -132,8 +154,15 @@ public final class DOT {
     }
 
     /**
-     * Invokes the DOT utility on a file, producing an output file. Convenience method, see
+     * Invokes the DOT utility on a file, producing an output file. Convenience method for
      * {@link #runDOT(Reader, String, File)}.
+     *
+     * @param dotFile
+     *         the file from which the GraphVIZ description is read
+     * @param format
+     *         the output format to produce
+     * @param out
+     *         the file to which the output is written
      *
      * @throws IOException
      *         if reading from the file, the call to the DOT utility, or writing to the file fails.
@@ -146,9 +175,9 @@ public final class DOT {
      * Invokes the GraphVIZ DOT utility for rendering graphs, writing output to the specified file.
      *
      * @param r
-     *         the reader from which the GraphVIZ description is read.
+     *         the reader from which the GraphVIZ description is read
      * @param format
-     *         the output format to produce.
+     *         the output format to produce
      * @param out
      *         the file to which the output is written.
      *
@@ -166,8 +195,15 @@ public final class DOT {
     }
 
     /**
-     * Invokes the DOT utility on a string, producing an output file. Convenience method, see
+     * Invokes the DOT utility on a string, producing an output file. Convenience method for
      * {@link #runDOT(Reader, String, File)}.
+     *
+     * @param dotText
+     *         the string from which the GraphVIZ description is read
+     * @param format
+     *         the output format to produce
+     * @param out
+     *         the file to which the output is written
      *
      * @throws IOException
      *         if the call to the DOT utility or writing to the file fails.
@@ -177,8 +213,13 @@ public final class DOT {
     }
 
     /**
-     * Renders a GraphVIZ description from a file, using an external program for displaying. Convenience method, see
+     * Renders a GraphVIZ description from a file, using an external program for displaying. Convenience method for
      * {@link #renderDOTExternal(Reader, String)}.
+     *
+     * @param dotFile
+     *         the file from which the GraphVIZ description is read
+     * @param format
+     *         the output format, as understood by the dot utility, e.g., png, ps, etc.
      *
      * @throws IOException
      *         if reading from the file or the call to the DOT utility fails.
@@ -192,9 +233,9 @@ public final class DOT {
      * system's file type associations, using the {@link Desktop#open(File)} method.
      *
      * @param r
-     *         the reader from which the GraphVIZ description is read.
+     *         the reader from which the GraphVIZ description is read
      * @param format
-     *         the output format, as understood by the dot utility, e.g., png, ps, ...
+     *         the output format, as understood by the dot utility, e.g., png, ps, etc.
      *
      * @throws IOException
      *         if reading from the reader or the call to the DOT utility fails.
@@ -206,8 +247,13 @@ public final class DOT {
     }
 
     /**
-     * Renders a GraphVIZ description from a string, using an external program for displaying. Convenience method, see
+     * Renders a GraphVIZ description from a string, using an external program for displaying. Convenience method for
      * {@link #renderDOTExternal(Reader, String)}.
+     *
+     * @param dotText
+     *         the string from which the GraphVIZ description is read.
+     * @param format
+     *         the output format, as understood by the dot utility, e.g., png, ps, etc.
      *
      * @throws IOException
      *         if the call to the DOT utility fails.
@@ -217,8 +263,13 @@ public final class DOT {
     }
 
     /**
-     * Renders a GraphVIZ description from a {@link File} and displays it in a Swing window. Convenience method, see
+     * Renders a GraphVIZ description from a {@link File} and displays it in a Swing window. Convenience method for
      * {@link #renderDOT(Reader, boolean)}.
+     *
+     * @param dotFile
+     *         the file from which the description is obtained
+     * @param modal
+     *         whether the dialog should be modal
      *
      * @throws IOException
      *         if reading from the file or the call to the DOT utility fails.
@@ -228,8 +279,13 @@ public final class DOT {
     }
 
     /**
-     * Renders a GraphVIZ description from a {@link Reader} and displays it in a Swing window. Convenience method, see
+     * Renders a GraphVIZ description from a {@link Reader} and displays it in a Swing window. Convenience method for
      * {@link #renderDOT(String, boolean)}.
+     *
+     * @param r
+     *         the reader from which the description is obtained
+     * @param modal
+     *         whether the dialog should be modal
      *
      * @throws IOException
      *         if reading from the reader or the call to the DOT utility fails.
@@ -242,9 +298,9 @@ public final class DOT {
      * Renders a GraphVIZ description and displays it in a Swing window.
      *
      * @param dotText
-     *         the {@link String} from which the description is obtained.
+     *         the string from which the description is obtained
      * @param modal
-     *         whether the dialog should be modal.
+     *         whether the dialog should be modal
      *
      * @throws IOException
      *         if the call to the DOT utility fails.
@@ -255,7 +311,13 @@ public final class DOT {
 
     /**
      * Renders multiple (named) GraphVIZ descriptions from {@link File}s and displays them in a Swing window.
-     * Convenience method, see {@link #renderDOTStrings(List, boolean)}.
+     * Convenience method for {@link #renderDOTStrings(List, boolean)}.
+     *
+     * @param files
+     *         the file from which the description is obtained. The first element of the {@link Pair} should contain the
+     *         name, the second element should contain the DOT file.
+     * @param modal
+     *         whether the dialog should be modal
      *
      * @throws IOException
      *         if reading from the files or the calls to the DOT utility fail.
@@ -266,7 +328,13 @@ public final class DOT {
 
     /**
      * Renders multiple (named) GraphVIZ descriptions from {@link Reader}s and displays them in a Swing window.
-     * Convenience method, see {@link #renderDOTStrings(List, boolean)}.
+     * Convenience method for {@link #renderDOTStrings(List, boolean)}.
+     *
+     * @param readers
+     *         the readers from which the description is obtained. The first element of the {@link Pair} should contain
+     *         the name, the second element should contain a reader for the DOT definition.
+     * @param modal
+     *         whether the dialog should be modal
      *
      * @throws IOException
      *         if reading from the readers or the calls to the DOT utility fail.
@@ -279,10 +347,10 @@ public final class DOT {
      * Renders multiple (named) GraphVIZ descriptions and displays them in a Swing window.
      *
      * @param dotTexts
-     *         the {@link String}s from which the description is obtained. The first element of the {@link Pair} should
-     *         contain the name, the second element should contain the DOT code.
+     *         the strings from which the description is obtained. The first element of the {@link Pair} should contain
+     *         the name, the second element should contain the DOT code.
      * @param modal
-     *         whether the dialog should be modal.
+     *         whether the dialog should be modal
      *
      * @throws IOException
      *         if the calls to the DOT utility fail.

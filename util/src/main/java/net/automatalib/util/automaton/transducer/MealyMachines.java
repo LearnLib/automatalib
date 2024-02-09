@@ -75,6 +75,8 @@ public final class MealyMachines {
      *         output symbol type of the first Mealy Machine
      * @param <O2>
      *         output symbol type of the second Mealy Machine
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */

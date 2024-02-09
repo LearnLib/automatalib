@@ -61,6 +61,8 @@ public final class CharacterizingSets {
      *         the input alphabets to consider
      * @param result
      *         the collection in which to store the characterizing words
+     * @param <I>
+     *         input symbol type
      */
     public static <I> void findCharacterizingSet(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
                                                  Collection<? extends I> inputs,
@@ -79,6 +81,10 @@ public final class CharacterizingSets {
      *         the state for which to determine the characterizing set
      * @param result
      *         the collection in which to store the characterizing words
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
      */
     public static <S, I> void findCharacterizingSet(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
                                                     Collection<? extends I> inputs,

@@ -27,9 +27,9 @@ import java.util.Comparator;
  */
 final class LexComparator<T extends Iterable<U>, U> implements Comparator<T> {
 
-    private final Comparator<U> elemComparator;
+    private final Comparator<? super U> elemComparator;
 
-    LexComparator(Comparator<U> elemComparator) {
+    LexComparator(Comparator<? super U> elemComparator) {
         this.elemComparator = elemComparator;
     }
 

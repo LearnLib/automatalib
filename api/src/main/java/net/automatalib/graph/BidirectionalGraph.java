@@ -34,7 +34,7 @@ public interface BidirectionalGraph<N, E> extends Graph<N, E> {
      * @param node
      *         the node
      *
-     * @return all incoming edges of the specified node.
+     * @return all incoming edges of the specified node
      */
     Collection<E> getIncomingEdges(N node);
 
@@ -58,11 +58,21 @@ public interface BidirectionalGraph<N, E> extends Graph<N, E> {
 
         /**
          * Int-abstracted version of {@link #getIncomingEdges(Object)}.
+         *
+         * @param node
+         *         the (int-abstracted) node identifier
+         *
+         * @return all incoming edges of the specified node
          */
         Collection<E> getIncomingEdges(int node);
 
         /**
          * Int-abstracted version of {@link #getSource(Object)}.
+         *
+         * @param edge
+         *         the edge
+         *
+         * @return the (int-abstracted) id of the source node of the given edge
          */
         int getIntSource(E edge);
 

@@ -277,6 +277,8 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      *
      * @param oldStorage
      *         the current array
+     * @param arrayConstructor
+     *         the constructor for creating the new array
      * @param defaultValue
      *         default value for newly allocated array positions
      * @param payload

@@ -58,6 +58,8 @@ public final class DFAs {
      *         the input alphabet
      * @param combiner
      *         combination method for acceptance values
+     * @param <I>
+     *         input symbol type
      *
      * @return a new DFA representing the combination of the specified DFA
      */
@@ -82,6 +84,12 @@ public final class DFAs {
      *         the mutable DFA for storing the result
      * @param combiner
      *         combination method for acceptance values
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -105,6 +113,8 @@ public final class DFAs {
      *         the second DFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new DFA representing the conjunction of the specified DFA
      */
@@ -123,6 +133,12 @@ public final class DFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable DFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -142,6 +158,8 @@ public final class DFAs {
      *         the second DFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new DFA representing the conjunction of the specified DFA
      */
@@ -160,6 +178,12 @@ public final class DFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable DFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -179,6 +203,8 @@ public final class DFAs {
      *         the second DFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new DFA representing the conjunction of the specified DFA
      */
@@ -197,6 +223,12 @@ public final class DFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable DFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -216,6 +248,8 @@ public final class DFAs {
      *         the second DFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new DFA representing the conjunction of the specified DFA
      */
@@ -234,6 +268,12 @@ public final class DFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable DFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -253,6 +293,8 @@ public final class DFAs {
      *         the second DFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new DFA representing the conjunction of the specified DFA
      */
@@ -271,6 +313,12 @@ public final class DFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable DFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -291,6 +339,8 @@ public final class DFAs {
      *         the DFA to complement
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
      * @return a new DFA representing the complement of the specified DFA
      */
@@ -310,6 +360,12 @@ public final class DFAs {
      *         the input symbols to consider
      * @param out
      *         a mutable DFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
@@ -347,6 +403,8 @@ public final class DFAs {
      * @param alphabet
      *         the input alphabet to consider for minimization (this will also be the input alphabet of the resulting
      *         automaton)
+     * @param <I>
+     *         input symbol type
      *
      * @return a minimized version of the specified DFA
      */
@@ -362,6 +420,12 @@ public final class DFAs {
      *
      * @param dfa
      *         the DFA to be minimized
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type
+     * @param <A>
+     *         automaton type
      *
      * @return a minimized version of the specified DFA
      */
@@ -378,12 +442,12 @@ public final class DFAs {
      *         the DFA to check
      * @param inputs
      *         the input symbols to consider
-     * @param <S>
-     *         the type of state
      * @param <I>
-     *         the type of input
+     *         input symbol type
+     * @param <S>
+     *         state type
      *
-     * @return whether the DFA is prefix-closed.
+     * @return whether the DFA is prefix-closed
      */
     public static <S, I> boolean isPrefixClosed(DFA<S, I> dfa, Collection<I> inputs) {
         for (S s : dfa) {
@@ -406,11 +470,11 @@ public final class DFAs {
      * Assumes all states in the given {@link DFA} are reachable from the initial state.
      *
      * @param dfa
-     *         the {@link DFA} to check.
+     *         the {@link DFA} to check
      * @param <S>
-     *         the state type.
+     *         state type
      *
-     * @return whether the given {@link DFA} accepts the empty language.
+     * @return whether the given {@link DFA} accepts the empty language
      */
     public static <S> boolean acceptsEmptyLanguage(DFA<S, ?> dfa) {
         for (S s : dfa) {

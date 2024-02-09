@@ -225,6 +225,8 @@ public final class Covers {
      *         the collection containing the already existing sequences of the state cover
      * @param newStates
      *         the collection in which the missing sequences will be stored
+     * @param <S>
+     *         state type
      * @param <I>
      *         input symbol type
      *

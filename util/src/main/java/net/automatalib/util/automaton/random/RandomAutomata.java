@@ -71,6 +71,8 @@ public final class RandomAutomata {
      *         determines whether the DFA will be minimized before being returned. Note that if {@code true} is passed
      *         for this parameter, the resulting automaton might have a {@link Automaton#size() size} less than
      *         {@code numStates}
+     * @param <I>
+     *         input symbol type
      *
      * @return a randomly generated ICDFA
      */

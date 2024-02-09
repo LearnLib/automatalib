@@ -119,13 +119,18 @@ public final class LTSminUtil {
 
     /**
      * Returns whether to make LTSmin's output more verbose.
+     *
+     * @return whether to make LTSmin's output more verbose
      */
     public static boolean isVerbose() {
         return verbose;
     }
 
     /**
-     * Programmitically set, whether to make LTSmin's output more verbose.
+     * Programmatically set, whether to make LTSmin's output more verbose.
+     *
+     * @param verbose
+     *         whether to make LTSmin's output more verbose
      */
     public static void setVerbose(boolean verbose) {
         LTSminUtil.verbose = verbose;

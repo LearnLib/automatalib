@@ -27,6 +27,9 @@ public interface GrowingAlphabet<I> extends Alphabet<I> {
      * Adds a new symbol to the alphabet. Some alphabets may prevent symbols from being added twice. In this case, the
      * original alphabet remains unchanged, but this is not considered an error.
      *
+     * @param a
+     *         the symbol to add
+     *
      * @return the index of the symbol in the alphabet, after adding it.
      */
     int addSymbol(I a);

@@ -61,10 +61,14 @@ public final class PaigeTarjanMinimization {
      *
      * @param dfa
      *         the DFA to minimize
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
      *
      * @return a minimized version of the specified DFA
      */
-    public static <S, I, A extends DFA<S, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa) {
+    public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa) {
         return minimizeDFA(dfa, dfa.getInputAlphabet());
     }
 
@@ -75,6 +79,8 @@ public final class PaigeTarjanMinimization {
      *         the DFA to minimize
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the returned DFA)
+     * @param <I>
+     *         input symbol type
      *
      * @return a minimized version of the specified DFA
      */
@@ -92,6 +98,10 @@ public final class PaigeTarjanMinimization {
      *         the input alphabet (this will be the input alphabet of the returned DFA)
      * @param creator
      *         the creator for constructing the automata instance to return
+     * @param <A>
+     *         automaton type
+     * @param <I>
+     *         input symbol type
      *
      * @return a minimized version of the specified DFA
      */
@@ -107,11 +117,16 @@ public final class PaigeTarjanMinimization {
      *
      * @param mealy
      *         the Mealy machine to minimize
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     * @param <A>
+     *         automaton type
      *
      * @return a minimized version of the specified Mealy machine
      */
-    public static <S, I, T, O, A extends MealyMachine<S, I, T, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(
-            A mealy) {
+    public static <I, O, A extends MealyMachine<?, I, ?, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(A mealy) {
         return minimizeMealy(mealy, mealy.getInputAlphabet());
     }
 
@@ -122,6 +137,10 @@ public final class PaigeTarjanMinimization {
      *         the Mealy machine to minimize
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a minimized version of the specified Mealy machine
      */
@@ -139,6 +158,12 @@ public final class PaigeTarjanMinimization {
      *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
      * @param creator
      *         the creator for constructing the automata instance to return
+     * @param <A>
+     *         automaton type
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a minimized version of the specified Mealy machine
      */
@@ -168,6 +193,16 @@ public final class PaigeTarjanMinimization {
      *         the initial partitioning function, determining how states will be distinguished
      * @param sinkClassification
      *         the classification used when an undefined transition is encountered
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition symbol type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     * @param <A>
+     *         automaton type
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      *

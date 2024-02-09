@@ -64,10 +64,14 @@ public final class HopcroftMinimization {
      *
      * @param dfa
      *         the DFA to minimize
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
      *
      * @return a minimized version of the specified DFA
      */
-    public static <S, I, A extends DFA<S, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa) {
+    public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa) {
         return minimizeDFA(dfa, PruningMode.PRUNE_AFTER);
     }
 
@@ -78,23 +82,29 @@ public final class HopcroftMinimization {
      * @param dfa
      *         the DFA to minimize
      * @param pruningMode
-     *         the pruning mode (see above)
+     *         the pruning mode
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
      *
      * @return a minimized version of the specified DFA
      */
-    public static <S, I, A extends DFA<S, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa,
-                                                                                                 PruningMode pruningMode) {
+    public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa,
+                                                                                              PruningMode pruningMode) {
         return minimizeDFA(dfa, dfa.getInputAlphabet(), pruningMode);
     }
 
     /**
-     * Minimizes the given DFA. The result is returned in the form of a {@link CompactDFA}, and pruning (see above) is
-     * performed after computing state equivalences.
+     * Minimizes the given DFA. The result is returned in the form of a {@link CompactDFA}, and pruning is performed
+     * after computing state equivalences.
      *
      * @param dfa
      *         the DFA to minimize
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the returned DFA)
+     * @param <I>
+     *         input symbol type
      *
      * @return a minimized version of the specified DFA
      */
@@ -110,7 +120,9 @@ public final class HopcroftMinimization {
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the returned DFA)
      * @param pruningMode
-     *         the pruning mode (see above)
+     *         the pruning mode
+     * @param <I>
+     *         input symbol type
      *
      * @return a minimized version of the specified DFA
      */
@@ -126,9 +138,13 @@ public final class HopcroftMinimization {
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the returned DFA)
      * @param pruningMode
-     *         the pruning mode (see above)
+     *         the pruning mode
      * @param creator
      *         the creator for constructing the automata instance to return
+     * @param <A>
+     *         automaton type
+     * @param <I>
+     *         input symbol type
      *
      * @return a minimized version of the specified DFA
      */
@@ -142,15 +158,20 @@ public final class HopcroftMinimization {
     /**
      * Minimizes the given Mealy machine. The result is returned in the form of a {@link CompactMealy}, using the
      * alphabet obtained via <code>mealy.{@link InputAlphabetHolder#getInputAlphabet() getInputAlphabet()}</code>.
-     * Pruning (see above) is performed after computing state equivalences.
+     * Pruning is performed after computing state equivalences.
      *
      * @param mealy
      *         the Mealy machine to minimize
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     * @param <A>
+     *         automaton type
      *
      * @return a minimized version of the specified Mealy machine
      */
-    public static <S, I, T, O, A extends MealyMachine<S, I, T, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(
-            A mealy) {
+    public static <I, O, A extends MealyMachine<?, I, ?, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(A mealy) {
         return minimizeMealy(mealy, PruningMode.PRUNE_AFTER);
     }
 
@@ -161,13 +182,18 @@ public final class HopcroftMinimization {
      * @param mealy
      *         the Mealy machine to minimize
      * @param pruningMode
-     *         the pruning mode (see above)
+     *         the pruning mode
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     * @param <A>
+     *         automaton type
      *
      * @return a minimized version of the specified Mealy machine
      */
-    public static <S, I, T, O, A extends MealyMachine<S, I, T, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(
-            A mealy,
-            PruningMode pruningMode) {
+    public static <I, O, A extends MealyMachine<?, I, ?, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(A mealy,
+                                                                                                                       PruningMode pruningMode) {
         return minimizeMealy(mealy, mealy.getInputAlphabet(), pruningMode);
     }
 
@@ -179,6 +205,10 @@ public final class HopcroftMinimization {
      *         the Mealy machine to minimize
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a minimized version of the specified Mealy machine
      */
@@ -194,7 +224,11 @@ public final class HopcroftMinimization {
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
      * @param pruningMode
-     *         the pruning mode (see above)
+     *         the pruning mode
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a minimized version of the specified Mealy machine
      */
@@ -212,9 +246,15 @@ public final class HopcroftMinimization {
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
      * @param pruningMode
-     *         the pruning mode (see above)
+     *         the pruning mode
      * @param creator
      *         the creator for constructing the automata instance to return
+     * @param <A>
+     *         automaton type
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a minimized version of the specified Mealy machine
      */
@@ -241,7 +281,17 @@ public final class HopcroftMinimization {
      * @param ap
      *         the initial partitioning function, determining how states will be distinguished
      * @param pruningMode
-     *         the pruning mode (see above)
+     *         the pruning mode
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     * @param <A>
+     *         automaton type
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      *

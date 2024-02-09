@@ -27,9 +27,6 @@ public abstract class AbstractFastState<T> extends AbstractMutableNumericID {
         this.transitions = new ResizingArrayStorage<>(Object.class, initialNumOfInputs);
     }
 
-    /**
-     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
-     */
     public final boolean ensureInputCapacity(int capacity) {
         return this.transitions.ensureCapacity(capacity);
     }

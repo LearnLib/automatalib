@@ -61,12 +61,14 @@ public interface Lasso<I, D> extends DetOutputAutomaton<Integer, I, Integer, D>,
     /**
      * Gets the finite representation of the output of the lasso.
      *
-     * @return the output type D.
+     * @return the output
      */
     D getOutput();
 
     /**
      * The sorted set containing some symbol indices after which the beginning state of the loop is visited.
+     *
+     * @return the symbol indices after which the beginning state of the loop is visited
      */
     SortedSet<Integer> getLoopBeginIndices();
 

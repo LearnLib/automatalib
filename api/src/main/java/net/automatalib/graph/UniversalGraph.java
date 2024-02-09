@@ -31,11 +31,21 @@ public interface UniversalGraph<N, E, NP, EP> extends Graph<N, E>, UniversalInde
 
         /**
          * Int-abstracted version of {@link #getNodeProperty(Object)}.
+         *
+         * @param node
+         *         the (int-abstracted) node identifier
+         *
+         * @return the property of the specified node
          */
         NP getNodeProperty(int node);
 
         /**
          * Int-abstracted version of {@link UniversalIndefiniteGraph#getEdgeProperty(Object)}.
+         *
+         * @param edge
+         *         the edge
+         *
+         * @return the property of the specified edge
          */
         EP getEdgeProperty(E edge);
     }

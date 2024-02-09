@@ -51,7 +51,9 @@ public interface ArrayWritable<T> {
     void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num);
 
     /**
-     * The size of this container.
+     * Returns the size of this container.
+     *
+     * @return the size of this container
      */
     int size();
 }

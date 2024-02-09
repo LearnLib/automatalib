@@ -32,17 +32,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * that has meaningful identifiers for the individual components.
  *
  * @param <T1>
- *         type of the triple's first component.
+ *         type of the first component
  * @param <T2>
- *         type of the triple's second component.
+ *         type of the second component
  * @param <T3>
- *         type of the triple's third component.
+ *         type of the third component
  */
 public final class Triple<T1, T2, T3> extends AbstractPrintable {
 
-    /*
-     * Components
-     */
     private final T1 first;
     private final T2 second;
     private final T3 third;
@@ -54,7 +51,22 @@ public final class Triple<T1, T2, T3> extends AbstractPrintable {
     }
 
     /**
-     * Convenience function for creating a triple, allowing the user to omit the type parameters.
+     * Creates a new triple from the given components.
+     *
+     * @param first
+     *         the first triple component
+     * @param second
+     *         the second triple component
+     * @param third
+     *         the third triple component
+     * @param <T1>
+     *         type of the first component
+     * @param <T2>
+     *         type of the second component
+     * @param <T3>
+     *         type of the third component
+     *
+     * @return the new triple object
      */
     public static <T1, T2, T3> Triple<T1, T2, T3> of(T1 first, T2 second, T3 third) {
         return new Triple<>(first, second, third);

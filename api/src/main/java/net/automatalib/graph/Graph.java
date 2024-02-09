@@ -79,16 +79,31 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
 
         /**
          * Int-abstracted version of {@link #getOutgoingEdges(Object)}.
+         *
+         * @param node
+         *         the (int-abstracted) node identifier
+         *
+         * @return a collection containing the outgoing edges
          */
         Collection<E> getOutgoingEdges(int node);
 
         /**
          * Int-abstracted version of {@link #getTarget(Object)}.
+         *
+         * @param edge
+         *         the edge
+         *
+         * @return the target node of the given edge.
          */
         int getIntTarget(E edge);
 
         /**
          * Int-abstracted version of {@link #getOutgoingEdgesIterator(Object)}.
+         *
+         * @param node
+         *         the (int-abstracted) node identifier
+         *
+         * @return an iterator over the outgoing edges
          */
         default Iterator<E> getOutgoingEdgesIterator(int node) {
             return getOutgoingEdges(node).iterator();
@@ -96,6 +111,13 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
 
         /**
          * (Finite) int-abstracted version of {@link #getEdgesBetween(Object, Object)}.
+         *
+         * @param from
+         *         the (int-abstracted) source node identifier
+         * @param to
+         *         the (int-abstracted) target node identifier
+         *
+         * @return an iterator over the edges between the two nodes
          */
         default Collection<E> getEdgesBetween(int from, int to) {
             return IteratorUtil.list(IteratorUtil.filter(getOutgoingEdgesIterator(from), e -> getIntTarget(e) == to));
@@ -103,6 +125,13 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
 
         /**
          * Int-abstracted version of {@link #isConnected(Object, Object)}.
+         *
+         * @param source
+         *         the (int-abstracted) source node identifier
+         * @param target
+         *         the (int-abstracted) target node identifier
+         *
+         * @return {@code true} if the nodes are connect, {@code false} otherwise
          */
         @Override
         default boolean isConnected(int source, int target) {

@@ -116,13 +116,12 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
     /**
      * This method must verify that the given formula adheres to the expected syntax of the chosen serialization format
      * for hypotheses of {@code this} model-checker.
-     * <p>
-     * If the formula does not adhere to the expected syntax, this method should throw a {@link
-     * IllegalArgumentException}, possibly containing nested causes that further elaborate on why the formula couldn't
-     * be verified.
      *
      * @param formula
      *         the formula to verify
+     *
+     * @throws FormatException
+     *         if the formula does not adhere to the expected syntax
      */
     protected abstract void verifyFormula(String formula) throws FormatException;
 

@@ -45,6 +45,8 @@ public final class SPMMs {
      *         the {@link SPMM} for which the sequences should be computed
      * @param <I>
      *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return an {@link ATSequences} object which contains the respective sequences.
      *

@@ -56,17 +56,31 @@ public final class TSCopy {
      *         the function for obtaining state properties
      * @param tpMapping
      *         the function for obtaining transition properties
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <T1>
+     *         transition type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
+     * @param <I2>
+     *         input symbol type of the output transition system
+     * @param <SP2>
+     *         state property type of the output transition system
+     * @param <TP2>
+     *         transition property type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I1, T1, S2, I2, T2, SP2, TP2> Mapping<S1, S2> rawCopy(TSTraversalMethod method,
-                                                                             TransitionSystem<S1, ? super I1, T1> in,
-                                                                             int limit,
-                                                                             Collection<? extends I1> inputs,
-                                                                             MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
-                                                                             Function<? super I1, ? extends I2> inputsMapping,
-                                                                             Function<? super S1, ? extends SP2> spMapping,
-                                                                             Function<? super T1, ? extends TP2> tpMapping) {
+    public static <S1, I1, T1, S2, I2, SP2, TP2> Mapping<S1, S2> rawCopy(TSTraversalMethod method,
+                                                                         TransitionSystem<S1, ? super I1, T1> in,
+                                                                         int limit,
+                                                                         Collection<? extends I1> inputs,
+                                                                         MutableAutomaton<S2, I2, ?, ? super SP2, ? super TP2> out,
+                                                                         Function<? super I1, ? extends I2> inputsMapping,
+                                                                         Function<? super S1, ? extends SP2> spMapping,
+                                                                         Function<? super T1, ? extends TP2> tpMapping) {
         return rawCopy(method,
                        in,
                        limit,
@@ -103,26 +117,35 @@ public final class TSCopy {
      *         the filter predicate for states
      * @param transFilter
      *         the filter predicate for transitions
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <T1>
+     *         transition type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
+     * @param <I2>
+     *         input symbol type of the output transition system
+     * @param <SP2>
+     *         state property type of the output transition system
+     * @param <TP2>
+     *         transition property type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I1, T1, S2, I2, T2, SP2, TP2> Mapping<S1, S2> rawCopy(TSTraversalMethod method,
-                                                                             TransitionSystem<S1, ? super I1, T1> in,
-                                                                             int limit,
-                                                                             Collection<? extends I1> inputs,
-                                                                             MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
-                                                                             Function<? super I1, ? extends I2> inputsMapping,
-                                                                             Function<? super S1, ? extends SP2> spMapping,
-                                                                             Function<? super T1, ? extends TP2> tpMapping,
-                                                                             Predicate<? super S1> stateFilter,
-                                                                             TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
-        TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> vis = new TSCopyVisitor<>(in,
-                                                                                  out,
-                                                                                  inputsMapping,
-                                                                                  spMapping,
-                                                                                  tpMapping,
-                                                                                  stateFilter,
-                                                                                  transFilter);
+    public static <S1, I1, T1, S2, I2, SP2, TP2> Mapping<S1, S2> rawCopy(TSTraversalMethod method,
+                                                                         TransitionSystem<S1, ? super I1, T1> in,
+                                                                         int limit,
+                                                                         Collection<? extends I1> inputs,
+                                                                         MutableAutomaton<S2, I2, ?, ? super SP2, ? super TP2> out,
+                                                                         Function<? super I1, ? extends I2> inputsMapping,
+                                                                         Function<? super S1, ? extends SP2> spMapping,
+                                                                         Function<? super T1, ? extends TP2> tpMapping,
+                                                                         Predicate<? super S1> stateFilter,
+                                                                         TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
+        TSCopyVisitor<S1, I1, T1, S2, I2, SP2, TP2> vis =
+                new TSCopyVisitor<>(in, out, inputsMapping, spMapping, tpMapping, stateFilter, transFilter);
 
         method.traverse(in, limit, inputs, vis);
         return vis.getStateMapping();
@@ -146,16 +169,28 @@ public final class TSCopy {
      *         the function for obtaining state properties
      * @param tpMapping
      *         the function for obtaining transition properties
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <T1>
+     *         transition type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
+     * @param <SP2>
+     *         state property type of the output transition system
+     * @param <TP2>
+     *         transition property type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, S2, T2, SP2, TP2> Mapping<S1, S2> rawCopy(TSTraversalMethod method,
-                                                                        TransitionSystem<S1, ? super I, T1> in,
-                                                                        int limit,
-                                                                        Collection<? extends I> inputs,
-                                                                        MutableAutomaton<S2, I, T2, SP2, TP2> out,
-                                                                        Function<? super S1, ? extends SP2> spMapping,
-                                                                        Function<? super T1, ? extends TP2> tpMapping) {
+    public static <S1, I1, T1, S2, SP2, TP2> Mapping<S1, S2> rawCopy(TSTraversalMethod method,
+                                                                     TransitionSystem<S1, ? super I1, T1> in,
+                                                                     int limit,
+                                                                     Collection<? extends I1> inputs,
+                                                                     MutableAutomaton<S2, I1, ?, SP2, TP2> out,
+                                                                     Function<? super S1, ? extends SP2> spMapping,
+                                                                     Function<? super T1, ? extends TP2> tpMapping) {
         return rawCopy(method,
                        in,
                        limit,
@@ -189,18 +224,30 @@ public final class TSCopy {
      *         the filter predicate for states
      * @param transFilter
      *         the filter predicate for transitions
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <T1>
+     *         transition type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
+     * @param <SP2>
+     *         state property type of the output transition system
+     * @param <TP2>
+     *         transition property type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, S2, T2, SP2, TP2> Mapping<S1, S2> rawCopy(TSTraversalMethod method,
-                                                                        TransitionSystem<S1, ? super I, T1> in,
-                                                                        int limit,
-                                                                        Collection<? extends I> inputs,
-                                                                        MutableAutomaton<S2, I, T2, SP2, TP2> out,
-                                                                        Function<? super S1, ? extends SP2> spMapping,
-                                                                        Function<? super T1, ? extends TP2> tpMapping,
-                                                                        Predicate<? super S1> stateFilter,
-                                                                        TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
+    public static <S1, I1, T1, S2, SP2, TP2> Mapping<S1, S2> rawCopy(TSTraversalMethod method,
+                                                                     TransitionSystem<S1, ? super I1, T1> in,
+                                                                     int limit,
+                                                                     Collection<? extends I1> inputs,
+                                                                     MutableAutomaton<S2, I1, ?, SP2, TP2> out,
+                                                                     Function<? super S1, ? extends SP2> spMapping,
+                                                                     Function<? super T1, ? extends TP2> tpMapping,
+                                                                     Predicate<? super S1> stateFilter,
+                                                                     TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
         return rawCopy(method,
                        in,
                        limit,
@@ -233,17 +280,33 @@ public final class TSCopy {
      *         the transformation for state properties
      * @param tpTransform
      *         the transformation for transition properties
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <SP1>
+     *         state property type of the input transition system
+     * @param <TP1>
+     *         transition property type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
+     * @param <I2>
+     *         input symbol type of the output transition system
+     * @param <SP2>
+     *         state property type of the output transition system
+     * @param <TP2>
+     *         transition property type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I1, T1, SP1, TP1, S2, I2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                                    UniversalTransitionSystem<S1, ? super I1, T1, ? extends SP1, ? extends TP1> in,
-                                                                                    int limit,
-                                                                                    Collection<? extends I1> inputs,
-                                                                                    MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
-                                                                                    Function<? super I1, ? extends I2> inputsMapping,
-                                                                                    Function<? super SP1, ? extends SP2> spTransform,
-                                                                                    Function<? super TP1, ? extends TP2> tpTransform) {
+    public static <S1, I1, SP1, TP1, S2, I2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                            UniversalTransitionSystem<S1, ? super I1, ?, ? extends SP1, ? extends TP1> in,
+                                                                            int limit,
+                                                                            Collection<? extends I1> inputs,
+                                                                            MutableAutomaton<S2, I2, ?, ? super SP2, ? super TP2> out,
+                                                                            Function<? super I1, ? extends I2> inputsMapping,
+                                                                            Function<? super SP1, ? extends SP2> spTransform,
+                                                                            Function<? super TP1, ? extends TP2> tpTransform) {
         return copy(method,
                     in,
                     limit,
@@ -280,19 +343,37 @@ public final class TSCopy {
      *         the filter predicate for states
      * @param transFilter
      *         the filter predicate for transitions
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <T1>
+     *         transition type of the input transition system
+     * @param <SP1>
+     *         state property type of the input transition system
+     * @param <TP1>
+     *         transition property type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
+     * @param <I2>
+     *         input symbol type of the output transition system
+     * @param <SP2>
+     *         state property type of the output transition system
+     * @param <TP2>
+     *         transition property type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I1, T1, SP1, TP1, S2, I2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                                    UniversalTransitionSystem<S1, ? super I1, T1, ? extends SP1, ? extends TP1> in,
-                                                                                    int limit,
-                                                                                    Collection<? extends I1> inputs,
-                                                                                    MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
-                                                                                    Function<? super I1, ? extends I2> inputsMapping,
-                                                                                    Function<? super SP1, ? extends SP2> spTransform,
-                                                                                    Function<? super TP1, ? extends TP2> tpTransform,
-                                                                                    Predicate<? super S1> stateFilter,
-                                                                                    TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
+    public static <S1, I1, T1, SP1, TP1, S2, I2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                                UniversalTransitionSystem<S1, ? super I1, T1, ? extends SP1, ? extends TP1> in,
+                                                                                int limit,
+                                                                                Collection<? extends I1> inputs,
+                                                                                MutableAutomaton<S2, I2, ?, ? super SP2, ? super TP2> out,
+                                                                                Function<? super I1, ? extends I2> inputsMapping,
+                                                                                Function<? super SP1, ? extends SP2> spTransform,
+                                                                                Function<? super TP1, ? extends TP2> tpTransform,
+                                                                                Predicate<? super S1> stateFilter,
+                                                                                TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
         Function<? super S1, ? extends SP2> spMapping = TS.stateProperties(in).andThen(spTransform);
         Function<? super T1, ? extends TP2> tpMapping = TS.transitionProperties(in).andThen(tpTransform);
         return rawCopy(method, in, limit, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transFilter);
@@ -316,16 +397,30 @@ public final class TSCopy {
      *         the transformation for state properties
      * @param tpTransform
      *         the transformation for transition properties
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <SP1>
+     *         state property type of the input transition system
+     * @param <TP1>
+     *         transition property type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
+     * @param <SP2>
+     *         state property type of the output transition system
+     * @param <TP2>
+     *         transition property type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, SP1, TP1, S2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                               UniversalTransitionSystem<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
-                                                                               int limit,
-                                                                               Collection<? extends I> inputs,
-                                                                               MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
-                                                                               Function<? super SP1, ? extends SP2> spTransform,
-                                                                               Function<? super TP1, ? extends TP2> tpTransform) {
+    public static <S1, I1, SP1, TP1, S2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                        UniversalTransitionSystem<S1, ? super I1, ?, ? extends SP1, ? extends TP1> in,
+                                                                        int limit,
+                                                                        Collection<? extends I1> inputs,
+                                                                        MutableAutomaton<S2, I1, ?, ? super SP2, ? super TP2> out,
+                                                                        Function<? super SP1, ? extends SP2> spTransform,
+                                                                        Function<? super TP1, ? extends TP2> tpTransform) {
         return copy(method,
                     in,
                     limit,
@@ -359,18 +454,34 @@ public final class TSCopy {
      *         the filter predicate for states
      * @param transFilter
      *         the filter predicate for transitions
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <T1>
+     *         transition type of the input transition system
+     * @param <SP1>
+     *         state property type of the input transition system
+     * @param <TP1>
+     *         transition property type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
+     * @param <SP2>
+     *         state property type of the output transition system
+     * @param <TP2>
+     *         transition property type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, SP1, TP1, S2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                               UniversalTransitionSystem<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
-                                                                               int limit,
-                                                                               Collection<? extends I> inputs,
-                                                                               MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
-                                                                               Function<? super SP1, ? extends SP2> spTransform,
-                                                                               Function<? super TP1, ? extends TP2> tpTransform,
-                                                                               Predicate<? super S1> stateFilter,
-                                                                               TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
+    public static <S1, I1, T1, SP1, TP1, S2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                            UniversalTransitionSystem<S1, ? super I1, T1, ? extends SP1, ? extends TP1> in,
+                                                                            int limit,
+                                                                            Collection<? extends I1> inputs,
+                                                                            MutableAutomaton<S2, I1, ?, ? super SP2, ? super TP2> out,
+                                                                            Function<? super SP1, ? extends SP2> spTransform,
+                                                                            Function<? super TP1, ? extends TP2> tpTransform,
+                                                                            Predicate<? super S1> stateFilter,
+                                                                            TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
         return copy(method,
                     in,
                     limit,
@@ -399,15 +510,27 @@ public final class TSCopy {
      *         the output automaton
      * @param inputsMapping
      *         a mapping from inputs in the input automaton to inputs in the output automaton
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <SP1>
+     *         state property type of the input transition system
+     * @param <TP1>
+     *         transition property type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
+     * @param <I2>
+     *         input symbol type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I1, T1, SP, TP, S2, I2, T2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                        UniversalTransitionSystem<S1, ? super I1, T1, ? extends SP, ? extends TP> in,
-                                                                        int limit,
-                                                                        Collection<? extends I1> inputs,
-                                                                        MutableAutomaton<S2, I2, T2, ? super SP, ? super TP> out,
-                                                                        Function<? super I1, ? extends I2> inputsMapping) {
+    public static <S1, I1, SP1, TP1, S2, I2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                  UniversalTransitionSystem<S1, ? super I1, ?, ? extends SP1, ? extends TP1> in,
+                                                                  int limit,
+                                                                  Collection<? extends I1> inputs,
+                                                                  MutableAutomaton<S2, I2, ?, ? super SP1, ? super TP1> out,
+                                                                  Function<? super I1, ? extends I2> inputsMapping) {
         return copy(method, in, limit, inputs, out, inputsMapping, x -> true, TransitionPredicates.alwaysTrue());
     }
 
@@ -430,17 +553,31 @@ public final class TSCopy {
      *         the filter predicate for states
      * @param transFilter
      *         the filter predicate for transitions
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <T1>
+     *         transition type of the input transition system
+     * @param <SP1>
+     *         state property type of the input transition system
+     * @param <TP1>
+     *         transition property type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
+     * @param <I2>
+     *         input symbol type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I1, T1, SP, TP, S2, I2, T2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                        UniversalTransitionSystem<S1, ? super I1, T1, ? extends SP, ? extends TP> in,
-                                                                        int limit,
-                                                                        Collection<? extends I1> inputs,
-                                                                        MutableAutomaton<S2, I2, T2, ? super SP, ? super TP> out,
-                                                                        Function<? super I1, ? extends I2> inputsMapping,
-                                                                        Predicate<? super S1> stateFilter,
-                                                                        TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
+    public static <S1, I1, T1, SP1, TP1, S2, I2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                      UniversalTransitionSystem<S1, ? super I1, T1, ? extends SP1, ? extends TP1> in,
+                                                                      int limit,
+                                                                      Collection<? extends I1> inputs,
+                                                                      MutableAutomaton<S2, I2, ?, ? super SP1, ? super TP1> out,
+                                                                      Function<? super I1, ? extends I2> inputsMapping,
+                                                                      Predicate<? super S1> stateFilter,
+                                                                      TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
         return copy(method,
                     in,
                     limit,
@@ -467,14 +604,24 @@ public final class TSCopy {
      *         the inputs to consider
      * @param out
      *         the output automaton
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <SP1>
+     *         state property type of the input transition system
+     * @param <TP1>
+     *         transition property type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
      *
      * @return a mapping from old to new states.
      */
-    public static <S1, I, T1, SP, TP, S2, T2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                   UniversalTransitionSystem<S1, ? super I, T1, ? extends SP, ? extends TP> in,
-                                                                   int limit,
-                                                                   Collection<? extends I> inputs,
-                                                                   MutableAutomaton<S2, I, T2, ? super SP, ? super TP> out) {
+    public static <S1, I1, SP1, TP1, S2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                              UniversalTransitionSystem<S1, ? super I1, ?, ? extends SP1, ? extends TP1> in,
+                                                              int limit,
+                                                              Collection<? extends I1> inputs,
+                                                              MutableAutomaton<S2, I1, ?, ? super SP1, ? super TP1> out) {
         return copy(method, in, limit, inputs, out, x -> true, TransitionPredicates.alwaysTrue());
     }
 
@@ -495,16 +642,28 @@ public final class TSCopy {
      *         the filter predicate for states
      * @param transFilter
      *         the filter predicate for transitions
+     * @param <S1>
+     *         state type of the input transition system
+     * @param <I1>
+     *         input symbol type of the input transition system
+     * @param <T1>
+     *         transition type of the input transition system
+     * @param <SP1>
+     *         state property type of the input transition system
+     * @param <TP1>
+     *         transition property type of the input transition system
+     * @param <S2>
+     *         state type of the output transition system
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, SP, TP, S2, T2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                   UniversalTransitionSystem<S1, ? super I, T1, ? extends SP, ? extends TP> in,
-                                                                   int limit,
-                                                                   Collection<? extends I> inputs,
-                                                                   MutableAutomaton<S2, I, T2, ? super SP, ? super TP> out,
-                                                                   Predicate<? super S1> stateFilter,
-                                                                   TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
+    public static <S1, I1, T1, SP1, TP1, S2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                  UniversalTransitionSystem<S1, ? super I1, T1, ? extends SP1, ? extends TP1> in,
+                                                                  int limit,
+                                                                  Collection<? extends I1> inputs,
+                                                                  MutableAutomaton<S2, I1, ?, ? super SP1, ? super TP1> out,
+                                                                  Predicate<? super S1> stateFilter,
+                                                                  TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
         return copy(method, in, limit, inputs, out, Function.identity(), stateFilter, transFilter);
     }
 

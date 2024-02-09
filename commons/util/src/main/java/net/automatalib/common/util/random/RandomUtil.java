@@ -115,6 +115,8 @@ public final class RandomUtil {
      *         the list to sample elements from
      * @param num
      *         number of integers to sample
+     * @param <T>
+     *         element type
      *
      * @return a list of distinct elements sampled from the specified list
      */
