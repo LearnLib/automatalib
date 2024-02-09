@@ -18,6 +18,7 @@ package net.automatalib.modelchecker.m3c.formula.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.m3c.formula.AndNode;
 import net.automatalib.modelchecker.m3c.formula.AtomicNode;
 import net.automatalib.modelchecker.m3c.formula.BoxNode;
@@ -38,7 +39,7 @@ public class ParserMuCalcTest {
     private final List<FormulaNode<String, String>> formulas = new ArrayList<>();
 
     @Test
-    public void testBaseCases() throws ParseException {
+    public void testBaseCases() throws FormatException {
         assertEquals("false", new FalseNode<>());
         assertEquals("true", new TrueNode<>());
         assertEquals("true && true", new AndNode<>(new TrueNode<>(), new TrueNode<>()));
@@ -60,10 +61,23 @@ public class ParserMuCalcTest {
                      new LfpNode<>("XY", new OrNode<>(new VariableNode<>("XY"), new FalseNode<>())));
         assertEquals("nu ZY.(ZY || false)",
                      new GfpNode<>("ZY", new OrNode<>(new VariableNode<>("ZY"), new FalseNode<>())));
+        // allow CTL tokens as variable names as well
+        assertEquals("mu E.(E || false)",
+                     new LfpNode<>("E", new OrNode<>(new VariableNode<>("E"), new FalseNode<>())));
+        assertEquals("nu AF.(AF || false)",
+                     new GfpNode<>("AF", new OrNode<>(new VariableNode<>("AF"), new FalseNode<>())));
     }
 
     @Test
-    public void testNestedFixPoints() throws ParseException {
+    public void tokensAsActionsTest() throws FormatException {
+        assertEquals("<mu>true", new DiamondNode<>("mu", new TrueNode<>()));
+        assertEquals("<nu>true", new DiamondNode<>("nu", new TrueNode<>()));
+        assertEquals("[mu]true", new BoxNode<>("mu", new TrueNode<>()));
+        assertEquals("[nu]true", new BoxNode<>("nu", new TrueNode<>()));
+    }
+
+    @Test
+    public void testNestedFixPoints() throws FormatException {
         assertEquals("nu X. ([]X && mu Y. (<>Y || (\"AP\" && [] false)))",
                      new GfpNode<>("X",
                                    new AndNode<>(new BoxNode<>(new VariableNode<>("X")),
@@ -84,7 +98,7 @@ public class ParserMuCalcTest {
     }
 
     @Test
-    public void testPrecedence() throws ParseException {
+    public void testPrecedence() throws FormatException {
         assertEquals("true || false && true", "true || (false && true)");
         assertEquals("true -> false || true", "true -> (false || true)");
         assertEquals("true <-> false -> true", "true <-> (false -> true)");
@@ -107,11 +121,11 @@ public class ParserMuCalcTest {
         }
     }
 
-    private void assertEquals(String actualMuCalcFormula, String expectedMuCalcFormula) throws ParseException {
+    private void assertEquals(String actualMuCalcFormula, String expectedMuCalcFormula) throws FormatException {
         assertEquals(actualMuCalcFormula, M3CParser.parse(expectedMuCalcFormula));
     }
 
-    private void assertEquals(String muCalcFormula, FormulaNode<String, String> expectedAST) throws ParseException {
+    private void assertEquals(String muCalcFormula, FormulaNode<String, String> expectedAST) throws FormatException {
         FormulaNode<String, String> actualAST = M3CParser.parse(muCalcFormula);
         Assert.assertEquals(actualAST, expectedAST);
         Assert.assertEquals(actualAST.hashCode(), expectedAST.hashCode());

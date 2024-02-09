@@ -16,9 +16,10 @@
 package net.automatalib.exception;
 
 /**
- * An exception that may be thrown when encountering an invalid format while de-serializing an automaton model.
+ * An exception that may be thrown when encountering an invalid format while de-serializing entities such as automata
+ * models or formulas.
  */
-public class FormatException extends IllegalArgumentException {
+public class FormatException extends Exception {
 
     public FormatException() {}
 

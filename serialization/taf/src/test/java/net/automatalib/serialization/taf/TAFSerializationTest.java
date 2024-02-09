@@ -31,6 +31,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.common.util.io.UnclosableOutputStream;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.util.automaton.Automata;
@@ -60,7 +61,7 @@ public class TAFSerializationTest {
     }
 
     @Test
-    public void testDFASerialization() throws Exception {
+    public void testDFASerialization() throws IOException, FormatException {
         final TAFSerializationDFA serializer = TAFSerializationDFA.getInstance();
         final DFA<Integer, String> deserializedModel =
                 writeAndReadModel(this.dfa, INPUT_ALPHABET, serializer, serializer);
@@ -69,7 +70,7 @@ public class TAFSerializationTest {
     }
 
     @Test
-    public void testMealySerialization() throws Exception {
+    public void testMealySerialization() throws IOException, FormatException {
         final TAFSerializationMealy serializer = TAFSerializationMealy.getInstance();
 
         final MealyMachine<?, String, ?, String> deserializedModel =
@@ -79,13 +80,13 @@ public class TAFSerializationTest {
     }
 
     @Test
-    public void doNotCloseInputOutputStreamDFATest() throws IOException {
+    public void doNotCloseInputOutputStreamDFATest() throws IOException, FormatException {
         final TAFSerializationDFA serializer = TAFSerializationDFA.getInstance();
         writeAndReadUnclosableModel(this.dfa, INPUT_ALPHABET, serializer, serializer);
     }
 
     @Test
-    public void doNotCloseInputOutputStreamMealyTest() throws IOException {
+    public void doNotCloseInputOutputStreamMealyTest() throws IOException, FormatException {
         final TAFSerializationMealy serializer = TAFSerializationMealy.getInstance();
         writeAndReadUnclosableModel(this.mealy, INPUT_ALPHABET, serializer, serializer);
     }
@@ -107,7 +108,7 @@ public class TAFSerializationTest {
             IN source,
             Alphabet<I> alphabet,
             InputModelSerializer<I, IN> serializer,
-            InputModelDeserializer<I, OUT> deserializer) throws IOException {
+            InputModelDeserializer<I, OUT> deserializer) throws IOException, FormatException {
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         serializer.writeModel(baos, source, alphabet);
@@ -120,7 +121,7 @@ public class TAFSerializationTest {
             IN source,
             Alphabet<I> alphabet,
             InputModelSerializer<I, IN> serializer,
-            InputModelDeserializer<I, OUT> deserializer) throws IOException {
+            InputModelDeserializer<I, OUT> deserializer) throws IOException, FormatException {
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         serializer.writeModel(new UnclosableOutputStream(baos), source, alphabet);

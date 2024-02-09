@@ -15,16 +15,16 @@
  */
 package net.automatalib.modelchecker.m3c.formula.visitor;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class FormulaNodeToStringTest {
 
     @Test
-    void testBaseCases() throws ParseException {
+    void testBaseCases() throws FormatException {
         // CTL
         testCorrectness("true");
         testCorrectness("false");
@@ -48,7 +48,7 @@ public class FormulaNodeToStringTest {
         testCorrectness("nu X.(\"a\" || [b]X)");
     }
 
-    private void testCorrectness(String formula) throws ParseException {
+    private void testCorrectness(String formula) throws FormatException {
         FormulaNode<String, String> ast = M3CParser.parse(formula);
         String astToString = ast.toString();
         FormulaNode<String, String> backToAst = M3CParser.parse(astToString);

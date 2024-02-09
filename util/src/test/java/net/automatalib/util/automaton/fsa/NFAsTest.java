@@ -21,6 +21,7 @@ import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -65,6 +66,13 @@ public class NFAsTest {
         result.addTransition(prev, 0, first);
 
         return result;
+    }
+
+    @Test
+    public void testCombine() {
+        NFA<?, Integer> expected = forVector(AND_RESULT);
+        NFA<?, Integer> actual = NFAs.combine(testNfa1, testNfa2, testAlphabet, AcceptanceCombiner.AND);
+        assertEquivalence(actual, expected, testAlphabet);
     }
 
     @Test
@@ -126,6 +134,8 @@ public class NFAsTest {
         CompactDFA<Integer> dfa = NFAs.determinize(nfa);
 
         Assert.assertEquals(dfa.size(), 2);
+        Assert.assertTrue(dfa.accepts(Word.fromSymbols(0, 1, 0, 1)));
+        Assert.assertFalse(dfa.accepts(Word.fromSymbols(0, 1, 0, 1, 0)));
     }
 
     private <I> void assertEquivalence(NFA<?, I> nfa1, NFA<?, I> nfa2, Alphabet<I> inputs) {

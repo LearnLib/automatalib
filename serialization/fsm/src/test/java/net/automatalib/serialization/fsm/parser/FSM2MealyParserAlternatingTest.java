@@ -24,6 +24,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.io.UnclosableInputStream;
+import net.automatalib.exception.FormatException;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -62,7 +63,7 @@ public class FSM2MealyParserAlternatingTest extends AbstractFSM2ParserTest {
 
     @Override
     protected CompactMealy<Character, Character> getParsedAutomaton(@Nullable Collection<Character> requiredInputs)
-            throws IOException {
+            throws IOException, FormatException {
         try (InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm")) {
             final Function<String, Character> ep = s -> s.charAt(0);
             return FSM2MealyParserAlternating.getParser(requiredInputs, null, ep).readModel(is);
@@ -70,7 +71,7 @@ public class FSM2MealyParserAlternatingTest extends AbstractFSM2ParserTest {
     }
 
     @Test
-    public void doNotCloseInputStreamTest() throws IOException {
+    public void doNotCloseInputStreamTest() throws IOException, FormatException {
         try (InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm")) {
             FSM2MealyParserAlternating.getParser(s -> s.charAt(0)).readModel(new UnclosableInputStream(is));
         }

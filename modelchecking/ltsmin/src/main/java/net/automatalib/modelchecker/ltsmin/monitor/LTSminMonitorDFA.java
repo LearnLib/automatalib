@@ -23,12 +23,12 @@ import java.util.function.Function;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.exception.FormatException;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecker.ltsmin.AbstractLTSmin;
 import net.automatalib.modelchecker.ltsmin.LTSminDFA;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
-import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA
     }
 
     @Override
-    protected void verifyFormula(String formula) {
+    protected void verifyFormula(String formula) throws FormatException {
         LTSminLTLParser.requireValidLetterFormula(formula);
     }
 
@@ -77,7 +77,7 @@ public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA
             }
 
             return result;
-        } catch (IOException | FSMFormatException e) {
+        } catch (IOException | FormatException e) {
             throw new ModelCheckingException(e);
         } finally {
             // check if we must keep the FSM

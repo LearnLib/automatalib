@@ -24,8 +24,8 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecking.ModelChecker;
-import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import net.automatalib.util.automaton.transducer.MealyFilter;
 
 /**
@@ -57,11 +57,11 @@ public interface LTSminMealy<I, O, R>
      *
      * @throws IOException
      *         when {@code fsm} can not be read.
-     * @throws FSMFormatException
+     * @throws FormatException
      *         when {@code fsm} is invalid.
      */
     CompactMealy<I, O> fsm2Mealy(File fsm, MealyMachine<?, I, ?, O> originalAutomaton, Collection<? extends I> inputs)
-            throws IOException;
+            throws IOException, FormatException;
 
     /**
      * Writes the given {@link MealyMachine} to the {@code etf} file.

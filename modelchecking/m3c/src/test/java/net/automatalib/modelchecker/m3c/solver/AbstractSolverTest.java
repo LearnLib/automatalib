@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Function;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
 import net.automatalib.graph.ProceduralModalProcessGraph;
@@ -29,7 +30,6 @@ import net.automatalib.graph.impl.CompactPMPG;
 import net.automatalib.graph.impl.DefaultCFMPS;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.modelchecker.m3c.solver.M3CSolver.TypedM3CSolver;
 import net.automatalib.modelchecker.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelchecker.m3c.util.Examples;
@@ -40,7 +40,7 @@ import org.testng.annotations.Test;
 public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T, String, String>> {
 
     @Test
-    void testSolve() throws ParseException {
+    void testSolve() throws FormatException {
         final M3CSolver<String> solver = getSolver(Examples.getCfmpsAnBn(Collections.emptySet()));
 
         final String formula = "mu X.(<b><b>true || <>X)";
@@ -55,7 +55,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
     }
 
     @Test
-    void testSolveWithSingleAP() throws ParseException {
+    void testSolveWithSingleAP() throws FormatException {
         final ContextFreeModalProcessSystem<String, String> cfmps = Examples.getCfmpsAnBn(Collections.singleton("a"));
         final M3CSolver<String> solver = getSolver(cfmps);
         final String formula = "mu X.(<>X || 'a,b')";
@@ -64,7 +64,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
     }
 
     @Test
-    void testSolveWithMultipleAPs() throws ParseException {
+    void testSolveWithMultipleAPs() throws FormatException {
         final ContextFreeModalProcessSystem<String, String> cfmps =
                 Examples.getCfmpsAnBn(new HashSet<>(Arrays.asList("a", "b")));
         final M3CSolver<String> solver = getSolver(cfmps);
@@ -77,7 +77,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
     }
 
     @Test
-    void testSBASystem() throws ParseException {
+    void testSBASystem() throws FormatException {
         final ContextFreeModalProcessSystem<String, Void> cfmps = Examples.getSBASystem();
         final TypedM3CSolver<FormulaNode<String, Void>> solver = getTypedSolver(cfmps);
 
@@ -173,7 +173,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     public abstract <L, AP> TypedM3CSolver<FormulaNode<L, AP>> getTypedSolver(ContextFreeModalProcessSystem<L, AP> cfmps);
 
-    protected <P> void assertSolve(M3CSolver<P> solver, P property, boolean expectedIsSat) throws ParseException {
+    protected <P> void assertSolve(M3CSolver<P> solver, P property, boolean expectedIsSat) throws FormatException {
         Assert.assertEquals(solver.solve(property), expectedIsSat);
     }
 

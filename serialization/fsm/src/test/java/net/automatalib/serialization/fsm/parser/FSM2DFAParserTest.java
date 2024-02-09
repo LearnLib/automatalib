@@ -24,6 +24,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.io.UnclosableInputStream;
+import net.automatalib.exception.FormatException;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -78,7 +79,7 @@ public class FSM2DFAParserTest extends AbstractFSM2ParserTest {
 
     @Override
     protected CompactDFA<Character> getParsedAutomaton(@Nullable Collection<Character> requiredInputs)
-            throws IOException {
+            throws IOException, FormatException {
         try (InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm")) {
             final Function<String, Character> ip = s -> s.charAt(0);
             return FSM2DFAParser.getParser(requiredInputs, ip, "label", "accept").readModel(is);
@@ -86,7 +87,7 @@ public class FSM2DFAParserTest extends AbstractFSM2ParserTest {
     }
 
     @Test
-    public void doNotCloseInputStreamTest() throws IOException {
+    public void doNotCloseInputStreamTest() throws IOException, FormatException {
         try (InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA1.fsm")) {
             parser.readModel(new UnclosableInputStream(is));
         }

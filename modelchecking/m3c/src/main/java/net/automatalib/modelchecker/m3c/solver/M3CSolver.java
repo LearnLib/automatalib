@@ -15,6 +15,7 @@
  */
 package net.automatalib.modelchecker.m3c.solver;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 
 /**
@@ -34,10 +35,10 @@ public interface M3CSolver<F> {
      *
      * @return {@code true} if the formula is satisfied, {@code false} otherwise.
      *
-     * @throws ParseException
+     * @throws FormatException
      *         when the given formula object cannot be parsed
      */
-    boolean solve(F formula) throws ParseException;
+    boolean solve(F formula) throws FormatException;
 
     /**
      * A specialized {@link M3CSolver} which no longer throws a {@link ParseException} when solving a formula, but

@@ -15,9 +15,9 @@
  */
 package net.automatalib.modelchecker.m3c.solver;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 
 /**
  * A {@link BDDSolver BDD solver} for generic, string-based formulas.
@@ -29,7 +29,7 @@ public class StringBDDSolver extends BDDSolver<String, String> implements M3CSol
     }
 
     @Override
-    public boolean solve(String formula) throws ParseException {
+    public boolean solve(String formula) throws FormatException {
         return super.solve(M3CParser.parse(formula));
     }
 

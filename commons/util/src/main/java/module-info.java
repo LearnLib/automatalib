@@ -30,7 +30,6 @@ import net.automatalib.common.util.setting.SettingsSource;
  */
 open module net.automatalib.common.util {
 
-    requires java.management;
     requires org.checkerframework.checker.qual;
     requires org.slf4j;
 

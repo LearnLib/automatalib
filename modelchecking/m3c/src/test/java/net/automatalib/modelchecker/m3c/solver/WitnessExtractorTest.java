@@ -24,11 +24,11 @@ import java.util.Collections;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.exception.FormatException;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.NotNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.modelchecker.m3c.visualization.ColorVisualizationHelper;
 import net.automatalib.modelchecker.m3c.visualization.EdgeVisualizationHelper;
 import net.automatalib.modelchecker.m3c.visualization.HTMLVisualizationHelper;
@@ -58,7 +58,7 @@ public class WitnessExtractorTest {
 
     @Test(dataProvider = "formulasOnAnCBn")
     public void checkFormulasOnAnCBn(String formula, Word<String> expectedWitness)
-            throws IOException, ParserConfigurationException, SAXException, ParseException {
+            throws IOException, ParserConfigurationException, SAXException, FormatException {
 
         final ContextFreeModalProcessSystem<String, Void> cfmps = parseCFMPS("/cfmps/witness/an_c_bn.xml");
         final BDDSolver<String, Void> m3c = new BDDSolver<>(cfmps);
@@ -71,7 +71,7 @@ public class WitnessExtractorTest {
     }
 
     @Test
-    public void checkPalindrome() throws ParseException, IOException, ParserConfigurationException, SAXException {
+    public void checkPalindrome() throws FormatException, IOException, ParserConfigurationException, SAXException {
 
         final ContextFreeModalProcessSystem<String, Void> cfmps = parseCFMPS("/cfmps/palindrome/seed.xml");
         final BDDSolver<String, Void> m3c = new BDDSolver<>(cfmps);
@@ -103,7 +103,7 @@ public class WitnessExtractorTest {
     }
 
     @Test
-    public void checkLoopSystem() throws ParseException, IOException, ParserConfigurationException, SAXException {
+    public void checkLoopSystem() throws FormatException, IOException, ParserConfigurationException, SAXException {
 
         final ContextFreeModalProcessSystem<String, Void> cfmps = parseCFMPS("/cfmps/witness/loop.xml");
         final BDDSolver<String, Void> m3c = new BDDSolver<>(cfmps);

@@ -336,10 +336,38 @@ public final class NFAs {
         return combine(nfa1, nfa2, inputs, out, AcceptanceCombiner.IMPL);
     }
 
+    /**
+     * Determinizes the given NFA, and returns the result as a new complete DFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the determinized NFA
+     */
     public static <I> CompactDFA<I> determinize(NFA<?, I> nfa, Alphabet<I> inputAlphabet) {
         return determinize(nfa, inputAlphabet, false, true);
     }
 
+    /**
+     * Determinizes the given NFA, and returns the result as a new DFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     * @param partial
+     *         allows the new DFA to be partial
+     * @param minimize
+     *         whether to minimize the DFA
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the determinized NFA
+     */
     public static <I> CompactDFA<I> determinize(NFA<?, I> nfa,
                                                 Alphabet<I> inputAlphabet,
                                                 boolean partial,
@@ -349,6 +377,22 @@ public final class NFAs {
         return result;
     }
 
+    /**
+     * Determinizes the given NFA, and stores the result in a given mutable DFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         a mutable DFA for storing the result
+     * @param partial
+     *         allows the new DFA to be partial
+     * @param minimize
+     *         whether to minimize the DFA
+     * @param <I>
+     *         input symbol type
+     */
     public static <I> void determinize(NFA<?, I> nfa,
                                        Collection<? extends I> inputs,
                                        MutableDFA<?, I> out,
@@ -360,20 +404,78 @@ public final class NFAs {
         }
     }
 
+    /**
+     * Determinizes the given NFA, and returns the result as a new DFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the determinized NFA
+     */
     public static <I, A extends NFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> determinize(A nfa) {
         return determinize(nfa, false, true);
     }
 
+    /**
+     * Determinizes the given NFA, and returns the result as a new DFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param partial
+     *         allows the new DFA to be partial
+     * @param minimize
+     *         whether to minimize the DFA
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the determinized NFA
+     */
     public static <I, A extends NFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> determinize(A nfa,
                                                                                               boolean partial,
                                                                                               boolean minimize) {
         return determinize(nfa, nfa.getInputAlphabet(), partial, minimize);
     }
 
+    /**
+     * Determinizes the given NFA, and stores the result in a given mutable DFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         a mutable DFA for storing the result
+     * @param <I>
+     *         input symbol type
+     */
     public static <I> void determinize(NFA<?, I> nfa, Collection<? extends I> inputs, MutableDFA<?, I> out) {
         determinize(nfa, inputs, out, false, true);
     }
 
+    /**
+     * Determinize the given NFA via the Subset (also called Powerset) Construction.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         a mutable DFA for storing the result
+     * @param partial
+     *         allows the new DFA to be partial
+     * @param <I>
+     *         input symbol type
+     * @param <SI>
+     *         state type of the input automaton
+     * @param <SO>
+     *         state type of the output automaton
+     */
     private static <I, SI, SO> void doDeterminize(NFA<SI, I> nfa,
                                                   Collection<? extends I> inputs,
                                                   MutableDFA<SO, I> out,
@@ -384,6 +486,7 @@ public final class NFAs {
 
         Deque<DeterminizeRecord<SI, SO>> stack = new ArrayDeque<>();
 
+        // Add union of initial states to DFA and to stack
         List<SI> initList = new ArrayList<>(nfa.getInitialStates());
         BitSet initBs = new BitSet();
         for (SI init : initList) {
@@ -407,6 +510,7 @@ public final class NFAs {
                 BitSet succBs = new BitSet();
                 List<SI> succList = new ArrayList<>();
 
+                // Determine the union of the successors of the given state and symbol
                 for (SI inState : inStates) {
                     for (SI succState : nfa.getSuccessors(inState, sym)) {
                         int succId = stateIds.getStateId(succState);
@@ -420,6 +524,7 @@ public final class NFAs {
                 if (!partial || !succList.isEmpty()) {
                     SO outSucc = outStateMap.get(succBs);
                     if (outSucc == null) {
+                        // add new state to DFA and to stack
                         outSucc = out.addState(nfa.isAccepting(succList));
                         outStateMap.put(succBs, outSucc);
                         stack.push(new DeterminizeRecord<>(succList, outSucc));

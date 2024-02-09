@@ -30,6 +30,7 @@ import java.util.function.Function;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
+import net.automatalib.exception.FormatException;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -88,7 +89,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseTransition(StreamTokenizer streamTokenizer) throws IOException {
+    protected void parseTransition(StreamTokenizer streamTokenizer) throws IOException, FormatException {
         try {
             // check we read a state number
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
@@ -140,16 +141,16 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
     /**
      * Converts all the transitions from the FSM to transitions in a {@link MealyMachine}.
      * <p>
-     * This method will for each new state make transitions.
-     * This is done by switching behavior between input, and output transitions in the FSM source.
+     * This method will for each new state make transitions. This is done by switching behavior between input, and
+     * output transitions in the FSM source.
      * <p>
      * This is a recursive DFS.
      *
      * @param currentState
      *         the current state to make transitions for.
      * @param inputTrans
-     *         when {@code null}, this means outgoing transitions from {@code currentState} will be output,
-     *         otherwise input.
+     *         when {@code null}, this means outgoing transitions from {@code currentState} will be output, otherwise
+     *         input.
      * @param newStates
      *         the set of states that still need to be visited.
      * @param inputLength
@@ -160,8 +161,12 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
      * @throws FSMFormatException
      *         when non-determinism is detected.
      */
-    private void makeTransitions(Integer currentState, @Nullable Pair<Integer, I> inputTrans, Set<Integer> newStates,
-                                 int inputLength, @Nullable WordBuilder<I> wb, StreamTokenizer streamTokenizer) {
+    private void makeTransitions(Integer currentState,
+                                 @Nullable Pair<Integer, I> inputTrans,
+                                 Set<Integer> newStates,
+                                 int inputLength,
+                                 @Nullable WordBuilder<I> wb,
+                                 StreamTokenizer streamTokenizer) throws FormatException {
 
         // indicate we have seen currentState
         newStates.remove(currentState);
@@ -250,7 +255,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
      *         when the Mealy machine is partial.
      */
     @Override
-    protected void checkTransitions(StreamTokenizer streamTokenizer) {
+    protected void checkTransitions(StreamTokenizer streamTokenizer) throws FormatException {
 
         // Only if no states are defined we add all from the transitions we found.
         // This is necessary because states are not necessarily defined in FSMs.

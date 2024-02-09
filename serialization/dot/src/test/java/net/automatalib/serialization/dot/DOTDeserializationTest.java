@@ -50,7 +50,7 @@ import org.testng.annotations.Test;
 public class DOTDeserializationTest {
 
     @Test
-    public void testRegularDFADeserialization() throws IOException {
+    public void testRegularDFADeserialization() throws IOException, FormatException {
 
         final CompactDFA<String> dfa = DOTSerializationUtil.DFA;
 
@@ -62,7 +62,7 @@ public class DOTDeserializationTest {
     }
 
     @Test
-    public void testRegularNFADeserialization() throws IOException {
+    public void testRegularNFADeserialization() throws IOException, FormatException {
 
         final CompactNFA<String> nfa = DOTSerializationUtil.NFA;
 
@@ -74,7 +74,7 @@ public class DOTDeserializationTest {
     }
 
     @Test
-    public void testRegularNFA2Deserialization() throws IOException {
+    public void testRegularNFA2Deserialization() throws IOException, FormatException {
 
         final CompactNFA<String> parsed = DOTParsers.fsa(new CompactNFA.Creator<>(),
                                                          DOTParsers.DEFAULT_FSA_NODE_PARSER,
@@ -98,7 +98,7 @@ public class DOTDeserializationTest {
     }
 
     @Test
-    public void testRegularMealyDeserialization() throws IOException {
+    public void testRegularMealyDeserialization() throws IOException, FormatException {
 
         final CompactMealy<String, String> mealy = DOTSerializationUtil.MEALY;
 
@@ -110,7 +110,7 @@ public class DOTDeserializationTest {
     }
 
     @Test
-    public void testRegularMooreDeserialization() throws IOException {
+    public void testRegularMooreDeserialization() throws IOException, FormatException {
         final CompactMoore<String, String> moore = DOTSerializationUtil.MOORE;
 
         final MooreMachine<?, String, ?, String> parsed =
@@ -121,7 +121,7 @@ public class DOTDeserializationTest {
     }
 
     @Test
-    public void testRegularGraphDeserialization() throws IOException {
+    public void testRegularGraphDeserialization() throws IOException, FormatException {
         final UniversalGraph<?, ?, String, String> graph = DOTSerializationUtil.GRAPH;
 
         final UniversalGraph<?, ?, String, String> parsed =
@@ -131,7 +131,7 @@ public class DOTDeserializationTest {
     }
 
     @Test
-    public void testRegularMTSDeserialization() throws IOException {
+    public void testRegularMTSDeserialization() throws IOException, FormatException {
         final CompactMTS<String> mts = DOTSerializationUtil.MTS;
 
         InputModelData<String, CompactMTS<String>> model =
@@ -144,17 +144,17 @@ public class DOTDeserializationTest {
     }
 
     @Test(expectedExceptions = FormatException.class)
-    public void testFaultyAutomatonDeserialization() throws IOException {
+    public void testFaultyAutomatonDeserialization() throws IOException, FormatException {
         DOTParsers.dfa().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.FAULTY_AUTOMATON_RESOURCE));
     }
 
     @Test(expectedExceptions = FormatException.class)
-    public void testFaultyGraphDeserialization() throws IOException {
+    public void testFaultyGraphDeserialization() throws IOException, FormatException {
         DOTParsers.graph().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.FAULTY_GRAPH_RESOURCE));
     }
 
     @Test
-    public void doNotCloseInputStreamTest() throws IOException {
+    public void doNotCloseInputStreamTest() throws IOException, FormatException {
         try (InputStream dfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.DFA_RESOURCE);
              InputStream nfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.NFA_RESOURCE);
              InputStream graph = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.GRAPH_RESOURCE);
@@ -169,7 +169,7 @@ public class DOTDeserializationTest {
     }
 
     @Test
-    public void testDuplicateTransitions() throws IOException {
+    public void testDuplicateTransitions() throws IOException, FormatException {
 
         final CompactDFA<String> dfa = new CompactDFA<>(Alphabets.closedCharStringRange('a', 'b'));
         final Integer s0 = dfa.addInitialState();

@@ -18,6 +18,7 @@ package net.automatalib.util.ts.modal.regression;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.ts.modal.impl.CompactMTS;
@@ -30,13 +31,13 @@ class CompositionInstance {
     final CompactMTS<String> input1;
     final CompactMTS<String> merge;
 
-    CompositionInstance(CompositionTest compositionTest) throws IOException {
+    CompositionInstance(CompositionTest compositionTest) throws IOException, FormatException {
         input0 = loadMTSFromPath(compositionTest.input0);
         input1 = loadMTSFromPath(compositionTest.input1);
         merge = loadMTSFromPath(compositionTest.merge);
     }
 
-    private static CompactMTS<String> loadMTSFromPath(String path) throws IOException {
+    private static CompactMTS<String> loadMTSFromPath(String path) throws IOException, FormatException {
         try (InputStream is = CompositionInstance.class.getResourceAsStream(path)) {
             return PARSER.readModel(is).model;
         }

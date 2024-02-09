@@ -32,6 +32,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.ModelDeserializer;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -146,7 +147,7 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
      * @throws IOException
      *         (see {@link #parse(Reader)}).
      */
-    protected CompactMealy<I, O> parseMealy(Reader reader) throws IOException {
+    protected CompactMealy<I, O> parseMealy(Reader reader) throws IOException, FormatException {
 
         parse(reader);
 
@@ -187,7 +188,7 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
     }
 
     @Override
-    public CompactMealy<I, O> readModel(InputStream is) throws IOException {
+    public CompactMealy<I, O> readModel(InputStream is) throws IOException, FormatException {
         try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
             return parseMealy(r);
         }

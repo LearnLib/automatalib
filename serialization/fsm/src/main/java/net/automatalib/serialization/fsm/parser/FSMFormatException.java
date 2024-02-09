@@ -22,19 +22,15 @@ import net.automatalib.exception.FormatException;
 /**
  * Exception that may be thrown whenever an FSM is illegal.
  */
-public class FSMFormatException extends FormatException {
+class FSMFormatException extends FormatException {
 
     public static final String MESSAGE = "Unable to parse FSM: %s at line %d";
 
-    public FSMFormatException(String message) {
-        super(message);
-    }
-
-    public FSMFormatException(String message, StreamTokenizer streamTokenizer) {
+    FSMFormatException(String message, StreamTokenizer streamTokenizer) {
         super(String.format(MESSAGE, message, streamTokenizer.lineno()));
     }
 
-    public FSMFormatException(Exception e, StreamTokenizer streamTokenizer) {
+    FSMFormatException(Exception e, StreamTokenizer streamTokenizer) {
         super(String.format(MESSAGE, e.getMessage(), streamTokenizer.lineno()));
     }
 }

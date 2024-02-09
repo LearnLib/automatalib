@@ -97,6 +97,28 @@ public final class Automata {
         return output;
     }
 
+    /**
+     * Minimize the given mutable DFA in-place.
+     *
+     * @param automaton
+     *         mutable DFA
+     * @param inputs
+     *         the input symbols
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the same mutable DFA (for convenience)
+     */
     @SuppressWarnings("unchecked")
     public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A invasiveMinimize(A automaton,
                                                                                                         Collection<? extends I> inputs) {
@@ -116,6 +138,7 @@ public final class Automata {
 
         ResultStateRecord<SP, TP>[] records = new ResultStateRecord[mr.getNumBlocks()];
 
+        // Store minimized automaton data in the records array
         for (Block<S, TransitionEdge.Property<I, TP>> blk : mr.getBlocks()) {
             int id = blk.getId();
             S state = mr.getRepresentative(blk);
@@ -138,6 +161,7 @@ public final class Automata {
 
         automaton.clear();
 
+        // Add states from records
         @Nullable Object[] states = new Object[records.length];
         for (int i = 0; i < records.length; i++) {
             ResultStateRecord<SP, TP> rec = records[i];
@@ -151,6 +175,7 @@ public final class Automata {
             states[i] = state;
         }
 
+        // Add transitions from records
         for (int i = 0; i < records.length; i++) {
             ResultStateRecord<SP, TP> rec = records[i];
             S state = (S) states[i];

@@ -54,9 +54,7 @@ For developing the code base of AutomataLib it is suggested to use one of the ma
 
 * For [IntelliJ IDEA][intellij]:
   1. Select `File` -> `New` -> `Project from existing sources` and select the folder containing the development checkout.
-  1. Choose "Import Project from external model", select "Maven" and click `Next`.
-  1. Configure the project to your liking but make sure to check "Import Maven projects automatically" and have "Generated sources folders" set to "Detect automatically".
-  1. Click `Next` until the project is imported (no Maven profile needs to be selected).
+  1. Choose "Import Project from external model", select "Maven" and click `Create`.
 
 * For [Eclipse][eclipse]:
   1. **Note**: AutomataLib uses annotation processing on several occasions throughout the build process.

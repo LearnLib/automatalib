@@ -22,6 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import net.automatalib.common.util.Pair;
+import net.automatalib.exception.FormatException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -60,7 +61,7 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseTransition(StreamTokenizer streamTokenizer) throws IOException {
+    protected void parseTransition(StreamTokenizer streamTokenizer) throws IOException, FormatException {
         try {
 
             // check we will read a state index

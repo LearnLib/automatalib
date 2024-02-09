@@ -98,7 +98,7 @@ PARSER_END(InternalM3CParser)
 |	< IMPLICATION: "->" >
 |	< ID: ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z"] | ["0"-"9"] | "_")* >
 |	< STRING_LITERAL: ("'" (~["'", "\\"])* (("\\\'" | "\\\\") (~["'", "\\"])*)* "'")
-| ("\""  (~["\"", "\\"])* (("\\\"" | "\\\\") (~["\"", "\\"])*)* "\"")>
+					| ("\""  (~["\"", "\\"])* (("\\\"" | "\\\\") (~["\"", "\\"])*)* "\"")>
 }
 
 FormulaNode<L, AP> parse(Function<String, L> labelParser, Function<String, AP> apParser):
@@ -213,8 +213,8 @@ private FormulaNode<L, AP> unary():
 |	<AG> child=unary() {return new AGNode<L, AP>(child);}
 |	<EF> child=unary() {return new EFNode<L, AP>(child);}
 |	<EG> child=unary() {return new EGNode<L, AP>(child);}
-|	<LABRACKET> (action=<ID>)? <RABRACKET> child=unary() {return new DiamondNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
-|	<LBRACKET> (action=<ID>)? <RBRACKET> child=unary() {return new BoxNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
+|	<LABRACKET> (action=action())? <RABRACKET> child=unary() {return new DiamondNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
+|	<LBRACKET> (action=action())? <RBRACKET> child=unary() {return new BoxNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
 |	child=element() {return child;}
 }
 
@@ -260,3 +260,25 @@ private FormulaNode<L, AP> element():
 |	<FALSE> {return new FalseNode<L, AP>();}
 |	<LPAREN> node=formula() <RPAREN> {return node;}
 }
+
+/*
+ * We cannot parse <ID> only, because the input may have been greedily parsed as a different token before.
+ */
+private Token action():
+{
+	Token action;
+}
+{
+	(action=<ALL>
+|	action=<EXISTS>
+|	action=<AF>
+|	action=<AG>
+|	action=<EF>
+|	action=<EG>
+|	action=<UNTIL>
+|	action=<WUNTIL>
+|	action=<NU>
+|	action=<MU>
+|	action=<ID>) { return action; }
+}
+

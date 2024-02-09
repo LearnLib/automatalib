@@ -15,9 +15,6 @@
  */
 package net.automatalib.common.util.system;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
-
 /**
  * Utility class for Java/JVM specific utilities.
  */
@@ -46,11 +43,9 @@ public final class JVMUtil {
      * </ul>
      *
      * @return the canonized java specification version
-     *
-     * @see RuntimeMXBean#getSpecVersion()
      */
     public static int getCanonicalSpecVersion() {
-        final String version = ManagementFactory.getRuntimeMXBean().getSpecVersion();
+        final String version = System.getProperty("java.vm.specification.version");
         final String[] split = version.split("\\.");
 
         return split.length > 1 ? Integer.parseInt(split[1]) : Integer.parseInt(split[0]);

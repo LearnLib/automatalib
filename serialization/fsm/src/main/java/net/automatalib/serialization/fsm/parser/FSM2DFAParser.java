@@ -32,6 +32,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.ModelDeserializer;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -112,7 +113,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseDataDefinition(StreamTokenizer streamTokenizer) throws IOException {
+    protected void parseDataDefinition(StreamTokenizer streamTokenizer) throws IOException, FormatException {
         if (acceptIndex == -1 && acceptValue == -1) {
 
             // check we will read an identifier.
@@ -176,7 +177,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      *         when the acceptance information could not be found.
      */
     @Override
-    protected void checkDataDefinitions(StreamTokenizer streamTokenizer) {
+    protected void checkDataDefinitions(StreamTokenizer streamTokenizer) throws FormatException {
         if (acceptIndex == -1) {
             throw new FSMFormatException(String.format(ACCEPT_NOT_FOUND, acceptingDataVariableName),
                                          streamTokenizer);
@@ -195,7 +196,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseStateVector(StreamTokenizer streamTokenizer) throws IOException {
+    protected void parseStateVector(StreamTokenizer streamTokenizer) throws IOException, FormatException {
         Boolean accepting = null;
         for (int i = 0;
              i <= acceptIndex && streamTokenizer.nextToken() == StreamTokenizer.TT_WORD && accepting == null;
@@ -230,7 +231,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseTransition(StreamTokenizer streamTokenizer) throws IOException {
+    protected void parseTransition(StreamTokenizer streamTokenizer) throws IOException, FormatException {
         try {
             // check whether we will read a number
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
@@ -301,7 +302,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      * @throws IOException
      *         see {@link #parse(Reader)}.
      */
-    private CompactDFA<I> parseDFA(Reader reader) throws IOException {
+    private CompactDFA<I> parseDFA(Reader reader) throws IOException, FormatException {
 
         parse(reader);
 
@@ -337,7 +338,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
     }
 
     @Override
-    public CompactDFA<I> readModel(InputStream is) throws IOException {
+    public CompactDFA<I> readModel(InputStream is) throws IOException, FormatException {
         try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
             return parseDFA(r);
         }

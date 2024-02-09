@@ -22,13 +22,13 @@ import java.util.function.Function;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.exception.FormatException;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
 import net.automatalib.modelchecker.ltsmin.LTSminMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.modelchecking.impl.MealyLassoImpl;
-import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +116,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
     }
 
     @Override
-    protected void verifyFormula(String formula) {
+    protected void verifyFormula(String formula) throws FormatException {
         LTSminLTLParser.requireValidIOFormula(formula);
     }
 
@@ -134,7 +134,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
             final CompactMealy<I, O> mealy = fsm2Mealy(fsm, automaton, inputs);
 
             return new MealyLassoImpl<>(mealy, inputs, computeUnfolds(automaton.size()));
-        } catch (IOException | FSMFormatException e) {
+        } catch (IOException | FormatException e) {
             throw new ModelCheckingException(e);
         } finally {
             // check if we must keep the FSM
