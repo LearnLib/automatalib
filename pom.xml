@@ -225,7 +225,7 @@ limitations under the License.
         <tidy-pom.version>1.2.0</tidy-pom.version>
 
         <!-- dependency versions -->
-        <addlib.version>3.0.1</addlib.version>
+        <addlib.version>3.1.0</addlib.version>
         <assertj.version>3.17.1</assertj.version>
         <brics-automaton.version>1.12-4</brics-automaton.version>
         <build-tools.version>0.1.1</build-tools.version>

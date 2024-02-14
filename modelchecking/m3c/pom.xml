@@ -94,25 +94,6 @@ limitations under the License.
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>javacc-maven-plugin</artifactId>
             </plugin>
-            <!-- TODO: Currently the java compiler does not support exploded JARs with an Automatic-Module-Name.
-            Therefore, we use a module-info.java to make the compiler happy and be able to provide a module description
-            (e.g., during 'mvn site'). However, we do not want to include the compiled module-info because this artifact
-            has non-modular dependencies. If people want to use this artifact in a modular context (e.g., with jlink)
-            they need to setup the dependencies themselves -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Automatic-Module-Name>net.automatalib.modelchecker.m3c</Automatic-Module-Name>
-                        </manifestEntries>
-                    </archive>
-                    <excludes>
-                        <exclude>module-info.class</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>

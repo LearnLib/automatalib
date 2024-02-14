@@ -37,7 +37,7 @@ open module net.automatalib.modelchecker.m3c {
 
     requires java.xml;
 
-    requires addlib.core;
+    requires info.scce.addlib.core;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
