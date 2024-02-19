@@ -51,7 +51,7 @@ class InternalTAFParser {
 	
 	public void warning(String fmtString, Object... args) {
 		if (listener != null) {
-			listener.error(getLine(), getCol(), fmtString, args);
+			listener.warning(getLine(), getCol(), fmtString, args);
 		}
 	}
 	
