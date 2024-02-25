@@ -38,9 +38,10 @@ open module net.automatalib.api {
 
     requires net.automatalib.common.smartcollection;
     requires net.automatalib.common.util;
-    requires org.checkerframework.checker.qual;
     requires org.slf4j;
 
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
     requires static org.kohsuke.metainf_services;
 
     exports net.automatalib;

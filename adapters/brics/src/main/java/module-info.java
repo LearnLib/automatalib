@@ -29,10 +29,11 @@
  */
 open module net.automatalib.brics {
 
+    requires automaton;
     requires net.automatalib.api;
-    requires org.checkerframework.checker.qual;
 
-    requires static automaton;
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports net.automatalib.brics;
 }

@@ -38,7 +38,7 @@ jobs:
           $GITHUB_WORKSPACE/.github/install-ltsmin.sh
           echo "$HOME/ltsmin/${{ env.LTSMIN_VERSION }}/bin" >> $GITHUB_PATH
       - name: Run Maven
-        run: mvn -B install site -Pcode-analysis,bundles
+        run: mvn -B install site -Pcode-analysis,bundles,jlink
   platform-integration:
     name: "Platform Integration (JDK: ${{ matrix.jdk }}, OS: ${{ matrix.os }})"
     needs: [ tests-and-analysis ]
@@ -64,7 +64,7 @@ jobs:
           key: cache-platform-integration-${{ matrix.jdk }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: cache-platform-integration-${{ matrix.jdk }}-
       - name: Run Maven
-        run: mvn -B install
+        run: mvn -B install -Pjlink
   coverage:
     name: "Coverage"
     needs: [ platform-integration ]

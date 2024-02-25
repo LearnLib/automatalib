@@ -33,9 +33,10 @@ open module net.automatalib.util {
     requires net.automatalib.common.util;
     requires net.automatalib.common.smartcollection;
     requires net.automatalib.core;
-    requires org.checkerframework.checker.qual;
 
     requires static de.learnlib.tooling.annotation;
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports net.automatalib.util.automaton;
     exports net.automatalib.util.automaton.ads;

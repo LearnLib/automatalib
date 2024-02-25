@@ -30,8 +30,10 @@ import net.automatalib.common.util.setting.SettingsSource;
  */
 open module net.automatalib.common.util {
 
-    requires org.checkerframework.checker.qual;
     requires org.slf4j;
+
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports net.automatalib.common.util;
     exports net.automatalib.common.util.array;
