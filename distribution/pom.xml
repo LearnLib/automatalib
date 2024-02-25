@@ -197,7 +197,6 @@ limitations under the License.
                     <artifactId>automata-examples</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
-                    <optional>true</optional>
                 </dependency>
             </dependencies>
         </profile>

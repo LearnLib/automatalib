@@ -45,7 +45,7 @@ limitations under the License.
         <dependency>
             <groupId>dk.brics</groupId>
             <artifactId>automaton</artifactId>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <!-- build -->
