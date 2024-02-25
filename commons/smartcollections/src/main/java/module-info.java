@@ -31,7 +31,9 @@
 open module net.automatalib.common.smartcollection {
 
     requires net.automatalib.common.util;
-    requires org.checkerframework.checker.qual;
+
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports net.automatalib.common.smartcollection;
 }

@@ -39,10 +39,11 @@ open module net.automatalib.modelchecker.ltsmin {
     requires net.automatalib.serialization.fsm;
     requires net.automatalib.serialization.etf;
     requires net.automatalib.util;
-    requires org.checkerframework.checker.qual;
     requires org.slf4j;
 
     requires static de.learnlib.tooling.annotation;
+    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    requires static org.checkerframework.checker.qual;
 
     exports net.automatalib.modelchecker.ltsmin;
     exports net.automatalib.modelchecker.ltsmin.ltl;
