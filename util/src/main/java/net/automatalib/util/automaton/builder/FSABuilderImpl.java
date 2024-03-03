@@ -48,6 +48,25 @@ class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends Automaton
     }
 
     /**
+     * Sets the target states of the current transition definition(s).
+     *
+     * @param firstStateId
+     *         the mandatory object to identify the first state
+     * @param otherStateIds
+     *         the optional objects to identify additional states
+     */
+    @Action
+    void to(Object firstStateId, Object... otherStateIds) {
+        for (S src : currentStates) {
+            for (I input : currentInputs) {
+                for (S tgt : getStates(firstStateId, otherStateIds)) {
+                    automaton.addTransition(src, input, tgt, currentTransProp);
+                }
+            }
+        }
+    }
+
+    /**
      * Marks the given states as initial.
      *
      * @param stateId

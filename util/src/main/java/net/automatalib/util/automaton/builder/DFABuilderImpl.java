@@ -52,8 +52,11 @@ class DFABuilderImpl<S, I, A extends MutableDFA<S, ? super I>> extends FSABuilde
     // override to un-mark it as action
     @Override
     void withInitial(Object stateId, Object... stateIds) {
-        if (stateIds.length > 0) {
-            throw new IllegalArgumentException("deterministic automata can only have a single initial state");
-        }
+        throw new IllegalArgumentException("deterministic automata can only have a single initial state");
+    }
+
+    @Override
+    void to(Object stateId, Object... stateIds) {
+        throw new IllegalArgumentException("deterministic automata can only have a single target state");
     }
 }
