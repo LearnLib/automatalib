@@ -52,8 +52,8 @@ public class AUTSerializationTest {
             final String input3 = "SEND !\"hello\" !\"world\"";
 
             final Set<Integer> s0 = automaton.getInitialStates();
-            final Set<Integer> s1 = automaton.getSuccessors(s0, Collections.singletonList(input1));
-            final Set<Integer> s2 = automaton.getSuccessors(s0, Collections.singletonList(input2));
+            final Set<Integer> s1 = automaton.getSuccessors(s0, input1);
+            final Set<Integer> s2 = automaton.getSuccessors(s0, input2);
             final Set<Integer> s3 = automaton.getSuccessors(s0, Arrays.asList(input2, input3));
 
             Assert.assertEquals(Collections.singleton(0), s0);
@@ -70,8 +70,8 @@ public class AUTSerializationTest {
             Assert.assertEquals(3, automaton.size());
 
             final Set<Integer> s0 = automaton.getInitialStates();
-            final Set<Integer> t1 = automaton.getSuccessors(s0, Collections.singletonList("input"));
-            final Set<Integer> t2 = automaton.getSuccessors(s0, Collections.singletonList("output"));
+            final Set<Integer> t1 = automaton.getSuccessors(s0, "input");
+            final Set<Integer> t2 = automaton.getSuccessors(s0, "output");
             final Set<Integer> t3 = automaton.getSuccessors(s0, Arrays.asList("input", "output"));
             final Set<Integer> t4 = automaton.getSuccessors(s0, Arrays.asList("input", "output", "output"));
 

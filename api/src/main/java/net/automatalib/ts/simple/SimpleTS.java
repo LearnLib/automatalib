@@ -36,6 +36,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public interface SimpleTS<S, I> {
 
     /**
+     * Retrieves the set of successors for the given input symbol.
+     *
+     * @param state
+     *         the source state.
+     * @param input
+     *         the input symbol.
+     *
+     * @return the set of successors reachable by this input.
+     */
+    Set<S> getSuccessors(S state, I input);
+
+    /**
      * Retrieves the set of successors for the given sequence of input symbols.
      *
      * @param state
@@ -51,6 +63,27 @@ public interface SimpleTS<S, I> {
 
     /**
      * Retrieves the set of all successors that can be reached from any of the given source states by the specified
+     * input symbol.
+     *
+     * @param states
+     *         the source states.
+     * @param input
+     *         the input symbol.
+     *
+     * @return the set of successors reachable by this input.
+     */
+    default Set<S> getSuccessors(Collection<? extends S> states, I input) {
+        final Set<S> result = new HashSet<>();
+
+        for (S state : states) {
+            result.addAll(getSuccessors(state, input));
+        }
+
+        return result;
+    }
+
+    /**
+     * Retrieves the set of all successors that can be reached from any of the given source states by the specified
      * sequence of input symbols.
      *
      * @param states
@@ -58,7 +91,7 @@ public interface SimpleTS<S, I> {
      * @param input
      *         the sequence of input symbols.
      *
-     * @return the set of successors reachable by this input, or <code>null</code> if no successor states are reachable.
+     * @return the set of successors reachable by this input.
      */
     default Set<S> getSuccessors(Collection<? extends S> states, Iterable<? extends I> input) {
         Set<S> current = new HashSet<>(states);
@@ -80,26 +113,13 @@ public interface SimpleTS<S, I> {
     }
 
     /**
-     * Retrieves the set of successors for the given input symbol.
-     *
-     * @param state
-     *         the source state.
-     * @param input
-     *         the input symbol.
-     *
-     * @return the set of successors reachable by this input.
-     */
-    Set<S> getSuccessors(S state, I input);
-
-    /**
      * Retrieves the set of all states reachable by the given sequence of input symbols from an initial state. Calling
      * this method is equivalent to <code>getSuccessors(getInitialStates(), input)</code>.
      *
      * @param input
      *         the sequence of input symbols.
      *
-     * @return the set of states reachable by this input from an initial state, or <code>null</code> if no successor
-     * state is reachable.
+     * @return the set of states reachable by this input from an initial state state is reachable.
      */
     default Set<S> getStates(Iterable<? extends I> input) {
         return getSuccessors(getInitialStates(), input);

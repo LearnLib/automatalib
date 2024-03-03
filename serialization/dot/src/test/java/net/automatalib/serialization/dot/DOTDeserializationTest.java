@@ -91,7 +91,7 @@ public class DOTDeserializationTest {
         Assert.assertFalse(parsed.accepts(Word.fromSymbols("c")));
         Assert.assertEquals(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("a", "a", "a")).size(), 1);
         Assert.assertEquals(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("b", "b")).size(), 1);
-        Assert.assertEquals(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("c")).size(), 1);
+        Assert.assertEquals(parsed.getSuccessors(parsed.getInitialStates(), "c").size(), 1);
         Assert.assertTrue(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("a", "b")).isEmpty());
         Assert.assertTrue(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("c", "a")).isEmpty());
         Assert.assertTrue(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("b", "c")).isEmpty());
