@@ -17,6 +17,8 @@ package net.automatalib.common.util.string;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -32,6 +34,15 @@ public final class StringUtil {
 
     private StringUtil() {
         // prevent instantiation
+    }
+
+    @SafeVarargs
+    public static <T> String join(String delimiter, T... objects) {
+        final StringJoiner sj = new StringJoiner(delimiter);
+        for (Object o : objects) {
+            sj.add(Objects.toString(o));
+        }
+        return sj.toString();
     }
 
     public static String enquote(String s) {
