@@ -234,7 +234,9 @@ limitations under the License.
         <extra-enforcer-rules.version>1.9.0</extra-enforcer-rules.version>
         <guava.version>33.4.0-jre</guava.version>
         <graphviz-awt-shapes.version>0.0.1</graphviz-awt-shapes.version>
+        <jakarta-jaxb-api.version>3.0.1</jakarta-jaxb-api.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
+        <jaxb-runtime.version>3.0.2</jaxb-runtime.version>
         <jung.version>2.1.1</jung.version>
         <logback.version>1.5.15</logback.version>
         <metainf-services.version>1.11</metainf-services.version>
@@ -431,6 +433,11 @@ limitations under the License.
                 <artifactId>automata-serialization-taf</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-serialization-xml</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- util -->
             <dependency>
@@ -508,6 +515,18 @@ limitations under the License.
                 <artifactId>annotations</artifactId>
                 <version>${build-tools.version}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>${jakarta-jaxb-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${jaxb-runtime.version}</version>
             </dependency>
 
             <dependency>

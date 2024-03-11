@@ -41,6 +41,8 @@ open module net.automatalib.core {
     exports net.automatalib.automaton.fsa.impl;
     exports net.automatalib.automaton.impl;
     exports net.automatalib.automaton.procedural.impl;
+    exports net.automatalib.automaton.ra.guard.impl;
+    exports net.automatalib.automaton.ra.impl;
     exports net.automatalib.automaton.transducer.impl;
     exports net.automatalib.automaton.transducer.probabilistic.impl;
     exports net.automatalib.automaton.vpa.impl;
@@ -48,6 +50,7 @@ open module net.automatalib.core {
     exports net.automatalib.graph.base;
     exports net.automatalib.graph.impl;
     exports net.automatalib.modelchecking.impl;
+    exports net.automatalib.symbol.impl;
     exports net.automatalib.ts.modal.impl;
     exports net.automatalib.ts.modal.transition.impl;
     exports net.automatalib.ts.powerset.impl;

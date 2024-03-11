@@ -48,11 +48,13 @@ open module net.automatalib.api {
     exports net.automatalib.automaton.graph;
     exports net.automatalib.automaton.helper;
     exports net.automatalib.automaton.procedural;
+    exports net.automatalib.automaton.ra;
     exports net.automatalib.automaton.simple;
     exports net.automatalib.automaton.transducer;
     exports net.automatalib.automaton.transducer.probabilistic;
     exports net.automatalib.automaton.visualization;
     exports net.automatalib.automaton.vpa;
+    exports net.automatalib.data;
     exports net.automatalib.exception;
     exports net.automatalib.graph;
     exports net.automatalib.graph.ads;
@@ -61,6 +63,7 @@ open module net.automatalib.api {
     exports net.automatalib.graph.visualization;
     exports net.automatalib.modelchecking;
     exports net.automatalib.serialization;
+    exports net.automatalib.symbol;
     exports net.automatalib.ts;
     exports net.automatalib.ts.acceptor;
     exports net.automatalib.ts.modal;

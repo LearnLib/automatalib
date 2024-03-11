@@ -40,5 +40,6 @@ limitations under the License.
         <module>learnlibv2</module>
         <module>saf</module>
         <module>taf</module>
+        <module>xml</module>
     </modules>
 </project>
