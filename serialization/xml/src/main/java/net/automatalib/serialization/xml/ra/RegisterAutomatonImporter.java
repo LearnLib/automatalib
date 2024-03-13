@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import net.automatalib.automaton.ra.Assignment;
 import net.automatalib.automaton.ra.impl.InputTransition;
 import net.automatalib.automaton.ra.impl.MutableRegisterAutomaton;
-import net.automatalib.automaton.ra.RALocation;
+import net.automatalib.automaton.ra.impl.RALocation;
 import net.automatalib.automaton.ra.impl.TransitionGuard;
 import net.automatalib.automaton.ra.impl.OutputMapping;
 import net.automatalib.automaton.ra.impl.OutputTransition;

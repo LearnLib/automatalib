@@ -19,8 +19,6 @@ package net.automatalib.automaton.ra.impl;
 import java.util.Map.Entry;
 
 import net.automatalib.automaton.ra.Assignment;
-import net.automatalib.automaton.ra.RALocation;
-import net.automatalib.automaton.ra.Transition;
 import net.automatalib.data.Constants;
 import net.automatalib.data.DataValue;
 import net.automatalib.data.ParValuation;

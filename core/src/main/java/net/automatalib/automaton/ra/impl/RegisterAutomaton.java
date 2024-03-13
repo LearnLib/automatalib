@@ -22,8 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.automatalib.automaton.ra.RALocation;
-import net.automatalib.automaton.ra.Transition;
 import net.automatalib.data.SymbolicDataValue.Register;
 import net.automatalib.data.VarValuation;
 import net.automatalib.symbol.PSymbolInstance;
@@ -33,7 +31,7 @@ import net.automatalib.word.Word;
  *
  * @author falk
  */
-public abstract class RegisterAutomaton implements net.automatalib.automaton.ra.RegisterAutomaton {
+public abstract class RegisterAutomaton implements net.automatalib.automaton.ra.RegisterAutomaton<RALocation, Transition> {
 
     private final VarValuation initialRegisters;
 

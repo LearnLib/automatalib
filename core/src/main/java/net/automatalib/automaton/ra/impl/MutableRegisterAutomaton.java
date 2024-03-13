@@ -18,12 +18,11 @@ package net.automatalib.automaton.ra.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.automatalib.automaton.ra.RALocation;
-import net.automatalib.automaton.ra.Transition;
 import net.automatalib.common.util.Pair;
 import net.automatalib.data.Constants;
 import net.automatalib.data.ParValuation;
@@ -37,7 +36,7 @@ import net.automatalib.word.Word;
  *
  * @author falk
  */
-public class MutableRegisterAutomaton extends RegisterAutomaton implements net.automatalib.automaton.ra.MutableRegisterAutomaton {
+public class MutableRegisterAutomaton extends RegisterAutomaton implements net.automatalib.automaton.ra.MutableRegisterAutomaton<RALocation, Transition> {
 
     protected final Constants constants;
 
@@ -66,19 +65,13 @@ public class MutableRegisterAutomaton extends RegisterAutomaton implements net.a
     }
 
     @Override
-    public Transition getTransition(RALocation s, ParameterizedSymbol i) {
-        throw new UnsupportedOperationException(
-                "There may be more than one transition per symbol in an RA.");
-    }
-
-    @Override
     public Collection<Transition> getTransitions(RALocation s, ParameterizedSymbol i) {
         return s.getOut(i);
     }
 
     @Override
-    public RALocation getInitialState() {
-        return initial;
+    public Set<RALocation> getInitialStates() {
+        return Collections.singleton(initial);
     }
 
     @Override
@@ -170,21 +163,6 @@ public class MutableRegisterAutomaton extends RegisterAutomaton implements net.a
     public boolean accepts(Word<PSymbolInstance> dw) {
         RALocation dest = getLocation(dw);
         return (dest != null && dest.isAccepting());
-    }
-
-    @Override
-    public void setInitialState(RALocation s) {
-        this.initial = s;
-    }
-
-    @Override
-    public void setTransition(RALocation s, ParameterizedSymbol i, Transition t) {
-        s.addOut(t);
-    }
-
-    @Override
-    public void setTransition(RALocation s, ParameterizedSymbol i, RALocation s1, Void tp) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -300,4 +278,8 @@ public class MutableRegisterAutomaton extends RegisterAutomaton implements net.a
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
+    public Constants getConstants() {
+        return this.constants;
+    }
 }

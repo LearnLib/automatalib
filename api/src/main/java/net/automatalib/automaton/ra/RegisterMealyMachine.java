@@ -17,29 +17,25 @@
 package net.automatalib.automaton.ra;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
-import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.data.Constants;
 import net.automatalib.data.SymbolicDataValue.Register;
 import net.automatalib.data.VarValuation;
 import net.automatalib.symbol.PSymbolInstance;
 import net.automatalib.symbol.ParameterizedSymbol;
-import net.automatalib.ts.acceptor.AcceptorTS;
-import net.automatalib.word.Word;
+import net.automatalib.ts.output.MealyTransitionSystem;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- *
  * @author falk
  */
-public interface RegisterAutomaton<L, T extends GuardedTransition> extends UniversalAutomaton<L, ParameterizedSymbol, T, Boolean, Void> {
-
-    Constants getConstants();
+public interface RegisterMealyMachine<L, T extends GuardedOutputTransition> extends UniversalAutomaton<L, ParameterizedSymbol, T, Void, ParameterizedSymbol> {
 
     Collection<Register> getRegisters();
+
+    Constants getConstants();
 
     VarValuation getInitialRegisters();
 
@@ -54,7 +50,8 @@ public interface RegisterAutomaton<L, T extends GuardedTransition> extends Unive
         }
     }
 
-    default AcceptorTS<State<L>, PSymbolInstance> asAcceptor() {
-        return new AcceptorView<>(this);
+    default MealyTransitionSystem<State<L>, PSymbolInstance, ?, PSymbolInstance> asTransducer() {
+        return new TransducerView<>(this);
     }
+
 }

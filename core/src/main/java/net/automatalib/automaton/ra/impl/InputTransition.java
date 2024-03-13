@@ -17,8 +17,6 @@
 package net.automatalib.automaton.ra.impl;
 
 import net.automatalib.automaton.ra.Assignment;
-import net.automatalib.automaton.ra.RALocation;
-import net.automatalib.automaton.ra.Transition;
 import net.automatalib.symbol.impl.InputSymbol;
 
 /**

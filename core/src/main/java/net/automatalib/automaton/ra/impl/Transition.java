@@ -14,8 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.ra;
+package net.automatalib.automaton.ra.impl;
 
+import net.automatalib.automaton.ra.Assignment;
+import net.automatalib.automaton.ra.GuardedTransition;
+import net.automatalib.automaton.ra.TransitionGuard;
 import net.automatalib.data.Constants;
 import net.automatalib.data.ParValuation;
 import net.automatalib.data.VarValuation;
@@ -26,11 +29,11 @@ import net.automatalib.symbol.ParameterizedSymbol;
  *
  * @author falk
  */
-public class Transition {
+public class Transition implements GuardedTransition {
 
     protected final ParameterizedSymbol label;
 
-    protected final TransitionGuard guard;
+    protected final net.automatalib.automaton.ra.TransitionGuard guard;
 
     protected final RALocation source;
 
@@ -38,7 +41,7 @@ public class Transition {
 
     protected final Assignment assignment;
 
-    public Transition(ParameterizedSymbol label, TransitionGuard guard,
+    public Transition(ParameterizedSymbol label, net.automatalib.automaton.ra.TransitionGuard guard,
             RALocation source, RALocation destination, Assignment assignment) {
         this.label = label;
         this.guard = guard;
