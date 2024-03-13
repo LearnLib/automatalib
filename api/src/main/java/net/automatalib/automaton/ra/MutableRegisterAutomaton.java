@@ -16,6 +16,7 @@
  */
 package net.automatalib.automaton.ra;
 
+import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.symbol.ParameterizedSymbol;
 
@@ -24,6 +25,5 @@ import net.automatalib.symbol.ParameterizedSymbol;
  *
  * @author falk
  */
-public interface MutableRegisterAutomaton extends RegisterAutomaton, MutableDeterministic<RALocation, ParameterizedSymbol, Transition, Boolean, Void> {
-
-}
+public interface MutableRegisterAutomaton<L, T extends GuardedTransition>
+        extends RegisterAutomaton<L, T>, MutableAutomaton<L, ParameterizedSymbol, T, Boolean, Void> {}

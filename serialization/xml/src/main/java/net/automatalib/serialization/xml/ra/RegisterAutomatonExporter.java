@@ -26,8 +26,8 @@ import java.util.Set;
 import jakarta.xml.bind.JAXB;
 
 import net.automatalib.automaton.ra.Assignment;
-import net.automatalib.automaton.ra.RALocation;
-import net.automatalib.automaton.ra.Transition;
+import net.automatalib.automaton.ra.impl.RALocation;
+import net.automatalib.automaton.ra.impl.Transition;
 import net.automatalib.automaton.ra.TransitionGuard;
 import net.automatalib.automaton.ra.impl.OutputMapping;
 import net.automatalib.automaton.ra.impl.OutputTransition;
