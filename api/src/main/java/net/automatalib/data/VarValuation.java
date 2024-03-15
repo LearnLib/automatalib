@@ -21,7 +21,7 @@ package net.automatalib.data;
  *
  * @author falk
  */
-public class VarValuation extends Mapping<SymbolicDataValue.Register, DataValue<?>> {
+public class VarValuation extends Valuation<SymbolicDataValue.Register, DataValue<?>> {
 
     public VarValuation(VarValuation other) {
         if (other != null) {

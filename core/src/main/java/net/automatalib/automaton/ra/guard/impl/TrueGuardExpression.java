@@ -34,7 +34,7 @@ public class TrueGuardExpression implements GuardExpression {
     public static final TrueGuardExpression TRUE = new TrueGuardExpression();
 
     @Override
-    public GuardExpression relabel(VarMapping relabelling) {
+    public GuardExpression relabel(VarMapping<?, ?> relabelling) {
         return TRUE;
     }
 

@@ -17,6 +17,7 @@
 package net.automatalib.symbol;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import net.automatalib.data.DataValue;
 
@@ -35,10 +36,10 @@ public class PSymbolInstance {
     /**
      * concrete parameter values
      */
-    private final DataValue[] parameterValues;
+    private final DataValue<?>[] parameterValues;
 
     public PSymbolInstance(ParameterizedSymbol baseSymbol,
-            DataValue ... parameterValues) {
+            DataValue<?> ... parameterValues) {
         this.baseSymbol = baseSymbol;
         this.parameterValues = parameterValues;
     }
@@ -65,10 +66,8 @@ public class PSymbolInstance {
             return false;
         }
         final PSymbolInstance other = (PSymbolInstance) obj;
-        if (this.baseSymbol != other.baseSymbol && (this.baseSymbol == null || !this.baseSymbol.equals(other.baseSymbol))) {
-            return false;
-        }
-        return Arrays.deepEquals(this.parameterValues, other.parameterValues);
+
+        return  Objects.equals(this.baseSymbol, other.baseSymbol) && Arrays.deepEquals(this.parameterValues, other.parameterValues);
     }
 
     @Override

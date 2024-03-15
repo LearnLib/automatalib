@@ -39,7 +39,7 @@ public class Conjunction implements GuardExpression {
     }
 
     @Override
-    public GuardExpression relabel(VarMapping relabelling) {
+    public GuardExpression relabel(VarMapping<?, ?> relabelling) {
         GuardExpression[] newExpr = new GuardExpression[conjuncts.length];
         int i = 0;
         for (GuardExpression ge : conjuncts) {

@@ -41,7 +41,7 @@ public class Negation implements GuardExpression {
     }
 
     @Override
-    public GuardExpression relabel(VarMapping relabelling) {
+    public GuardExpression relabel(VarMapping<?, ?> relabelling) {
         GuardExpression newNegated = negated.relabel(relabelling);
         return new Negation(newNegated);
     }

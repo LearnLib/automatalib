@@ -32,7 +32,7 @@ import net.automatalib.automaton.ra.GuardExpression;
  * @param <Left>
  * @param <Right>
  */
-public class AtomicGuardExpression<Left extends SymbolicDataValue, Right extends SymbolicDataValue> implements 
+public class AtomicGuardExpression<Left extends SymbolicDataValue, Right extends SymbolicDataValue> implements
                                                                                                     GuardExpression {
 
     private final Left left;
@@ -50,8 +50,8 @@ public class AtomicGuardExpression<Left extends SymbolicDataValue, Right extends
     @Override
     public boolean isSatisfied(Mapping<SymbolicDataValue, DataValue<?>> val) {
 
-        DataValue lv = val.get(left);
-        DataValue rv = val.get(right);
+        DataValue<?> lv = val.get(left);
+        DataValue<?> rv = val.get(right);
 
         //System.out.println(this);
         //System.out.println(val.toString());
@@ -74,17 +74,17 @@ public class AtomicGuardExpression<Left extends SymbolicDataValue, Right extends
     }
 
     @Override
-    public GuardExpression relabel(VarMapping relabelling) {
-        SymbolicDataValue newLeft = (SymbolicDataValue) relabelling.get(left);
+    public GuardExpression relabel(VarMapping<?, ?> relabelling) {
+        SymbolicDataValue newLeft = relabelling.get(left);
         if (newLeft == null) {
             newLeft = left;
         }
-        SymbolicDataValue newRight = (SymbolicDataValue) relabelling.get(right);
+        SymbolicDataValue newRight = relabelling.get(right);
         if (newRight == null) {
             newRight = right;
         }
 
-        return new AtomicGuardExpression(newLeft, relation, newRight);
+        return new AtomicGuardExpression<>(newLeft, relation, newRight);
     }
 
     @Override

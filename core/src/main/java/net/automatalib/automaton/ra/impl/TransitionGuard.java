@@ -19,7 +19,10 @@ package net.automatalib.automaton.ra.impl;
 import net.automatalib.automaton.ra.GuardExpression;
 import net.automatalib.automaton.ra.guard.impl.TrueGuardExpression;
 import net.automatalib.data.Constants;
+import net.automatalib.data.DataValue;
+import net.automatalib.data.Mapping;
 import net.automatalib.data.ParValuation;
+import net.automatalib.data.SymbolicDataValue;
 import net.automatalib.data.VarMapping;
 import net.automatalib.data.VarValuation;
 
@@ -51,7 +54,7 @@ public class TransitionGuard implements net.automatalib.automaton.ra.TransitionG
      * @return
      */
     public boolean isSatisfied(VarValuation registers, ParValuation parameters, Constants consts) {
-        VarMapping val = new VarMapping();
+        Mapping<SymbolicDataValue, DataValue<?>> val = new Mapping<>();
         val.putAll(registers);
         val.putAll(parameters);
         val.putAll(consts);

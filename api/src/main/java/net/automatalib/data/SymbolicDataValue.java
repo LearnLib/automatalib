@@ -23,27 +23,44 @@ import java.util.Objects;
  *
  * @author falk
  */
-public abstract class SymbolicDataValue extends DataValue<Integer> {
+public abstract class SymbolicDataValue {
+
+    protected final DataType<?> type;
+    protected final int id;
+
+    private SymbolicDataValue(DataType<?> dataType, int id) {
+        this.type = dataType;
+        this.id = id;
+    }
+
+    public DataType<?> getType() {
+        return type;
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public static final class Parameter extends SymbolicDataValue {
 
-        public Parameter(DataType dataType, int id) {
+        public Parameter(DataType<?> dataType, int id) {
             super(dataType, id);
-        }
-
-        public boolean equals(Parameter other) {
-            return (this.getType().equals(other.getType()) && this.getId().equals(other.getId()));
         }
 
         @Override
         public SymbolicDataValue.Parameter copy() {
         	return new SymbolicDataValue.Parameter(type, id);
         }
+
+        @Override
+        public String toString() {
+            return "p" + this.id;
+        }
     };
 
     public static final class Register extends SymbolicDataValue {
 
-        public Register(DataType dataType, int id) {
+        public Register(DataType<?> dataType, int id) {
             super(dataType, id);
         }
 
@@ -51,11 +68,16 @@ public abstract class SymbolicDataValue extends DataValue<Integer> {
         public SymbolicDataValue.Register copy() {
         	return new SymbolicDataValue.Register(type, id);
         }
+
+        @Override
+        public String toString() {
+            return "r" + this.id;
+        }
     };
 
     public static final class Constant extends SymbolicDataValue {
 
-        public Constant(DataType dataType, int id) {
+        public Constant(DataType<?> dataType, int id) {
             super(dataType, id);
         }
 
@@ -63,11 +85,16 @@ public abstract class SymbolicDataValue extends DataValue<Integer> {
         public SymbolicDataValue.Constant copy() {
         	return new SymbolicDataValue.Constant(type, id);
         }
+
+        @Override
+        public String toString() {
+            return "c" + this.id;
+        }
     };
 
     public static final class SuffixValue extends SymbolicDataValue {
 
-        public SuffixValue(DataType dataType, int id) {
+        public SuffixValue(DataType<?> dataType, int id) {
             super(dataType, id);
         }
 
@@ -75,32 +102,14 @@ public abstract class SymbolicDataValue extends DataValue<Integer> {
         public SymbolicDataValue.SuffixValue copy() {
         	return new SymbolicDataValue.SuffixValue(type, id);
         }
+
+        @Override
+        public String toString() {
+            return "s" + this.id;
+        }
     };
 
-    private SymbolicDataValue(DataType dataType, int id) {
-        super(dataType, id);
-    }
-
-    public String toStringWithType() {
-        return this.toString() + ":" + this.type.getName();
-    }
-
     public abstract SymbolicDataValue copy();
-
-    @Override
-    public String toString() {
-        String s = "";
-        if (this.isParameter()) {
-            s += "p";
-        } else if (this.isRegister()) {
-            s += "r";
-        } else if (this.isSuffixValue()) {
-            s += "s";
-        } else if (this.isConstant()) {
-            s += "c";
-        }
-        return s + this.id;
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -110,14 +119,10 @@ public abstract class SymbolicDataValue extends DataValue<Integer> {
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         final SymbolicDataValue other = (SymbolicDataValue) obj;
-        if (!Objects.equals(this.type, other.type)) {
-            return false;
-        }
-        if (this.id != other.id) {
-            return false;
-        }
-        return true;
+
+        return this.id == other.id && Objects.equals(this.type, other.type);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class Disjunction implements GuardExpression {
     }
 
     @Override
-    public GuardExpression relabel(VarMapping relabelling) {
+    public GuardExpression relabel(VarMapping<?, ?> relabelling) {
         GuardExpression[] newExpr = new GuardExpression[disjuncts.length];
         int i = 0;
         for (GuardExpression ge : disjuncts) {
