@@ -16,19 +16,38 @@
  */
 package net.automatalib.data;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
- * maps symbolic data values to symbolic data values.
- *
- * @param <K>
- * @param <V>
  *
  * @author falk
+ * @param <K>
+ * @param <V>
  */
-public class VarMapping<K extends SymbolicDataValue, V extends SymbolicDataValue> extends Mapping<K, V> {
+public class Valuation<K, V extends DataValue<?>> extends Mapping<K, V> {
 
-    public VarMapping() {}
-
-    public VarMapping(K k1, V v1) {
-        put(k1, v1);
+    /**
+     * returns the contained values of some type.
+     *
+     * @param <T>
+     * @param type the type
+     * @return
+     */
+    public <T> Collection<DataValue<T>> values(DataType<T> type) {
+        List<DataValue<T>> list = new ArrayList<>();
+        for (DataValue<?> v : values()) {
+            if (v.type.equals(type)) {
+                list.add((DataValue<T>) v);
+            }
+        }
+        return list;
     }
+
 }

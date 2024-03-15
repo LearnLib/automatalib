@@ -30,7 +30,7 @@ import net.automatalib.data.VarMapping;
  */
 public interface GuardExpression {
 
-    GuardExpression relabel(VarMapping relabelling);
+    GuardExpression relabel(VarMapping<?, ?> relabelling);
 
     boolean isSatisfied(Mapping<SymbolicDataValue, DataValue<?>> val);
 

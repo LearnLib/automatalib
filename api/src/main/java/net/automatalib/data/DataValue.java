@@ -19,21 +19,20 @@ package net.automatalib.data;
 import java.util.Objects;
 
 /**
+ * @param <T>
  *
  * @author falk
- * @param <T>
  */
 public class DataValue<T> {
 
-    protected final DataType type;
+    protected final DataType<T> type;
 
     protected final T id;
 
-    public DataValue(DataType type, T id) {
+    public DataValue(DataType<T> type, T id) {
         this.type = type;
         this.id = id;
     }
-
 
     @Override
     public String toString() {
@@ -56,23 +55,17 @@ public class DataValue<T> {
         if (!(obj instanceof DataValue)) {
             return false;
         }
-        final DataValue other = (DataValue) obj;
-        if (!Objects.equals(this.type, other.type)) {
-            return false;
-        }
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
+        final DataValue<?> other = (DataValue<?>) obj;
+
+        return Objects.equals(this.type, other.type) && Objects.equals(this.id, other.id);
     }
 
     public T getId() {
         return id;
     }
 
-    public DataType getType() {
+    public DataType<?> getType() {
         return type;
     }
-
 
 }

@@ -21,6 +21,6 @@ package net.automatalib.data;
  *
  * @author falk
  */
-public class Constants extends Mapping<SymbolicDataValue.Constant, DataValue<?>> {
+public class Constants extends Valuation<SymbolicDataValue.Constant, DataValue<?>> {
 
 }

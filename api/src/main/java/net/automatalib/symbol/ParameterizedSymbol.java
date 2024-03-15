@@ -17,6 +17,7 @@
 package net.automatalib.symbol;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import net.automatalib.data.DataType;
 
@@ -36,9 +37,9 @@ public abstract class ParameterizedSymbol {
     /**
      * parameter types
      */
-    private final DataType[] ptypes;
+    private final DataType<?>[] ptypes;
 
-    public ParameterizedSymbol(String name, DataType ... ptypes) {
+    public ParameterizedSymbol(String name, DataType<?> ... ptypes) {
         this.name = name;
         this.ptypes = ptypes;
     }
@@ -46,7 +47,7 @@ public abstract class ParameterizedSymbol {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 71 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 71 * hash + this.name.hashCode();
         hash = 71 * hash + Arrays.deepHashCode(this.ptypes);
         return hash;
     }
@@ -60,10 +61,8 @@ public abstract class ParameterizedSymbol {
             return false;
         }
         final ParameterizedSymbol other = (ParameterizedSymbol) obj;
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
-            return false;
-        }
-        return Arrays.deepEquals(this.ptypes, other.ptypes);
+
+        return Objects.equals(this.name, other.name) && Arrays.deepEquals(this.ptypes, other.ptypes);
     }
 
     @Override
@@ -89,7 +88,7 @@ public abstract class ParameterizedSymbol {
         return this.ptypes.length;
     }
 
-    public DataType[] getPtypes() {
+    public DataType<?>[] getPtypes() {
         return ptypes;
     }
 

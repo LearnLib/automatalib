@@ -16,12 +16,9 @@
  */
 package net.automatalib.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,25 +28,8 @@ import java.util.Set;
  * @param <K>
  * @param <V>
  */
-public class Mapping<K, V extends DataValue<?>> extends LinkedHashMap<K, V>
+public class Mapping<K, V> extends LinkedHashMap<K, V>
         implements Iterable<Map.Entry<K, V>> {
-
-    /**
-     * returns the contained values of some type.
-     *
-     * @param <T>
-     * @param type the type
-     * @return
-     */
-    public <T> Collection<DataValue<T>> values(DataType type) {
-        List<DataValue<T>> list = new ArrayList<>();
-        for (DataValue<?> v : values()) {
-            if (v.type.equals(type)) {
-                list.add((DataValue<T>) v);
-            }
-        }
-        return list;
-    }
 
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
@@ -94,7 +74,7 @@ public class Mapping<K, V extends DataValue<?>> extends LinkedHashMap<K, V>
     }
 
     public Set<K> getAllKeys(V value) {
-        Set<K> retKeySet = new LinkedHashSet();
+        Set<K> retKeySet = new HashSet<>();
         for (Map.Entry<K,V> entry : this.entrySet()) {
             //log.trace("key = " + K);
             //log.trace("value = " + entry.getKey().toString());

@@ -28,7 +28,7 @@ import net.automatalib.word.Word;
  *
  * @author falk
  */
-public class ParValuation extends Mapping<Parameter, DataValue<?>> {
+public class ParValuation extends Valuation<Parameter, DataValue<?>> {
 
     public ParValuation() {
 
@@ -36,7 +36,7 @@ public class ParValuation extends Mapping<Parameter, DataValue<?>> {
 
     public ParValuation(PSymbolInstance psi) {
         ParameterGenerator pgen = new ParameterGenerator();
-        for (DataValue dv : psi.getParameterValues()) {
+        for (DataValue<?> dv : psi.getParameterValues()) {
             this.put(pgen.next(dv.getType()), dv);
         }
     }
@@ -46,7 +46,7 @@ public class ParValuation extends Mapping<Parameter, DataValue<?>> {
     	Iterator<PSymbolInstance> it = dw.iterator();
     	while (it.hasNext()) {
     		PSymbolInstance psi = it.next();
-    		for (DataValue dv : psi.getParameterValues()) {
+    		for (DataValue<?> dv : psi.getParameterValues()) {
     			put(pgen.next(dv.getType()), dv);
     		}
     	}

@@ -34,7 +34,7 @@ public class FalseGuardExpression implements GuardExpression {
     public static final FalseGuardExpression FALSE = new FalseGuardExpression();
 
     @Override
-    public GuardExpression relabel(VarMapping relabelling) {
+    public GuardExpression relabel(VarMapping<?, ?> relabelling) {
         return FALSE;
     }
 

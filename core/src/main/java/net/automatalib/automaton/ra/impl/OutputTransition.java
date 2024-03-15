@@ -60,7 +60,7 @@ public class OutputTransition extends Transition {
 
         // check freshness of parameters ...
         for (Parameter p : output.getFreshParameters()) {
-            DataValue pval = parameters.get(p);
+            DataValue<?> pval = parameters.get(p);
             if (registers.containsValue(pval) || consts.containsValue(pval)) {
                 return false;
             }
