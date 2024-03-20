@@ -21,8 +21,10 @@ import java.util.BitSet;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
@@ -335,6 +337,161 @@ public final class NFAs {
                                                             A out) {
         return combine(nfa1, nfa2, inputs, out, AcceptanceCombiner.IMPL);
     }
+
+    /**
+     * Reverse the specified NFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the reversed NFA
+     */
+    public static <I> CompactNFA<I> reverse(MutableNFA<Integer, I> nfa, Alphabet<I> inputAlphabet) {
+        CompactNFA<I> result = new CompactNFA<>(inputAlphabet);
+        reverse(nfa, inputAlphabet, result);
+        return result;
+    }
+
+    /**
+     * Reverse the specified NFA, and stores the result in a given mutable NFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param rNFA
+     *         a mutable NFA for storing the result
+     * @param <S>
+     *         state type of the automata
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         reversed NFA type
+     */
+    public static <S, I, A extends MutableNFA<S, I>> void reverse(MutableNFA<S, I> nfa,
+                                      Collection<? extends I> inputs,
+                                      A rNFA) {
+        Set<S> initialStates = nfa.getInitialStates();
+
+        // Accepting are initial states and vice versa
+        for (S q: nfa.getStates()) {
+            rNFA.addState(initialStates.contains(q));
+            if (nfa.isAccepting(q)) {
+                rNFA.setInitial(q, true);
+            }
+        }
+        // reverse transitions
+        for (S q: nfa.getStates()) {
+            for (I a: inputs) {
+                for (S s: nfa.getTransitions(q, a)) {
+                    rNFA.addTransition(s, a, q);
+                }
+            }
+        }
+    }
+
+    /**
+     * Create a trim (accessible and co-accessible) NFA from the specified NFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     * @param <I>
+     *         input symbol type
+     * @return the trim NFA
+     */
+    public static <I> CompactNFA<I> trim(CompactNFA<I> nfa, Alphabet<I> inputAlphabet) {
+        CompactNFA<I> result = new CompactNFA<>(inputAlphabet);
+        trim(nfa, inputAlphabet, result);
+        return result;
+    }
+
+    /**
+     * Create a trim NFA from the specified NFA, and store the result in a given mutable NFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     * @param trimNFA
+     *         a mutable NFA for storing the result
+     * @param <S>
+     *         state type of the automata
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         trim NFA type
+     */
+    @SuppressWarnings("unchecked")
+    public static <S, I, A extends MutableNFA<S, I>> void trim(CompactNFA<I> nfa,
+                                Alphabet<I> inputAlphabet,
+                                A trimNFA) {
+        Set<Integer> trimStates = new HashSet<>(nfa.size());
+        for (int i = 0; i < nfa.size(); i++) {
+            trimStates.add(i);
+        }
+        // right (accessible) trim
+        trimStates.retainAll(rightTrimHelper(nfa, inputAlphabet));
+        // left (co-accessible) trim
+        trimStates.retainAll(rightTrimHelper(reverse(nfa, inputAlphabet), inputAlphabet));
+
+        // Quotient based upon trim states
+        // determine mapping of old states to new ones
+        Object[] oldToNewMap = new Object[nfa.size()];
+        // Add new states -- initial, accepting properties
+        for (int i = 0; i < nfa.size(); i++) {
+            if (!trimStates.contains(i)) {
+                continue;
+            }
+            S newState = trimNFA.addState(nfa.isAccepting(i));
+            oldToNewMap[i] = newState;
+            if (nfa.getInitialStates().contains(i)) {
+                trimNFA.setInitial(newState, true);
+            }
+        }
+        // Add transitions to trim states
+        for (int i = 0; i < nfa.size(); i++) {
+            if (!trimStates.contains(i)) {
+                continue;
+            }
+            for (I j : inputAlphabet) {
+                for (int k : nfa.getTransitions(i, j)) {
+                    if (trimStates.contains(k)) {
+                        trimNFA.addTransition((S) oldToNewMap[i], j, (S) oldToNewMap[k]);
+                    }
+                }
+            }
+        }
+    }
+
+    static <S, I> Set<S> rightTrimHelper(NFA<S, I> nfa, Collection<? extends I> inputs) {
+        Set<S> found = new HashSet<>();
+        Deque<S> stack = new ArrayDeque<>();
+
+        for (S init : nfa.getInitialStates()) {
+            stack.push(init);
+            found.add(init);
+        }
+
+        while (!stack.isEmpty()) {
+            S curr = stack.pop();
+            for (I sym : inputs) {
+                for (S succState : nfa.getSuccessors(curr, sym)) {
+                    if (found.add(succState)) {
+                        // Add states to stack if they haven't been visited
+                        stack.push(succState);
+                    }
+                }
+            }
+        }
+        return found;
+    }
+
 
     /**
      * Determinizes the given NFA, and returns the result as a new complete DFA.
