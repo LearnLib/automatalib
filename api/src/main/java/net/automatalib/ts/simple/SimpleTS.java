@@ -99,7 +99,7 @@ public interface SimpleTS<S, I> {
 
         for (I sym : input) {
             for (S state : current) {
-                Set<? extends S> currSuccs = getSuccessors(state, sym);
+                Set<S> currSuccs = getSuccessors(state, sym);
                 succs.addAll(currSuccs);
             }
 

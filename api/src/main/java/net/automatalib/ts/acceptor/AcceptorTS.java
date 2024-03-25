@@ -17,7 +17,9 @@ package net.automatalib.ts.acceptor;
 
 import java.util.Collection;
 
+import net.automatalib.ts.UniversalPowersetViewTS;
 import net.automatalib.ts.UniversalTransitionSystem;
+import net.automatalib.ts.powerset.AcceptorPowersetView;
 
 /**
  * A transition system whose semantics are defined by whether a state is "accepting" or not.
@@ -68,5 +70,10 @@ public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boo
     @Override
     default S getSuccessor(S transition) {
         return transition;
+    }
+
+    @Override
+    default UniversalPowersetViewTS<?, I, ?, Boolean, Void, S, S> powersetView() {
+        return new AcceptorPowersetView<>(this);
     }
 }

@@ -29,7 +29,7 @@ import net.automatalib.automaton.fsa.impl.FastNFA;
 import net.automatalib.automaton.fsa.impl.FastNFAState;
 import net.automatalib.common.util.nid.NumericID;
 import net.automatalib.ts.PowersetViewTS;
-import net.automatalib.ts.powerset.DirectPowersetDTS;
+import net.automatalib.ts.powerset.PowersetView;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -47,7 +47,7 @@ public class PowersetViewTest {
     @Test
     public void testDirectPowerset() {
         final ConstructedSystem<CompactNFA<Character>, Integer> system = constructSystem(CompactNFA::new);
-        final DirectPowersetDTS<Integer, Character, ?> powersetDTS = new DirectPowersetDTS<>(system.automaton);
+        final PowersetView<Integer, Character, ?> powersetDTS = new PowersetView<>(system.automaton);
 
         checkConstructedSystem(powersetDTS, system, HashSet::new);
     }

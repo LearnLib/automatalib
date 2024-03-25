@@ -22,6 +22,8 @@ import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.UniversalDTS;
+import net.automatalib.ts.UniversalPowersetViewTS;
+import net.automatalib.ts.powerset.DeterministicAcceptorPowersetView;
 
 /**
  * A deterministic acceptor transition system.
@@ -63,5 +65,10 @@ public interface DeterministicAcceptorTS<S, I>
             throw new IllegalArgumentException("Acceptance of state sets is undefined for DFAs");
         }
         return isAccepting(firstState);
+    }
+
+    @Override
+    default UniversalPowersetViewTS<?, I, ?, Boolean, Void, S, S> powersetView() {
+        return new DeterministicAcceptorPowersetView<>(this);
     }
 }

@@ -19,14 +19,16 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<S>, I, Set<T>, S, T> {
+public class PowersetView<S, I, T> implements PowersetViewTS<Set<S>, I, Set<T>, S, T> {
 
     private final TransitionSystem<S, I, T> ts;
 
-    public DirectPowersetDTS(TransitionSystem<S, I, T> ts) {
+    public PowersetView(TransitionSystem<S, I, T> ts) {
         this.ts = ts;
     }
 
@@ -37,7 +39,7 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<S>, I, Set
 
     @Override
     public Set<S> getSuccessor(Set<T> transition) {
-        Set<S> result = new HashSet<>();
+        Set<S> result = new HashSet<>(HashUtil.capacity(transition.size()));
         for (T trans : transition) {
             result.add(ts.getSuccessor(trans));
         }
@@ -45,26 +47,20 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<S>, I, Set
     }
 
     @Override
-    public Set<S> getSuccessor(Set<S> state, I input) {
-        Set<S> result = new HashSet<>();
-        for (S s : state) {
-            Collection<T> transitions = ts.getTransitions(s, input);
-            for (T t : transitions) {
-                result.add(ts.getSuccessor(t));
-            }
-        }
+    public @Nullable Set<S> getSuccessor(Set<S> state, I input) {
+        Set<S> result = ts.getSuccessors(state, input);
 
-        return result;
+        return result.isEmpty() ? null : result;
     }
 
     @Override
-    public Set<T> getTransition(Set<S> state, I input) {
+    public @Nullable Set<T> getTransition(Set<S> state, I input) {
         Set<T> result = new HashSet<>();
         for (S s : state) {
             Collection<T> transitions = ts.getTransitions(s, input);
             result.addAll(transitions);
         }
-        return result;
+        return result.isEmpty() ? null : result;
     }
 
     @Override
