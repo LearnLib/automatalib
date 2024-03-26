@@ -17,7 +17,7 @@ package net.automatalib.ts.acceptor;
 
 import java.util.Collection;
 
-import net.automatalib.ts.UniversalPowersetViewTS;
+import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.UniversalTransitionSystem;
 import net.automatalib.ts.powerset.AcceptorPowersetView;
 
@@ -73,7 +73,7 @@ public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boo
     }
 
     @Override
-    default UniversalPowersetViewTS<?, I, ?, Boolean, Void, S, S> powersetView() {
+    default AcceptorPowersetViewTS<?, I, ?, S, S> powersetView() {
         return new AcceptorPowersetView<>(this);
     }
 }

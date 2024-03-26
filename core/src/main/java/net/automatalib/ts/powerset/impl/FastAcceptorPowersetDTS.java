@@ -15,14 +15,14 @@
  */
 package net.automatalib.ts.powerset.impl;
 
-import java.util.Set;
+import java.util.Collection;
 
 import net.automatalib.common.util.nid.NumericID;
-import net.automatalib.ts.UniversalPowersetViewTS;
+import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.acceptor.AcceptorTS;
 
 public class FastAcceptorPowersetDTS<S extends NumericID, I> extends FastPowersetDTS<S, I, S>
-        implements UniversalPowersetViewTS<FastPowersetState<S>, I, Set<S>, Boolean, Void, S, S> {
+        implements AcceptorPowersetViewTS<FastPowersetState<S>, I, Collection<S>, S, S> {
 
     private final AcceptorTS<S, I> ts;
 
@@ -32,12 +32,8 @@ public class FastAcceptorPowersetDTS<S extends NumericID, I> extends FastPowerse
     }
 
     @Override
-    public Boolean getStateProperty(FastPowersetState<S> state) {
+    public boolean isAccepting(FastPowersetState<S> state) {
         return ts.isAccepting(state);
     }
 
-    @Override
-    public Void getTransitionProperty(Set<S> transition) {
-        return null;
-    }
 }

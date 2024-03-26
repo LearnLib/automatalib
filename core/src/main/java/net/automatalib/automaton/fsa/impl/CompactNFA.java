@@ -22,7 +22,7 @@ import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.base.AbstractCompactSimpleNondet;
 import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.common.util.WrapperUtil;
-import net.automatalib.ts.UniversalPowersetViewTS;
+import net.automatalib.ts.AcceptorPowersetViewTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> implements MutableNFA<Integer, I> {
@@ -100,27 +100,22 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
     }
 
     @Override
-    public UniversalPowersetViewTS<BitSet, I, BitSet, Boolean, Void, Integer, Integer> powersetView() {
+    public AcceptorPowersetViewTS<BitSet, I, BitSet, Integer, Integer> powersetView() {
         return new CompactAcceptorPowersetDTS();
     }
 
     protected class CompactAcceptorPowersetDTS extends CompactPowersetDTS
-            implements UniversalPowersetViewTS<BitSet, I, BitSet, Boolean, Void, Integer, Integer> {
+            implements AcceptorPowersetViewTS<BitSet, I, BitSet, Integer, Integer> {
 
         @Override
-        public Boolean getStateProperty(BitSet state) {
+        public boolean isAccepting(BitSet state) {
             for (int i = state.nextSetBit(0); i >= 0; i = state.nextSetBit(i + 1)) {
-                if (isAccepting(i)) {
+                if (CompactNFA.this.isAccepting(i)) {
                     return true;
                 }
             }
 
             return false;
-        }
-
-        @Override
-        public Void getTransitionProperty(BitSet transition) {
-            return null;
         }
     }
 

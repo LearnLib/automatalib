@@ -15,4 +15,8 @@
  */
 package net.automatalib.ts;
 
-public interface UniversalPowersetViewTS<S, I, T, SP, TP, OS, OT> extends PowersetViewTS<S, I, T, OS, OT>, UniversalDTS<S, I, T, SP, TP> {}
+public interface AcceptorPowersetViewTS<S, I, T, SO, TO>
+        extends PowersetViewTS<S, I, T, SO, TO> {
+
+    boolean isAccepting(S state);
+}

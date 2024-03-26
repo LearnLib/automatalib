@@ -15,13 +15,14 @@
  */
 package net.automatalib.ts.powerset;
 
+import java.util.Collection;
 import java.util.Set;
 
-import net.automatalib.ts.UniversalPowersetViewTS;
+import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.acceptor.AcceptorTS;
 
 public class AcceptorPowersetView<S, I> extends PowersetView<S, I, S>
-        implements UniversalPowersetViewTS<Set<S>, I, Set<S>, Boolean, Void, S, S> {
+        implements AcceptorPowersetViewTS<Set<S>, I, Collection<S>, S, S> {
 
     private final AcceptorTS<S, I> ts;
 
@@ -31,12 +32,7 @@ public class AcceptorPowersetView<S, I> extends PowersetView<S, I, S>
     }
 
     @Override
-    public Boolean getStateProperty(Set<S> state) {
-        return ts.isAccepting(state);
-    }
-
-    @Override
-    public Void getTransitionProperty(Set<S> transition) {
-        return null;
+    public boolean isAccepting(Set<S> state) {
+        return this.ts.isAccepting(state);
     }
 }

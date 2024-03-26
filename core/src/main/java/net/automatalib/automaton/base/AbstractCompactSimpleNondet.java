@@ -218,7 +218,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     }
 
     @Override
-    public PowersetViewTS<?, I, ?, Integer, Integer> powersetView() {
+    public PowersetViewTS<BitSet, I, BitSet, Integer, Integer> powersetView() {
         return new CompactPowersetDTS();
     }
 
@@ -226,7 +226,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
 
         @Override
         public @Nullable BitSet getTransition(BitSet state, I input) {
-            final BitSet result = new BitSet();
+            final BitSet result = new BitSet(AbstractCompactSimpleNondet.this.size());
             final int inputIdx = getSymbolIndex(input);
 
             for (int i = state.nextSetBit(0); i >= 0; i = state.nextSetBit(i+1)) {
@@ -240,16 +240,6 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
         }
 
         @Override
-        public Collection<Integer> getOriginalStates(BitSet state) {
-            return new PositiveIntSet(state);
-        }
-
-        @Override
-        public Collection<Integer> getOriginalTransitions(BitSet transition) {
-            return new PositiveIntSet(transition);
-        }
-
-        @Override
         public BitSet getSuccessor(BitSet transition) {
             return transition;
         }
@@ -257,6 +247,16 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
         @Override
         public BitSet getInitialState() {
             return initial;
+        }
+
+        @Override
+        public Collection<Integer> getOriginalStates(BitSet state) {
+            return new PositiveIntSet(state);
+        }
+
+        @Override
+        public Collection<Integer> getOriginalTransitions(BitSet transition) {
+            return new PositiveIntSet(transition);
         }
     }
 }

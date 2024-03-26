@@ -15,11 +15,11 @@
  */
 package net.automatalib.ts.powerset;
 
-import net.automatalib.ts.UniversalPowersetViewTS;
+import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
 public class DeterministicAcceptorPowersetView<S, I> extends DeterministicPowersetView<S, I, S>
-        implements UniversalPowersetViewTS<S, I, S, Boolean, Void, S, S> {
+        implements AcceptorPowersetViewTS<S, I, S, S, S> {
 
     private final DeterministicAcceptorTS<S, I> ts;
 
@@ -29,12 +29,7 @@ public class DeterministicAcceptorPowersetView<S, I> extends DeterministicPowers
     }
 
     @Override
-    public Boolean getStateProperty(S state) {
-        return ts.getStateProperty(state);
-    }
-
-    @Override
-    public Void getTransitionProperty(S transition) {
-        return ts.getTransitionProperty(transition);
+    public boolean isAccepting(S state) {
+        return this.ts.isAccepting(state);
     }
 }

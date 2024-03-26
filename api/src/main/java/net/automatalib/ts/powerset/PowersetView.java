@@ -15,16 +15,17 @@
  */
 package net.automatalib.ts.powerset;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class PowersetView<S, I, T> implements PowersetViewTS<Set<S>, I, Set<T>, S, T> {
+public class PowersetView<S, I, T> implements PowersetViewTS<Set<S>, I, Collection<T>, S, T> {
 
     private final TransitionSystem<S, I, T> ts;
 
@@ -38,7 +39,7 @@ public class PowersetView<S, I, T> implements PowersetViewTS<Set<S>, I, Set<T>, 
     }
 
     @Override
-    public Set<S> getSuccessor(Set<T> transition) {
+    public Set<S> getSuccessor(Collection<T> transition) {
         Set<S> result = new HashSet<>(HashUtil.capacity(transition.size()));
         for (T trans : transition) {
             result.add(ts.getSuccessor(trans));
@@ -47,20 +48,12 @@ public class PowersetView<S, I, T> implements PowersetViewTS<Set<S>, I, Set<T>, 
     }
 
     @Override
-    public @Nullable Set<S> getSuccessor(Set<S> state, I input) {
-        Set<S> result = ts.getSuccessors(state, input);
-
-        return result.isEmpty() ? null : result;
-    }
-
-    @Override
-    public @Nullable Set<T> getTransition(Set<S> state, I input) {
-        Set<T> result = new HashSet<>();
+    public Collection<T> getTransition(Set<S> state, I input) {
+        List<T> result = new ArrayList<>();
         for (S s : state) {
-            Collection<T> transitions = ts.getTransitions(s, input);
-            result.addAll(transitions);
+            result.addAll(ts.getTransitions(s, input));
         }
-        return result.isEmpty() ? null : result;
+        return result;
     }
 
     @Override
@@ -69,7 +62,7 @@ public class PowersetView<S, I, T> implements PowersetViewTS<Set<S>, I, Set<T>, 
     }
 
     @Override
-    public Collection<T> getOriginalTransitions(Set<T> transition) {
+    public Collection<T> getOriginalTransitions(Collection<T> transition) {
         return transition;
     }
 }

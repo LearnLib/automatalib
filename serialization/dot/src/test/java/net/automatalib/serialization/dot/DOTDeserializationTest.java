@@ -89,12 +89,12 @@ public class DOTDeserializationTest {
         Assert.assertFalse(parsed.accepts(Word.fromSymbols("a", "a", "a")));
         Assert.assertFalse(parsed.accepts(Word.fromSymbols("b", "b")));
         Assert.assertFalse(parsed.accepts(Word.fromSymbols("c")));
-        Assert.assertEquals(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("a", "a", "a")).size(), 1);
-        Assert.assertEquals(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("b", "b")).size(), 1);
-        Assert.assertEquals(parsed.getSuccessors(parsed.getInitialStates(), "c").size(), 1);
-        Assert.assertTrue(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("a", "b")).isEmpty());
-        Assert.assertTrue(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("c", "a")).isEmpty());
-        Assert.assertTrue(parsed.getSuccessors(parsed.getInitialStates(), Word.fromSymbols("b", "c")).isEmpty());
+        Assert.assertEquals(parsed.getStates(Word.fromSymbols("a", "a", "a")).size(), 1);
+        Assert.assertEquals(parsed.getStates(Word.fromSymbols("b", "b")).size(), 1);
+        Assert.assertEquals(parsed.getStates(Word.fromLetter("c")).size(), 1);
+        Assert.assertTrue(parsed.getStates(Word.fromSymbols("a", "b")).isEmpty());
+        Assert.assertTrue(parsed.getStates(Word.fromSymbols("c", "a")).isEmpty());
+        Assert.assertTrue(parsed.getStates(Word.fromSymbols("b", "c")).isEmpty());
     }
 
     @Test

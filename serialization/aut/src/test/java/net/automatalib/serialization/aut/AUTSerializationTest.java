@@ -35,6 +35,7 @@ import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.exception.FormatException;
 import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -52,9 +53,9 @@ public class AUTSerializationTest {
             final String input3 = "SEND !\"hello\" !\"world\"";
 
             final Set<Integer> s0 = automaton.getInitialStates();
-            final Set<Integer> s1 = automaton.getSuccessors(s0, input1);
-            final Set<Integer> s2 = automaton.getSuccessors(s0, input2);
-            final Set<Integer> s3 = automaton.getSuccessors(s0, Arrays.asList(input2, input3));
+            final Set<Integer> s1 = automaton.getStates(Word.fromLetter(input1));
+            final Set<Integer> s2 = automaton.getStates(Word.fromLetter(input2));
+            final Set<Integer> s3 = automaton.getStates(Arrays.asList(input2, input3));
 
             Assert.assertEquals(Collections.singleton(0), s0);
             Assert.assertEquals(Collections.singleton(1), s1);
@@ -70,10 +71,10 @@ public class AUTSerializationTest {
             Assert.assertEquals(3, automaton.size());
 
             final Set<Integer> s0 = automaton.getInitialStates();
-            final Set<Integer> t1 = automaton.getSuccessors(s0, "input");
-            final Set<Integer> t2 = automaton.getSuccessors(s0, "output");
-            final Set<Integer> t3 = automaton.getSuccessors(s0, Arrays.asList("input", "output"));
-            final Set<Integer> t4 = automaton.getSuccessors(s0, Arrays.asList("input", "output", "output"));
+            final Set<Integer> t1 = automaton.getStates(Word.fromLetter("input"));
+            final Set<Integer> t2 = automaton.getStates(Word.fromLetter("output"));
+            final Set<Integer> t3 = automaton.getStates(Arrays.asList("input", "output"));
+            final Set<Integer> t4 = automaton.getStates(Arrays.asList("input", "output", "output"));
 
             Assert.assertEquals(Collections.singleton(0), s0);
             Assert.assertEquals(Collections.singleton(1), t1);

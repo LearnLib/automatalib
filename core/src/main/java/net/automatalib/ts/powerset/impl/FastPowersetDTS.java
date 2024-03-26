@@ -15,18 +15,16 @@
  */
 package net.automatalib.ts.powerset.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import net.automatalib.common.util.nid.NumericID;
-import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
 
 public class FastPowersetDTS<S extends NumericID, I, T>
-        implements DeterministicTransitionSystem<FastPowersetState<S>, I, Set<T>>,
-                   PowersetViewTS<FastPowersetState<S>, I, Set<T>, S, T> {
+        implements PowersetViewTS<FastPowersetState<S>, I, Collection<T>, S, T> {
 
     private final TransitionSystem<S, I, T> ts;
 
@@ -44,7 +42,7 @@ public class FastPowersetDTS<S extends NumericID, I, T>
     }
 
     @Override
-    public FastPowersetState<S> getSuccessor(Set<T> transition) {
+    public FastPowersetState<S> getSuccessor(Collection<T> transition) {
         FastPowersetState<S> succ = new FastPowersetState<>();
         for (T t : transition) {
             S succS = ts.getSuccessor(t);
@@ -55,25 +53,10 @@ public class FastPowersetDTS<S extends NumericID, I, T>
     }
 
     @Override
-    public FastPowersetState<S> getSuccessor(FastPowersetState<S> state, I input) {
-        FastPowersetState<S> succ = new FastPowersetState<>();
-
+    public Collection<T> getTransition(FastPowersetState<S> state, I input) {
+        List<T> result = new ArrayList<>();
         for (S s : state) {
-            Collection<S> succs = ts.getSuccessors(s, input);
-            for (S succS : succs) {
-                succ.add(succS, succS.getId());
-            }
-        }
-
-        return succ;
-    }
-
-    @Override
-    public Set<T> getTransition(FastPowersetState<S> state, I input) {
-        Set<T> result = new HashSet<>();
-        for (S s : state) {
-            Collection<T> transitions = ts.getTransitions(s, input);
-            result.addAll(transitions);
+            result.addAll(ts.getTransitions(s, input));
         }
         return result;
     }
@@ -84,7 +67,7 @@ public class FastPowersetDTS<S extends NumericID, I, T>
     }
 
     @Override
-    public Collection<T> getOriginalTransitions(Set<T> transition) {
+    public Collection<T> getOriginalTransitions(Collection<T> transition) {
         return transition;
     }
 
