@@ -16,23 +16,53 @@
 package net.automatalib.ts.powerset;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.acceptor.AcceptorTS;
 
-public class AcceptorPowersetView<S, I> extends PowersetView<S, I, S>
-        implements AcceptorPowersetViewTS<Set<S>, I, Collection<S>, S, S> {
+public class AcceptorPowersetView<S, I>
+        implements AcceptorPowersetViewTS<Set<S>, I, S> {
 
     private final AcceptorTS<S, I> ts;
 
     public AcceptorPowersetView(AcceptorTS<S, I> ts) {
-        super(ts);
         this.ts = ts;
+    }
+
+    @Override
+    public Set<S> getInitialState() {
+        return this.ts.getInitialStates();
+    }
+
+    @Override
+    public Set<S> getTransition(Set<S> state, I input) {
+        // store in a list first to prevent re-sizes, better performance according to benchmarks
+        final List<S> result = new LinkedList<>();
+        for (S s : state) {
+            for (S t : this.ts.getTransitions(s, input)) {
+                // LinkedList's #add is faster than #addAll
+                result.add(t);
+            }
+        }
+        return new HashSet<>(result);
     }
 
     @Override
     public boolean isAccepting(Set<S> state) {
         return this.ts.isAccepting(state);
+    }
+
+    @Override
+    public Collection<S> getOriginalStates(Set<S> state) {
+        return state;
+    }
+
+    @Override
+    public Collection<S> getOriginalTransitions(Set<S> transition) {
+        return transition;
     }
 }

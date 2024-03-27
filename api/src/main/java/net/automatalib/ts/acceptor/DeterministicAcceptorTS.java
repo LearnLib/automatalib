@@ -68,7 +68,7 @@ public interface DeterministicAcceptorTS<S, I>
     }
 
     @Override
-    default AcceptorPowersetViewTS<?, I, ?, S, S> powersetView() {
+    default AcceptorPowersetViewTS<?, I, S> powersetView() {
         return new DeterministicAcceptorPowersetView<>(this);
     }
 }

@@ -15,9 +15,9 @@
  */
 package net.automatalib.ts.powerset;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -49,9 +49,12 @@ public class PowersetView<S, I, T> implements PowersetViewTS<Set<S>, I, Collecti
 
     @Override
     public Collection<T> getTransition(Set<S> state, I input) {
-        List<T> result = new ArrayList<>();
+        final List<T> result = new LinkedList<>();
         for (S s : state) {
-            result.addAll(ts.getTransitions(s, input));
+            for (T t : ts.getTransitions(s, input)) {
+                // LinkedList's #add is faster than #addAll
+                result.add(t);
+            }
         }
         return result;
     }

@@ -73,7 +73,7 @@ public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boo
     }
 
     @Override
-    default AcceptorPowersetViewTS<?, I, ?, S, S> powersetView() {
+    default AcceptorPowersetViewTS<?, I, S> powersetView() {
         return new AcceptorPowersetView<>(this);
     }
 }

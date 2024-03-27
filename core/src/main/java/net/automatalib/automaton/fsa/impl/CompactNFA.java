@@ -90,7 +90,7 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
 
     @Override
     public void clear() {
-        accepting.clear(0, size());
+        accepting.clear();
         super.clear();
     }
 
@@ -100,12 +100,12 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
     }
 
     @Override
-    public AcceptorPowersetViewTS<BitSet, I, BitSet, Integer, Integer> powersetView() {
+    public AcceptorPowersetViewTS<BitSet, I, Integer> powersetView() {
         return new CompactAcceptorPowersetDTS();
     }
 
     protected class CompactAcceptorPowersetDTS extends CompactPowersetDTS
-            implements AcceptorPowersetViewTS<BitSet, I, BitSet, Integer, Integer> {
+            implements AcceptorPowersetViewTS<BitSet, I, Integer> {
 
         @Override
         public boolean isAccepting(BitSet state) {

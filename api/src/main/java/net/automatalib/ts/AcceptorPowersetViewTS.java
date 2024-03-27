@@ -15,8 +15,13 @@
  */
 package net.automatalib.ts;
 
-public interface AcceptorPowersetViewTS<S, I, T, SO, TO>
-        extends PowersetViewTS<S, I, T, SO, TO> {
+import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
-    boolean isAccepting(S state);
+public interface AcceptorPowersetViewTS<S, I, SO>
+        extends PowersetViewTS<S, I, S, SO, SO>, DeterministicAcceptorTS<S, I> {
+
+    @Override
+    default AcceptorPowersetViewTS<?, I, S> powersetView() {
+        return DeterministicAcceptorTS.super.powersetView();
+    }
 }

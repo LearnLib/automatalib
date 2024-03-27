@@ -18,22 +18,23 @@ package net.automatalib.ts.powerset.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import net.automatalib.common.util.nid.NumericID;
-import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
+import net.automatalib.ts.powerset.PowersetView;
 
-public class FastPowersetDTS<S extends NumericID, I, T>
-        implements PowersetViewTS<FastPowersetState<S>, I, Collection<T>, S, T> {
+public class FastPowersetDTS<S extends NumericID, I, T> extends PowersetView<S, I, T> {
 
     private final TransitionSystem<S, I, T> ts;
 
     public FastPowersetDTS(TransitionSystem<S, I, T> ts) {
+        super(ts);
         this.ts = ts;
     }
 
     @Override
-    public FastPowersetState<S> getInitialState() {
+    public Set<S> getInitialState() {
         FastPowersetState<S> result = new FastPowersetState<>();
         for (S init : ts.getInitialStates()) {
             result.add(init, init.getId());
@@ -42,7 +43,7 @@ public class FastPowersetDTS<S extends NumericID, I, T>
     }
 
     @Override
-    public FastPowersetState<S> getSuccessor(Collection<T> transition) {
+    public Set<S> getSuccessor(Collection<T> transition) {
         FastPowersetState<S> succ = new FastPowersetState<>();
         for (T t : transition) {
             S succS = ts.getSuccessor(t);
@@ -53,22 +54,12 @@ public class FastPowersetDTS<S extends NumericID, I, T>
     }
 
     @Override
-    public Collection<T> getTransition(FastPowersetState<S> state, I input) {
+    public Collection<T> getTransition(Set<S> state, I input) {
         List<T> result = new ArrayList<>();
         for (S s : state) {
             result.addAll(ts.getTransitions(s, input));
         }
         return result;
-    }
-
-    @Override
-    public Collection<S> getOriginalStates(FastPowersetState<S> state) {
-        return state;
-    }
-
-    @Override
-    public Collection<T> getOriginalTransitions(Collection<T> transition) {
-        return transition;
     }
 
 }

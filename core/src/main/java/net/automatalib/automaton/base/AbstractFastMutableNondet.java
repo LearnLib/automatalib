@@ -25,7 +25,6 @@ import java.util.Set;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.powerset.impl.FastPowersetDTS;
-import net.automatalib.ts.powerset.impl.FastPowersetState;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFastMutableNondet<S extends AbstractFastState<Collection<T>>, I, T, SP, TP>
@@ -80,7 +79,7 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastState<Coll
     }
 
     @Override
-    public PowersetViewTS<FastPowersetState<S>, I, Collection<T>, S, T> powersetView() {
+    public PowersetViewTS<Set<S>, I, ?, S, T> powersetView() {
         return new FastPowersetDTS<>(this);
     }
 

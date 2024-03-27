@@ -19,7 +19,7 @@ import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
 public class DeterministicAcceptorPowersetView<S, I> extends DeterministicPowersetView<S, I, S>
-        implements AcceptorPowersetViewTS<S, I, S, S, S> {
+        implements AcceptorPowersetViewTS<S, I, S> {
 
     private final DeterministicAcceptorTS<S, I> ts;
 
