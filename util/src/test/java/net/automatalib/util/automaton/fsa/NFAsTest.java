@@ -152,8 +152,9 @@ public class NFAsTest {
                                            FiniteStateAcceptor.TRANSITION_PROPERTIES,
                                            dfa);
 
-        CompactDFA<Integer> det = NFAs.determinize(dfa);
+        CompactDFA<Integer> det = NFAs.determinize(dfa, true, false);
 
+        Assert.assertEquals(det.size(), dfa.size());
         Assert.assertTrue(Automata.testEquivalence(dfa, det, alphabet));
     }
 
