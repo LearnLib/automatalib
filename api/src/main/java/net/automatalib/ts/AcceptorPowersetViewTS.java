@@ -15,8 +15,19 @@
  */
 package net.automatalib.ts;
 
+import net.automatalib.ts.acceptor.AcceptorTS;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
+/**
+ * A {@link PowersetViewTS} refinement that additionally captures the semantics of {@link AcceptorTS}s.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <SO>
+ *         (original) state type
+ */
 public interface AcceptorPowersetViewTS<S, I, SO>
         extends PowersetViewTS<S, I, S, SO, SO>, DeterministicAcceptorTS<S, I> {
 

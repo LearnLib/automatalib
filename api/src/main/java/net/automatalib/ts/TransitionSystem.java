@@ -76,7 +76,8 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
     S getSuccessor(T transition);
 
     /**
-     * Retrieves a "powerset view" of this transition system.
+     * Returns a powerset view of this transition system. A powerset view is a deterministic view on a (potentially)
+     * non-deterministic transition system.
      *
      * @return a powerset view of this transition system.
      */

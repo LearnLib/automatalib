@@ -18,6 +18,14 @@ package net.automatalib.ts.powerset;
 import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
+/**
+ * An {@link AcceptorPowersetViewTS}-specific refinement of {@link DeterministicPowersetView}.
+ *
+ * @param <S>
+ *         (original) state type
+ * @param <I>
+ *         input symbol type
+ */
 public class DeterministicAcceptorPowersetView<S, I> extends DeterministicPowersetView<S, I, S>
         implements AcceptorPowersetViewTS<S, I, S> {
 

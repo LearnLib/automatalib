@@ -24,8 +24,16 @@ import java.util.Set;
 import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.acceptor.AcceptorTS;
 
-public class AcceptorPowersetView<S, I>
-        implements AcceptorPowersetViewTS<Set<S>, I, S> {
+/**
+ * A (default) {@link AcceptorPowersetViewTS} implementation that represents states of the original acceptor transition
+ * system via {@link Set}s.
+ *
+ * @param <S>
+ *         (original) state type
+ * @param <I>
+ *         input symbol type
+ */
+public class AcceptorPowersetView<S, I> implements AcceptorPowersetViewTS<Set<S>, I, S> {
 
     private final AcceptorTS<S, I> ts;
 

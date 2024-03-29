@@ -22,6 +22,16 @@ import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.PowersetViewTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A thin {@link PowersetViewTS} wrapper that may be used if the given transition system already is deterministic.
+ *
+ * @param <S>
+ *         (original) state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         (original) transition type
+ */
 public class DeterministicPowersetView<S, I, T>
         implements DeterministicTransitionSystem<S, I, T>, PowersetViewTS<S, I, T, S, T> {
 

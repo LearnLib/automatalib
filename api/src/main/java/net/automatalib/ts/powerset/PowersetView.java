@@ -25,6 +25,17 @@ import net.automatalib.common.util.HashUtil;
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
 
+/**
+ * A (default) {@link PowersetViewTS} implementation that represents states and transitions of the original transition
+ * system via {@link Set}s and {@link Collection}s.
+ *
+ * @param <S>
+ *         (original) state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         (original) transition type
+ */
 public class PowersetView<S, I, T> implements PowersetViewTS<Set<S>, I, Collection<T>, S, T> {
 
     private final TransitionSystem<S, I, T> ts;
