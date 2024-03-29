@@ -17,16 +17,30 @@ package net.automatalib.ts.powerset;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
 
-public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<S>, I, Set<T>, S, T> {
+/**
+ * A (default) {@link PowersetViewTS} implementation that represents states and transitions of the original transition
+ * system via {@link Set}s and {@link Collection}s.
+ *
+ * @param <S>
+ *         (original) state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         (original) transition type
+ */
+public class PowersetView<S, I, T> implements PowersetViewTS<Set<S>, I, Collection<T>, S, T> {
 
     private final TransitionSystem<S, I, T> ts;
 
-    public DirectPowersetDTS(TransitionSystem<S, I, T> ts) {
+    public PowersetView(TransitionSystem<S, I, T> ts) {
         this.ts = ts;
     }
 
@@ -36,8 +50,8 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<S>, I, Set
     }
 
     @Override
-    public Set<S> getSuccessor(Set<T> transition) {
-        Set<S> result = new HashSet<>();
+    public Set<S> getSuccessor(Collection<T> transition) {
+        Set<S> result = new HashSet<>(HashUtil.capacity(transition.size()));
         for (T trans : transition) {
             result.add(ts.getSuccessor(trans));
         }
@@ -45,24 +59,13 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<S>, I, Set
     }
 
     @Override
-    public Set<S> getSuccessor(Set<S> state, I input) {
-        Set<S> result = new HashSet<>();
+    public Collection<T> getTransition(Set<S> state, I input) {
+        final List<T> result = new LinkedList<>();
         for (S s : state) {
-            Collection<T> transitions = ts.getTransitions(s, input);
-            for (T t : transitions) {
-                result.add(ts.getSuccessor(t));
+            for (T t : ts.getTransitions(s, input)) {
+                // LinkedList's #add is faster than #addAll
+                result.add(t);
             }
-        }
-
-        return result;
-    }
-
-    @Override
-    public Set<T> getTransition(Set<S> state, I input) {
-        Set<T> result = new HashSet<>();
-        for (S s : state) {
-            Collection<T> transitions = ts.getTransitions(s, input);
-            result.addAll(transitions);
         }
         return result;
     }
@@ -73,7 +76,7 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<S>, I, Set
     }
 
     @Override
-    public Collection<T> getOriginalTransitions(Set<T> transition) {
+    public Collection<T> getOriginalTransitions(Collection<T> transition) {
         return transition;
     }
 }

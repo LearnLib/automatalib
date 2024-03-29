@@ -15,21 +15,27 @@
  */
 package net.automatalib.ts.powerset.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.function.Function;
+import java.util.List;
+import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.fsa.impl.FastNFA;
 import net.automatalib.automaton.fsa.impl.FastNFAState;
-import net.automatalib.common.util.nid.NumericID;
+import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.PowersetViewTS;
-import net.automatalib.ts.powerset.DirectPowersetDTS;
+import net.automatalib.ts.TransitionSystem;
+import net.automatalib.ts.acceptor.AcceptorTS;
+import net.automatalib.ts.powerset.AcceptorPowersetView;
+import net.automatalib.ts.powerset.DeterministicAcceptorPowersetView;
+import net.automatalib.ts.powerset.DeterministicPowersetView;
+import net.automatalib.ts.powerset.PowersetView;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -37,106 +43,117 @@ import org.testng.annotations.Test;
 public class PowersetViewTest {
 
     @Test
-    public void testFastPowerset() {
-        final ConstructedSystem<FastNFA<Character>, FastNFAState> system = constructSystem(FastNFA::new);
-        final FastPowersetDTS<FastNFAState, Character, ?> powersetDTS = new FastPowersetDTS<>(system.automaton);
-
-        checkConstructedSystem(powersetDTS, system, PowersetViewTest::toFastPowersetState);
+    public void testPowerset() {
+        final FastNFA<Character> system = constructSystem(FastNFA::new);
+        final PowersetView<FastNFAState, Character, FastNFAState> powersetView = new PowersetView<>(system);
+        checkConstructedSystem(system, powersetView, system.getInputAlphabet());
+        checkConstructedSystem(powersetView, powersetView.powersetView(), system.getInputAlphabet());
     }
 
     @Test
-    public void testDirectPowerset() {
-        final ConstructedSystem<CompactNFA<Character>, Integer> system = constructSystem(CompactNFA::new);
-        final DirectPowersetDTS<Integer, Character, ?> powersetDTS = new DirectPowersetDTS<>(system.automaton);
-
-        checkConstructedSystem(powersetDTS, system, HashSet::new);
+    public void testDeterministicPowerset() {
+        final FastNFA<Character> system = constructSystem(FastNFA::new);
+        final AcceptorPowersetViewTS<Set<FastNFAState>, Character, FastNFAState> detSystem = system.powersetView();
+        final DeterministicPowersetView<Set<FastNFAState>, Character, Set<FastNFAState>> powersetView =
+                new DeterministicPowersetView<>(detSystem);
+        checkConstructedSystem(detSystem, powersetView, system.getInputAlphabet());
+        checkConstructedSystem(powersetView, powersetView.powersetView(), system.getInputAlphabet());
     }
 
-    private static <S, A extends MutableNFA<S, Character>> ConstructedSystem<A, S> constructSystem(Function<Alphabet<Character>, A> constructor) {
+    @Test
+    public void testAcceptorPowerset() {
+        final FastNFA<Character> system = constructSystem(FastNFA::new);
+        final AcceptorPowersetView<FastNFAState, Character> powersetView = new AcceptorPowersetView<>(system);
+        checkConstructedSystem(system, powersetView, system.getInputAlphabet());
+        checkConstructedSystem(powersetView, powersetView.powersetView(), system.getInputAlphabet());
+    }
+
+    @Test
+    public void testDeterministicAcceptorPowerset() {
+        final FastNFA<Character> system = constructSystem(FastNFA::new);
+        final AcceptorPowersetViewTS<Set<FastNFAState>, Character, FastNFAState> detSystem = system.powersetView();
+        final DeterministicAcceptorPowersetView<Set<FastNFAState>, Character> powersetView =
+                new DeterministicAcceptorPowersetView<>(detSystem);
+        checkConstructedSystem(detSystem, powersetView, system.getInputAlphabet());
+        checkConstructedSystem(powersetView, powersetView.powersetView(), system.getInputAlphabet());
+    }
+
+    @Test
+    public void testCompactNFAPowerset() {
+        final CompactNFA<Character> system = constructSystem(CompactNFA::new);
+        checkConstructedSystem(system, system.powersetView(), system.getInputAlphabet());
+    }
+
+    @Test
+    public void testFastNFAPowerset() {
+        final FastNFA<Character> system = constructSystem(FastNFA::new);
+        checkConstructedSystem(system, system.powersetView(), system.getInputAlphabet());
+    }
+
+    @Test
+    public void testFastPowersetDTS() {
+        final FastNFA<Character> system = constructSystem(FastNFA::new);
+        checkConstructedSystem(system, new FastPowersetDTS<>(system), system.getInputAlphabet());
+    }
+
+    private static <S, A extends MutableNFA<S, Character>> A constructSystem(AutomatonCreator<A, Character> creator) {
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
-        final A nfa = constructor.apply(alphabet);
+        final A nfa = creator.createAutomaton(alphabet);
 
         final S q1 = nfa.addInitialState(false);
-        final S q2 = nfa.addState(false);
+        final S q2 = nfa.addState(true);
         final S q3 = nfa.addState(false);
 
         nfa.setTransitions(q1, 'a', Arrays.asList(q1, q2, q3));
         nfa.setTransitions(q2, 'b', Arrays.asList(q2, q3));
         nfa.setTransitions(q3, 'c', Collections.singleton(q3));
 
-        return new ConstructedSystem<>(nfa, q1, q2, q3);
+        return nfa;
     }
 
-    private static <S, OS> void checkConstructedSystem(PowersetViewTS<S, Character, ?, OS, ?> view,
-                                                       ConstructedSystem<?, OS> system,
-                                                       Function<Collection<OS>, S> stateConstructor) {
-        final OS q1 = system.q1;
-        final OS q2 = system.q2;
-        final OS q3 = system.q3;
+    private static <S, T, SO, TO> void checkConstructedSystem(TransitionSystem<SO, Character, TO> transitionSystem,
+                                                              PowersetViewTS<S, Character, T, SO, TO> view,
+                                                              Alphabet<Character> alphabet) {
+        Assert.assertEquals(view.getOriginalStates(view.getInitialState()), transitionSystem.getInitialStates());
 
-        final Collection<OS> firstStateSet = Collections.singleton(q1);
-        final Collection<OS> secondStateSet = Arrays.asList(q1, q2, q3);
-        final Collection<OS> thirdStateSet = Arrays.asList(q2, q3);
-        final Collection<OS> fourthStateSet = Collections.singleton(q3);
+        final List<Word<Character>> traces = Arrays.asList(Word.epsilon(),
+                                                           Word.fromLetter('a'),
+                                                           Word.fromSymbols('a', 'b'),
+                                                           Word.fromSymbols('a', 'b', 'c'));
 
-        final S firstPSState = stateConstructor.apply(firstStateSet);
-        final S secondPSState = stateConstructor.apply(secondStateSet);
-        final S thirdPSState = stateConstructor.apply(thirdStateSet);
-        final S fourthPSState = stateConstructor.apply(fourthStateSet);
+        for (Word<Character> trace : traces) {
+            final Set<SO> states = transitionSystem.getStates(trace);
+            final S state = view.getState(trace);
 
-        final Word<Character> firstTrace = Word.epsilon();
-        final Word<Character> secondTrace = Word.fromLetter('a');
-        final Word<Character> thirdTrace = Word.fromSymbols('a', 'b');
-        final Word<Character> fourthTrace = Word.fromSymbols('a', 'b', 'c');
+            // check equality without order
+            Assert.assertEquals(view.getOriginalStates(state).size(), states.size(), trace.toString());
+            Assert.assertTrue(view.getOriginalStates(state).containsAll(states), trace.toString());
+            Assert.assertTrue(states.containsAll(view.getOriginalStates(state)), trace.toString());
 
-        checkPowersetTrace(view, firstPSState, firstTrace);
-        checkPowersetTrace(view, secondPSState, secondTrace);
-        checkPowersetTrace(view, thirdPSState, thirdTrace);
-        checkPowersetTrace(view, fourthPSState, fourthTrace);
+            for (Character i : alphabet) {
+                final List<TO> transitions = new ArrayList<>();
+                for (SO s : states) {
+                    transitions.addAll(transitionSystem.getTransitions(s, i));
+                }
+                final T transition = view.getTransition(state, i);
 
-        Assert.assertEquals(firstStateSet, view.getOriginalStates(firstPSState));
-        Assert.assertEquals(secondStateSet, view.getOriginalStates(secondPSState));
-        Assert.assertEquals(thirdStateSet, view.getOriginalStates(thirdPSState));
-        Assert.assertEquals(fourthStateSet, view.getOriginalStates(fourthPSState));
-    }
+                // check equality without order
+                Assert.assertEquals(transitions.size(), view.getOriginalTransitions(transition).size(), trace.toString());
+                Assert.assertTrue(view.getOriginalTransitions(transition).containsAll(transitions), trace.toString());
+                Assert.assertTrue(transitions.containsAll(view.getOriginalTransitions(transition)), trace.toString());
+            }
 
-    private static <S, I, T> void checkPowersetTrace(PowersetViewTS<S, I, T, ?, ?> view,
-                                                     S expectedFinalState,
-                                                     Word<I> traceFromInit) {
-        S iter = view.getInitialState();
+            if (transitionSystem instanceof AcceptorTS && view instanceof AcceptorPowersetViewTS) {
+                @SuppressWarnings("unchecked")
+                final AcceptorTS<SO, Character> acceptorTS = (AcceptorTS<SO, Character>) transitionSystem;
+                @SuppressWarnings("unchecked")
+                final AcceptorPowersetViewTS<S, Character, SO> acceptorPowersetViewTS =
+                        (AcceptorPowersetViewTS<S, Character, SO>) view;
 
-        for (I i : traceFromInit) {
-            final T trans = view.getTransition(iter, i);
-            final S tSucc = view.getSuccessor(trans);
-
-            Assert.assertEquals(view.getSuccessor(iter, i), tSucc);
-
-            iter = tSucc;
-        }
-
-        Assert.assertEquals(expectedFinalState, iter);
-    }
-
-    private static <S extends NumericID> FastPowersetState<S> toFastPowersetState(Collection<S> from) {
-        final FastPowersetState<S> result = new FastPowersetState<>();
-
-        for (S s : from) {
-            result.add(s, s.getId());
-        }
-
-        return result;
-    }
-
-    private static class ConstructedSystem<A, OS> {
-
-        private final A automaton;
-        private final OS q1, q2, q3;
-
-        ConstructedSystem(A automaton, OS q1, OS q2, OS q3) {
-            this.automaton = automaton;
-            this.q1 = q1;
-            this.q2 = q2;
-            this.q3 = q3;
+                Assert.assertEquals(acceptorTS.isAccepting(states),
+                                    acceptorPowersetViewTS.isAccepting(state),
+                                    trace.toString());
+            }
         }
     }
 

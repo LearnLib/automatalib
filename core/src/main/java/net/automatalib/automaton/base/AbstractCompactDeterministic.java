@@ -22,7 +22,6 @@ import java.util.Objects;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.ts.powerset.impl.DeterministicPowersetView;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -143,11 +142,6 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
     @Override
     public StateIntAbstraction<I, T, SP, TP> stateIntAbstraction() {
         return this;
-    }
-
-    @Override
-    public DeterministicPowersetView<Integer, I, T> powersetView() {
-        return new DeterministicPowersetView<>(this);
     }
 
     @Override

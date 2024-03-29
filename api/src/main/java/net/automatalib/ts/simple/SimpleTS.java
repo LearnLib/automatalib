@@ -16,7 +16,6 @@
 package net.automatalib.ts.simple;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,41 +47,6 @@ public interface SimpleTS<S, I> {
     Set<S> getSuccessors(S state, I input);
 
     /**
-     * Retrieves the set of successors for the given sequence of input symbols.
-     *
-     * @param state
-     *         the source state.
-     * @param input
-     *         the sequence of input symbols.
-     *
-     * @return the set of successors reachable by this input.
-     */
-    default Set<S> getSuccessors(S state, Iterable<? extends I> input) {
-        return getSuccessors(Collections.singleton(state), input);
-    }
-
-    /**
-     * Retrieves the set of all successors that can be reached from any of the given source states by the specified
-     * input symbol.
-     *
-     * @param states
-     *         the source states.
-     * @param input
-     *         the input symbol.
-     *
-     * @return the set of successors reachable by this input.
-     */
-    default Set<S> getSuccessors(Collection<? extends S> states, I input) {
-        final Set<S> result = new HashSet<>();
-
-        for (S state : states) {
-            result.addAll(getSuccessors(state, input));
-        }
-
-        return result;
-    }
-
-    /**
      * Retrieves the set of all successors that can be reached from any of the given source states by the specified
      * sequence of input symbols.
      *
@@ -99,7 +63,7 @@ public interface SimpleTS<S, I> {
 
         for (I sym : input) {
             for (S state : current) {
-                Set<? extends S> currSuccs = getSuccessors(state, sym);
+                Set<S> currSuccs = getSuccessors(state, sym);
                 succs.addAll(currSuccs);
             }
 

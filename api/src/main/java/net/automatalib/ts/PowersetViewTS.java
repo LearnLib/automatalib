@@ -17,10 +17,41 @@ package net.automatalib.ts;
 
 import java.util.Collection;
 
+/**
+ * A powerset view is a deterministic view on a (potentially) non-deterministic transition system. Conceptually, this
+ * view traverses sets of states of the original transition system.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <OS>
+ *         original state type
+ * @param <OT>
+ *         original transition type
+ */
 public interface PowersetViewTS<S, I, T, OS, OT> extends DeterministicTransitionSystem<S, I, T> {
 
+    /**
+     * Returns the original states that the given view state represents.
+     *
+     * @param state
+     *         the view state
+     *
+     * @return the original states that the given view state represents
+     */
     Collection<OS> getOriginalStates(S state);
 
+    /**
+     * Returns the original transitions that the given view transition represents.
+     *
+     * @param transition
+     *         the view transition
+     *
+     * @return the original transitions that the given view transition represents
+     */
     Collection<OT> getOriginalTransitions(T transition);
 
 }

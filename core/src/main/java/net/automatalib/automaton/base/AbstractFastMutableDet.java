@@ -21,7 +21,6 @@ import java.util.List;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.ShrinkableDeterministic;
-import net.automatalib.ts.powerset.impl.DeterministicPowersetView;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFastMutableDet<S extends AbstractFastState<T>, I, T, SP, TP>
@@ -68,11 +67,6 @@ public abstract class AbstractFastMutableDet<S extends AbstractFastState<T>, I, 
     public void clear() {
         super.clear();
         this.initialState = null;
-    }
-
-    @Override
-    public DeterministicPowersetView<S, I, T> powersetView() {
-        return new DeterministicPowersetView<>(this);
     }
 
     @Override

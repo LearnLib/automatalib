@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
+import net.automatalib.common.util.collection.IteratorUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class FastPowersetState<S> extends AbstractSet<S> {
@@ -39,17 +39,12 @@ public class FastPowersetState<S> extends AbstractSet<S> {
 
     @Override
     public Iterator<S> iterator() {
-        return contents.iterator();
+        return IteratorUtil.immutable(contents.iterator());
     }
 
     @Override
     public int size() {
         return contents.size();
-    }
-
-    @Override
-    public boolean remove(@Nullable Object o) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -62,11 +57,11 @@ public class FastPowersetState<S> extends AbstractSet<S> {
         }
 
         final FastPowersetState<?> that = (FastPowersetState<?>) o;
-        return Objects.equals(bs, that.bs);
+        return bs.equals(that.bs);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hashCode(bs);
+        return bs.hashCode();
     }
 }

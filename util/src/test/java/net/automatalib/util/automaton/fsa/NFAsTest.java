@@ -15,12 +15,22 @@
  */
 package net.automatalib.util.automaton.fsa;
 
+import java.util.Random;
+
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.fsa.FiniteStateAcceptor;
+import net.automatalib.automaton.fsa.MutableDFA;
+import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
+import net.automatalib.automaton.fsa.impl.FastDFA;
+import net.automatalib.automaton.fsa.impl.FastNFA;
 import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -116,13 +126,45 @@ public class NFAsTest {
     }
 
     @Test
-    public void testDeterminize() {
+    public void testDeterminizeDFA() {
+        determinizeDFA(new CompactDFA.Creator<>());
+        determinizeDFA(FastDFA::new);
+    }
+
+    @Test
+    public void testDeterminizeNFA() {
+        determinizeNFA(new CompactNFA.Creator<>());
+        determinizeNFA(FastNFA::new);
+    }
+
+    /*
+     * Check that determinization is idempotent.
+     */
+    private <S, A extends MutableDFA<S, Integer> & InputAlphabetHolder<Integer>> void determinizeDFA(AutomatonCreator<A, Integer> creator) {
         Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
 
-        CompactNFA<Integer> nfa = new CompactNFA<>(alphabet);
+        A dfa = creator.createAutomaton(alphabet);
 
-        int q0 = nfa.addInitialState(false);
-        int q1 = nfa.addState(true);
+        RandomAutomata.randomDeterministic(new Random(42),
+                                           10,
+                                           alphabet,
+                                           FiniteStateAcceptor.STATE_PROPERTIES,
+                                           FiniteStateAcceptor.TRANSITION_PROPERTIES,
+                                           dfa);
+
+        CompactDFA<Integer> det = NFAs.determinize(dfa, true, false);
+
+        Assert.assertEquals(det.size(), dfa.size());
+        Assert.assertTrue(Automata.testEquivalence(dfa, det, alphabet));
+    }
+
+    private <S, A extends MutableNFA<S, Integer> & InputAlphabetHolder<Integer>> void determinizeNFA(AutomatonCreator<A, Integer> creator) {
+        Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
+
+        A nfa = creator.createAutomaton(alphabet);
+
+        S q0 = nfa.addInitialState(false);
+        S q1 = nfa.addState(true);
 
         nfa.addTransition(q0, 0, q0);
         nfa.addTransition(q0, 1, q0);

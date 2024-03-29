@@ -119,6 +119,21 @@ public final class IteratorUtil {
     }
 
     /**
+     * Returns an immutable view on the given iterator so that calls to {@link Iterator#remove()} throw a
+     * {@link UnsupportedOperationException}.
+     *
+     * @param iterator
+     *         the iterator to provide the elements
+     * @param <T>
+     *         element type
+     *
+     * @return an iterator that does not support the removal of elements
+     */
+    public static <T> Iterator<T> immutable(Iterator<T> iterator) {
+        return new ImmutableIterator<>(iterator);
+    }
+
+    /**
      * Collects the elements of the given iterator into a list. Note that the iterator is consumed in this process.
      *
      * @param iterator

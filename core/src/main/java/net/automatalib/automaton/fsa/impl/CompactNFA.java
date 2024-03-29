@@ -22,6 +22,7 @@ import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.base.AbstractCompactSimpleNondet;
 import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.common.util.WrapperUtil;
+import net.automatalib.ts.AcceptorPowersetViewTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> implements MutableNFA<Integer, I> {
@@ -89,13 +90,33 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
 
     @Override
     public void clear() {
-        accepting.clear(0, size());
+        accepting.clear();
         super.clear();
     }
 
     @Override
     public void setStateProperty(int stateId, @Nullable Boolean property) {
         setAccepting(stateId, WrapperUtil.booleanValue(property));
+    }
+
+    @Override
+    public AcceptorPowersetViewTS<BitSet, I, Integer> powersetView() {
+        return new CompactAcceptorPowersetDTS();
+    }
+
+    protected class CompactAcceptorPowersetDTS extends CompactPowersetDTS
+            implements AcceptorPowersetViewTS<BitSet, I, Integer> {
+
+        @Override
+        public boolean isAccepting(BitSet state) {
+            for (int i = state.nextSetBit(0); i >= 0; i = state.nextSetBit(i + 1)) {
+                if (CompactNFA.this.isAccepting(i)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 
     public static final class Creator<I> implements AutomatonCreator<CompactNFA<I>, I> {

@@ -15,10 +15,14 @@
  */
 package net.automatalib.automaton.fsa.impl;
 
+import java.util.Set;
+
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.base.AbstractFastMutableNondet;
 import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.common.util.WrapperUtil;
+import net.automatalib.ts.AcceptorPowersetViewTS;
+import net.automatalib.ts.powerset.impl.FastAcceptorPowersetDTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class FastNFA<I> extends AbstractFastMutableNondet<FastNFAState, I, FastNFAState, Boolean, Void>
@@ -46,6 +50,11 @@ public class FastNFA<I> extends AbstractFastMutableNondet<FastNFAState, I, FastN
     @Override
     protected FastNFAState createState(@Nullable Boolean property) {
         return new FastNFAState(inputAlphabet.size(), WrapperUtil.booleanValue(property));
+    }
+
+    @Override
+    public AcceptorPowersetViewTS<Set<FastNFAState>, I, FastNFAState> powersetView() {
+        return new FastAcceptorPowersetDTS<>(this);
     }
 
 }

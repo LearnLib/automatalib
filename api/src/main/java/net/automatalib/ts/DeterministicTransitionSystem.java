@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+import net.automatalib.ts.powerset.DeterministicPowersetView;
 import net.automatalib.ts.simple.SimpleDTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -70,6 +71,11 @@ public interface DeterministicTransitionSystem<S, I, T> extends TransitionSystem
     @Override
     default Collection<T> getTransitions(S state, I input) {
         return transToSet(getTransition(state, input));
+    }
+
+    @Override
+    default PowersetViewTS<?, I, ?, S, T> powersetView() {
+        return new DeterministicPowersetView<>(this);
     }
 
     static <T> Set<T> transToSet(@Nullable T trans) {

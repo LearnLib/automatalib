@@ -20,7 +20,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.automatalib.ts.powerset.DirectPowersetDTS;
+import net.automatalib.common.util.HashUtil;
+import net.automatalib.ts.powerset.PowersetView;
 import net.automatalib.ts.simple.SimpleTS;
 
 /**
@@ -42,7 +43,7 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
         if (transitions.isEmpty()) {
             return Collections.emptySet();
         }
-        Set<S> result = new HashSet<>(transitions.size());
+        Set<S> result = new HashSet<>(HashUtil.capacity(transitions.size()));
         for (T trans : transitions) {
             result.add(getSuccessor(trans));
         }
@@ -75,11 +76,12 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
     S getSuccessor(T transition);
 
     /**
-     * Retrieves a "powerset view" of this transition system.
+     * Returns a powerset view of this transition system. A powerset view is a deterministic view on a (potentially)
+     * non-deterministic transition system.
      *
      * @return a powerset view of this transition system.
      */
     default PowersetViewTS<?, I, ?, S, T> powersetView() {
-        return new DirectPowersetDTS<>(this);
+        return new PowersetView<>(this);
     }
 }

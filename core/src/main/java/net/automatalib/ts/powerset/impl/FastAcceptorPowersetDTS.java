@@ -15,20 +15,17 @@
  */
 package net.automatalib.ts.powerset.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import net.automatalib.common.util.nid.NumericID;
-import net.automatalib.ts.TransitionSystem;
-import net.automatalib.ts.powerset.PowersetView;
+import net.automatalib.ts.acceptor.AcceptorTS;
+import net.automatalib.ts.powerset.AcceptorPowersetView;
 
-public class FastPowersetDTS<S extends NumericID, I, T> extends PowersetView<S, I, T> {
+public class FastAcceptorPowersetDTS<S extends NumericID, I> extends AcceptorPowersetView<S, I> {
 
-    private final TransitionSystem<S, I, T> ts;
+    private final AcceptorTS<S, I> ts;
 
-    public FastPowersetDTS(TransitionSystem<S, I, T> ts) {
+    public FastAcceptorPowersetDTS(AcceptorTS<S, I> ts) {
         super(ts);
         this.ts = ts;
     }
@@ -43,23 +40,13 @@ public class FastPowersetDTS<S extends NumericID, I, T> extends PowersetView<S, 
     }
 
     @Override
-    public Set<S> getSuccessor(Collection<T> transition) {
-        FastPowersetState<S> succ = new FastPowersetState<>();
-        for (T t : transition) {
-            S succS = ts.getSuccessor(t);
-            succ.add(succS, succS.getId());
-        }
-
-        return succ;
-    }
-
-    @Override
-    public Collection<T> getTransition(Set<S> state, I input) {
-        List<T> result = new ArrayList<>();
+    public Set<S> getTransition(Set<S> state, I input) {
+        FastPowersetState<S> result = new FastPowersetState<>();
         for (S s : state) {
-            result.addAll(ts.getTransitions(s, input));
+            for (S succ : this.ts.getTransitions(s, input)) {
+                result.add(succ, succ.getId());
+            }
         }
         return result;
     }
-
 }

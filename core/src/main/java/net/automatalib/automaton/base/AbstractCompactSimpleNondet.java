@@ -24,6 +24,7 @@ import java.util.Set;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.common.util.collection.PositiveIntSet;
+import net.automatalib.ts.PowersetViewTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -214,5 +215,48 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     @Override
     public Set<Integer> getInitialStates() {
         return new PositiveIntSet(initial);
+    }
+
+    @Override
+    public PowersetViewTS<BitSet, I, BitSet, Integer, Integer> powersetView() {
+        return new CompactPowersetDTS();
+    }
+
+    protected class CompactPowersetDTS implements PowersetViewTS<BitSet, I, BitSet, Integer, Integer> {
+
+        @Override
+        public @Nullable BitSet getTransition(BitSet state, I input) {
+            final BitSet result = new BitSet(AbstractCompactSimpleNondet.this.size());
+            final int inputIdx = getSymbolIndex(input);
+
+            for (int i = state.nextSetBit(0); i >= 0; i = state.nextSetBit(i+1)) {
+                final BitSet transitions = AbstractCompactSimpleNondet.this.transitions[toMemoryIndex(i, inputIdx)];
+                if (transitions != null) {
+                    result.or(transitions);
+                }
+            }
+
+            return result;
+        }
+
+        @Override
+        public BitSet getSuccessor(BitSet transition) {
+            return transition;
+        }
+
+        @Override
+        public BitSet getInitialState() {
+            return initial;
+        }
+
+        @Override
+        public Collection<Integer> getOriginalStates(BitSet state) {
+            return new PositiveIntSet(state);
+        }
+
+        @Override
+        public Collection<Integer> getOriginalTransitions(BitSet transition) {
+            return new PositiveIntSet(transition);
+        }
     }
 }

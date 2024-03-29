@@ -15,6 +15,7 @@
  */
 package net.automatalib.ts.simple;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
@@ -36,11 +37,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol class
  */
 public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
-
-    @Override
-    default Set<S> getSuccessors(S state, Iterable<? extends I> input) {
-        return stateToSet(getSuccessor(state, input));
-    }
 
     @Override
     default Set<S> getSuccessors(S state, I input) {
@@ -81,13 +77,6 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      */
     @Nullable S getInitialState();
 
-    static <S> Set<S> stateToSet(@Nullable S state) {
-        if (state == null) {
-            return Collections.emptySet();
-        }
-        return Collections.singleton(state);
-    }
-
     /**
      * Retrieves the successor state reachable by the given sequence of input symbols.
      *
@@ -99,7 +88,7 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      * @return the successor state reachable by the given sequence of input symbols, or <code>null</code> if no state is
      * reachable by this symbol.
      *
-     * @see TransitionSystem#getSuccessors(Object, Iterable)
+     * @see TransitionSystem#getSuccessors(Collection, Iterable)
      */
     default @Nullable S getSuccessor(S state, Iterable<? extends I> input) {
         S curr = state;
@@ -127,4 +116,11 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      * @see TransitionSystem#getSuccessors(Object, Object)
      */
     @Nullable S getSuccessor(S state, I input);
+
+    static <S> Set<S> stateToSet(@Nullable S state) {
+        if (state == null) {
+            return Collections.emptySet();
+        }
+        return Collections.singleton(state);
+    }
 }
