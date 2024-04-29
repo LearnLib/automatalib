@@ -74,7 +74,6 @@ class CFMPSViewSBA<I> implements ContextFreeModalProcessSystem<I, Void> {
         private static final Object FINAL = new Object();
 
         private final ProceduralInputAlphabet<I> alphabet;
-        private final Collection<I> proceduralInputs;
         private final I procedure;
         private final DFA<S, I> dfa;
         private final S dfaInit;
@@ -93,33 +92,16 @@ class CFMPSViewSBA<I> implements ContextFreeModalProcessSystem<I, Void> {
             }
 
             this.alphabet = sba.getInputAlphabet();
-            this.proceduralInputs = sba.getProceduralInputs();
             this.procedure = procedure;
             this.dfa = dfa;
             this.dfaInit = dfaInit;
 
-            S finalNode = null;
-            for (S s : dfa) {
-                final S rSucc = dfa.getSuccessor(s, alphabet.getReturnSymbol());
-                if (rSucc != null && dfa.isAccepting(rSucc)) {
-                    finalNode = rSucc;
-                    break;
-                }
-            }
-
-            final List<S> nodes;
+            final List<S> nodes = new ArrayList<>(dfa.size() + 2);
             this.initialNode = (S) INITIAL;
-
-            if (finalNode == null) {
-                this.finalNode = (S) FINAL;
-                nodes = new ArrayList<>(dfa.size() + 2);
-                nodes.add(this.finalNode);
-            } else {
-                this.finalNode = finalNode;
-                nodes = new ArrayList<>(dfa.size() + 1);
-            }
+            this.finalNode = (S) FINAL;
 
             nodes.add(initialNode);
+            nodes.add(finalNode);
 
             for (S s : dfa) {
                 if (dfa.isAccepting(s)) {
@@ -137,10 +119,10 @@ class CFMPSViewSBA<I> implements ContextFreeModalProcessSystem<I, Void> {
             } else if (node == finalNode) {
                 return Collections.emptyList();
             } else {
-                final List<PMPGEdge<I, S>> result = new ArrayList<>(proceduralInputs.size());
+                final List<PMPGEdge<I, S>> result = new ArrayList<>(alphabet.size());
 
-                for (I i : proceduralInputs) {
-                    final S succ = dfa.getSuccessor(node, i);
+                for (I i : alphabet) {
+                    S succ = dfa.getSuccessor(node, i);
                     if (succ != null && dfa.isAccepting(succ)) {
                         final ProceduralType type;
 
@@ -148,6 +130,9 @@ class CFMPSViewSBA<I> implements ContextFreeModalProcessSystem<I, Void> {
                             type = ProceduralType.PROCESS;
                         } else {
                             type = ProceduralType.INTERNAL;
+                            if (alphabet.isReturnSymbol(i)) {
+                                succ = this.finalNode;
+                            }
                         }
 
                         result.add(new PMPGEdge<>(i, succ, type));

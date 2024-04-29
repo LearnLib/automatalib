@@ -282,11 +282,11 @@ public class SBAsTest {
 
         final ProceduralModalProcessGraph<?, String, ?, Void, ?> p1 = pmpgs.get("P1");
         Assert.assertNotNull(p1);
-        Assert.assertEquals(p1.getNodes().size(), 4);
+        Assert.assertEquals(p1.getNodes().size(), 5);
 
         final ProceduralModalProcessGraph<?, String, ?, Void, ?> p2 = pmpgs.get("P2");
         Assert.assertNotNull(p2);
-        Assert.assertEquals(p2.getNodes().size(), 4);
+        Assert.assertEquals(p2.getNodes().size(), 5);
 
         final ProceduralModalProcessGraph<?, String, ?, Void, ?> p3 = pmpgs.get("P3");
         Assert.assertNotNull(p3);

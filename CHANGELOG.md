@@ -34,6 +34,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `SimpleTS#getSuccessors(S state, Iterable<? extends I> input)` has been removed. In order to traverse a (non-deterministic) transition system, use `TransitionSystem#powersetView` instead.
 * The `net.automatalib:automata-serialization-core` artifact has been dropped. Its contents are now part of the `net.automatalib:automata-api` artifact.
 
+### Fixed
+
+* Fixed a bug in `SBAs#toCFMPS` which would allow the returned view to reach a final node on a non-return symbol.
+
 
 ## [0.11.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.11.0) - 2023-11-06
 
