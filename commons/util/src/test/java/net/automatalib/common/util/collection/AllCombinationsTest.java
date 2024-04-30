@@ -50,8 +50,7 @@ public class AllCombinationsTest {
 
     @Test
     public void testEmptyDomain() {
-        final Iterable<List<Integer>> iter =
-                IterableUtil.cartesianProduct(DOMAIN1, Collections.emptyList(), DOMAIN3);
+        final Iterable<List<Integer>> iter = IterableUtil.cartesianProduct(DOMAIN1, Collections.emptyList(), DOMAIN3);
 
         Assert.assertEquals(IterableUtil.size(iter), 0);
         Assert.assertThrows(NoSuchElementException.class, () -> iter.iterator().next());
@@ -63,5 +62,14 @@ public class AllCombinationsTest {
 
         Assert.assertEquals(IterableUtil.size(iter), 1);
         Assert.assertTrue(IterableUtil.stream(iter).allMatch(List::isEmpty));
+    }
+
+    @Test
+    public void testSingletons() {
+        final Iterable<List<Integer>> iter =
+                IterableUtil.cartesianProduct(Collections.singleton(1), Collections.singleton(2));
+
+        Assert.assertEquals(IterableUtil.size(iter), 1);
+        Assert.assertEquals(iter.iterator().next(), List.of(1, 2));
     }
 }

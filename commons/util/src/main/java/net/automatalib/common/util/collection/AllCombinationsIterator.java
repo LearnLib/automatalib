@@ -66,7 +66,8 @@ final class AllCombinationsIterator<T> implements Iterator<List<T>> {
                 return true;
             }
         }
-        return false;
+
+        return first;
     }
 
     @Override
