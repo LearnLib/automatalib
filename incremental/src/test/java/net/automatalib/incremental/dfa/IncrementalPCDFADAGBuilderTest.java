@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.IntegrationUtil;
 import net.automatalib.incremental.IntegrationUtil.ParsedTraces;
@@ -38,6 +39,32 @@ public class IncrementalPCDFADAGBuilderTest extends AbstractIncrementalPCDFABuil
     @Override
     protected String getDOTResource() {
         return "/dfa/pc_dag.dot";
+    }
+
+    /**
+     * (DFA-adjusted) test-case based on <a href="https://github.com/LearnLib/automatalib/issues/79">AutomataLib
+     * issue #79</a>.
+     */
+    @Test
+    public void testAutomataLib79() {
+        final Alphabet<Character> alphabet = Alphabets.characters('0', '3');
+
+        final Word<Character> in1 = Word.fromString("12");
+        final Word<Character> in2 = Word.fromString("302");
+        final Word<Character> in3 = Word.fromString("3023102");
+        final Word<Character> in4 = Word.fromString("30231023102");
+
+        final IncrementalPCDFADAGBuilder<Character> builder = new IncrementalPCDFADAGBuilder<>(alphabet);
+
+        builder.insert(in1, true);
+        builder.insert(in2, true);
+        builder.insert(in3, true);
+        builder.insert(in4, false); // threw a ConflictException previously
+
+        Assert.assertEquals(builder.lookup(in1), Acceptance.TRUE);
+        Assert.assertEquals(builder.lookup(in2), Acceptance.TRUE);
+        Assert.assertEquals(builder.lookup(in3), Acceptance.TRUE);
+        Assert.assertEquals(builder.lookup(in4), Acceptance.FALSE);
     }
 
     /**

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.IntegrationUtil;
 import net.automatalib.incremental.IntegrationUtil.ParsedTraces;
@@ -39,6 +40,37 @@ public class IncrementalMooreDAGBuilderTest extends AbstractIncrementalMooreBuil
     @Override
     protected String getDOTResource() {
         return "/moore/dag.dot";
+    }
+
+    /**
+     * (Moore-adjusted) test-case based on <a href="https://github.com/LearnLib/automatalib/issues/79">AutomataLib
+     * issue #79</a>.
+     */
+    @Test
+    public void testAutomataLib79() {
+        final Alphabet<Character> alphabet = Alphabets.characters('0', '3');
+
+        final Word<Character> in1 = Word.fromString("12");
+        final Word<Character> in2 = Word.fromString("302");
+        final Word<Character> in3 = Word.fromString("3023102");
+        final Word<Character> in4 = Word.fromString("30231023");
+
+        final Word<Character> out1 = Word.fromString("001");
+        final Word<Character> out2 = Word.fromString("0101");
+        final Word<Character> out3 = Word.fromString("01013101");
+        final Word<Character> out4 = Word.fromString("010131010");
+
+        final IncrementalMooreDAGBuilder<Character, Character> builder = new IncrementalMooreDAGBuilder<>(alphabet);
+
+        builder.insert(in1, out1);
+        builder.insert(in2, out2);
+        builder.insert(in3, out3);
+        builder.insert(in4, out4); // threw a ConflictException previously
+
+        Assert.assertEquals(builder.lookup(in1), out1);
+        Assert.assertEquals(builder.lookup(in2), out2);
+        Assert.assertEquals(builder.lookup(in3), out3);
+        Assert.assertEquals(builder.lookup(in4), out4);
     }
 
     /**

@@ -230,13 +230,13 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
         if (last != init) {
             last = unhide(last, suffTransIdx, suffixState);
 
-            // the suffixState may be part of our current path and become confluent due to un-hiding
-            if (suffixState.isConfluence()) {
-                // update the reference with whatever state comes first
+            if (conf != null) {
+                // in case of a cyclic structure, the suffix may make predecessors of 'conf' confluent due to un-hiding
+                // update the reference with whatever confluent state comes first
                 final Iterator<Transition<O>> iter = path.descendingIterator();
                 while (iter.hasNext()) {
                     final State<O> s = iter.next().state;
-                    if (s == conf || s == suffixState) {
+                    if (s.isConfluence()) {
                         conf = s;
                         break;
                     }
