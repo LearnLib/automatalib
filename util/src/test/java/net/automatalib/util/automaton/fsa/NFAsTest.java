@@ -15,7 +15,6 @@
  */
 package net.automatalib.util.automaton.fsa;
 
-
 import java.util.Random;
 import java.util.Set;
 
