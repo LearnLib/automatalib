@@ -16,6 +16,7 @@
 package net.automatalib.util.automaton.fsa;
 
 import java.util.Random;
+import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -123,6 +124,72 @@ public class NFAsTest {
         NFA<?, Integer> actual = NFAs.impl(testNfa1, testNfa2, testAlphabet);
 
         assertEquivalence(actual, expected, testAlphabet);
+    }
+
+    @Test
+    public void testReverse() {
+        CompactNFA<Integer> rNFA = NFAs.reverse(testNfa1, testAlphabet);
+        Assert.assertEquals(rNFA.size(), testNfa1.size());
+
+        for (int i = 0; i < rNFA.size(); i++) {
+            Assert.assertEquals(rNFA.isAccepting(i), i == 0);
+            int iMinusOneModSize = (rNFA.size() + i - 1) % rNFA.size();
+            Assert.assertEquals(rNFA.getTransitions(i), Set.of(iMinusOneModSize));
+        }
+
+        Assert.assertEquals(rNFA.getInitialStates(), Set.of(0, 1));
+
+        // double-reverse == no reverse
+        assertEquivalence(testNfa1, NFAs.reverse(rNFA, testAlphabet), testAlphabet);
+    }
+
+    @Test
+    public void testTrim() {
+        Alphabet<Integer> alphabet = Alphabets.singleton(0);
+        CompactNFA<Integer> nfa = new CompactNFA<>(alphabet);
+
+        int q0 = nfa.addInitialState(false);
+
+        // with no accepting states, if trimmed this will have no states
+        Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 0);
+
+        // accepting state is not accessible
+        int q1 = nfa.addState(true);
+        Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 0);
+
+        // accessible and co-accessible
+        nfa.addTransition(q0, 0, q1);
+        Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 2);
+
+        // dead-end is not co-accessible
+        int q2 = nfa.addState(false);
+        nfa.addTransition(q0, 0, q2);
+        Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 2);
+    }
+
+    @Test
+    public void testTrimReversal() {
+        // test trim equivalence of testNfa1 and its reverse
+        assertEquivalence(testNfa1, NFAs.trim(testNfa1, testAlphabet), testAlphabet);
+        CompactNFA<Integer> reverseNFA = NFAs.reverse(testNfa1, testAlphabet);
+        assertEquivalence(reverseNFA, NFAs.trim(reverseNFA, testAlphabet), testAlphabet);
+    }
+
+    @Test
+    public void testTrimAccessibility() {
+        Alphabet<Integer> alphabet = Alphabets.singleton(0);
+        CompactNFA<Integer> nfa = new CompactNFA<>(alphabet);
+
+        // q0 -> q1, q1 -> q2: accessible but not co-accessible
+        int q0 = nfa.addInitialState(false);
+        int q1 = nfa.addState(false);
+        int q2 = nfa.addState(true);
+        nfa.addTransition(q0, 0, q1);
+        nfa.addTransition(q0, 0, q2);
+
+        Assert.assertEquals(NFAs.accessibleStates(nfa, alphabet), Set.of(0, 1, 2));
+        Assert.assertEquals(NFAs.coaccessibleStates(nfa, alphabet), Set.of(0, 2));
+        Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 2);
     }
 
     @Test
