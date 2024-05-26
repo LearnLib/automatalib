@@ -36,6 +36,9 @@ import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
+import java.util.Set;
+
 public class NFAsTest {
 
     private static final boolean[] VECTOR_1 = {true, true, false, false};
@@ -123,6 +126,21 @@ public class NFAsTest {
         NFA<?, Integer> actual = NFAs.impl(testNfa1, testNfa2, testAlphabet);
 
         assertEquivalence(actual, expected, testAlphabet);
+    }
+
+    @Test
+    public void testReverse() {
+        CompactNFA<Integer> rNFA = NFAs.reverse(testNfa1, testAlphabet);
+        Assert.assertEquals(rNFA.size(), testNfa1.size());
+        for(int i=0;i<rNFA.size();i++) {
+            Assert.assertEquals(rNFA.isAccepting(i), i == 0);
+            int iMinusOneModSize = (rNFA.size() + i - 1) % rNFA.size();
+            Assert.assertEquals(rNFA.getTransitions(i), Set.of(iMinusOneModSize));
+        }
+        Assert.assertEquals(rNFA.getInitialStates(), Set.of(0,1));
+
+        // double-reverse == no reverse
+        assertEquivalence(testNfa1, NFAs.reverse(rNFA, testAlphabet), testAlphabet);
     }
 
     @Test
