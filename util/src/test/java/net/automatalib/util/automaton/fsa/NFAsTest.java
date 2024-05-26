@@ -15,7 +15,9 @@
  */
 package net.automatalib.util.automaton.fsa;
 
+
 import java.util.Random;
+import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -35,9 +37,6 @@ import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
-import java.util.Set;
 
 public class NFAsTest {
 
@@ -132,12 +131,12 @@ public class NFAsTest {
     public void testReverse() {
         CompactNFA<Integer> rNFA = NFAs.reverse(testNfa1, testAlphabet);
         Assert.assertEquals(rNFA.size(), testNfa1.size());
-        for(int i=0;i<rNFA.size();i++) {
+        for (int i=0; i<rNFA.size(); i++) {
             Assert.assertEquals(rNFA.isAccepting(i), i == 0);
             int iMinusOneModSize = (rNFA.size() + i - 1) % rNFA.size();
             Assert.assertEquals(rNFA.getTransitions(i), Set.of(iMinusOneModSize));
         }
-        Assert.assertEquals(rNFA.getInitialStates(), Set.of(0,1));
+        Assert.assertEquals(rNFA.getInitialStates(), Set.of(0, 1));
 
         // double-reverse == no reverse
         assertEquivalence(testNfa1, NFAs.reverse(rNFA, testAlphabet), testAlphabet);
@@ -150,9 +149,10 @@ public class NFAsTest {
         CompactNFA<Integer> reverseNFA = NFAs.reverse(testNfa1, testAlphabet);
         assertEquivalence(reverseNFA, NFAs.trim(reverseNFA, testAlphabet), testAlphabet);
 
-        Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
+        Alphabet<Integer> alphabet = Alphabets.integers(0, 0);
         CompactNFA<Integer> nfa = new CompactNFA<>(alphabet);
         int q0 = nfa.addInitialState(false);
+
         // With no accepting states, if trimmed this will have no states
         Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 0);
 
@@ -164,19 +164,17 @@ public class NFAsTest {
         nfa.addTransition(q0, 0, q1);
         Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 2);
 
+        // q0 -> q1, q1 -> q2: accessible but not co-accessible
         nfa.clear();
         q0 = nfa.addInitialState(false);
         q1 = nfa.addState(false);
         int q2 = nfa.addState(true);
         nfa.addTransition(q0, 0, q1);
         nfa.addTransition(q0, 0, q2);
-
-        // Accessible but not co-accessible
         Set<Integer> actual = NFAs.rightTrimHelper(nfa, alphabet);
         Assert.assertEquals(actual, Set.of(0, 1, 2));
         actual = NFAs.rightTrimHelper(NFAs.reverse(nfa, alphabet), alphabet);
-        Assert.assertEquals(actual, Set.of(0,2));
-
+        Assert.assertEquals(actual, Set.of(0, 2));
         Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 2);
     }
 
