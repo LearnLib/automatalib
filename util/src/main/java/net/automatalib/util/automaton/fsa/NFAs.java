@@ -24,12 +24,16 @@ import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.MapAlphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
+import net.automatalib.common.util.HashUtil;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.acceptor.AcceptorTS;
 import net.automatalib.util.automaton.Automata;
@@ -336,10 +340,10 @@ public final class NFAs {
     }
 
     /**
-     * Reverse the specified NFA.
+     * Creates an NFA for the reverse language of the given input NFA.
      *
      * @param nfa
-     *         the original NFA
+     *         the input NFA
      * @param inputAlphabet
      *         the input alphabet
      * @param <I>
@@ -347,148 +351,195 @@ public final class NFAs {
      *
      * @return the reversed NFA
      */
-    public static <I> CompactNFA<I> reverse(MutableNFA<Integer, I> nfa, Alphabet<I> inputAlphabet) {
-        CompactNFA<I> result = new CompactNFA<>(inputAlphabet);
+    public static <I> CompactNFA<I> reverse(NFA<?, I> nfa, Alphabet<I> inputAlphabet) {
+        final CompactNFA<I> result = new CompactNFA<>(inputAlphabet, nfa.size());
         reverse(nfa, inputAlphabet, result);
         return result;
     }
 
     /**
-     * Reverse the specified NFA, and stores the result in a given mutable NFA.
+     * Writes an NFA for the reverse language of the given input NFA into the given output NFA.
      *
      * @param nfa
-     *         the original NFA
+     *         the input NFA
      * @param inputs
      *         the input symbols to consider
-     * @param rNFA
-     *         a mutable NFA for storing the result
-     * @param <S>
-     *         state type of the automata
+     * @param out
+     *         the output NFA
+     * @param <SI>
+     *         (input) state type
      * @param <I>
      *         input symbol type
+     * @param <SO>
+     *         (output) state type
      * @param <A>
-     *         reversed NFA type
+     *         (output) automaton type
+     *
+     * @return a mapping from output states to their original input states
      */
-    public static <S, I, A extends MutableNFA<S, I>> void reverse(MutableNFA<S, I> nfa,
-                                      Collection<? extends I> inputs,
-                                      A rNFA) {
-        Set<S> initialStates = nfa.getInitialStates();
+    public static <SI, I, SO, A extends MutableNFA<SO, I>> Mapping<SO, SI> reverse(NFA<SI, I> nfa,
+                                                                                   Collection<? extends I> inputs,
+                                                                                   A out) {
+        final Set<SI> initialStates = nfa.getInitialStates();
+        final MutableMapping<SI, SO> mapping = nfa.createStaticStateMapping();
+        final MutableMapping<SO, SI> reverseMapping = out.createDynamicStateMapping();
 
-        // Accepting are initial states and vice versa
-        for (S q: nfa.getStates()) {
-            rNFA.addState(initialStates.contains(q));
-            if (nfa.isAccepting(q)) {
-                rNFA.setInitial(q, true);
-            }
+        // accepting states are initial states and vice versa
+        for (SI si : nfa) {
+            final SO so = out.addState(initialStates.contains(si));
+            out.setInitial(so, nfa.isAccepting(si));
+            mapping.put(si, so);
+            reverseMapping.put(so, si);
         }
+
         // reverse transitions
-        for (S q: nfa.getStates()) {
-            for (I a: inputs) {
-                for (S s: nfa.getTransitions(q, a)) {
-                    rNFA.addTransition(s, a, q);
+        for (SI s1 : nfa) {
+            for (I a : inputs) {
+                for (SI s2 : nfa.getTransitions(s1, a)) {
+                    out.addTransition(mapping.get(s2), a, mapping.get(s1));
                 }
             }
         }
+
+        return reverseMapping;
     }
 
     /**
-     * Create a trim (accessible and co-accessible) NFA from the specified NFA.
+     * Creates a trim NFA from the given input NFA. An NFA is trim if all of its states are accessible and
+     * co-accessible.
      *
      * @param nfa
-     *         the original NFA
+     *         the input NFA
      * @param inputAlphabet
      *         the input alphabet
      * @param <I>
      *         input symbol type
+     *
      * @return the trim NFA
+     *
+     * @see #accessibleStates(NFA, Collection)
+     * @see #coaccessibleStates(NFA, Collection)
      */
-    public static <I> CompactNFA<I> trim(CompactNFA<I> nfa, Alphabet<I> inputAlphabet) {
-        CompactNFA<I> result = new CompactNFA<>(inputAlphabet);
-        trim(nfa, inputAlphabet, result);
-        return result;
+    public static <I> CompactNFA<I> trim(NFA<?, I> nfa, Alphabet<I> inputAlphabet) {
+        return trim(nfa, inputAlphabet, new CompactNFA<>(inputAlphabet));
     }
 
     /**
-     * Create a trim NFA from the specified NFA, and store the result in a given mutable NFA.
+     * Creates a trim NFA from the given input NFA and writes it to the given output NFA. An NFA is trim if all of its
+     * states are accessible and co-accessible.
      *
      * @param nfa
-     *         the original NFA
-     * @param inputAlphabet
-     *         the input alphabet
-     * @param trimNFA
-     *         a mutable NFA for storing the result
-     * @param <S>
-     *         state type of the automata
+     *         the input NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         the output NFA
+     * @param <SI>
+     *         (input) state type
      * @param <I>
      *         input symbol type
+     * @param <SO>
+     *         (output) state type
      * @param <A>
-     *         trim NFA type
+     *         (output) automaton type
+     *
+     * @return {@code out} for convenience
+     *
+     * @see #accessibleStates(NFA, Collection)
+     * @see #coaccessibleStates(NFA, Collection)
      */
-    @SuppressWarnings("unchecked")
-    public static <S, I, A extends MutableNFA<S, I>> void trim(CompactNFA<I> nfa,
-                                Alphabet<I> inputAlphabet,
-                                A trimNFA) {
-        Set<Integer> trimStates = new HashSet<>(nfa.size());
-        for (int i = 0; i < nfa.size(); i++) {
-            trimStates.add(i);
-        }
-        // right (accessible) trim
-        trimStates.retainAll(rightTrimHelper(nfa, inputAlphabet));
-        // left (co-accessible) trim
-        trimStates.retainAll(rightTrimHelper(reverse(nfa, inputAlphabet), inputAlphabet));
+    public static <SI, I, SO, A extends MutableNFA<SO, I>> A trim(NFA<SI, I> nfa,
+                                                                  Collection<? extends I> inputs,
+                                                                  A out) {
+        final MutableMapping<SI, SO> mapping = nfa.createStaticStateMapping();
+        final Set<SI> inits = nfa.getInitialStates();
 
-        // Quotient based upon trim states
-        // determine mapping of old states to new ones
-        Object[] oldToNewMap = new Object[nfa.size()];
-        // Add new states -- initial, accepting properties
-        for (int i = 0; i < nfa.size(); i++) {
-            if (!trimStates.contains(i)) {
-                continue;
-            }
-            S newState = trimNFA.addState(nfa.isAccepting(i));
-            oldToNewMap[i] = newState;
-            if (nfa.getInitialStates().contains(i)) {
-                trimNFA.setInitial(newState, true);
-            }
+        final Set<SI> states = accessibleStates(nfa, inputs);
+        states.retainAll(coaccessibleStates(nfa, inputs));
+
+        for (SI s : states) {
+            final SO so = out.addState(nfa.isAccepting(s));
+            out.setInitial(so, inits.contains(s));
+            mapping.put(s, so);
         }
-        // Add transitions to trim states
-        for (int i = 0; i < nfa.size(); i++) {
-            if (!trimStates.contains(i)) {
-                continue;
-            }
-            for (I j : inputAlphabet) {
-                for (int k : nfa.getTransitions(i, j)) {
-                    if (trimStates.contains(k)) {
-                        trimNFA.addTransition((S) oldToNewMap[i], j, (S) oldToNewMap[k]);
+
+        for (SI s : states) {
+            for (I i : inputs) {
+                for (SI t : nfa.getTransitions(s, i)) {
+                    if (states.contains(t)) {
+                        out.addTransition(mapping.get(s), i, mapping.get(t));
                     }
                 }
             }
         }
+
+        return out;
     }
 
-    static <S, I> Set<S> rightTrimHelper(NFA<S, I> nfa, Collection<? extends I> inputs) {
-        Set<S> found = new HashSet<>();
-        Deque<S> stack = new ArrayDeque<>();
+    /**
+     * Returns for a given NFA the set of accessible states. A state is accessible if it can be reached by an initial
+     * state.
+     *
+     * @param nfa
+     *         the input NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the set of accessible states
+     */
+    public static <S, I> Set<S> accessibleStates(NFA<S, I> nfa, Collection<? extends I> inputs) {
 
-        for (S init : nfa.getInitialStates()) {
-            stack.push(init);
-            found.add(init);
-        }
+        final Set<S> inits = nfa.getInitialStates();
+        final Deque<S> deque = new ArrayDeque<>(inits);
+        final Set<S> found = new HashSet<>(inits);
 
-        while (!stack.isEmpty()) {
-            S curr = stack.pop();
+        while (!deque.isEmpty()) {
+            final S curr = deque.pop();
             for (I sym : inputs) {
-                for (S succState : nfa.getSuccessors(curr, sym)) {
-                    if (found.add(succState)) {
-                        // Add states to stack if they haven't been visited
-                        stack.push(succState);
+                for (S succ : nfa.getSuccessors(curr, sym)) {
+                    if (found.add(succ)) {
+                        deque.push(succ);
                     }
                 }
             }
         }
+
         return found;
     }
 
+    /**
+     * Returns for a given NFA the set of co-accessible states. A state is co-accessible if it reaches an accepting
+     * state.
+     *
+     * @param nfa
+     *         the input NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the set of co-accessible states
+     */
+    public static <S, I> Set<S> coaccessibleStates(NFA<S, I> nfa, Collection<? extends I> inputs) {
+
+        final CompactNFA<I> out = new CompactNFA<>(new MapAlphabet<>(inputs), nfa.size());
+        final Mapping<Integer, S> mapping = reverse(nfa, inputs, out);
+        final Set<Integer> states = accessibleStates(out, inputs);
+
+        final Set<S> result = new HashSet<>(HashUtil.capacity(states.size()));
+
+        for (Integer s : states) {
+            result.add(mapping.get(s));
+        }
+
+        return result;
+    }
 
     /**
      * Determinizes the given NFA, and returns the result as a new complete DFA.

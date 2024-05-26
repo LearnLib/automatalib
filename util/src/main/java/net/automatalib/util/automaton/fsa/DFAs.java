@@ -16,12 +16,16 @@
 package net.automatalib.util.automaton.fsa;
 
 import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
+import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
@@ -327,6 +331,77 @@ public final class DFAs {
                                                             Collection<? extends I> inputs,
                                                             A out) {
         return combine(dfa1, dfa2, inputs, out, AcceptanceCombiner.IMPL);
+    }
+
+    /**
+     * Creates a trim DFA from the given input DFA. A DFA is trim if all of its states are accessible and
+     * co-accessible.
+     *
+     * @param dfa
+     *         the input DFA
+     * @param inputAlphabet
+     *         the input alphabet
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the trim DFA
+     *
+     * @see NFAs#accessibleStates(NFA, Collection)
+     * @see NFAs#coaccessibleStates(NFA, Collection)
+     */
+    public static <I> CompactDFA<I> trim(DFA<?, I> dfa, Alphabet<I> inputAlphabet) {
+        return trim(dfa, inputAlphabet, new CompactDFA<>(inputAlphabet));
+    }
+
+    /**
+     * Creates a trim DFA from the given input DFA and writes it to the given output DFA. A DFA is trim if all of its
+     * states are accessible and co-accessible.
+     *
+     * @param dfa
+     *         the input DFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         the output NFA
+     * @param <SI>
+     *         (input) state type
+     * @param <I>
+     *         input symbol type
+     * @param <SO>
+     *         (output) state type
+     * @param <A>
+     *         (output) automaton type
+     *
+     * @return {@code out} for convenience
+     *
+     * @see NFAs#accessibleStates(NFA, Collection)
+     * @see NFAs#coaccessibleStates(NFA, Collection)
+     */
+    public static <SI, I, SO, A extends MutableDFA<SO, I>> A trim(DFA<SI, I> dfa,
+                                                                  Collection<? extends I> inputs,
+                                                                  A out) {
+        final MutableMapping<SI, SO> mapping = dfa.createStaticStateMapping();
+        final SI init = dfa.getInitialState();
+
+        final Set<SI> states = NFAs.accessibleStates(dfa, inputs);
+        states.retainAll(NFAs.coaccessibleStates(dfa, inputs));
+
+        for (SI s : states) {
+            final SO so = out.addState(dfa.isAccepting(s));
+            out.setInitial(so, Objects.equals(init, s));
+            mapping.put(s, so);
+        }
+
+        for (SI s : states) {
+            for (I i : inputs) {
+                final SI t = dfa.getSuccessor(s, i);
+                if (states.contains(t)) {
+                    out.addTransition(mapping.get(s), i, mapping.get(t));
+                }
+            }
+        }
+
+        return out;
     }
 
     /**

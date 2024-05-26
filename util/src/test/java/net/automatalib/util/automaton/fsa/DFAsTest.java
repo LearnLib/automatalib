@@ -117,6 +117,30 @@ public class DFAsTest {
     }
 
     @Test
+    public void testTrim() {
+        Alphabet<Integer> alphabet = Alphabets.singleton(0);
+        CompactDFA<Integer> dfa = new CompactDFA<>(alphabet);
+
+        int q0 = dfa.addInitialState(false);
+
+        // with no accepting states if trimmed this will have no states
+        Assert.assertEquals(DFAs.trim(dfa, alphabet).size(), 0);
+
+        // accepting state is not accessible
+        int q1 = dfa.addState(true);
+        Assert.assertEquals(DFAs.trim(dfa, alphabet).size(), 0);
+
+        // accessible and co-accessible
+        dfa.addTransition(q0, 0, q1);
+        Assert.assertEquals(DFAs.trim(dfa, alphabet).size(), 2);
+
+        // dead-end is not co-accessible
+        int q2 = dfa.addState(false);
+        dfa.addTransition(q1, 0, q2);
+        Assert.assertEquals(DFAs.trim(dfa, alphabet).size(), 2);
+    }
+
+    @Test
     public void testComplement() {
         DFA<?, Integer> expected = forVector(VECTOR_1_NEG);
         DFA<?, Integer> actual = DFAs.complement(testDfa1, testAlphabet);
