@@ -144,6 +144,12 @@ public class NFAsTest {
     }
 
     @Test
+    public void testTrim() {
+        CompactNFA<Integer> trimNFA = NFAs.trim(testNfa1, testAlphabet);
+        assertEquivalence(testNfa1, trimNFA, testAlphabet);
+    }
+
+    @Test
     public void testDeterminizeDFA() {
         determinizeDFA(new CompactDFA.Creator<>());
         determinizeDFA(FastDFA::new);

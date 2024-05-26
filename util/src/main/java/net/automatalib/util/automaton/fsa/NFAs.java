@@ -388,21 +388,52 @@ public final class NFAs {
         }
     }
 
+    /**
+     * Create a trim (co-accessible) NFA from the specified NFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     * @param <I>
+     *         input symbol type
+     * @return the trim NFA
+     */
     public static <I> CompactNFA<I> trim(CompactNFA<I> nfa, Alphabet<I> inputAlphabet) {
-        Set<Integer> remainingStates = new HashSet<>(nfa.size());
+        CompactNFA<I> result = new CompactNFA<>(inputAlphabet);
+        trim(nfa, inputAlphabet, result);
+        return result;
+    }
+
+    /**
+     * Create a trim (co-accessible) NFA from the specified NFA, and store the result in a given mutable NFA.
+     * @param nfa
+     *         the original NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     * @param trimNFA
+     *         a mutable NFA for storing the result
+     * @param <I>
+     *         input symbol type
+     */
+    public static <I> void trim(CompactNFA<I> nfa,
+                                Alphabet<I> inputAlphabet,
+                                CompactNFA<I> trimNFA) {
+        Set<Integer> coAccessibleStates = new HashSet<>(nfa.size());
         for (int i = 0; i < nfa.size(); i++) {
-            remainingStates.add(i);
+            coAccessibleStates.add(i);
         }
-        remainingStates.retainAll(rightTrimHelper(nfa, inputAlphabet));
-        remainingStates.retainAll(leftTrimHelper(nfa, inputAlphabet));
+        // right trim
+        coAccessibleStates.retainAll(rightTrimHelper(nfa, inputAlphabet));
+        // left trim
+        coAccessibleStates.retainAll(rightTrimHelper(reverse(nfa, inputAlphabet), inputAlphabet));
 
-        CompactNFA<I> trimNFA = new CompactNFA<I>(inputAlphabet);
-
+        // Quotient based upon co-accessible states
         // determine mapping of old states to new ones
         int[] oldToNewMap = new int[nfa.size()];
         // Add new states -- initial, accepting properties
         for (int i = 0; i < nfa.size(); i++) {
-            if (remainingStates.contains(i)) {
+            if (coAccessibleStates.contains(i)) {
                 int newState = trimNFA.addState(nfa.isAccepting(i));
                 oldToNewMap[i] = newState;
                 if (nfa.getInitialStates().contains(i)) {
@@ -412,22 +443,17 @@ public final class NFAs {
         }
         // Add transitions
         for (int i = 0; i < nfa.size(); i++) {
-            if (remainingStates.contains(i)) {
-                for(I j: nfa.getInputAlphabet()) {
+            if (coAccessibleStates.contains(i)) {
+                for(I j: inputAlphabet) {
                     for (int k: nfa.getTransitions(i, j)) {
                         trimNFA.addTransition(oldToNewMap[i], j, oldToNewMap[k]);
                     }
                 }
             }
         }
-        return trimNFA;
     }
 
-    static <I> Set<Integer> leftTrimHelper(CompactNFA<I> nfa, Alphabet<I> inputAlphabet) {
-        return rightTrimHelper(reverse(nfa, inputAlphabet), inputAlphabet);
-    }
-
-    static <I> Set<Integer> rightTrimHelper(CompactNFA<I> nfa, Alphabet<I> inputAlphabet) {
+    static <I> Set<Integer> rightTrimHelper(CompactNFA<I> nfa, Collection<? extends I> inputs) {
         Set<Integer> found = new HashSet<>();
         Deque<Integer> stack = new ArrayDeque<>();
 
@@ -438,9 +464,10 @@ public final class NFAs {
 
         while (!stack.isEmpty()) {
             Integer curr = stack.pop();
-            for (I sym : inputAlphabet) {
+            for (I sym : inputs) {
                 for (Integer succState : nfa.getSuccessors(curr, sym)) {
                     if (found.add(succState)) {
+                        // Add states to stack if they haven't been visited
                         stack.push(succState);
                     }
                 }
