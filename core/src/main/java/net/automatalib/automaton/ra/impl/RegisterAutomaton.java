@@ -103,8 +103,8 @@ public abstract class RegisterAutomaton implements net.automatalib.automaton.ra.
         return ret;
     }
 
-    public Collection<Register> getRegisters() {
-        Set<Register> regs = new HashSet<>();
+    public Collection<Register<?>> getRegisters() {
+        Set<Register<?>> regs = new HashSet<>();
         for (Transition t : getTransitions()) {
             regs.addAll(t.getAssignment().getAssignment().keySet());
         }

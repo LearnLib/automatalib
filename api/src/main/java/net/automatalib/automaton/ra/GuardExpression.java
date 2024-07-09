@@ -18,9 +18,8 @@ package net.automatalib.automaton.ra;
 
 import java.util.Set;
 
-import net.automatalib.data.DataValue;
-import net.automatalib.data.Mapping;
 import net.automatalib.data.SymbolicDataValue;
+import net.automatalib.data.Valuation;
 import net.automatalib.data.VarMapping;
 
 /**
@@ -32,7 +31,7 @@ public interface GuardExpression {
 
     GuardExpression relabel(VarMapping<?, ?> relabelling);
 
-    boolean isSatisfied(Mapping<SymbolicDataValue, DataValue<?>> val);
+    boolean isSatisfied(Valuation<?, ?> val);
 
-    Set<SymbolicDataValue> getSymbolicDataValues();
+    Set<SymbolicDataValue<?>> getSymbolicDataValues();
 }

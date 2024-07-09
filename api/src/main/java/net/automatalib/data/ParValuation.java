@@ -28,7 +28,7 @@ import net.automatalib.word.Word;
  *
  * @author falk
  */
-public class ParValuation extends Valuation<Parameter, DataValue<?>> {
+public class ParValuation extends Valuation<Parameter<?>, DataValue<?>> {
 
     public ParValuation() {
 

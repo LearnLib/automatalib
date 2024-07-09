@@ -31,7 +31,7 @@ import java.util.Set;
  * @param <K>
  * @param <V>
  */
-public class Valuation<K, V extends DataValue<?>> extends Mapping<K, V> {
+public class Valuation<K extends SymbolicDataValue<?>, V extends DataValue<?>> extends Mapping<K, V> {
 
     /**
      * returns the contained values of some type.
@@ -48,6 +48,19 @@ public class Valuation<K, V extends DataValue<?>> extends Mapping<K, V> {
             }
         }
         return list;
+    }
+
+    @Override
+    public V put(K key, V value) {
+        if (!key.getType().equals(value.getType())) {
+            throw new IllegalArgumentException("Types of key and value do not match");
+        }
+        return super.put(key, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> DataValue<T> get(SymbolicDataValue<T> key) {
+        return (DataValue<T>) super.get(key);
     }
 
 }

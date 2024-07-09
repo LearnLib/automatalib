@@ -37,11 +37,11 @@ public class ExpressionParser {
 
 
     private final String expLine;
-    private final Map<String, SymbolicDataValue> pMap;
+    private final Map<String, SymbolicDataValue<?>> pMap;
 
     private GuardExpression predicate;
 
-    public ExpressionParser(String exp, Map<String, SymbolicDataValue> pMap) {
+    public ExpressionParser(String exp, Map<String, SymbolicDataValue<?>> pMap) {
         expLine = exp.trim();
         this.pMap = pMap;
 
@@ -110,9 +110,9 @@ public class ExpressionParser {
                     "this should not happen!!! " + pred + " in " + expLine);
         }
 
-        SymbolicDataValue left = pMap.get(related[0].trim());
-        SymbolicDataValue right = pMap.get(related[1].trim());
-        return new AtomicGuardExpression(left, relation, right);
+        SymbolicDataValue<?> left = pMap.get(related[0].trim());
+        SymbolicDataValue<?> right = pMap.get(related[1].trim());
+        return new AtomicGuardExpression<>(left, relation, right);
     }
 
     /**

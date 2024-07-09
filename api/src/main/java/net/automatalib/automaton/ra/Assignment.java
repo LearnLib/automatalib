@@ -34,25 +34,25 @@ import net.automatalib.data.VarValuation;
  */
 public class Assignment {
 
-    private final VarMapping<Register, ? extends SymbolicDataValue> assignment;
+    private final VarMapping<Register<?>, ? extends SymbolicDataValue<?>> assignment;
 
-    public Assignment(VarMapping<Register, ? extends SymbolicDataValue> assignment) {
+    public Assignment(VarMapping<Register<?>, ? extends SymbolicDataValue<?>> assignment) {
         this.assignment = assignment;
     }
 
     public VarValuation compute(VarValuation registers, ParValuation parameters, Constants consts) {
         VarValuation val = new VarValuation(registers);
-        for (Entry<Register, ? extends SymbolicDataValue> e : assignment) {
-            SymbolicDataValue valp = e.getValue();
+        for (Entry<Register<?>, ? extends SymbolicDataValue<?>> e : assignment) {
+            SymbolicDataValue<?> valp = e.getValue();
             if (valp.isRegister()) {
-                val.put(e.getKey(), registers.get( (Register) valp));
+                val.put(e.getKey(), registers.get( (Register<?>) valp));
             }
             else if (valp.isParameter()) {
-                val.put(e.getKey(), parameters.get( (Parameter) valp));
+                val.put(e.getKey(), parameters.get( (Parameter<?>) valp));
             }
             //TODO: check if we want to copy constant values into vars
             else if (valp.isConstant()) {
-                val.put(e.getKey(), consts.get( (Constant) valp));
+                val.put(e.getKey(), consts.get( (Constant<?>) valp));
             }
             else {
                 throw new IllegalStateException("Illegal assignment: " +
@@ -67,7 +67,7 @@ public class Assignment {
         return assignment.toString(":=");
     }
 
-    public VarMapping<Register, ? extends SymbolicDataValue> getAssignment() {
+    public VarMapping<Register<?>, ? extends SymbolicDataValue<?>> getAssignment() {
         return assignment;
     }
 

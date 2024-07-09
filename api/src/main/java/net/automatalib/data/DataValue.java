@@ -27,23 +27,23 @@ public class DataValue<T> {
 
     protected final DataType<T> type;
 
-    protected final T id;
+    protected final T value;
 
-    public DataValue(DataType<T> type, T id) {
+    public DataValue(DataType<T> type, T value) {
         this.type = type;
-        this.id = id;
+        this.value = value;
     }
 
     @Override
     public String toString() {
-        return id.toString() + "[" + this.type.getName() + "]";
+        return value.toString() + "[" + this.type.getName() + "]";
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 97 * hash + Objects.hashCode(this.type);
-        hash = 97 * hash + Objects.hashCode(this.id);
+        hash = 97 * hash + Objects.hashCode(this.value);
         return hash;
     }
 
@@ -57,14 +57,14 @@ public class DataValue<T> {
         }
         final DataValue<?> other = (DataValue<?>) obj;
 
-        return Objects.equals(this.type, other.type) && Objects.equals(this.id, other.id);
+        return Objects.equals(this.type, other.type) && Objects.equals(this.value, other.value);
     }
 
-    public T getId() {
-        return id;
+    public T getValue() {
+        return value;
     }
 
-    public DataType<?> getType() {
+    public DataType<T> getType() {
         return type;
     }
 

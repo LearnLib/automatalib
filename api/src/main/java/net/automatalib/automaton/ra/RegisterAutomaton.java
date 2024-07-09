@@ -17,10 +17,8 @@
 package net.automatalib.automaton.ra;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
-import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.data.Constants;
 import net.automatalib.data.SymbolicDataValue.Register;
@@ -28,7 +26,6 @@ import net.automatalib.data.VarValuation;
 import net.automatalib.symbol.PSymbolInstance;
 import net.automatalib.symbol.ParameterizedSymbol;
 import net.automatalib.ts.acceptor.AcceptorTS;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -39,7 +36,7 @@ public interface RegisterAutomaton<L, T extends GuardedTransition> extends Unive
 
     Constants getConstants();
 
-    Collection<Register> getRegisters();
+    Collection<Register<?>> getRegisters();
 
     VarValuation getInitialRegisters();
 

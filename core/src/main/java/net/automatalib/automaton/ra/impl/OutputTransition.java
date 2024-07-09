@@ -59,12 +59,12 @@ public class OutputTransition extends Transition {
     public boolean isEnabled(VarValuation registers, ParValuation parameters, Constants consts) {
 
         // check freshness of parameters ...
-        for (Parameter p : output.getFreshParameters()) {
+        for (Parameter<?> p : output.getFreshParameters()) {
             DataValue<?> pval = parameters.get(p);
             if (registers.containsValue(pval) || consts.containsValue(pval)) {
                 return false;
             }
-            for (Entry<Parameter, DataValue<?>> e : parameters) {
+            for (Entry<Parameter<?>, DataValue<?>> e : parameters) {
                 if (!p.equals(e.getKey()) && pval.equals(e.getValue())) {
                     return false;
                 }
@@ -72,15 +72,15 @@ public class OutputTransition extends Transition {
         }
 
         // check other parameters
-        for (Entry<Parameter, SymbolicDataValue> e : output.getOutput()) {
+        for (Entry<Parameter<?>, SymbolicDataValue<?>> e : output.getOutput()) {
             if (e.getValue() instanceof Register) {
                 if (!parameters.get(e.getKey()).equals(
-                        registers.get( (Register) e.getValue()))) {
+                        registers.get( (Register<?>) e.getValue()))) {
                     return false;
                 }
             } else if (e.getValue() instanceof Constant) {
                 if (!parameters.get(e.getKey()).equals(
-                        consts.get( (Constant) e.getValue()))) {
+                        consts.get( (Constant<?>) e.getValue()))) {
                     return false;
                 }
             } else {

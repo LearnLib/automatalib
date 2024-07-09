@@ -61,7 +61,7 @@ public final class DataType<T> {
         return name;
     }
 
-    public Class<?> getBase() {
+    public Class<T> getBase() {
         return base;
     }
 }

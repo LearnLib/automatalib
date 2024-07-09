@@ -37,37 +37,38 @@ import net.automatalib.data.VarMapping;
  */
 public class OutputMapping  {
 
-    private final Collection<Parameter> fresh;
+    private final Collection<Parameter<?>> fresh;
 
-    private final VarMapping<Parameter, SymbolicDataValue> piv;
+    private final VarMapping<Parameter<?>, SymbolicDataValue<?>> piv;
 
-    public OutputMapping(Collection<Parameter> fresh,
-            VarMapping<Parameter, SymbolicDataValue> piv) {
+    public OutputMapping(Collection<Parameter<?>> fresh,
+                         VarMapping<Parameter<?>, SymbolicDataValue<?>> piv) {
         this.fresh = fresh;
         this.piv = piv;
     }
 
     public OutputMapping() {
-        this(new ArrayList<Parameter>(), new VarMapping<Parameter, SymbolicDataValue>());
+        this(new ArrayList<>(), new VarMapping<>());
     }
 
-    public OutputMapping(Parameter fresh) {
-        this(Collections.singleton(fresh), new VarMapping<Parameter, SymbolicDataValue>());
+    public OutputMapping(Parameter<?> fresh) {
+        this(Collections.singleton(fresh), new VarMapping<>());
     }
 
-    public OutputMapping(Parameter key, Register value) {
-        this(new ArrayList<Parameter>(), new VarMapping<Parameter, SymbolicDataValue>(key, value));
+    public <T> OutputMapping(Parameter<T> key, Register<T> value) {
+        this(new ArrayList<>(), new VarMapping<>());
+        this.piv.put(key, value);
     }
 
-    public OutputMapping(VarMapping<Parameter, SymbolicDataValue> outputs) {
-        this(new ArrayList<Parameter>(), outputs);
+    public OutputMapping(VarMapping<Parameter<?>, SymbolicDataValue<?>> outputs) {
+        this(new ArrayList<>(), outputs);
     }
 
-    public Collection<Parameter> getFreshParameters() {
+    public Collection<Parameter<?>> getFreshParameters() {
         return fresh;
     }
 
-    public VarMapping<Parameter, SymbolicDataValue> getOutput() {
+    public VarMapping<Parameter<?>, SymbolicDataValue<?>> getOutput() {
         return piv;
     }
 

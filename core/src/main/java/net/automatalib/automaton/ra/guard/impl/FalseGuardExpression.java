@@ -19,11 +19,10 @@ package net.automatalib.automaton.ra.guard.impl;
 import java.util.Collections;
 import java.util.Set;
 
-import net.automatalib.data.DataValue;
-import net.automatalib.data.Mapping;
-import net.automatalib.data.SymbolicDataValue;
-import net.automatalib.data.VarMapping;
 import net.automatalib.automaton.ra.GuardExpression;
+import net.automatalib.data.SymbolicDataValue;
+import net.automatalib.data.Valuation;
+import net.automatalib.data.VarMapping;
 
 /**
  *
@@ -39,8 +38,8 @@ public class FalseGuardExpression implements GuardExpression {
     }
 
     @Override
-    public boolean isSatisfied(Mapping<SymbolicDataValue, DataValue<?>> val) {
-        return true;
+    public boolean isSatisfied(Valuation<?, ?> val) {
+        return false;
     }
 
     @Override
@@ -49,7 +48,7 @@ public class FalseGuardExpression implements GuardExpression {
     }
 
     @Override
-    public Set<SymbolicDataValue> getSymbolicDataValues() {
+    public Set<SymbolicDataValue<?>> getSymbolicDataValues() {
         return Collections.emptySet();
     }
 }

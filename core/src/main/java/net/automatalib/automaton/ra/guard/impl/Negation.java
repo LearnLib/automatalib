@@ -18,11 +18,10 @@ package net.automatalib.automaton.ra.guard.impl;
 
 import java.util.Set;
 
-import net.automatalib.data.DataValue;
-import net.automatalib.data.Mapping;
-import net.automatalib.data.SymbolicDataValue;
-import net.automatalib.data.VarMapping;
 import net.automatalib.automaton.ra.GuardExpression;
+import net.automatalib.data.SymbolicDataValue;
+import net.automatalib.data.Valuation;
+import net.automatalib.data.VarMapping;
 
 /**
  *
@@ -47,7 +46,7 @@ public class Negation implements GuardExpression {
     }
 
     @Override
-    public boolean isSatisfied(Mapping<SymbolicDataValue, DataValue<?>> val) {
+    public boolean isSatisfied(Valuation<?, ?> val) {
         return !negated.isSatisfied(val);
     }
 
@@ -57,7 +56,7 @@ public class Negation implements GuardExpression {
     }
 
     @Override
-    public Set<SymbolicDataValue> getSymbolicDataValues() {
+    public Set<SymbolicDataValue<?>> getSymbolicDataValues() {
         return this.negated.getSymbolicDataValues();
     }
 

@@ -32,33 +32,33 @@ public abstract class SymbolicDataValueGenerator {
         id = g.id;
     }
 
-    public abstract SymbolicDataValue next(DataType<?> type);
+    public abstract <T> SymbolicDataValue<T> next(DataType<T> type);
 
     public static final class ParameterGenerator extends SymbolicDataValueGenerator {
         @Override
-        public SymbolicDataValue.Parameter next(DataType<?> type) {
-            return new SymbolicDataValue.Parameter(type, id++);
+        public <T> SymbolicDataValue.Parameter<T> next(DataType<T> type) {
+            return new SymbolicDataValue.Parameter<>(type, id++);
         }
     };
 
     public static final class RegisterGenerator extends SymbolicDataValueGenerator {
         @Override
-        public SymbolicDataValue.Register next(DataType<?> type) {
-            return new SymbolicDataValue.Register(type, id++);
+        public <T> SymbolicDataValue.Register<T> next(DataType<T> type) {
+            return new SymbolicDataValue.Register<>(type, id++);
         }
     };
 
     public static final class SuffixValueGenerator extends SymbolicDataValueGenerator {
         @Override
-        public SymbolicDataValue.SuffixValue next(DataType<?> type) {
-            return new SymbolicDataValue.SuffixValue(type, id++);
+        public <T> SymbolicDataValue.SuffixValue<T> next(DataType<T> type) {
+            return new SymbolicDataValue.SuffixValue<>(type, id++);
         }
     };
 
     public static final class ConstantGenerator extends SymbolicDataValueGenerator {
         @Override
-        public SymbolicDataValue.Constant next(DataType<?> type) {
-            return new SymbolicDataValue.Constant(type, id++);
+        public <T> SymbolicDataValue.Constant<T> next(DataType<T> type) {
+            return new SymbolicDataValue.Constant<>(type, id++);
         }
     };
 }

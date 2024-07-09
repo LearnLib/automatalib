@@ -19,6 +19,7 @@ package net.automatalib.symbol;
 import java.util.Arrays;
 import java.util.Objects;
 
+import net.automatalib.data.DataType;
 import net.automatalib.data.DataValue;
 
 /**
@@ -40,6 +41,18 @@ public class PSymbolInstance {
 
     public PSymbolInstance(ParameterizedSymbol baseSymbol,
             DataValue<?> ... parameterValues) {
+
+        if (baseSymbol.getArity() == parameterValues.length) {
+            final DataType<?>[] types = baseSymbol.getPtypes();
+            for (int i = 0; i < parameterValues.length; i++) {
+                if (!types[i].equals(parameterValues[i].getType())) {
+                    throw new IllegalArgumentException("Type of parameter '" + parameterValues[i] + "' does not match expected type");
+                }
+            }
+        } else {
+            throw new IllegalArgumentException("The numbers of parameters and values do not match");
+        }
+
         this.baseSymbol = baseSymbol;
         this.parameterValues = parameterValues;
     }

@@ -16,6 +16,8 @@
  */
 package net.automatalib.data;
 
+import net.automatalib.data.SymbolicDataValue.Register;
+
 /**
  * maps symbolic data values to symbolic data values.
  *
@@ -24,11 +26,33 @@ package net.automatalib.data;
  *
  * @author falk
  */
-public class VarMapping<K extends SymbolicDataValue, V extends SymbolicDataValue> extends Mapping<K, V> {
+public class VarMapping<K extends SymbolicDataValue<?>, V extends SymbolicDataValue<?>> extends Mapping<K, V> {
 
     public VarMapping() {}
 
     public VarMapping(K k1, V v1) {
         put(k1, v1);
     }
+
+    @Override
+    public V put(K key, V value) {
+        if (!key.getType().equals(value.getType())) {
+            throw new IllegalArgumentException("Types of key and value do not match");
+        }
+        return super.put(key, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> SymbolicDataValue<T> get(SymbolicDataValue<T> key) {
+        return (SymbolicDataValue<T>) super.get(key);
+    }
+
+    public static class RegMapping<K extends SymbolicDataValue<?>> extends VarMapping<K, Register<?>> {
+
+        @Override
+        public <T> Register<T> get(SymbolicDataValue<T> key) {
+            return (Register<T>) super.get(key);
+        }
+    }
+
 }
