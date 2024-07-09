@@ -16,11 +16,13 @@
  */
 package net.automatalib.data;
 
+import net.automatalib.data.SymbolicDataValue.Constant;
+
 /**
  * Named constants.
  *
  * @author falk
  */
-public class Constants extends Valuation<SymbolicDataValue.Constant, DataValue<?>> {
+public class Constants extends Valuation<Constant<?>, DataValue<?>> {
 
 }

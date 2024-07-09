@@ -23,14 +23,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import jakarta.xml.bind.JAXB;
 
+import jakarta.xml.bind.JAXB;
 import net.automatalib.automaton.ra.Assignment;
-import net.automatalib.automaton.ra.impl.RALocation;
-import net.automatalib.automaton.ra.impl.Transition;
 import net.automatalib.automaton.ra.TransitionGuard;
 import net.automatalib.automaton.ra.impl.OutputMapping;
 import net.automatalib.automaton.ra.impl.OutputTransition;
+import net.automatalib.automaton.ra.impl.RALocation;
+import net.automatalib.automaton.ra.impl.Transition;
 import net.automatalib.data.Constants;
 import net.automatalib.data.DataType;
 import net.automatalib.data.DataValue;
@@ -39,9 +39,9 @@ import net.automatalib.data.SymbolicDataValue.Constant;
 import net.automatalib.data.SymbolicDataValue.Parameter;
 import net.automatalib.data.SymbolicDataValue.Register;
 import net.automatalib.data.SymbolicDataValueGenerator.ParameterGenerator;
+import net.automatalib.symbol.ParameterizedSymbol;
 import net.automatalib.symbol.impl.InputSymbol;
 import net.automatalib.symbol.impl.OutputSymbol;
-import net.automatalib.symbol.ParameterizedSymbol;
 
 /**
  *
@@ -53,26 +53,26 @@ public class RegisterAutomatonExporter {
 
     private static RegisterAutomaton.Constants exportConstants(Constants consts) {
         RegisterAutomaton.Constants ret = factory.createRegisterAutomatonConstants();
-        for (Entry<Constant, DataValue<?>> e : consts) {
+        for (Entry<Constant<?>, DataValue<?>> e : consts) {
             RegisterAutomaton.Constants.Constant c = factory.createRegisterAutomatonConstantsConstant();
             c.setName(e.getKey().toString());
             c.setType(e.getKey().getType().getName());
-            c.setValue(e.getValue().getId().toString());
+            c.setValue(e.getValue().getValue().toString());
             ret.getConstant().add(c);
         }
         return ret;
     }
 
-    private static RegisterAutomaton.Globals exportRegisters(Collection<Register> reg, Map<String,DataType> extra) {
+    private static RegisterAutomaton.Globals exportRegisters(Collection<Register<?>> reg, Map<String,DataType<?>> extra) {
         RegisterAutomaton.Globals ret = factory.createRegisterAutomatonGlobals();
-        for (Register r : reg) {
+        for (Register<?> r : reg) {
             RegisterAutomaton.Globals.Variable v = factory.createRegisterAutomatonGlobalsVariable();
             v.setName(r.toString());
             v.setType(r.getType().getName());
             v.setValue("0");
             ret.getVariable().add(v);
         }
-        for (Entry<String, DataType> e : extra.entrySet()) {
+        for (Entry<String, DataType<?>> e : extra.entrySet()) {
             RegisterAutomaton.Globals.Variable v = factory.createRegisterAutomatonGlobalsVariable();
             v.setName(e.getKey());
             v.setType(e.getValue().getName());
@@ -88,7 +88,7 @@ public class RegisterAutomatonExporter {
             RegisterAutomaton.Alphabet.Inputs.Symbol s = factory.createRegisterAutomatonAlphabetInputsSymbol();
             s.setName(input.getName());
             int idx=1;
-            for (DataType t : input.getPtypes()) {
+            for (DataType<?> t : input.getPtypes()) {
                 RegisterAutomaton.Alphabet.Inputs.Symbol.Param param =
                         factory.createRegisterAutomatonAlphabetInputsSymbolParam();
                 param.setName("p" + (idx++));
@@ -106,7 +106,7 @@ public class RegisterAutomatonExporter {
             RegisterAutomaton.Alphabet.Outputs.Symbol s = factory.createRegisterAutomatonAlphabetOutputsSymbol();
             s.setName(output.getName());
             int idx=1;
-            for (DataType t : output.getPtypes()) {
+            for (DataType<?> t : output.getPtypes()) {
                 RegisterAutomaton.Alphabet.Outputs.Symbol.Param param =
                         factory.createRegisterAutomatonAlphabetOutputsSymbolParam();
                 param.setName("p" + (idx++));
@@ -127,7 +127,7 @@ public class RegisterAutomatonExporter {
                     factory.createRegisterAutomatonLocationsLocation();
 
             l.setName(loc.getName());
-            if (ra.getInitialState().equals(loc)) {
+            if (loc.equals(ra.getInitialState())) {
                 l.setInitial("true");
             }
             ret.getLocation()   .add(l);
@@ -135,7 +135,7 @@ public class RegisterAutomatonExporter {
         return ret;
     }
 
-    private static RegisterAutomaton.Transitions exportTransitions(Collection<Transition> trans, Map<String, DataType> tmp) {
+    private static RegisterAutomaton.Transitions exportTransitions(Collection<Transition> trans, Map<String, DataType<?>> tmp) {
         RegisterAutomaton.Transitions ret =
                 factory.createRegisterAutomatonTransitions();
 
@@ -166,7 +166,7 @@ public class RegisterAutomatonExporter {
     }
 
     private static RegisterAutomaton.Transitions.Transition exportOutputTransition(
-            OutputTransition t, Map<String, DataType> tmp) {
+            OutputTransition t, Map<String, DataType<?>> tmp) {
         RegisterAutomaton.Transitions.Transition ret =
                 factory.createRegisterAutomatonTransitionsTransition();
 
@@ -183,8 +183,8 @@ public class RegisterAutomatonExporter {
         OutputMapping outMap = t.getOutput();
         ParameterGenerator pgen = new ParameterGenerator();
         int idx=1;
-        for (DataType type : t.getLabel().getPtypes()) {
-            Parameter p = pgen.next(type);
+        for (DataType<?> type : t.getLabel().getPtypes()) {
+            Parameter<?> p = pgen.next(type);
             if (outMap.getFreshParameters().contains(p)) {
 
                 // find out register that stores parameter
@@ -202,7 +202,7 @@ public class RegisterAutomatonExporter {
                 }
             }
             else {
-                SymbolicDataValue out = outMap.getOutput().get(p);
+                SymbolicDataValue<?> out = outMap.getOutput().get(p);
                 // assignments are assumed to happen before
                 // output by the parser
                 if (out instanceof Register) {
@@ -247,7 +247,7 @@ public class RegisterAutomatonExporter {
     private static RegisterAutomaton.Transitions.Transition.Assignments exportAssignments(Assignment as) {
         RegisterAutomaton.Transitions.Transition.Assignments ret =
                 factory.createRegisterAutomatonTransitionsTransitionAssignments();
-        for (Entry<Register, ? extends SymbolicDataValue> e : as.getAssignment()) {
+        for (Entry<Register<?>, ? extends SymbolicDataValue<?>> e : as.getAssignment()) {
             RegisterAutomaton.Transitions.Transition.Assignments.Assign a =
                     factory.createRegisterAutomatonTransitionsTransitionAssignmentsAssign();
 
@@ -283,7 +283,7 @@ public class RegisterAutomatonExporter {
         RegisterAutomaton.Alphabet acts = factory.createRegisterAutomatonAlphabet();
         acts.setInputs(exportInputs(inputs));
         acts.setOutputs(exportOutputs(outputs));
-        Map<String, DataType> tmp = new HashMap<>();
+        Map<String, DataType<?>> tmp = new HashMap<>();
         ret.setAlphabet(acts);
         ret.setConstants(exportConstants(c));
         ret.setLocations(exportLocations(ra, ra.getStates()));

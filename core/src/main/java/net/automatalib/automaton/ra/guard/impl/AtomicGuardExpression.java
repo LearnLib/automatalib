@@ -20,11 +20,11 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import net.automatalib.data.DataValue;
-import net.automatalib.data.Mapping;
-import net.automatalib.data.SymbolicDataValue;
-import net.automatalib.data.VarMapping;
 import net.automatalib.automaton.ra.GuardExpression;
+import net.automatalib.data.DataValue;
+import net.automatalib.data.SymbolicDataValue;
+import net.automatalib.data.Valuation;
+import net.automatalib.data.VarMapping;
 
 /**
  *
@@ -32,7 +32,7 @@ import net.automatalib.automaton.ra.GuardExpression;
  * @param <Left>
  * @param <Right>
  */
-public class AtomicGuardExpression<Left extends SymbolicDataValue, Right extends SymbolicDataValue> implements
+public class AtomicGuardExpression<Left extends SymbolicDataValue<?>, Right extends SymbolicDataValue<?>> implements
                                                                                                     GuardExpression {
 
     private final Left left;
@@ -48,7 +48,7 @@ public class AtomicGuardExpression<Left extends SymbolicDataValue, Right extends
     }
 
     @Override
-    public boolean isSatisfied(Mapping<SymbolicDataValue, DataValue<?>> val) {
+    public boolean isSatisfied(Valuation<?, ?> val) {
 
         DataValue<?> lv = val.get(left);
         DataValue<?> rv = val.get(right);
@@ -75,11 +75,11 @@ public class AtomicGuardExpression<Left extends SymbolicDataValue, Right extends
 
     @Override
     public GuardExpression relabel(VarMapping<?, ?> relabelling) {
-        SymbolicDataValue newLeft = relabelling.get(left);
+        SymbolicDataValue<?> newLeft = relabelling.get(left);
         if (newLeft == null) {
             newLeft = left;
         }
-        SymbolicDataValue newRight = relabelling.get(right);
+        SymbolicDataValue<?> newRight = relabelling.get(right);
         if (newRight == null) {
             newRight = right;
         }
@@ -101,7 +101,7 @@ public class AtomicGuardExpression<Left extends SymbolicDataValue, Right extends
     }
 
     @Override
-    public Set<SymbolicDataValue> getSymbolicDataValues() {
+    public Set<SymbolicDataValue<?>> getSymbolicDataValues() {
         return new LinkedHashSet<>(Arrays.asList(left, right));
     }
 
@@ -114,8 +114,8 @@ public class AtomicGuardExpression<Left extends SymbolicDataValue, Right extends
             return false;
         }
 
-        Comparable lc = (Comparable) l.getId();
-        int result = lc.compareTo(r.getId());
+        Comparable lc = (Comparable) l.getValue();
+        int result = lc.compareTo(r.getValue());
         switch (relation) {
             case SMALLER:
                 return result < 0;

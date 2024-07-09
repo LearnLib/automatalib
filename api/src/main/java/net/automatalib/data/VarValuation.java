@@ -16,12 +16,14 @@
  */
 package net.automatalib.data;
 
+import net.automatalib.data.SymbolicDataValue.Register;
+
 /**
  * A valuation of registers.
  *
  * @author falk
  */
-public class VarValuation extends Valuation<SymbolicDataValue.Register, DataValue<?>> {
+public class VarValuation extends Valuation<Register<?>, DataValue<?>> {
 
     public VarValuation(VarValuation other) {
         if (other != null) {

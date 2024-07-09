@@ -21,9 +21,8 @@ import java.util.Set;
 
 import net.automatalib.automaton.ra.GuardExpression;
 import net.automatalib.common.util.string.StringUtil;
-import net.automatalib.data.DataValue;
-import net.automatalib.data.Mapping;
 import net.automatalib.data.SymbolicDataValue;
+import net.automatalib.data.Valuation;
 import net.automatalib.data.VarMapping;
 
 /**
@@ -49,7 +48,7 @@ public class Disjunction implements GuardExpression {
     }
 
     @Override
-    public boolean isSatisfied(Mapping<SymbolicDataValue, DataValue<?>> val) {
+    public boolean isSatisfied(Valuation<?, ?> val) {
         for (GuardExpression ge : disjuncts) {
             if (ge.isSatisfied(val)) {
                 return true;
@@ -64,8 +63,8 @@ public class Disjunction implements GuardExpression {
     }
 
     @Override
-    public Set<SymbolicDataValue> getSymbolicDataValues() {
-        final Set<SymbolicDataValue> result = new LinkedHashSet<>();
+    public Set<SymbolicDataValue<?>> getSymbolicDataValues() {
+        final Set<SymbolicDataValue<?>> result = new LinkedHashSet<>();
         for (GuardExpression ge : disjuncts) {
             result.addAll(ge.getSymbolicDataValues());
         }

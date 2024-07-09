@@ -33,9 +33,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface RegisterMealyMachine<L, T extends GuardedOutputTransition> extends UniversalAutomaton<L, ParameterizedSymbol, T, Void, ParameterizedSymbol> {
 
-    Collection<Register> getRegisters();
-
     Constants getConstants();
+
+    Collection<Register<?>> getRegisters();
 
     VarValuation getInitialRegisters();
 
