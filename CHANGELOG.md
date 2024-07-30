@@ -38,6 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Fixed a bug in `SBAs#toCFMPS` which would allow the returned view to reach a final node on a non-return symbol.
 * Fixed (another) inconsistency bug in `Incremental*DAGBuilder`s.
+* The `AUTParser` now correctly reads non-deterministic automata.
 
 
 ## [0.11.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.11.0) - 2023-11-06

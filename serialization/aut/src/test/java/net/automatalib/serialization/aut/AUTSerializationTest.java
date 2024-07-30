@@ -85,6 +85,24 @@ public class AUTSerializationTest {
     }
 
     @Test
+    public void nfaTest() throws Exception {
+        try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/nfa.aut")) {
+            final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
+            Assert.assertEquals(3, automaton.size());
+
+            final Set<Integer> s0 = automaton.getInitialStates();
+            final Set<Integer> t1 = automaton.getStates(Word.fromLetter("a"));
+            final Set<Integer> t2 = automaton.getStates(Word.fromLetter("b"));
+            final Set<Integer> t3 = automaton.getStates(Arrays.asList("a", "b"));
+
+            Assert.assertEquals(Collections.singleton(0), s0);
+            Assert.assertEquals(Set.of(0, 1), t1);
+            Assert.assertEquals(Collections.emptySet(), t2);
+            Assert.assertEquals(Collections.singleton(2), t3);
+        }
+    }
+
+    @Test
     public void serializationTest() throws Exception {
         final Alphabet<Integer> alphabet = Alphabets.integers(0, 2);
         final Random random = new Random(0);

@@ -37,7 +37,7 @@ class InternalAUTParser {
     private int initialState;
     private int numStates;
     private final Set<String> alphabetSymbols = new HashSet<>();
-    private final Map<Integer, Map<String, Integer>> transitionMap = new HashMap<>();
+    private final Map<Integer, Map<String, Set<Integer>>> transitionMap = new HashMap<>();
 
     private final InputStream inputStream;
 
@@ -70,12 +70,14 @@ class InternalAUTParser {
                 result.addState();
             }
 
-            for (Map.Entry<Integer, Map<String, Integer>> outgoing : transitionMap.entrySet()) {
+            for (Map.Entry<Integer, Map<String, Set<Integer>>> outgoing : transitionMap.entrySet()) {
                 final Integer src = outgoing.getKey();
-                for (Map.Entry<String, Integer> targets : outgoing.getValue().entrySet()) {
+                for (Map.Entry<String, Set<Integer>> targets : outgoing.getValue().entrySet()) {
                     final String input = targets.getKey();
-                    final Integer dest = targets.getValue();
-                    result.addTransition(src, inputMap.get(input), dest);
+                    final Set<Integer> tgts = targets.getValue();
+                    for (Integer tgt : tgts) {
+                        result.addTransition(src, inputMap.get(input), tgt);
+                    }
                 }
             }
             result.setInitial(initialState, true);
@@ -133,7 +135,9 @@ class InternalAUTParser {
         verifyRBracketAndShift();
 
         alphabetSymbols.add(label);
-        transitionMap.computeIfAbsent(start, k -> new HashMap<>()).put(label, dest);
+        transitionMap.computeIfAbsent(start, k -> new HashMap<>())
+                     .computeIfAbsent(label, k -> new HashSet<>())
+                     .add(dest);
 
         return true;
     }
