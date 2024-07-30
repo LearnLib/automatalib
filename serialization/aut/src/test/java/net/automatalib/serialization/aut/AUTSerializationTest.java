@@ -46,7 +46,7 @@ public class AUTSerializationTest {
         try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/quotationTest.aut")) {
             final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
 
-            Assert.assertEquals(4, automaton.size());
+            Assert.assertEquals(automaton.size(), 4);
 
             final String input1 = "PUT_\\6";
             final String input2 = "GET !true !7 !CONS (A, CONS (B, NIL))";
@@ -57,10 +57,10 @@ public class AUTSerializationTest {
             final Set<Integer> s2 = automaton.getStates(Word.fromLetter(input2));
             final Set<Integer> s3 = automaton.getStates(Arrays.asList(input2, input3));
 
-            Assert.assertEquals(Collections.singleton(0), s0);
-            Assert.assertEquals(Collections.singleton(1), s1);
-            Assert.assertEquals(Collections.singleton(2), s2);
-            Assert.assertEquals(Collections.singleton(3), s3);
+            Assert.assertEquals(s0, Collections.singleton(0));
+            Assert.assertEquals(s1, Collections.singleton(1));
+            Assert.assertEquals(s2, Collections.singleton(2));
+            Assert.assertEquals(s3, Collections.singleton(3));
         }
     }
 
@@ -68,19 +68,19 @@ public class AUTSerializationTest {
     public void sinkStateTest() throws Exception {
         try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/sinkStateTest.aut")) {
             final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
-            Assert.assertEquals(3, automaton.size());
+            Assert.assertEquals(automaton.size(), 3);
 
             final Set<Integer> s0 = automaton.getInitialStates();
-            final Set<Integer> t1 = automaton.getStates(Word.fromLetter("input"));
-            final Set<Integer> t2 = automaton.getStates(Word.fromLetter("output"));
-            final Set<Integer> t3 = automaton.getStates(Arrays.asList("input", "output"));
-            final Set<Integer> t4 = automaton.getStates(Arrays.asList("input", "output", "output"));
+            final Set<Integer> s1 = automaton.getStates(Word.fromLetter("input"));
+            final Set<Integer> s2 = automaton.getStates(Word.fromLetter("output"));
+            final Set<Integer> s3 = automaton.getStates(Arrays.asList("input", "output"));
+            final Set<Integer> s4 = automaton.getStates(Arrays.asList("input", "output", "output"));
 
-            Assert.assertEquals(Collections.singleton(0), s0);
-            Assert.assertEquals(Collections.singleton(1), t1);
-            Assert.assertEquals(Collections.singleton(2), t2);
-            Assert.assertEquals(Collections.singleton(0), t3);
-            Assert.assertEquals(Collections.singleton(2), t4);
+            Assert.assertEquals(s0, Collections.singleton(0));
+            Assert.assertEquals(s1, Collections.singleton(1));
+            Assert.assertEquals(s2, Collections.singleton(2));
+            Assert.assertEquals(s3, Collections.singleton(0));
+            Assert.assertEquals(s4, Collections.singleton(2));
         }
     }
 
@@ -88,17 +88,17 @@ public class AUTSerializationTest {
     public void nfaTest() throws Exception {
         try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/nfa.aut")) {
             final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
-            Assert.assertEquals(3, automaton.size());
+            Assert.assertEquals(automaton.size(), 3);
 
             final Set<Integer> s0 = automaton.getInitialStates();
-            final Set<Integer> t1 = automaton.getStates(Word.fromLetter("a"));
-            final Set<Integer> t2 = automaton.getStates(Word.fromLetter("b"));
-            final Set<Integer> t3 = automaton.getStates(Arrays.asList("a", "b"));
+            final Set<Integer> s1 = automaton.getStates(Word.fromLetter("a"));
+            final Set<Integer> s2 = automaton.getStates(Word.fromLetter("b"));
+            final Set<Integer> s3 = automaton.getStates(Arrays.asList("a", "b"));
 
-            Assert.assertEquals(Collections.singleton(0), s0);
-            Assert.assertEquals(Set.of(0, 1), t1);
-            Assert.assertEquals(Collections.emptySet(), t2);
-            Assert.assertEquals(Collections.singleton(2), t3);
+            Assert.assertEquals(s0, Collections.singleton(0));
+            Assert.assertEquals(s1, Set.of(0, 1));
+            Assert.assertEquals(s2, Collections.emptySet());
+            Assert.assertEquals(s3, Collections.singleton(2));
         }
     }
 
@@ -120,7 +120,7 @@ public class AUTSerializationTest {
     private <S, I> void equalityTest(SimpleAutomaton<S, I> src, SimpleAutomaton<S, I> target, Alphabet<I> inputs) {
         for (S s : src.getStates()) {
             for (I i : inputs) {
-                Assert.assertEquals(src.getSuccessors(s, i), target.getSuccessors(s, i));
+                Assert.assertEquals(target.getSuccessors(s, i), src.getSuccessors(s, i));
             }
         }
     }
