@@ -16,6 +16,7 @@
 package net.automatalib.serialization.saf;
 
 import java.io.DataOutput;
+import java.io.IOException;
 
 @FunctionalInterface
 public interface SinglePropertyEncoder<P> {
@@ -24,5 +25,5 @@ public interface SinglePropertyEncoder<P> {
         return (out, property) -> {};
     }
 
-    void writeProperty(DataOutput out, P property);
+    void writeProperty(DataOutput out, P property) throws IOException;
 }

@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -34,6 +33,7 @@ import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.exception.FormatException;
+import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -44,7 +44,7 @@ public class AUTSerializationTest {
     @Test
     public void quotationLabelTest() throws Exception {
         try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/quotationTest.aut")) {
-            final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
+            final SimpleAutomaton<Integer, String> automaton = AUTParsers.parser().readModel(is).model;
 
             Assert.assertEquals(automaton.size(), 4);
 
@@ -67,7 +67,7 @@ public class AUTSerializationTest {
     @Test
     public void sinkStateTest() throws Exception {
         try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/sinkStateTest.aut")) {
-            final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
+            final SimpleAutomaton<Integer, String> automaton = AUTParsers.parser().readModel(is).model;
             Assert.assertEquals(automaton.size(), 3);
 
             final Set<Integer> s0 = automaton.getInitialStates();
@@ -87,7 +87,7 @@ public class AUTSerializationTest {
     @Test
     public void nfaTest() throws Exception {
         try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/nfa.aut")) {
-            final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
+            final SimpleAutomaton<Integer, String> automaton = AUTParsers.parser().readModel(is).model;
             Assert.assertEquals(automaton.size(), 3);
 
             final Set<Integer> s0 = automaton.getInitialStates();
@@ -109,10 +109,10 @@ public class AUTSerializationTest {
         final DFA<Integer, Integer> automaton = RandomAutomata.randomDFA(random, 20, alphabet);
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        AUTWriter.writeAutomaton(automaton, alphabet, baos);
+        new AUTWriter<Integer>().writeModel(baos, automaton, alphabet);
 
         final InputStream is = new ByteArrayInputStream(baos.toByteArray());
-        final SimpleAutomaton<Integer, Integer> deserialized = AUTParser.readAutomaton(is, Integer::parseInt).model;
+        final SimpleAutomaton<Integer, Integer> deserialized = AUTParsers.parser(Integer::parseInt).readModel(is).model;
 
         equalityTest(automaton, deserialized, alphabet);
     }
@@ -127,16 +127,18 @@ public class AUTSerializationTest {
 
     @Test
     public void errorTest() throws IOException {
+        final InputModelDeserializer<String, SimpleAutomaton<Integer, String>> parser = AUTParsers.parser();
+
         try (InputStream e1 = AUTSerializationTest.class.getResourceAsStream("/error1.aut");
              InputStream e2 = AUTSerializationTest.class.getResourceAsStream("/error2.aut");
              InputStream e3 = AUTSerializationTest.class.getResourceAsStream("/error3.aut");
              InputStream e4 = AUTSerializationTest.class.getResourceAsStream("/error4.aut");
              InputStream e5 = AUTSerializationTest.class.getResourceAsStream("/error5.aut")) {
-            Assert.assertThrows(() -> AUTParser.readAutomaton(e1));
-            Assert.assertThrows(() -> AUTParser.readAutomaton(e2));
-            Assert.assertThrows(() -> AUTParser.readAutomaton(e3));
-            Assert.assertThrows(() -> AUTParser.readAutomaton(e4));
-            Assert.assertThrows(() -> AUTParser.readAutomaton(e5));
+            Assert.assertThrows(FormatException.class, () -> parser.readModel(e1));
+            Assert.assertThrows(FormatException.class, () -> parser.readModel(e2));
+            Assert.assertThrows(FormatException.class, () -> parser.readModel(e3));
+            Assert.assertThrows(FormatException.class, () -> parser.readModel(e4));
+            Assert.assertThrows(FormatException.class, () -> parser.readModel(e5));
         }
     }
 
@@ -144,17 +146,15 @@ public class AUTSerializationTest {
     public void doNotCloseOutputStreamTest() throws IOException {
         final CompactDFA<Integer> automaton = RandomAutomata.randomDFA(new Random(0), 10, Alphabets.integers(0, 2));
 
-        AUTSerializationProvider.getInstance()
-                                .writeModel(new UnclosableOutputStream(OutputStream.nullOutputStream()),
+        new AUTWriter<Integer>().writeModel(new UnclosableOutputStream(OutputStream.nullOutputStream()),
                                             automaton,
-                                            automaton.getInputAlphabet(),
-                                            Objects::toString);
+                                            automaton.getInputAlphabet());
     }
 
     @Test
     public void doNotCloseInputStreamTest() throws IOException, FormatException {
         try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/quotationTest.aut")) {
-            AUTSerializationProvider.getInstance().readModel(new UnclosableInputStream(is));
+            AUTParsers.parser().readModel(new UnclosableInputStream(is));
         }
     }
 }

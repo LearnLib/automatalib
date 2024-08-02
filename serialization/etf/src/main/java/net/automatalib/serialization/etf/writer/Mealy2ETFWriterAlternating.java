@@ -157,7 +157,7 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
 
     @Override
     public void writeModel(OutputStream os, MealyMachine<?, I, ?, O> model, Alphabet<I> alphabet) {
-        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedNonClosingUTF8Writer(os))) {
+        try (PrintWriter pw = new PrintWriter(IOUtil.asNonClosingUTF8Writer(os))) {
             write(pw, model, alphabet);
         }
     }

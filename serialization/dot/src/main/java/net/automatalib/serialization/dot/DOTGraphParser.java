@@ -68,7 +68,7 @@ public class DOTGraphParser<NP, EP, G extends MutableGraph<?, ?, NP, EP>> implem
     @Override
     public G readModel(InputStream is) throws IOException, FormatException {
 
-        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
+        try (Reader r = IOUtil.asNonClosingUTF8Reader(is)) {
             InternalDOTParser parser = new InternalDOTParser(r);
             parser.parse();
 

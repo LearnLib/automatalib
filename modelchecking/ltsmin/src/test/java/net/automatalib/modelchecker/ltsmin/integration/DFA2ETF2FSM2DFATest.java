@@ -23,14 +23,15 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.modelchecker.ltsmin.LTSminDFA;
 import net.automatalib.serialization.etf.writer.DFA2ETFWriter;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
-import net.automatalib.serialization.taf.parser.TAFParser;
+import net.automatalib.serialization.taf.parser.TAFParsers;
 
 public class DFA2ETF2FSM2DFATest extends AbstractAut2ETF2FSM2AutTest<CompactDFA<String>> {
 
     @Override
     protected CompactDFA<String> taf2Automaton() throws Exception {
-        final InputStream is = DFA2ETF2FSM2DFATest.class.getResourceAsStream("/DFA.taf");
-        return TAFParser.parseDFA(is, null);
+        try (InputStream is = DFA2ETF2FSM2DFATest.class.getResourceAsStream("/DFA.taf")) {
+            return TAFParsers.dfa().readModel(is).model;
+        }
     }
 
     @Override

@@ -26,20 +26,17 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.serialization.InputModelSerializer;
 
 /**
- * A utility class that exports automata to the AUT format (see <a
- * href="http://cadp.inria.fr/man/aut.html">http://cadp.inria.fr/man/aut.html</a> for further information).
+ * A writer that exports automata to the AUT format. For further information about the AUT format, see <a
+ * href="http://cadp.inria.fr/man/aut.html">http://cadp.inria.fr/man/aut.html</a>.
  */
-public final class AUTWriter {
+public final class AUTWriter<I> implements InputModelSerializer<I, SimpleAutomaton<?, I>> {
 
-    private AUTWriter() {
-        // prevent instantiation
-    }
-
-    public static <S, I> void writeAutomaton(SimpleAutomaton<S, I> automaton, Alphabet<I> alphabet, OutputStream os)
-            throws IOException {
-        writeAutomaton(automaton, alphabet, str -> "\"" + str + "\"", os);
+    @Override
+    public void writeModel(OutputStream os, SimpleAutomaton<?, I> model, Alphabet<I> alphabet) throws IOException {
+        writeAutomaton(model, alphabet, str -> "\"" + str + "\"", os);
     }
 
     public static <S, I> void writeAutomaton(SimpleAutomaton<S, I> automaton,
@@ -62,7 +59,7 @@ public final class AUTWriter {
             }
         }
 
-        try (Writer w = IOUtil.asBufferedNonClosingUTF8Writer(os)) {
+        try (Writer w = IOUtil.asNonClosingUTF8Writer(os)) {
             writeHeader(automaton, transitions, w);
             writeTransitions(automaton, transitions, inputTransformer, w);
         }

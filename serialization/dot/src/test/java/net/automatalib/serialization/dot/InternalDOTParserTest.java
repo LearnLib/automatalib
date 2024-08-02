@@ -39,7 +39,7 @@ public class InternalDOTParserTest {
     @BeforeMethod
     public void setUp() throws IOException, FormatException {
         try (InputStream is = InternalDOTParserTest.class.getResourceAsStream(DOTSerializationUtil.PARSER_RESOURCE);
-             Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
+             Reader r = IOUtil.asUTF8Reader(is)) {
 
             final InternalDOTParser parser = new InternalDOTParser(r);
             parser.parse();

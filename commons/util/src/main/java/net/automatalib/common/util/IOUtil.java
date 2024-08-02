@@ -189,6 +189,19 @@ public final class IOUtil {
     }
 
     /**
+     * Returns a reader that parses the contents of the given input stream with {@link StandardCharsets#UTF_8} encoding
+     * and does not propagate calls to {@link InputStream#close()}.
+     *
+     * @param is
+     *         the input stream to read
+     *
+     * @return a non-closing, UTF-8-decoding reader for the input stream.
+     */
+    public static Reader asNonClosingUTF8Reader(InputStream is) {
+        return asUTF8Reader(new NonClosingInputStream(is));
+    }
+
+    /**
      * Returns a reader that parses the contents of the given input stream with {@link StandardCharsets#UTF_8} encoding.
      *
      * @param is
@@ -234,6 +247,19 @@ public final class IOUtil {
     }
 
     /**
+     * Returns a writer that writes contents to the given output stream with {@link StandardCharsets#UTF_8} encoding and
+     * propagates calls to {@link OutputStream#close()} to {@link OutputStream#flush()}.
+     *
+     * @param os
+     *         the output stream to write to
+     *
+     * @return a non-closing, UTF-8 encoding writer for the output stream
+     */
+    public static Writer asNonClosingUTF8Writer(OutputStream os) {
+        return asUTF8Writer(new NonClosingOutputStream(os));
+    }
+
+    /**
      * Returns a writer that writes contents to the given output stream with {@link StandardCharsets#UTF_8} encoding.
      *
      * @param os
@@ -247,88 +273,24 @@ public final class IOUtil {
 
     /**
      * Returns a buffered input stream that de-compresses the contents of {@code is} (in case the given input stream
-     * contains gzip'ed content) and does not propagate calls to {@link InputStream#close()} to the passed {@code is}.
+     * contains gzip'ed content).
      *
      * @param is
      *         the input stream to read
      *
-     * @return a (potentially) de-compressing, buffered, non-closing version of {@code is}
+     * @return a (potentially) de-compressed, buffered version of {@code is}
      *
      * @throws IOException
      *         if reading the stream (for detecting whether it contains compressed contents) fails
-     * @see NonClosingInputStream
      * @see #asBufferedInputStream(InputStream)
      * @see #asUncompressedInputStream(InputStream)
      */
-    public static InputStream asUncompressedBufferedNonClosingInputStream(InputStream is) throws IOException {
+    public static InputStream asUncompressedBufferedInputStream(InputStream is) throws IOException {
         if (isBufferedInputStream(is)) {
-            return asUncompressedInputStream(new NonClosingInputStream(is));
+            return asUncompressedInputStream(is);
         }
 
-        // inverse chaining so that calls to #close can clear the buffers
-        return asUncompressedInputStream(asBufferedInputStream(new NonClosingInputStream(is)));
-    }
-
-    /**
-     * Returns a buffered reader that un-compresses the contents of {@code is} (in case the given input stream contains
-     * gzip'ed content), does not propagate calls to {@link Reader#close()} to the passed {@code is} and parses the
-     * contents of the given input stream with {@link StandardCharsets#UTF_8} encoding.
-     * <p>
-     * Implementation note: the input stream (byte-wise representation) will be buffered, not the reader (character-wise
-     * representation).
-     *
-     * @param is
-     *         the input stream to read
-     *
-     * @return a (potentially) de-compressing, buffered, non-closing, UTF-8-decoding version of {@code is}
-     *
-     * @throws IOException
-     *         if reading the stream (for detecting whether it contains compressed contents) fails
-     * @see #asUTF8Reader(InputStream)
-     * @see #asUncompressedBufferedNonClosingInputStream(InputStream)
-     */
-    public static Reader asUncompressedBufferedNonClosingUTF8Reader(InputStream is) throws IOException {
-        return asUTF8Reader(asUncompressedBufferedNonClosingInputStream(is));
-    }
-
-    /**
-     * Returns a buffered output stream that does not propagate calls to {@link OutputStream#close()} to the passed
-     * {@code os}.
-     *
-     * @param os
-     *         the output stream to write to
-     *
-     * @return a buffered, non-closing version of {@code os}
-     *
-     * @see #asBufferedOutputStream(OutputStream)
-     * @see NonClosingOutputStream
-     */
-    public static OutputStream asBufferedNonClosingOutputStream(OutputStream os) {
-        if (isBufferedOutputStream(os)) {
-            return new NonClosingOutputStream(os);
-        }
-
-        // inverse chaining so that calls to #close can clear the buffers
-        return asBufferedOutputStream(new NonClosingOutputStream(os));
-    }
-
-    /**
-     * Returns a writer that writes contents to the given output stream with {@link StandardCharsets#UTF_8} encoding and
-     * does not propagate calls to {@link Writer#close()} to the passed {@code os}.
-     * <p>
-     * Implementation note: the output stream (byte-wise representation) will be buffered, not the writer (character-
-     * wise representation).
-     *
-     * @param os
-     *         the output stream to write to
-     *
-     * @return a buffered, non-closing, UTF-8-encoding writer for the output stream
-     *
-     * @see #asBufferedNonClosingOutputStream(OutputStream)
-     * @see #asUTF8Writer(OutputStream)
-     */
-    public static Writer asBufferedNonClosingUTF8Writer(OutputStream os) {
-        return asUTF8Writer(asBufferedNonClosingOutputStream(os));
+        return asUncompressedInputStream(asBufferedInputStream(is));
     }
 
     private static boolean isBufferedInputStream(InputStream is) {

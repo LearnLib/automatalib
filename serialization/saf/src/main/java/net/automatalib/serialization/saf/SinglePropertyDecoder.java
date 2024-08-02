@@ -16,6 +16,7 @@
 package net.automatalib.serialization.saf;
 
 import java.io.DataInput;
+import java.io.IOException;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -26,5 +27,5 @@ public interface SinglePropertyDecoder<P> {
         return in -> null;
     }
 
-    P readProperty(DataInput in);
+    P readProperty(DataInput in) throws IOException;
 }

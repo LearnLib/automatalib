@@ -62,6 +62,15 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactT
         this.outputs = other.outputs.clone();
     }
 
+    public <I2> CompactMealy<I2, O> translate(Alphabet<I2> newAlphabet) {
+        if (newAlphabet.size() != numInputs()) {
+            throw new IllegalArgumentException(
+                    "Alphabet sizes must match, but they do not (old/new): " + numInputs() + " vs. " +
+                    newAlphabet.size());
+        }
+        return new CompactMealy<>(newAlphabet, this);
+    }
+
     @Override
     protected void updateTransitionStorage(Payload payload) {
         this.transitions = updateTransitionStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);

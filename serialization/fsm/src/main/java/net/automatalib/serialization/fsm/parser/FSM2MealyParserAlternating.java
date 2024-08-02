@@ -27,10 +27,14 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Function;
 
+import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MutableMealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Pair;
 import net.automatalib.exception.FormatException;
+import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -38,13 +42,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Parses a Mealy machine with alternating edge semantics from an FSM source.
  * <p>
- * Some public static parse() methods accept an {@link Output} object. This is used as follows.
- * If the Mealy machine that is read from the FSM file has no defined output symbol after an input word. The
- * last output symbol is taken from {@link Output#computeOutput(Iterable)}. If a parse() method is used that does not
- * accept an {@link Output} object an exception is thrown when the FSM does not define an output symbol after an input
- * word. Furthermore, if {@link Output#computeOutput(Iterable)} returns {@code null} an exception is throws as well.
+ * Some factory methods accept an {@link Output} object. This is used as follows. If the Mealy machine that is read from
+ * the FSM file has no defined output symbol after an input word. The last output symbol is taken from
+ * {@link Output#computeOutput(Iterable)}. If a factory method is used that does not accept an {@link Output} object an
+ * exception is thrown when the FSM does not define an output symbol after an input word. Furthermore, if
+ * {@link Output#computeOutput(Iterable)} returns {@code null} an exception is throws as well.
  * <p>
- * A use case where supplying an {@link Output} object to a parse() method is necessary is when one is model checking
+ * A use case where supplying an {@link Output} object is necessary is when one is model checking
  * with monitors. With alternating semantics the model checker can conclude the monitor is in a rejecting state after an
  * input symbol (and hence every output symbol is incorrect). To construct an input-enabled Mealy machine this parser
  * needs to know the correct output symbol. Note that this situation does not arise with synchronous semantics.
@@ -53,8 +57,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the input type
  * @param <O>
  *         the output type
+ * @param <A>
+ *         the parsed automaton type
  */
-public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyParser<I, O> {
+public final class FSM2MealyParserAlternating<I, O, A extends MutableMealyMachine<Integer, I, ?, O>> extends AbstractFSM2MealyParser<I, O, A> {
 
     public static final String PARTIAL_FSM =
             "FSM transition relation is incomplete: could not reach states '%s', from initial state '%s'";
@@ -74,8 +80,9 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
     private FSM2MealyParserAlternating(@Nullable Collection<? extends I> targetInputs,
                                        @Nullable Output<I, Word<O>> output,
                                        Function<String, I> inputParser,
-                                       Function<String, O> outputParser) {
-        super(targetInputs, inputParser, outputParser);
+                                       Function<String, O> outputParser,
+                                       AutomatonCreator<A, I> creator) {
+        super(targetInputs, inputParser, outputParser, creator);
         this.output = output;
         this.transitionsFSM = new HashMap<>();
     }
@@ -278,25 +285,116 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
         }
     }
 
-    public static <I, O> FSM2MealyParserAlternating<I, O> getParser(@Nullable Collection<? extends I> targetInputs,
-                                                                    @Nullable Output<I, Word<O>> output,
-                                                                    Function<String, I> inputParser,
-                                                                    Function<String, O> outputParser) {
-        return new FSM2MealyParserAlternating<>(targetInputs, output, inputParser, outputParser);
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link MealyMachine} description and writes it into a
+     * {@link CompactMealy}.
+     *
+     * @param edgeParser
+     *         the transformer of String representatives to (same-typed) input/output symbols
+     * @param <E>
+     *         symbol type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link MealyMachine} description
+     */
+    public static <E> ModelDeserializer<CompactMealy<E, E>> getParser(Function<String, E> edgeParser) {
+        return getParser(edgeParser, edgeParser);
     }
 
-    public static <I, O> FSM2MealyParserAlternating<I, O> getParser(Function<String, I> inputParser,
-                                                                    Function<String, O> outputParser) {
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link MealyMachine} description and writes it into a
+     * {@link CompactMealy}.
+     *
+     * @param inputParser
+     *         the transformer of String representatives to input alphabet symbols
+     * @param outputParser
+     *         the transformer of String representatives to output alphabet symbols
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link MealyMachine} description
+     */
+    public static <I, O> ModelDeserializer<CompactMealy<I, O>> getParser(Function<String, I> inputParser,
+                                                                         Function<String, O> outputParser) {
         return getParser(null, null, inputParser, outputParser);
     }
 
-    public static <E> FSM2MealyParserAlternating<E, E> getParser(@Nullable Collection<? extends E> targetInputs,
-                                                                 @Nullable Output<E, Word<E>> output,
-                                                                 Function<String, E> edgeParser) {
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link MealyMachine} description and writes it into a
+     * {@link CompactMealy}.
+     *
+     * @param targetInputs
+     *         the collection of symbols the parsing should be constrained to (may be {@code null} if unconstrained)
+     * @param output
+     *         the output object from which determines the transition outputs
+     * @param edgeParser
+     *         the transformer of String representatives to (same-typed) input/output symbols
+     * @param <E>
+     *         symbol type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link MealyMachine} description
+     */
+    public static <E> ModelDeserializer<CompactMealy<E, E>> getParser(@Nullable Collection<? extends E> targetInputs,
+                                                                      @Nullable Output<E, Word<E>> output,
+                                                                      Function<String, E> edgeParser) {
         return getParser(targetInputs, output, edgeParser, edgeParser);
     }
 
-    public static <E> FSM2MealyParserAlternating<E, E> getParser(Function<String, E> edgeParser) {
-        return getParser(edgeParser, edgeParser);
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link MealyMachine} description and writes it into a
+     * {@link CompactMealy}.
+     *
+     * @param targetInputs
+     *         the collection of symbols the parsing should be constrained to (may be {@code null} if unconstrained)
+     * @param output
+     *         the output object from which determines the transition outputs
+     * @param inputParser
+     *         the transformer of String representatives to input alphabet symbols
+     * @param outputParser
+     *         the transformer of String representatives to output alphabet symbols
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link MealyMachine} description
+     */
+    public static <I, O> ModelDeserializer<CompactMealy<I, O>> getParser(@Nullable Collection<? extends I> targetInputs,
+                                                                         @Nullable Output<I, Word<O>> output,
+                                                                         Function<String, I> inputParser,
+                                                                         Function<String, O> outputParser) {
+        return getParser(targetInputs, output, inputParser, outputParser, new CompactMealy.Creator<>());
+    }
+
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link MealyMachine} description and writes it into a given
+     * {@link MutableMealyMachine}.
+     *
+     * @param targetInputs
+     *         the collection of symbols the parsing should be constrained to (may be {@code null} if unconstrained)
+     * @param output
+     *         the output object from which determines the transition outputs
+     * @param inputParser
+     *         the transformer of String representatives to input alphabet symbols
+     * @param outputParser
+     *         the transformer of String representatives to output alphabet symbols
+     * @param creator
+     *         the creator to construct the concrete automaton instance
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     * @param <A>
+     *         (concrete) automaton type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link MealyMachine} description
+     */
+    public static <I, O, A extends MutableMealyMachine<Integer, I, ?, O>> ModelDeserializer<A> getParser(@Nullable Collection<? extends I> targetInputs,
+                                                                                                         @Nullable Output<I, Word<O>> output,
+                                                                                                         Function<String, I> inputParser,
+                                                                                                         Function<String, O> outputParser,
+                                                                                                         AutomatonCreator<A, I> creator) {
+        return new FSM2MealyParserAlternating<>(targetInputs, output, inputParser, outputParser, creator);
     }
 }

@@ -34,6 +34,8 @@ import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.InputModelSerializer;
+import net.automatalib.serialization.taf.parser.TAFParsers;
+import net.automatalib.serialization.taf.writer.TAFWriters;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import org.testng.Assert;
@@ -62,33 +64,37 @@ public class TAFSerializationTest {
 
     @Test
     public void testDFASerialization() throws IOException, FormatException {
-        final TAFSerializationDFA serializer = TAFSerializationDFA.getInstance();
+        final InputModelDeserializer<String, CompactDFA<String>> deserializer = TAFParsers.dfa();
+        final InputModelSerializer<String, CompactDFA<String>> serializer = TAFWriters.dfa();
         final DFA<Integer, String> deserializedModel =
-                writeAndReadModel(this.dfa, INPUT_ALPHABET, serializer, serializer);
+                writeAndReadModel(this.dfa, INPUT_ALPHABET, serializer, deserializer);
 
         Assert.assertTrue(Automata.testEquivalence(this.dfa, deserializedModel, INPUT_ALPHABET));
     }
 
     @Test
     public void testMealySerialization() throws IOException, FormatException {
-        final TAFSerializationMealy serializer = TAFSerializationMealy.getInstance();
+        final InputModelDeserializer<String, CompactMealy<String, String>> deserializer = TAFParsers.mealy();
+        final InputModelSerializer<String, CompactMealy<String, String>> serializer = TAFWriters.mealy();
 
         final MealyMachine<?, String, ?, String> deserializedModel =
-                writeAndReadModel(this.mealy, INPUT_ALPHABET, serializer, serializer);
+                writeAndReadModel(this.mealy, INPUT_ALPHABET, serializer, deserializer);
 
         Assert.assertTrue(Automata.testEquivalence(this.mealy, deserializedModel, INPUT_ALPHABET));
     }
 
     @Test
     public void doNotCloseInputOutputStreamDFATest() throws IOException, FormatException {
-        final TAFSerializationDFA serializer = TAFSerializationDFA.getInstance();
-        writeAndReadUnclosableModel(this.dfa, INPUT_ALPHABET, serializer, serializer);
+        final InputModelDeserializer<String, CompactDFA<String>> deserializer = TAFParsers.dfa();
+        final InputModelSerializer<String, CompactDFA<String>> serializer = TAFWriters.dfa();
+        writeAndReadUnclosableModel(this.dfa, INPUT_ALPHABET, serializer, deserializer);
     }
 
     @Test
     public void doNotCloseInputOutputStreamMealyTest() throws IOException, FormatException {
-        final TAFSerializationMealy serializer = TAFSerializationMealy.getInstance();
-        writeAndReadUnclosableModel(this.mealy, INPUT_ALPHABET, serializer, serializer);
+        final InputModelDeserializer<String, CompactMealy<String, String>> deserializer = TAFParsers.mealy();
+        final InputModelSerializer<String, CompactMealy<String, String>> serializer = TAFWriters.mealy();
+        writeAndReadUnclosableModel(this.mealy, INPUT_ALPHABET, serializer, deserializer);
     }
 
     private <T, A extends MutableDeterministic<Integer, String, T, ?, ?>> void weedOutTransitions(A automaton) {

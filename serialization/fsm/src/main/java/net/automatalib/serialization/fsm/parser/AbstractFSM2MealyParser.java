@@ -28,8 +28,9 @@ import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.exception.FormatException;
@@ -44,9 +45,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the input type.
  * @param <O>
  *         the output type.
+ * @param <A>
+ *         the parsed automaton type
  */
-public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
-        implements ModelDeserializer<CompactMealy<I, O>> {
+public abstract class AbstractFSM2MealyParser<I, O, A extends MutableMealyMachine<Integer, I, ?, O>> extends AbstractFSMParser<I>
+        implements ModelDeserializer<A> {
 
     /**
      * A Function that transform strings from the FSM source to actual output.
@@ -64,6 +67,11 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
     private final SortedSet<Integer> states = new TreeSet<>();
 
     /**
+     * The creator for the returned automaton.
+     */
+    private final AutomatonCreator<A, I> creator;
+
+    /**
      * Constructs a new AbstractFSM2MealyParser.
      *
      * @param targetInputs
@@ -73,12 +81,17 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
      *         the input parser
      * @param outputParser
      *         the output parser (similar to {@code inputParser})
+     * @param creator
+     *         the creator to construct the returned automaton instance
+     *
      */
     protected AbstractFSM2MealyParser(@Nullable Collection<? extends I> targetInputs,
                                       Function<String, I> inputParser,
-                                      Function<String, O> outputParser) {
+                                      Function<String, O> outputParser,
+                                      AutomatonCreator<A, I> creator) {
         super(targetInputs, inputParser);
         this.outputParser = outputParser;
+        this.creator = creator;
     }
 
     /**
@@ -147,7 +160,7 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
      * @throws IOException
      *         (see {@link #parse(Reader)}).
      */
-    protected CompactMealy<I, O> parseMealy(Reader reader) throws IOException, FormatException {
+    protected A parseMealy(Reader reader) throws IOException, FormatException {
 
         parse(reader);
 
@@ -161,7 +174,7 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
         }
 
         // create a CompactMealy
-        final CompactMealy<I, O> mealy = new CompactMealy<>(alphabet);
+        final A mealy = creator.createAutomaton(alphabet);
 
         // create a mapping states in the FSM source to states in the CompactMealy
         final Map<Integer, Integer> stateMap = new HashMap<>();
@@ -188,8 +201,8 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
     }
 
     @Override
-    public CompactMealy<I, O> readModel(InputStream is) throws IOException, FormatException {
-        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
+    public A readModel(InputStream is) throws IOException, FormatException {
+        try (Reader r = IOUtil.asNonClosingUTF8Reader(is)) {
             return parseMealy(r);
         }
     }

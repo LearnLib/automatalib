@@ -18,6 +18,7 @@ package net.automatalib.serialization;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import net.automatalib.common.util.IOUtil;
 
@@ -30,7 +31,8 @@ import net.automatalib.common.util.IOUtil;
 public interface ModelSerializer<M> {
 
     /**
-     * Writes the model to the given output stream.
+     * Writes the model to the given output stream. If the format is a textual one, the output is typically encoded in
+     * {@link StandardCharsets#UTF_8 UTF-8}.
      * <p>
      * Note: the output stream will <b>not</b> be closed.
      *
@@ -45,7 +47,8 @@ public interface ModelSerializer<M> {
     void writeModel(OutputStream os, M model) throws IOException;
 
     /**
-     * Writes the model to the given file.
+     * Writes the model to the given file. If the format is a textual one, the output is typically encoded in
+     * {@link StandardCharsets#UTF_8 UTF-8}.
      *
      * @param f
      *         the file to write to
