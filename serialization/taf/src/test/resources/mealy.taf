@@ -1,0 +1,15 @@
+mealy {"Hello","?"} {
+	init [initial] {
+		"Hello" / "World" -> s1
+		* / "err" -> sink
+	}
+	s1 {
+		"?" / "!" -> sink
+		"?" / "!" -> init // duplicate transition, first definition should win
+		"?" / "?" -> sink // duplicate output, first definition should win
+		"asd" / "?!?" -> sink // unknown input symbol
+	}
+	sink [sink] { // unknown property, should be ignored
+		* / "err" -> sink
+	}
+}

@@ -23,21 +23,25 @@ import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.FiniteAlphabetAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.impl.CompactTransition;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.exception.FormatException;
+import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.serialization.taf.parser.TAFParsers;
 import net.automatalib.serialization.taf.writer.TAFWriters;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -84,6 +88,81 @@ public class TAFSerializationTest {
     }
 
     @Test
+    public void testAnySerializationDFA() throws IOException, FormatException {
+        final InputModelDeserializer<String, FiniteAlphabetAutomaton<?, String, ?>> deserializer = TAFParsers.any();
+        final InputModelSerializer<String, FiniteAlphabetAutomaton<Integer, String, Integer>> serializer =
+                TAFWriters.any();
+        final FiniteAlphabetAutomaton<?, String, ?> deserializedModel =
+                writeAndReadModel(this.dfa, INPUT_ALPHABET, serializer, deserializer);
+
+        Assert.assertNotNull(deserializedModel);
+    }
+
+    @Test
+    public void testAnySerializationMealy() throws IOException, FormatException {
+        final InputModelDeserializer<String, FiniteAlphabetAutomaton<?, String, ?>> deserializer = TAFParsers.any();
+        final InputModelSerializer<String, FiniteAlphabetAutomaton<Integer, String, CompactTransition<String>>>
+                serializer = TAFWriters.any();
+        final FiniteAlphabetAutomaton<?, String, ?> deserializedModel =
+                writeAndReadModel(this.mealy, INPUT_ALPHABET, serializer, deserializer);
+
+        Assert.assertNotNull(deserializedModel);
+    }
+
+    @Test
+    public void testParseDFA() throws IOException, FormatException {
+
+        final InputModelDeserializer<String, CompactDFA<String>> parser = TAFParsers.dfa();
+        final Alphabet<String> alphabet;
+        final CompactDFA<String> dfa;
+
+        try (InputStream is = TAFSerializationTest.class.getResourceAsStream("/dfa.taf")) {
+            final InputModelData<String, CompactDFA<String>> model = parser.readModel(is);
+            alphabet = model.alphabet;
+            dfa = model.model;
+        }
+
+        Assert.assertNotNull(alphabet);
+        Assert.assertNotNull(dfa);
+
+        Assert.assertEquals(alphabet, Alphabets.closedCharStringRange('a', 'd'));
+        Assert.assertTrue(dfa.accepts(Word.fromSymbols("a", "b", "c")));
+        Assert.assertTrue(dfa.accepts(Word.fromSymbols("a", "b", "c", "a", "b", "c")));
+        Assert.assertFalse(dfa.accepts(Word.fromSymbols("a", "a", "b")));
+    }
+
+    @Test
+    public void testParseMealy() throws IOException, FormatException {
+
+        final InputModelDeserializer<String, CompactMealy<String, String>> parser = TAFParsers.mealy();
+        final Alphabet<String> alphabet;
+        final CompactMealy<String, String> mealy;
+
+        try (InputStream is = TAFSerializationTest.class.getResourceAsStream("/mealy.taf")) {
+            final InputModelData<String, CompactMealy<String, String>> model = parser.readModel(is);
+            alphabet = model.alphabet;
+            mealy = model.model;
+        }
+
+        Assert.assertNotNull(alphabet);
+        Assert.assertNotNull(mealy);
+
+        Assert.assertEquals(alphabet, Alphabets.fromArray("Hello", "?"));
+        Assert.assertEquals(mealy.computeOutput(Word.fromSymbols("Hello", "?")), Word.fromSymbols("World", "!"));
+        Assert.assertEquals(mealy.computeOutput(Word.fromSymbols("?", "?")), Word.fromSymbols("err", "err"));
+        Assert.assertNull(mealy.getState(Word.fromSymbols("Hello", "Hello")));
+    }
+
+    @Test
+    public void testParseError() throws IOException {
+        try (InputStream is = TAFSerializationTest.class.getResourceAsStream("/error.taf")) {
+            Assert.assertThrows(FormatException.class, () -> TAFParsers.dfa().readModel(is));
+            Assert.assertThrows(FormatException.class, () -> TAFParsers.mealy().readModel(is));
+            Assert.assertThrows(FormatException.class, () -> TAFParsers.any().readModel(is));
+        }
+    }
+
+    @Test
     public void doNotCloseInputOutputStreamDFATest() throws IOException, FormatException {
         final InputModelDeserializer<String, CompactDFA<String>> deserializer = TAFParsers.dfa();
         final InputModelSerializer<String, CompactDFA<String>> serializer = TAFWriters.dfa();
@@ -110,11 +189,11 @@ public class TAFSerializationTest {
         }
     }
 
-    private <I, IN extends UniversalAutomaton<?, I, ?, ?, ?>, OUT extends UniversalAutomaton<?, I, ?, ?, ?>> OUT writeAndReadModel(
-            IN source,
-            Alphabet<I> alphabet,
-            InputModelSerializer<I, IN> serializer,
-            InputModelDeserializer<I, OUT> deserializer) throws IOException, FormatException {
+    private <I, IN extends Automaton<?, I, ?>, OUT extends Automaton<?, I, ?>> OUT writeAndReadModel(IN source,
+                                                                                                     Alphabet<I> alphabet,
+                                                                                                     InputModelSerializer<I, IN> serializer,
+                                                                                                     InputModelDeserializer<I, OUT> deserializer)
+            throws IOException, FormatException {
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         serializer.writeModel(baos, source, alphabet);
@@ -123,11 +202,11 @@ public class TAFSerializationTest {
         return deserializer.readModel(is).model;
     }
 
-    private <I, IN extends UniversalAutomaton<?, I, ?, ?, ?>, OUT extends UniversalAutomaton<?, I, ?, ?, ?>> OUT writeAndReadUnclosableModel(
-            IN source,
-            Alphabet<I> alphabet,
-            InputModelSerializer<I, IN> serializer,
-            InputModelDeserializer<I, OUT> deserializer) throws IOException, FormatException {
+    private <I, IN extends Automaton<?, I, ?>, OUT extends Automaton<?, I, ?>> OUT writeAndReadUnclosableModel(IN source,
+                                                                                                               Alphabet<I> alphabet,
+                                                                                                               InputModelSerializer<I, IN> serializer,
+                                                                                                               InputModelDeserializer<I, OUT> deserializer)
+            throws IOException, FormatException {
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         serializer.writeModel(new UnclosableOutputStream(baos), source, alphabet);

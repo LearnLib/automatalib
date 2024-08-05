@@ -25,12 +25,13 @@ import net.automatalib.automaton.impl.CompactTransition;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.exception.FormatException;
-import net.automatalib.serialization.ModelDeserializer;
+import net.automatalib.serialization.InputModelData;
+import net.automatalib.serialization.InputModelDeserializer;
 
-final class TAFAnyParser implements ModelDeserializer<FiniteAlphabetAutomaton<?, String, ?>> {
+final class TAFAnyParser implements InputModelDeserializer<String, FiniteAlphabetAutomaton<?, String, ?>> {
 
     @Override
-    public FiniteAlphabetAutomaton<?, String, ?> readModel(InputStream is) throws IOException, FormatException {
+    public InputModelData<String, FiniteAlphabetAutomaton<?, String, ?>> readModel(InputStream is) throws IOException, FormatException {
 
         try (Reader r = IOUtil.asNonClosingUTF8Reader(is)) {
             final InternalTAFParser parser = new InternalTAFParser(r);
@@ -42,13 +43,13 @@ final class TAFAnyParser implements ModelDeserializer<FiniteAlphabetAutomaton<?,
                         final DefaultTAFBuilderDFA<CompactDFA<String>, Integer> builder =
                                 new DefaultTAFBuilderDFA<>(parser, new CompactDFA.Creator<>());
                         parser.dfaBody(builder);
-                        return builder.finish();
+                        return new InputModelData<>(builder.finish(), builder.getAlphabet());
                     }
                     case MEALY: {
                         final DefaultTAFBuilderMealy<CompactMealy<String, String>, Integer, CompactTransition<String>>
                                 builder = new DefaultTAFBuilderMealy<>(parser, new CompactMealy.Creator<>());
                         parser.mealyBody(builder);
-                        return builder.finish();
+                        return new InputModelData<>(builder.finish(), builder.getAlphabet());
                     }
                     default:
                         throw new IllegalStateException("Unknown type " + type);

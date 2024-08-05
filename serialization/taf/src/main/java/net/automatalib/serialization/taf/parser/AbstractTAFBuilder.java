@@ -57,12 +57,13 @@ abstract class AbstractTAFBuilder<S, T, SP, TP, M extends MutableDeterministic<S
     @Override
     public void declareState(String identifier, Set<String> options) {
         if (!declaredStates.add(identifier)) {
-            error("State {0} declared twice", identifier);
+            error("State {0} declared twice, ignoring properties ...", identifier);
+            return;
         }
 
         boolean init = options.remove("initial") | options.remove("init");
         if (init && automaton.getInitialState() != null) {
-            error("Duplicate initial state {0}", identifier);
+            error("Duplicate initial state {0}, ignoring property ...", identifier);
             init = false;
         }
 
@@ -85,7 +86,9 @@ abstract class AbstractTAFBuilder<S, T, SP, TP, M extends MutableDeterministic<S
 
     @Override
     public M finish() {
-        checkState();
+        if (automaton == null) {
+            throw new IllegalStateException("Must call one of the parse methods first");
+        }
 
         stateMap.clear();
         declaredStates.clear();
@@ -93,12 +96,6 @@ abstract class AbstractTAFBuilder<S, T, SP, TP, M extends MutableDeterministic<S
         automaton = null;
         alphabet = null;
         return result;
-    }
-
-    protected void checkState() {
-        if (automaton == null) {
-            throw new IllegalStateException();
-        }
     }
 
     protected void error(String msgFmt, Object... args) {
@@ -125,11 +122,12 @@ abstract class AbstractTAFBuilder<S, T, SP, TP, M extends MutableDeterministic<S
             T exTrans = automaton.getTransition(src, input);
             if (exTrans != null) {
                 if (!Objects.equals(tgt, automaton.getSuccessor(exTrans))) {
-                    error("Duplicate transition from {0} on input {1} to differing target {2}" +
-                          " would introduce non-determinism", source, StringUtil.enquoteIfNecessary(input, ID_PATTERN), tgt);
+                    error("Duplicate transition from {0} on input {1} to differing target {2} would introduce non-determinism",
+                          source,
+                          StringUtil.enquoteIfNecessary(input, ID_PATTERN),
+                          tgt);
                 } else if (!Objects.equals(transProperty, automaton.getTransitionProperty(exTrans))) {
-                    error("Duplicate transition from {0} on input {1} to {2} with " +
-                          "differing property '{3}' would introduce non-determinism",
+                    error("Duplicate transition from {0} on input {1} to {2} with differing property '{3}' would introduce non-determinism",
                           source,
                           StringUtil.enquoteIfNecessary(input, ID_PATTERN),
                           tgt,

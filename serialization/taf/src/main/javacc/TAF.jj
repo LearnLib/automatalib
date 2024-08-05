@@ -216,7 +216,7 @@ Set<String> stateOpts():
 {
 	[
 	<LBRACK>
-	s=identifier() { result = new HashSet<String>(); result.add(s); }
+	s=identifier() { result = new HashSet<>(); result.add(s); }
 	(<COMMA> s=identifier() { result.add(s); })*
 	<RBRACK>
 	]
@@ -269,6 +269,7 @@ void transBlockDfa(TAFBuilderDFA builder, String source):
 {
 	<LBRACE>
 	( transDeclDfa(builder, source) )*
+	[ wildcardTransDeclDfa(builder, source) ]
 	<RBRACE>
 }
 

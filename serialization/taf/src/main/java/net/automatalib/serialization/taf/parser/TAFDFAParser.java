@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.common.util.IOUtil;
@@ -47,7 +48,8 @@ final class TAFDFAParser<S, A extends MutableDFA<S, String>> implements InputMod
                 throw new FormatException(ex);
             }
 
-            return new InputModelData<>(builder.finish(), builder.getAlphabet());
+            final Alphabet<String> alphabet = builder.getAlphabet(); // finish() will clear the variable
+            return new InputModelData<>(builder.finish(), alphabet);
         }
     }
 }

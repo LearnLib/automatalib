@@ -1,0 +1,15 @@
+dfa [a..d] {
+	init [initial, accepting] {
+		a -> s1
+		* -> sink
+	}
+	s1 [initial] { // duplicate initial state, first definition should win
+		b -> acc
+	}
+	acc [accepting] { // duplicate state, first definition should win
+		* -> init
+	}
+	acc {
+		* -> s1 // duplicate transition, first definition should win
+	}
+}

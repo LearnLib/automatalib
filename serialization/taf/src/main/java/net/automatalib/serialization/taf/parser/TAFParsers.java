@@ -24,7 +24,6 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.serialization.InputModelDeserializer;
-import net.automatalib.serialization.ModelDeserializer;
 
 /**
  * Facade for TAF (textual automaton format) parsing. This class provides several static methods to access
@@ -106,7 +105,7 @@ public final class TAFParsers {
      * @see #dfa()
      * @see #mealy()
      */
-    public static ModelDeserializer<FiniteAlphabetAutomaton<?, String, ?>> any() {
+    public static InputModelDeserializer<String, FiniteAlphabetAutomaton<?, String, ?>> any() {
         return new TAFAnyParser();
     }
 }
