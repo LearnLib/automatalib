@@ -26,33 +26,39 @@ import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.fsa.impl.CompactNFA;
-import net.automatalib.automaton.simple.SimpleAutomaton;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
+import net.automatalib.serialization.InputModelDeserializer;
 
-class InternalAUTParser {
+class InternalAUTParser<I, A extends MutableAutomaton<Integer, I, Integer, ?, ?>>
+        implements InputModelDeserializer<I, A> {
+
+    private final Function<String, I> inputTransformer;
+    private final AutomatonCreator<A, I> creator;
+    private final Set<String> alphabetSymbols;
+    private final Map<Integer, Map<String, Set<Integer>>> transitionMap;
 
     private int initialState;
     private int numStates;
-    private final Set<String> alphabetSymbols = new HashSet<>();
-    private final Map<Integer, Map<String, Set<Integer>>> transitionMap = new HashMap<>();
-
-    private final InputStream inputStream;
-
     private char[] currentLineContent;
     private int currentLine;
     private int currentPos;
 
-    InternalAUTParser(InputStream is) {
-        this.inputStream = is;
+    InternalAUTParser(Function<String, I> inputTransformer, AutomatonCreator<A, I> creator) {
+        this.inputTransformer = inputTransformer;
+        this.creator = creator;
+        this.alphabetSymbols = new HashSet<>();
+        this.transitionMap = new HashMap<>();
     }
 
-    public <I> InputModelData<I, SimpleAutomaton<Integer, I>> parse(Function<String, I> inputTransformer)
-            throws IOException {
-        try (BufferedReader br = new BufferedReader(IOUtil.asUncompressedBufferedNonClosingUTF8Reader(inputStream))) {
+    @Override
+    public InputModelData<I, A> readModel(InputStream is) throws IOException, FormatException {
 
+        try (BufferedReader br = new BufferedReader(IOUtil.asNonClosingUTF8Reader(is))) {
             // parsing
             parseHeader(br);
             while (parseTransition(br)) {}
@@ -64,7 +70,7 @@ class InternalAUTParser {
             }
             final Alphabet<I> alphabet = Alphabets.fromCollection(inputMap.values());
 
-            final CompactNFA<I> result = new CompactNFA<>(alphabet, numStates);
+            final A result = creator.createAutomaton(alphabet, numStates);
 
             for (int i = 0; i < numStates; i++) {
                 result.addState();
@@ -83,14 +89,23 @@ class InternalAUTParser {
             result.setInitial(initialState, true);
 
             return new InputModelData<>(result, alphabet);
+        } finally {
+            // cleanup
+            initialState = 0;
+            numStates = 0;
+            currentLineContent = null;
+            currentLine = 0;
+            currentPos = 0;
+            alphabetSymbols.clear();
+            transitionMap.clear();
         }
     }
 
-    private void parseHeader(BufferedReader reader) throws IOException {
+    private void parseHeader(BufferedReader reader) throws IOException, FormatException {
         final String line = reader.readLine();
 
         if (line == null) {
-            throw new IllegalArgumentException(buildErrorMessage("Missing description"));
+            throw new FormatException(buildErrorMessage("Missing description"));
         }
 
         currentLineContent = line.toCharArray();
@@ -105,12 +120,12 @@ class InternalAUTParser {
         verifyCommaAndShift();
         numStates = parseNumberAndShift(); // store number of states
         if (numStates < 1) {
-            throw new IllegalArgumentException("Number of states must be >= 1");
+            throw new FormatException("Number of states must be >= 1");
         }
         verifyRBracketAndShift();
     }
 
-    private boolean parseTransition(BufferedReader reader) throws IOException {
+    private boolean parseTransition(BufferedReader reader) throws IOException, FormatException {
         final String line = reader.readLine();
 
         if (line == null) {
@@ -142,33 +157,33 @@ class InternalAUTParser {
         return true;
     }
 
-    private void verifyDesAndShift() {
+    private void verifyDesAndShift() throws FormatException {
 
         if (currentLineContent[currentPos] != 'd' || currentLineContent[currentPos + 1] != 'e' ||
             currentLineContent[currentPos + 2] != 's') {
-            throw new IllegalArgumentException(buildErrorMessage("Missing 'des' keyword"));
+            throw new FormatException(buildErrorMessage("Missing 'des' keyword"));
         }
 
         currentPos += 3;
         shiftToNextNonWhitespace();
     }
 
-    private void verifyLBracketAndShift() {
+    private void verifyLBracketAndShift() throws FormatException {
         verifySymbolAndShift('(');
     }
 
-    private void verifyRBracketAndShift() {
+    private void verifyRBracketAndShift() throws FormatException {
         verifySymbolAndShift(')');
     }
 
-    private void verifyCommaAndShift() {
+    private void verifyCommaAndShift() throws FormatException {
         verifySymbolAndShift(',');
     }
 
-    private void verifySymbolAndShift(char symbol) {
+    private void verifySymbolAndShift(char symbol) throws FormatException {
 
         if (currentLineContent[currentPos] != symbol) {
-            throw new IllegalArgumentException(buildErrorMessage("Expected: " + symbol));
+            throw new FormatException(buildErrorMessage("Expected: " + symbol));
         }
 
         currentPos++;
@@ -181,7 +196,7 @@ class InternalAUTParser {
         }
     }
 
-    private int parseNumberAndShift() {
+    private int parseNumberAndShift() throws FormatException {
 
         final StringBuilder sb = new StringBuilder();
 
@@ -193,8 +208,8 @@ class InternalAUTParser {
             sym = currentLineContent[currentPos];
         }
 
-        if (sb.length() == 0){
-            throw new IllegalArgumentException(buildErrorMessage("Expected a positive number"));
+        if (sb.length() == 0) {
+            throw new FormatException(buildErrorMessage("Expected a positive number"));
         }
 
         // forward pointer
@@ -202,7 +217,7 @@ class InternalAUTParser {
         return Integer.parseInt(sb.toString());
     }
 
-    private String parseLabelAndShift() {
+    private String parseLabelAndShift() throws FormatException {
 
         if (currentLineContent[currentPos] == '"') {
             return parseQuotedLabelAndShift();
@@ -225,7 +240,7 @@ class InternalAUTParser {
         return new String(currentLineContent, openingIndex + 1, closingIndex - openingIndex);
     }
 
-    private String parseNormalLabelAndShift() {
+    private String parseNormalLabelAndShift() throws FormatException {
 
         final char firstChar = currentLineContent[currentPos];
 
@@ -245,7 +260,7 @@ class InternalAUTParser {
             shiftToNextNonWhitespace();
             return new String(currentLineContent, startIdx, endIdx - startIdx);
         } else {
-            throw new IllegalArgumentException(buildErrorMessage("Invalid unquoted label"));
+            throw new FormatException(buildErrorMessage("Invalid unquoted label"));
         }
     }
 
@@ -257,5 +272,4 @@ class InternalAUTParser {
     private String buildErrorMessage(String desc) {
         return "In line " + currentLine + ", col " + currentPos + ": " + desc;
     }
-
 }

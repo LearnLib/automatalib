@@ -17,7 +17,6 @@ package net.automatalib.serialization.saf;
 
 import java.io.DataOutput;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -27,74 +26,61 @@ import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalAutomaton;
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.NFA;
-import net.automatalib.common.util.IOUtil;
+import net.automatalib.common.util.io.NonClosingOutputStream;
+import net.automatalib.serialization.InputModelSerializer;
 
-/**
- * Serializer for the SAF (simple automaton format).
- */
-public class SAFOutput {
+class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> implements InputModelSerializer<I, M> {
 
-    private final DataOutput out;
+    private final AutomatonType expectedType;
+    private final BlockPropertyEncoder<? super SP> spEncoder;
+    private final SinglePropertyEncoder<? super TP> tpEncoder;
 
-    SAFOutput(OutputStream os) {
-        this((DataOutput) new DataOutputStream(os));
+    SAFOutput(AutomatonType expectedType,
+              BlockPropertyEncoder<? super SP> spEncoder,
+              SinglePropertyEncoder<? super TP> tpEncoder) {
+        this.expectedType = expectedType;
+        this.spEncoder = spEncoder;
+        this.tpEncoder = tpEncoder;
     }
 
-    SAFOutput(DataOutput out) {
-        this.out = out;
+    @Override
+    public void writeModel(OutputStream os, M model, Alphabet<I> alphabet) throws IOException {
+        try (DataOutputStream out = new DataOutputStream(new NonClosingOutputStream(os))) {
+            writeHeader(out, expectedType);
+            out.writeInt(alphabet.size());
+            writeAutomatonBody(out, model, alphabet, expectedType.isDeterministic(), spEncoder, tpEncoder);
+        }
     }
 
-    SAFOutput(File file) throws IOException {
-        this(IOUtil.asBufferedOutputStream(file));
-    }
-
-    public <I> void writeDFA(DFA<?, I> automaton, Alphabet<I> alphabet) throws IOException {
-        writeAutomaton(automaton,
-                       alphabet,
-                       AutomatonType.DFA,
-                       new AcceptanceEncoder(),
-                       SinglePropertyEncoder.nullEncoder());
-    }
-
-    public <I, SP, TP> void writeAutomaton(UniversalAutomaton<?, I, ?, SP, TP> source,
-                                           Alphabet<I> alphabet,
-                                           AutomatonType expectedType,
-                                           BlockPropertyEncoder<? super SP> spEncoder,
-                                           SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
-        writeHeader(expectedType);
-        out.writeInt(alphabet.size());
-        writeAutomatonBody(source, alphabet, expectedType.isDeterministic(), spEncoder, tpEncoder);
-    }
-
-    public void writeHeader(AutomatonType type) throws IOException {
+    private void writeHeader(DataOutput out, AutomatonType type) throws IOException {
         out.writeByte('S');
         out.writeByte('A');
         out.writeByte('F');
         out.writeByte(type.ordinal());
     }
 
-    private <I, SP, TP> void writeAutomatonBody(UniversalAutomaton<?, I, ?, SP, TP> automaton,
-                                                Alphabet<I> alphabet,
-                                                boolean deterministic,
-                                                BlockPropertyEncoder<? super SP> spDecoder,
-                                                SinglePropertyEncoder<? super TP> tpDecoder) throws IOException {
+    private void writeAutomatonBody(DataOutput out,
+                                    M automaton,
+                                    Alphabet<I> alphabet,
+                                    boolean deterministic,
+                                    BlockPropertyEncoder<? super SP> spDecoder,
+                                    SinglePropertyEncoder<? super TP> tpDecoder) throws IOException {
 
         final int numStates = automaton.size();
         out.writeInt(numStates);
 
         if (deterministic) {
-            encodeBodyDet(automaton, alphabet, spDecoder, tpDecoder);
+            encodeBodyDet(out, automaton, alphabet, spDecoder, tpDecoder);
         } else {
-            encodeBodyNondet(automaton, alphabet, spDecoder, tpDecoder);
+            encodeBodyNondet(out, automaton, alphabet, spDecoder, tpDecoder);
         }
     }
 
-    private <S, I, SP, TP> void encodeBodyDet(UniversalAutomaton<S, I, ?, SP, TP> result,
-                                              Alphabet<I> alphabet,
-                                              BlockPropertyEncoder<? super SP> spEncoder,
-                                              SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
+    private void encodeBodyDet(DataOutput out,
+                               M result,
+                               Alphabet<I> alphabet,
+                               BlockPropertyEncoder<? super SP> spEncoder,
+                               SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
 
         final Set<S> initials = result.getInitialStates();
 
@@ -105,35 +91,37 @@ public class SAFOutput {
         final List<S> states = new ArrayList<>(result.getStates());
         final S init = initials.iterator().next();
 
-        encodeStatesDet(result, init, states, spEncoder);
-        encodeTransitionsDet(result, alphabet, states, tpEncoder);
+        encodeStatesDet(out, result, init, states, spEncoder);
+        encodeTransitionsDet(out, result, alphabet, states, tpEncoder);
     }
 
-    private <S, I, SP, TP> void encodeBodyNondet(UniversalAutomaton<S, I, ?, SP, TP> source,
-                                                 Alphabet<I> alphabet,
-                                                 BlockPropertyEncoder<? super SP> spEncoder,
-                                                 SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
+    private void encodeBodyNondet(DataOutput out,
+                                  M source,
+                                  Alphabet<I> alphabet,
+                                  BlockPropertyEncoder<? super SP> spEncoder,
+                                  SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
 
         final List<S> states = new ArrayList<>(source.getStates());
         final Set<S> initials = source.getInitialStates();
 
-        encodeStatesNondet(source, initials, states, spEncoder);
-        encodeTransitionsNondet(source, alphabet, states, tpEncoder);
-
+        encodeStatesNondet(out, source, initials, states, spEncoder);
+        encodeTransitionsNondet(out, source, alphabet, states, tpEncoder);
     }
 
-    private <S, SP> void encodeStatesDet(UniversalAutomaton<S, ?, ?, SP, ?> source,
-                                         S init,
-                                         List<S> states,
-                                         BlockPropertyEncoder<? super SP> encoder) throws IOException {
+    private void encodeStatesDet(DataOutput out,
+                                 M source,
+                                 S init,
+                                 List<S> states,
+                                 BlockPropertyEncoder<? super SP> encoder) throws IOException {
         out.writeInt(states.indexOf(init));
-        encodeStateProperties(source, states, encoder);
+        encodeStateProperties(out, source, states, encoder);
     }
 
-    private <S, I, T, TP> void encodeTransitionsDet(UniversalAutomaton<S, I, T, ?, TP> source,
-                                                    Alphabet<I> alphabet,
-                                                    List<S> stateList,
-                                                    SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
+    private void encodeTransitionsDet(DataOutput out,
+                                      M source,
+                                      Alphabet<I> alphabet,
+                                      List<S> stateList,
+                                      SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
         for (S state : stateList) {
             for (int j = 0; j < alphabet.size(); j++) {
                 final I sym = alphabet.getSymbol(j);
@@ -162,10 +150,11 @@ public class SAFOutput {
         }
     }
 
-    private <S, SP> void encodeStatesNondet(UniversalAutomaton<S, ?, ?, SP, ?> source,
-                                            Collection<? extends S> initialStates,
-                                            List<S> states,
-                                            BlockPropertyEncoder<? super SP> encoder) throws IOException {
+    private void encodeStatesNondet(DataOutput out,
+                                    M source,
+                                    Collection<? extends S> initialStates,
+                                    List<S> states,
+                                    BlockPropertyEncoder<? super SP> encoder) throws IOException {
         // 'writeInts'
         out.writeInt(initialStates.size());
 
@@ -174,13 +163,14 @@ public class SAFOutput {
         }
         // end 'writeInts'
 
-        encodeStateProperties(source, states, encoder);
+        encodeStateProperties(out, source, states, encoder);
     }
 
-    private <S, I, T, TP> void encodeTransitionsNondet(UniversalAutomaton<S, I, T, ?, TP> source,
-                                                       Alphabet<I> alphabet,
-                                                       List<S> stateList,
-                                                       SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
+    private void encodeTransitionsNondet(DataOutput out,
+                                         M source,
+                                         Alphabet<I> alphabet,
+                                         List<S> stateList,
+                                         SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
         for (S state : stateList) {
             for (int j = 0; j < alphabet.size(); j++) {
                 final I sym = alphabet.getSymbol(j);
@@ -198,9 +188,10 @@ public class SAFOutput {
         }
     }
 
-    private <S, SP> void encodeStateProperties(UniversalAutomaton<S, ?, ?, SP, ?> source,
-                                               List<S> states,
-                                               BlockPropertyEncoder<? super SP> encoder) throws IOException {
+    private void encodeStateProperties(DataOutput out,
+                                       M source,
+                                       List<S> states,
+                                       BlockPropertyEncoder<? super SP> encoder) throws IOException {
         encoder.start(out);
 
         for (S s : states) {
@@ -208,13 +199,5 @@ public class SAFOutput {
         }
 
         encoder.finish(out);
-    }
-
-    public <I> void writeNFA(NFA<?, I> automaton, Alphabet<I> alphabet) throws IOException {
-        writeAutomaton(automaton,
-                       alphabet,
-                       AutomatonType.NFA,
-                       new AcceptanceEncoder(),
-                       SinglePropertyEncoder.nullEncoder());
     }
 }

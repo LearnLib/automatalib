@@ -21,19 +21,27 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MutableMealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Pair;
 import net.automatalib.exception.FormatException;
+import net.automatalib.serialization.ModelDeserializer;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Parse a Mealy machine from an FSM source, with straightforward edge semantics.
+ * Parse a Mealy machine from an FSM source with straightforward edge semantics (as compared to
+ * {@link FSM2MealyParserAlternating}).
  *
  * @param <I>
  *         the input type
  * @param <O>
  *         the output type
+ * @param <A>
+ *         the parsed automaton type
  */
-public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O> {
+public final class FSM2MealyParserIO<I, O, A extends MutableMealyMachine<Integer, I, ?, O>> extends AbstractFSM2MealyParser<I, O, A> {
 
     /**
      * Constructs a new FSM2MealyParserIO. Use one of the static parse() methods to actually parse an FSM source.
@@ -48,8 +56,9 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
      */
     private FSM2MealyParserIO(@Nullable Collection<? extends I> targetInputs,
                               Function<String, I> inputParser,
-                              Function<String, O> outputParser) {
-        super(targetInputs, inputParser, outputParser);
+                              Function<String, O> outputParser,
+                              AutomatonCreator<A, I> creator) {
+        super(targetInputs, inputParser, outputParser, creator);
     }
 
     /**
@@ -130,23 +139,107 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
         }
     }
 
-    public static <I, O> FSM2MealyParserIO<I, O> getParser(@Nullable Collection<? extends I> targetInputs,
-                                                           Function<String, I> inputParser,
-                                                           Function<String, O> outputParser) {
-        return new FSM2MealyParserIO<>(targetInputs, inputParser, outputParser);
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link MealyMachine} description and writes it into a
+     * {@link CompactMealy}.
+     *
+     * @param edgeParser
+     *         the transformer of String representatives to (same-typed) input/output symbols
+     * @param <E>
+     *         symbol type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link MealyMachine} description
+     */
+    public static <E> ModelDeserializer<CompactMealy<E, E>> getParser(Function<String, E> edgeParser) {
+        return getParser(edgeParser, edgeParser);
     }
 
-    public static <I, O> FSM2MealyParserIO<I, O> getParser(Function<String, I> inputParser,
-                                                           Function<String, O> outputParser) {
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link MealyMachine} description and writes it into a
+     * {@link CompactMealy}.
+     *
+     * @param inputParser
+     *         the transformer of String representatives to input alphabet symbols
+     * @param outputParser
+     *         the transformer of String representatives to output alphabet symbols
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link MealyMachine} description
+     */
+    public static <I, O> ModelDeserializer<CompactMealy<I, O>> getParser(Function<String, I> inputParser,
+                                                                         Function<String, O> outputParser) {
         return getParser(null, inputParser, outputParser);
     }
 
-    public static <E> FSM2MealyParserIO<E, E> getParser(@Nullable Collection<? extends E> targetInputs,
-                                                        Function<String, E> edgeParser) {
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link MealyMachine} description and writes it into a
+     * {@link CompactMealy}.
+     *
+     * @param targetInputs
+     *         the collection of symbols the parsing should be constrained to (may be {@code null} if unconstrained)
+     * @param edgeParser
+     *         the transformer of String representatives to (same-typed) input/output symbols
+     * @param <E>
+     *         symbol type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link MealyMachine} description
+     */
+    public static <E> ModelDeserializer<CompactMealy<E, E>> getParser(@Nullable Collection<? extends E> targetInputs,
+                                                                      Function<String, E> edgeParser) {
         return getParser(targetInputs, edgeParser, edgeParser);
     }
 
-    public static <E> FSM2MealyParserIO<E, E> getParser(Function<String, E> edgeParser) {
-        return getParser(edgeParser, edgeParser);
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link MealyMachine} description and writes it into a
+     * {@link CompactMealy}.
+     *
+     * @param targetInputs
+     *         the collection of symbols the parsing should be constrained to (may be {@code null} if unconstrained)
+     * @param inputParser
+     *         the transformer of String representatives to input alphabet symbols
+     * @param outputParser
+     *         the transformer of String representatives to output alphabet symbols
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link MealyMachine} description
+     */
+    public static <I, O> ModelDeserializer<CompactMealy<I, O>> getParser(@Nullable Collection<? extends I> targetInputs,
+                                                                         Function<String, I> inputParser,
+                                                                         Function<String, O> outputParser) {
+        return getParser(targetInputs, inputParser, outputParser, new CompactMealy.Creator<>());
+    }
+
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link MealyMachine} description and writes it into a given
+     * {@link MutableMealyMachine}.
+     *
+     * @param targetInputs
+     *         the collection of symbols the parsing should be constrained to (may be {@code null} if unconstrained)
+     * @param inputParser
+     *         the transformer of String representatives to input alphabet symbols
+     * @param outputParser
+     *         the transformer of String representatives to output alphabet symbols
+     * @param creator
+     *         the creator to construct the concrete automaton instance
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     * @param <A>
+     *         (concrete) automaton type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link MealyMachine} description
+     */
+    public static <I, O, A extends MutableMealyMachine<Integer, I, ?, O>> ModelDeserializer<A> getParser(@Nullable Collection<? extends I> targetInputs,
+                                                                                                         Function<String, I> inputParser,
+                                                                                                         Function<String, O> outputParser,
+                                                                                                         AutomatonCreator<A, I> creator) {
+        return new FSM2MealyParserIO<>(targetInputs, inputParser, outputParser, creator);
     }
 }

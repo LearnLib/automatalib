@@ -15,7 +15,7 @@
  */
 package net.automatalib.serialization.saf;
 
-public enum AutomatonType {
+enum AutomatonType {
     DFA(true),
     NFA(false),
     MEALY(true);
@@ -26,7 +26,7 @@ public enum AutomatonType {
         this.deterministic = deterministic;
     }
 
-    public boolean isDeterministic() {
+    boolean isDeterministic() {
         return deterministic;
     }
 }

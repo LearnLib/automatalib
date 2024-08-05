@@ -1,0 +1,2 @@
+moore [a..b] {
+	init [initial] {}

@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -31,24 +30,22 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
-import net.automatalib.serialization.InputModelSerializationProvider;
+import net.automatalib.serialization.InputModelDeserializer;
+import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.util.automaton.Automata;
 
-public class LearnLibV2Serialization
-        implements InputModelSerializationProvider<Integer, DFA<?, Integer>, DFA<Integer, Integer>> {
+public class LearnLibV2Serialization<I>
+        implements InputModelSerializer<I, DFA<?, I>>, InputModelDeserializer<Integer, DFA<Integer, Integer>> {
 
-    private static final LearnLibV2Serialization INSTANCE = new LearnLibV2Serialization();
+    private static final LearnLibV2Serialization<?> INSTANCE = new LearnLibV2Serialization<>();
 
-    public static LearnLibV2Serialization getInstance() {
-        return INSTANCE;
+    @SuppressWarnings("unchecked")
+    public static <I> LearnLibV2Serialization<I> getInstance() {
+        return (LearnLibV2Serialization<I>) INSTANCE;
     }
 
     @Override
-    public void writeModel(OutputStream os, DFA<?, Integer> model, Alphabet<Integer> alphabet) {
-        doWriteDFA(model, alphabet, os);
-    }
-
-    public <I> void writeGenericModel(OutputStream os, DFA<?, I> model, Alphabet<I> alphabet) {
+    public void writeModel(OutputStream os, DFA<?, I> model, Alphabet<I> alphabet) {
         doWriteDFA(model, alphabet, os);
     }
 
@@ -59,8 +56,7 @@ public class LearnLibV2Serialization
     }
 
     public CompactDFA<Integer> readGenericDFA(InputStream is) throws IOException {
-        try (Scanner sc = new Scanner(IOUtil.asUncompressedBufferedNonClosingInputStream(is),
-                                      StandardCharsets.UTF_8.toString())) {
+        try (Scanner sc = new Scanner(IOUtil.asNonClosingUTF8Reader(is))) {
 
             int numStates = sc.nextInt();
             int numSymbols = sc.nextInt();
@@ -93,7 +89,7 @@ public class LearnLibV2Serialization
         }
     }
 
-    private <S, I> void doWriteDFA(DFA<S, I> dfa, Alphabet<I> alphabet, OutputStream os) {
+    private <S> void doWriteDFA(DFA<S, I> dfa, Alphabet<I> alphabet, OutputStream os) {
         S initState = dfa.getInitialState();
         if (initState == null) {
             throw new IllegalArgumentException("Serialization format does not support automata without initial state");
@@ -106,7 +102,7 @@ public class LearnLibV2Serialization
             numStates++;
         }
 
-        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedNonClosingUTF8Writer(os))) {
+        try (PrintWriter pw = new PrintWriter(IOUtil.asNonClosingUTF8Writer(os))) {
             int numInputs = alphabet.size();
             pw.printf("%d %d%n", numStates, numInputs);
 

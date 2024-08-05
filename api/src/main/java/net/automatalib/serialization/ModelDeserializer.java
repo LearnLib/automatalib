@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.exception.FormatException;
@@ -33,7 +34,8 @@ import net.automatalib.exception.FormatException;
 public interface ModelDeserializer<M> {
 
     /**
-     * Reads the contents from the given input stream and de-serializes it into a model instance.
+     * Reads the contents from the given input stream and de-serializes it into a model instance. If the format is a
+     * textual one, the input stream is typically interpreted in {@link StandardCharsets#UTF_8 UTF-8}.
      * <p>
      * Note: the input stream will <b>not</b> be closed.
      *
@@ -50,7 +52,8 @@ public interface ModelDeserializer<M> {
     M readModel(InputStream is) throws IOException, FormatException;
 
     /**
-     * Reads the contents from the given URL and de-serializes it into a model instance.
+     * Reads the contents from the given URL and de-serializes it into a model instance. If the format is a textual one,
+     * the input stream is typically interpreted in {@link StandardCharsets#UTF_8 UTF-8}.
      *
      * @param url
      *         the url to read data from
@@ -69,7 +72,8 @@ public interface ModelDeserializer<M> {
     }
 
     /**
-     * Reads the contents from the given file and de-serializes it into a model instance.
+     * Reads the contents from the given file and de-serializes it into a model instance. If the format is a textual
+     * one, the input stream is typically interpreted in {@link StandardCharsets#UTF_8 UTF-8}.
      *
      * @param f
      *         the file to read data from
@@ -88,7 +92,8 @@ public interface ModelDeserializer<M> {
     }
 
     /**
-     * Reads the contents from the given byte buffer and de-serializes it into a model instance.
+     * Reads the contents from the given byte buffer and de-serializes it into a model instance. If the format is a
+     * textual one, the input stream is typically interpreted in {@link StandardCharsets#UTF_8 UTF-8}.
      *
      * @param buf
      *         the buffer to read data from

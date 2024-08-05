@@ -70,7 +70,7 @@ public class LearnLibV2SerializationTest {
     @Test
     public void doNotCloseInputOutputStreamTest() throws IOException {
         final Alphabet<Integer> alphabet = this.automaton.getInputAlphabet();
-        LearnLibV2Serialization serializer = LearnLibV2Serialization.getInstance();
+        LearnLibV2Serialization<Integer> serializer = LearnLibV2Serialization.getInstance();
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         serializer.writeModel(new UnclosableOutputStream(baos), automaton, alphabet);
@@ -81,7 +81,7 @@ public class LearnLibV2SerializationTest {
 
     private InputModelData<Integer, DFA<Integer, Integer>> writeAndRead(DFA<Integer, Integer> automaton,
                                                                         Alphabet<Integer> alphabet) throws IOException {
-        LearnLibV2Serialization serializer = LearnLibV2Serialization.getInstance();
+        LearnLibV2Serialization<Integer> serializer = LearnLibV2Serialization.getInstance();
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         serializer.writeModel(baos, automaton, alphabet);

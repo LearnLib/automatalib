@@ -19,15 +19,17 @@ import java.util.Collection;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.impl.CompactTransition;
-import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.transducer.MutableMealyMachine;
 
-final class DefaultTAFBuilderMealy
-        extends AbstractTAFBuilder<Integer, String, CompactTransition<String>, Void, String, CompactMealy<String, String>>
-        implements TAFBuilderMealy {
+final class DefaultTAFBuilderMealy<A extends MutableMealyMachine<S, String, T, String>, S, T>
+        extends AbstractTAFBuilder<S, T, Void, String, A> implements TAFBuilderMealy {
 
-    DefaultTAFBuilderMealy(InternalTAFParser parser) {
+    private final AutomatonCreator<A, String> creator;
+
+    DefaultTAFBuilderMealy(InternalTAFParser parser, AutomatonCreator<A, String> creator) {
         super(parser);
+        this.creator = creator;
     }
 
     @Override
@@ -41,18 +43,13 @@ final class DefaultTAFBuilderMealy
     }
 
     @Override
-    protected CompactMealy<String, String> createAutomaton(Alphabet<String> stringAlphabet) {
-        return new CompactMealy<>(stringAlphabet);
+    protected A createAutomaton(Alphabet<String> stringAlphabet) {
+        return creator.createAutomaton(stringAlphabet);
     }
 
     @Override
     protected Void getStateProperty(Set<String> options) {
         return null;
-    }
-
-    @Override
-    protected String translateInput(String s) {
-        return s;
     }
 
 }

@@ -25,6 +25,7 @@ import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.exception.FormatException;
+import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -37,7 +38,7 @@ import org.testng.annotations.Test;
  */
 public class FSM2DFAParserTest extends AbstractFSM2ParserTest {
 
-    private FSM2DFAParser<Character> parser;
+    private ModelDeserializer<CompactDFA<Character>> parser;
 
     @BeforeClass
     public void setUp() {

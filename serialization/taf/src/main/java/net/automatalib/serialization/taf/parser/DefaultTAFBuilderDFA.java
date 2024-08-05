@@ -19,13 +19,17 @@ import java.util.Collection;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.fsa.MutableDFA;
 
-final class DefaultTAFBuilderDFA extends AbstractTAFBuilder<Integer, String, Integer, Boolean, Void, CompactDFA<String>>
+final class DefaultTAFBuilderDFA<A extends MutableDFA<S, String>, S> extends AbstractTAFBuilder<S, S, Boolean, Void, A>
         implements TAFBuilderDFA {
 
-    DefaultTAFBuilderDFA(InternalTAFParser parser) {
+    private final AutomatonCreator<A, String> creator;
+
+    DefaultTAFBuilderDFA(InternalTAFParser parser, AutomatonCreator<A, String> creator) {
         super(parser);
+        this.creator = creator;
     }
 
     @Override
@@ -39,18 +43,13 @@ final class DefaultTAFBuilderDFA extends AbstractTAFBuilder<Integer, String, Int
     }
 
     @Override
-    protected CompactDFA<String> createAutomaton(Alphabet<String> stringAlphabet) {
-        return new CompactDFA<>(stringAlphabet);
+    protected A createAutomaton(Alphabet<String> alphabet) {
+        return creator.createAutomaton(alphabet);
     }
 
     @Override
     protected Boolean getStateProperty(Set<String> options) {
         return options.remove("accepting") | options.remove("acc");
-    }
-
-    @Override
-    protected String translateInput(String s) {
-        return s;
     }
 
 }

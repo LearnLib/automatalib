@@ -66,7 +66,6 @@ open module net.automatalib.api {
     exports net.automatalib.graph.visualization;
     exports net.automatalib.modelchecking;
     exports net.automatalib.serialization;
-    exports net.automatalib.serialization.automaton;
     exports net.automatalib.ts;
     exports net.automatalib.ts.acceptor;
     exports net.automatalib.ts.modal;

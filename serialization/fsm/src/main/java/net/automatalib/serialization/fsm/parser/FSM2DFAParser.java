@@ -28,7 +28,9 @@ import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
@@ -41,8 +43,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         the input type
+ * @param <A>
+ *         the parsed automaton type
  */
-public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements ModelDeserializer<CompactDFA<I>> {
+public final class FSM2DFAParser<I, A extends MutableDFA<Integer, I>> extends AbstractFSMParser<I>
+        implements ModelDeserializer<A> {
 
     // some Exception messages
     public static final String ACCEPT_NOT_FOUND = "accepting state label (%s) not found";
@@ -81,6 +86,11 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
     private final String acceptingDataValue;
 
     /**
+     * The creator for the returned automaton.
+     */
+    private final AutomatonCreator<A, I> creator;
+
+    /**
      * Constructs an FSM2DFAParser. To parse a DFA use one of the parse() methods.
      *
      * @param targetInputs
@@ -92,14 +102,18 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      *         the variable name for acceptance (see {@link #acceptingDataVariableName})
      * @param acceptingDataValue
      *         the string for acceptance (see {@link #acceptingDataValue})
+     * @param creator
+     *         the creator to construct the returned automaton instance
      */
     private FSM2DFAParser(@Nullable Collection<? extends I> targetInputs,
                           Function<String, I> inputParser,
                           String acceptingDataVariableName,
-                          String acceptingDataValue) {
+                          String acceptingDataValue,
+                          AutomatonCreator<A, I> creator) {
         super(targetInputs, inputParser);
         this.acceptingDataVariableName = acceptingDataVariableName;
         this.acceptingDataValue = acceptingDataValue;
+        this.creator = creator;
     }
 
     /**
@@ -302,7 +316,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      * @throws IOException
      *         see {@link #parse(Reader)}.
      */
-    private CompactDFA<I> parseDFA(Reader reader) throws IOException, FormatException {
+    private A parseDFA(Reader reader) throws IOException, FormatException {
 
         parse(reader);
 
@@ -314,7 +328,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
             alphabet = Alphabets.fromCollection(getInputs());
         }
 
-        final CompactDFA<I> dfa = new CompactDFA<>(alphabet);
+        final A dfa = creator.createAutomaton(alphabet);
 
         // add all the states
         states.forEach((key, value) -> dfa.addState(value));
@@ -338,22 +352,87 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
     }
 
     @Override
-    public CompactDFA<I> readModel(InputStream is) throws IOException, FormatException {
-        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
+    public A readModel(InputStream is) throws IOException, FormatException {
+        try (Reader r = IOUtil.asNonClosingUTF8Reader(is)) {
             return parseDFA(r);
         }
     }
 
-    public static <I> FSM2DFAParser<I> getParser(@Nullable Collection<? extends I> targetInputs,
-                                                 Function<String, I> inputParser,
-                                                 String acceptingDataVariableName,
-                                                 String acceptingDataValue) {
-        return new FSM2DFAParser<>(targetInputs, inputParser, acceptingDataVariableName, acceptingDataValue);
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link DFA} description and writes it into a
+     * {@link CompactDFA}.
+     *
+     * @param inputParser
+     *         the transformer of String representatives to alphabet symbols
+     * @param acceptingDataValue
+     *         the label identifying the accepting variable name
+     * @param acceptingDataVariableName
+     *         the label identifying the accepting variable value
+     * @param <I>
+     *         input symbol type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link DFA} description
+     */
+    public static <I> ModelDeserializer<CompactDFA<I>> getParser(Function<String, I> inputParser,
+                                                                 String acceptingDataVariableName,
+                                                                 String acceptingDataValue) {
+        return getParser(null, inputParser, acceptingDataVariableName, acceptingDataValue);
     }
 
-    public static <I> FSM2DFAParser<I> getParser(Function<String, I> inputParser,
-                                                 String acceptingDataVariableName,
-                                                 String acceptingDataValue) {
-        return getParser(null, inputParser, acceptingDataVariableName, acceptingDataValue);
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link DFA} description and writes it into a
+     * {@link CompactDFA}, limited to the specified input symbols.
+     *
+     * @param targetInputs
+     *         the collection of symbols the parsing should be constrained to (may be {@code null} if unconstrained)
+     * @param inputParser
+     *         the transformer of String representatives to alphabet symbols
+     * @param acceptingDataValue
+     *         the label identifying the accepting variable name
+     * @param acceptingDataVariableName
+     *         the label identifying the accepting variable value
+     * @param <I>
+     *         input symbol type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link DFA} description
+     */
+    public static <I> ModelDeserializer<CompactDFA<I>> getParser(@Nullable Collection<? extends I> targetInputs,
+                                                                 Function<String, I> inputParser,
+                                                                 String acceptingDataVariableName,
+                                                                 String acceptingDataValue) {
+        return getParser(targetInputs,
+                         inputParser,
+                         acceptingDataVariableName,
+                         acceptingDataValue,
+                         new CompactDFA.Creator<>());
+    }
+
+    /**
+     * Constructs a {@link ModelDeserializer} that reads a {@link DFA} description and writes it into a given
+     * {@link MutableDFA}, limited to the specified input symbols.
+     *
+     * @param targetInputs
+     *         the collection of symbols the parsing should be constrained to (may be {@code null} if unconstrained)
+     * @param inputParser
+     *         the transformer of String representatives to alphabet symbols
+     * @param acceptingDataValue
+     *         the label identifying the accepting variable name
+     * @param acceptingDataVariableName
+     *         the label identifying the accepting variable value
+     * @param creator
+     *         the creator to construct the concrete automaton instance
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         (concrete) automaton type
+     *
+     * @return a {@link ModelDeserializer} that reads a {@link DFA} description
+     */
+    public static <I, A extends MutableDFA<Integer, I>> ModelDeserializer<A> getParser(@Nullable Collection<? extends I> targetInputs,
+                                                                                       Function<String, I> inputParser,
+                                                                                       String acceptingDataVariableName,
+                                                                                       String acceptingDataValue,
+                                                                                       AutomatonCreator<A, I> creator) {
+        return new FSM2DFAParser<>(targetInputs, inputParser, acceptingDataVariableName, acceptingDataValue, creator);
     }
 }

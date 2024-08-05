@@ -16,25 +16,22 @@
 package net.automatalib.serialization.saf;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableAutomaton;
 
-class SAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I, T, SP, TP>>
-        extends AbstractSAFInput<S, I, T, SP, TP, A> {
+class SAFNativeInput<S, T, SP, TP, A extends MutableAutomaton<S, Integer, T, SP, TP>>
+        extends AbstractSAFInput<S, Integer, T, SP, TP, A> {
 
-    private final Alphabet<I> alphabet;
-
-    SAFInput(AutomatonType expectedType,
-             AutomatonCreator<? extends A, I> creator,
-             Alphabet<I> alphabet,
-             BlockPropertyDecoder<? extends SP> spDecoder,
-             SinglePropertyDecoder<? extends TP> tpDecoder) {
+    SAFNativeInput(AutomatonType expectedType,
+                   AutomatonCreator<? extends A, Integer> creator,
+                   BlockPropertyDecoder<? extends SP> spDecoder,
+                   SinglePropertyDecoder<? extends TP> tpDecoder) {
         super(expectedType, creator, spDecoder, tpDecoder);
-        this.alphabet = alphabet;
     }
 
     @Override
-    protected Alphabet<I> getAlphabet(int size) {
-        return this.alphabet;
+    protected Alphabet<Integer> getAlphabet(int size) {
+        return Alphabets.integers(0, size - 1);
     }
 }

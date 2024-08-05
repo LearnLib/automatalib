@@ -30,7 +30,7 @@ import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.common.util.string.StringUtil;
 
 @SuppressWarnings("nullness")
-abstract class AbstractTAFBuilder<S, I, T, SP, TP, M extends MutableDeterministic<S, I, T, SP, TP>>
+abstract class AbstractTAFBuilder<S, T, SP, TP, M extends MutableDeterministic<S, String, T, SP, TP>>
         implements TAFBuilder {
 
     private static final Pattern ID_PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z0-9_]*");
@@ -54,17 +54,16 @@ abstract class AbstractTAFBuilder<S, I, T, SP, TP, M extends MutableDeterministi
         this.alphabet = alphabet;
     }
 
-    protected abstract M createAutomaton(Alphabet<String> stringAlphabet);
-
     @Override
     public void declareState(String identifier, Set<String> options) {
         if (!declaredStates.add(identifier)) {
-            error("State {0} declared twice", identifier);
+            error("State {0} declared twice, ignoring properties ...", identifier);
+            return;
         }
 
         boolean init = options.remove("initial") | options.remove("init");
         if (init && automaton.getInitialState() != null) {
-            error("Duplicate initial state {0}", identifier);
+            error("Duplicate initial state {0}, ignoring property ...", identifier);
             init = false;
         }
 
@@ -87,7 +86,9 @@ abstract class AbstractTAFBuilder<S, I, T, SP, TP, M extends MutableDeterministi
 
     @Override
     public M finish() {
-        checkState();
+        if (automaton == null) {
+            throw new IllegalStateException("Must call one of the parse methods first");
+        }
 
         stateMap.clear();
         declaredStates.clear();
@@ -97,15 +98,11 @@ abstract class AbstractTAFBuilder<S, I, T, SP, TP, M extends MutableDeterministi
         return result;
     }
 
-    protected void checkState() {
-        if (automaton == null) {
-            throw new IllegalStateException();
-        }
-    }
-
     protected void error(String msgFmt, Object... args) {
         parser.error(msgFmt, args);
     }
+
+    protected abstract M createAutomaton(Alphabet<String> stringAlphabet);
 
     protected abstract SP getStateProperty(Set<String> options);
 
@@ -117,22 +114,22 @@ abstract class AbstractTAFBuilder<S, I, T, SP, TP, M extends MutableDeterministi
         S src = lookupState(source);
         S tgt = lookupState(target);
         List<String> invalidSymbols = new ArrayList<>();
-        for (String s : symbols) {
-            if (!alphabet.containsSymbol(s)) {
-                invalidSymbols.add(StringUtil.enquoteIfNecessary(s, ID_PATTERN));
+        for (String input : symbols) {
+            if (!alphabet.containsSymbol(input)) {
+                invalidSymbols.add(StringUtil.enquoteIfNecessary(input, ID_PATTERN));
                 continue;
             }
-            I input = translateInput(s);
             T exTrans = automaton.getTransition(src, input);
             if (exTrans != null) {
                 if (!Objects.equals(tgt, automaton.getSuccessor(exTrans))) {
-                    error("Duplicate transition from {0} on input {1} to differing target {2}" +
-                          " would introduce non-determinism", source, StringUtil.enquoteIfNecessary(s, ID_PATTERN), tgt);
-                } else if (!Objects.equals(transProperty, automaton.getTransitionProperty(exTrans))) {
-                    error("Duplicate transition from {0} on input {1} to {2} with " +
-                          "differing property '{3}' would introduce non-determinism",
+                    error("Duplicate transition from {0} on input {1} to differing target {2} would introduce non-determinism",
                           source,
-                          StringUtil.enquoteIfNecessary(s, ID_PATTERN),
+                          StringUtil.enquoteIfNecessary(input, ID_PATTERN),
+                          tgt);
+                } else if (!Objects.equals(transProperty, automaton.getTransitionProperty(exTrans))) {
+                    error("Duplicate transition from {0} on input {1} to {2} with differing property '{3}' would introduce non-determinism",
+                          source,
+                          StringUtil.enquoteIfNecessary(input, ID_PATTERN),
                           tgt,
                           transProperty);
                 }
@@ -149,17 +146,18 @@ abstract class AbstractTAFBuilder<S, I, T, SP, TP, M extends MutableDeterministi
         return stateMap.computeIfAbsent(identifier, k -> automaton.addState());
     }
 
-    protected abstract I translateInput(String c);
-
     protected void doAddWildcardTransitions(String source, String target, TP transProperty) {
         S src = lookupState(source);
         S tgt = lookupState(target);
-        for (String s : alphabet) {
-            I input = translateInput(s);
+        for (String input : alphabet) {
             T exTrans = automaton.getTransition(src, input);
             if (exTrans == null) {
                 automaton.addTransition(src, input, tgt, transProperty);
             }
         }
+    }
+
+    protected Alphabet<String> getAlphabet() {
+        return alphabet;
     }
 }
