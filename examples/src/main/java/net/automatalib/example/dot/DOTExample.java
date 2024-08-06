@@ -55,7 +55,7 @@ public final class DOTExample {
 
             DOT.renderDOTStrings(graphs, true);
         } else {
-            LOGGER.warn("DOT does not seem usable. Check you configuration.");
+            LOGGER.warn("DOT does not seem usable. Check your configuration.");
         }
     }
 
