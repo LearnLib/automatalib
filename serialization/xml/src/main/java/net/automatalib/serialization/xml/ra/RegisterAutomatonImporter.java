@@ -18,6 +18,7 @@ package net.automatalib.serialization.xml.ra;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -84,6 +85,18 @@ public class RegisterAutomatonImporter {
 
     public Collection<DataType<?>> getDataTypes() {
         return typeMap.values();
+    }
+    public <T> Collection<DataType<T>> getDataTypes(Class<T> clazz) {
+        final Collection<DataType<?>> values = this.typeMap.values();
+        final List<DataType<T>> result = new ArrayList<>(values.size());
+
+        for (DataType<?> value : values) {
+            if (value.getBase().equals(clazz)) {
+                result.add((DataType<T>) value);
+            }
+        }
+
+        return result;
     }
 
     public RegisterAutomatonImporter(InputStream is) {
