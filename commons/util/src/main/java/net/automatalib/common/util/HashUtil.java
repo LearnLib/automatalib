@@ -20,7 +20,7 @@ package net.automatalib.common.util;
  */
 public final class HashUtil {
 
-    private static final double DEFAULT_LOADFACTOR = 0.75f;
+    private static final double DEFAULT_LOADFACTOR = 0.75d;
 
     private HashUtil() {
         // prevent instantiation
