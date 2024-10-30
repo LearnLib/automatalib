@@ -18,6 +18,7 @@ package net.automatalib.util.automaton.builder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.fsa.MutableDFA;
+import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.impl.CompactTransition;
@@ -51,6 +52,10 @@ public final class AutomatonBuilders {
 
     public static <I> FSABuilder<Integer, I, CompactNFA<I>> newNFA(Alphabet<I> alphabet) {
         return new FSABuilder<>(new CompactNFA<>(alphabet));
+    }
+
+    public static <S, I, A extends MutableNFA<S, ? super I>> FSABuilder<S, I, A> forNFA(A nfa) {
+        return new FSABuilder<>(nfa);
     }
 
     public static <I, O> MealyBuilder<Integer, I, CompactTransition<O>, O, CompactMealy<I, O>> newMealy(Alphabet<I> alphabet) {

@@ -89,4 +89,41 @@ public final class ArrayUtil {
     public static <E> Iterator<E> iterator(E[] array) {
         return new ArrayIterator<>(array);
     }
+
+
+    public static void heapsort(int[] arr, int[] keys) {
+
+        int start = arr.length / 2;
+        int end = arr.length;
+
+        while (end > 1) {
+            if (start > 0) {
+                start--;
+            } else {
+                end--;
+                swap(arr, end, 0);
+            }
+
+            int root = start;
+            while (2 * root + 1 < end) {
+                int child = 2 * root + 1;
+                if (child + 1 < end && keys[arr[child]] < keys[arr[child + 1]]) {
+                    child++;
+                }
+
+                if (keys[arr[root]] < keys[arr[child]]) {
+                    swap(arr, root, child);
+                    root = child;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    private static void swap(int[] arr, int i, int j) {
+        int tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
 }
