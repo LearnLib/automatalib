@@ -4,25 +4,25 @@ import net.automatalib.common.util.array.ArrayUtil;
 
 public class Valmari {
 
-    final RefinablePartition blocks;
-    final RefinablePartition clusters;
+    public final RefinablePartition blocks;
+    public final RefinablePartition clusters;
 
-    final int n, m;
+    private final int n, m;
 
-    final int[] tail;
-    final int[] label;
-    final int[] head;
+    private final int[] tail;
+    private final int[] label;
+    private final int[] head;
 
-    final int[] inTransitionsTrans;
-    final int[] inTransitionsStates;
-    final int[] link;
+    private final int[] inTransitionsTrans;
+    private final int[] inTransitionsStates;
+    private final int[] link;
 
-    final int[] touchedItems;
-    int touchedItemsPtr;
+    private final int[] touchedItems;
+    private int touchedItemsPtr;
 
-    final int[] sCount;
-    final int[] lCount;
-    int lCounters;
+    private final int[] sCount;
+    private final int[] lCount;
+    private int lCounters;
 
     public Valmari(int[] blocks, int[] tail, int[] label, int[] head) {
 
@@ -218,15 +218,15 @@ public class Valmari {
         }
     }
 
-    static class RefinablePartition {
+    public static class RefinablePartition {
 
-        int sets;
-        final int[] elems;
-        final int[] first;
-        final int[] mid;
-        final int[] end;
-        final int[] loc;
-        final int[] sidx;
+        public int sets;
+        public final int[] elems;
+        public final int[] first;
+        public final int[] mid;
+        public final int[] end;
+        public final int[] loc;
+        public final int[] sidx;
 
         RefinablePartition(int size) {
             this(size, new int[size]);

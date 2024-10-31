@@ -17,12 +17,15 @@ package net.automatalib.util.automaton.equivalence;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
+import java.util.List;
 import java.util.Set;
 
 import net.automatalib.automaton.Automaton;
-import net.automatalib.common.util.HashUtil;
+import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.collection.CollectionUtil;
+import net.automatalib.util.partitionrefinement.Valmari;
+import net.automatalib.util.partitionrefinement.Valmari.RefinablePartition;
 
 public final class Bisimulation {
 
@@ -30,101 +33,88 @@ public final class Bisimulation {
         // prevent instantiation
     }
 
-    public static <AS, I, AT, A extends Automaton<AS, I, AT>, BS, BT, B extends Automaton<BS, I, BT>> Set<Pair<AS, BS>> bisimulationEquivalenceRelation(
-            A a,
-            B b,
-            Collection<I> inputs) {
+    public static <AS, BS, I, AT, BT> Set<Pair<AS, BS>> bisimulationEquivalenceRelation(Automaton<AS, I, AT> a,
+                                                                                        Automaton<BS, I, BT> b,
+                                                                                        Collection<? extends I> inputs) {
 
-        Set<Pair<AS, BS>> bisim = new HashSet<>(HashUtil.capacity(a.size() * b.size()));
-        Set<Pair<AS, BS>> change = new HashSet<>(HashUtil.capacity(a.size() * b.size()));
+        final List<? extends I> alphabet = CollectionUtil.randomAccessList(inputs);
+        final StateIDs<AS> aIDs = a.stateIDs();
+        final StateIDs<BS> bIDs = b.stateIDs();
 
-        boolean empty;
+        // set up valmari data
+        final int n1 = a.size();
+        final int n2 = b.size();
+        final int k = alphabet.size();
+        int m = 0;
 
-        for (AS p : a.getStates()) {
-            for (BS q : b.getStates()) {
+        for (I i : alphabet) {
+            for (AS as : a) {
+                m += a.getTransitions(as, i).size();
+            }
+            for (BS bs : b) {
+                m += b.getTransitions(bs, i).size();
+            }
+        }
 
-                empty = true;
-                for (I sym : inputs) {
-                    empty &= a.getTransitions(p, sym).isEmpty() && b.getTransitions(q, sym).isEmpty();
-                    if (!a.getTransitions(p, sym).isEmpty() && !b.getTransitions(q, sym).isEmpty()) {
-                        change.add(Pair.of(p, q));
-                        break;
-                    }
+        final int[] tail = new int[m];
+        final int[] label = new int[m];
+        final int[] head = new int[m];
+
+        int cnt = 0;
+        for (int i = 0; i < k; i++) {
+            final I sym = alphabet.get(i);
+            for (int j = 0; j < n1; j++) {
+                final AS as = aIDs.getState(j);
+                for (AT t : a.getTransitions(as, sym)) {
+                    tail[cnt] = j;
+                    label[cnt] = i;
+                    head[cnt] = aIDs.getStateId(a.getSuccessor(t));
+                    cnt++;
                 }
-
-                if (empty) {
-                    change.add(Pair.of(p, q));
+            }
+            for (int j = 0; j < n2; j++) {
+                final BS bs = bIDs.getState(j);
+                for (BT t : b.getTransitions(bs, sym)) {
+                    tail[cnt] = j + n1;
+                    label[cnt] = i;
+                    head[cnt] = bIDs.getStateId(b.getSuccessor(t)) + n1;
+                    cnt++;
                 }
             }
         }
 
-        Set<Pair<AS, BS>> swap;
-        boolean forall, exists;
-        while (!bisim.equals(change)) {
-            swap = change;
-            change = bisim;
-            bisim = swap;
-            change.clear();
+        // compute bisimulation relation
+        final Valmari valmari = new Valmari(new int[n1 + n2], tail, label, head);
+        valmari.computeCoarsestStablePartition();
+        final RefinablePartition blocks = valmari.blocks;
 
-            for (Pair<AS, BS> p : bisim) {
+        // extract result
+        final Set<Pair<AS, BS>> result = new HashSet<>();
 
-                forall = true;
-                for (I sym : inputs) {
-                    for (AT t : a.getTransitions(p.getFirst(), sym)) {
-
-                        exists = false;
-                        for (BT f : b.getTransitions(p.getSecond(), sym)) {
-                            for (Pair<AS, BS> s : bisim) {
-                                if (Objects.equals(a.getSuccessor(t), s.getFirst()) &&
-                                    Objects.equals(b.getSuccessor(f), s.getSecond())) {
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            if (exists) {
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            forall = false;
-                            break;
-                        }
-                    }
+        for (int block = 0; block <= blocks.sets; block++) {
+            final int size = blocks.end[block] - blocks.first[block];
+            final int[] elems = new int[size];
+            int low = 0;
+            int mid = 0;
+            int high = size;
+            for (int i = blocks.first[block]; i < blocks.end[block]; i++) {
+                final int e = blocks.elems[i];
+                if (e < n1) { // a states to the left
+                    elems[low++] = e;
+                    mid++;
+                } else { // b states to the right
+                    elems[--high] = e;
                 }
+            }
 
-                if (!forall) {
-                    continue;
-                }
-
-                for (I sym : inputs) {
-                    for (BT f : b.getTransitions(p.getSecond(), sym)) {
-
-                        exists = false;
-                        for (AT t : a.getTransitions(p.getFirst(), sym)) {
-                            for (Pair<AS, BS> s : bisim) {
-                                if (Objects.equals(b.getSuccessor(f), s.getSecond()) &&
-                                    Objects.equals(a.getSuccessor(t), s.getFirst())) {
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            if (exists) {
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            forall = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (forall) {
-                    change.add(p);
+            // cartesian product on mid
+            for (int i = 0; i < mid; i++) {
+                for (int j = size - 1; j >= mid; j--) {
+                    result.add(Pair.of(aIDs.getState(elems[i]), bIDs.getState(elems[j] - n1)));
                 }
             }
         }
 
-        return change;
+        return result;
     }
 }

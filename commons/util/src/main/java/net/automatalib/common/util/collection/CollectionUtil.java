@@ -48,9 +48,9 @@ public final class CollectionUtil {
         return new CharStringRange(start, end);
     }
 
-    public static <T> List<? extends T> randomAccessList(Collection<? extends T> coll) {
+    public static <T> List<T> randomAccessList(Collection<T> coll) {
         if (coll instanceof List && coll instanceof RandomAccess) {
-            return (List<? extends T>) coll;
+            return (List<T>) coll;
         }
         return new ArrayList<>(coll);
     }
