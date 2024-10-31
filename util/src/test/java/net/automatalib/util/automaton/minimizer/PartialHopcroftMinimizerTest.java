@@ -20,17 +20,16 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
-import net.automatalib.util.automaton.minimizer.hopcroft.HopcroftMinimization;
-import net.automatalib.util.automaton.minimizer.hopcroft.HopcroftMinimization.PruningMode;
+import net.automatalib.util.partitionrefinement.PruningMode;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 
-public class HopcroftMinimizationTest extends AbstractMinimizationTest {
+public class PartialHopcroftMinimizerTest extends AbstractMinimizationTest {
 
     private final PruningMode pruningMode;
 
     @Factory(dataProvider = "pruningModes")
-    public HopcroftMinimizationTest(PruningMode pruningMode) {
+    public PartialHopcroftMinimizerTest(PruningMode pruningMode) {
         this.pruningMode = pruningMode;
     }
 
@@ -41,13 +40,13 @@ public class HopcroftMinimizationTest extends AbstractMinimizationTest {
 
     @Override
     protected <I> DFA<?, I> minimizeDFA(MutableDFA<?, I> dfa, Alphabet<I> alphabet) {
-        return HopcroftMinimization.minimizeDFA(dfa, alphabet, this.pruningMode);
+        return HopcroftMinimizer.minimizePartialDFA(dfa, alphabet, this.pruningMode);
     }
 
     @Override
     protected <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
                                                             Alphabet<I> alphabet) {
-        return HopcroftMinimization.minimizeMealy(mealy, alphabet, this.pruningMode);
+        return HopcroftMinimizer.minimizePartialMealy(mealy, alphabet, this.pruningMode);
     }
 
     @Override
@@ -57,6 +56,6 @@ public class HopcroftMinimizationTest extends AbstractMinimizationTest {
 
     @Override
     protected boolean supportsPartial() {
-        return false;
+        return true;
     }
 }

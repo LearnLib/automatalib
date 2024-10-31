@@ -29,7 +29,6 @@ import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
-import net.automatalib.util.partitionrefinement.PaigeTarjanTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -135,7 +134,7 @@ public abstract class AbstractMinimizationTest {
 
     @Test
     public void createTestMealy1() {
-        final CompactMealy<Integer, String> mealy = PaigeTarjanTest.getMealy();
+        final CompactMealy<Integer, String> mealy =  StateSignaturesTest.getMealy();
         TestConfig<Integer, CompactMealy<Integer, String>> config =
                 new TestConfig<>(mealy.getInputAlphabet(), mealy, 7, 8);
 

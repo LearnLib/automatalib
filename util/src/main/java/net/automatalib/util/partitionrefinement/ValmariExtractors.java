@@ -10,7 +10,6 @@ import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
-import net.automatalib.util.automaton.minimizer.hopcroft.HopcroftMinimization.PruningMode;
 
 public class ValmariExtractors {
 
@@ -22,7 +21,7 @@ public class ValmariExtractors {
                                                              NFA<?, I> original,
                                                              Alphabet<I> alphabet,
                                                              AutomatonCreator<A, I> creator) {
-        return toUniversal(valmari, original, alphabet, creator);
+        return toNFA(valmari, original, alphabet, creator, PruningMode.PRUNE_AFTER);
     }
 
     public static <S, I, A extends MutableNFA<S, I>> A toNFA(Valmari valmari,

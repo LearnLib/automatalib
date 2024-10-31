@@ -24,7 +24,7 @@ import java.util.Spliterators;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * An implementation of the Paige/Tarjan partition refinement algorithm.
+ * An implementation of Hopcroft's partition refinement algorithm.
  * <p>
  * To ensure maximal performance, this class is designed in a very low-level fashion, exposing most of its internal
  * fields directly. It should only ever be used directly, and its use should be hidden behind a facade such that neither
@@ -32,12 +32,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <p>
  * This class stores most of its internal data in several, or possibly even a single, (mostly {@code int}) array(s), to
  * achieve maximal cache efficiency. The layout of these arrays is described in the documentation of the respective
- * public fields: <ul> <li>{@link #blockData}</li> <li>{@link #predOfsData}</li> <li>{@link #predData}</li> <li>{@link
- * #blockForState}</li> </ul> The {@link PaigeTarjanInitializers} provides methods for initializing this data structure
- * for common cases (e.g., DFA minimization). Similarly, the {@link PaigeTarjanExtractors} class provides methods for
+ * public fields:
+ * <ul>
+ *     <li>{@link #blockData}</li>
+ *     <li>{@link #predOfsData}</li>
+ *     <li>{@link #predData}</li>
+ *     <li>{@link #blockForState}</li>
+ * </ul>
+ * The {@link HopcroftInitializers} provides methods for initializing this data structure for
+ * common cases (e.g., DFA minimization). Similarly, the {@link HopcroftExtractors} class provides methods for
  * transforming the resulting data structure.
  */
-public class PaigeTarjan {
+public class Hopcroft {
 
     /**
      * The number of input symbols.
@@ -69,8 +75,9 @@ public class PaigeTarjan {
      * the respective predecessor list. The offsets are assumed to refer to the {@link #predData} array.
      * <p>
      * The layout of this array is assumed to be the following: for state {@code i} and input symbol {@code j}, where
-     * <code>0 &lt;= i &lt; {@link #numStates}</code> and <code>0 &lt;= j &lt; {@link #numInputs}</code>, the offset (in
-     * the {@link #predData} array) of the first {@code j}-predecessor of {@code i} is <code>{@link #predOfsData}[{@link
+     * <code>0 &lt;= i &lt; {@link #numStates}</code> and <code>0 &lt;= j &lt; {@link #numInputs}</code>, the offset
+     * (in the {@link #predData} array) of the first {@code j}-predecessor of {@code i} is
+     * <code>{@link #predOfsData}[{@link
      * #predOfsDataLow} + j*{@link #numStates} + i]</code>, and the last {@code j}-predecessor of {@code i} is
      * <code>{@link #predOfsData}[{@link #predOfsDataLow} + j*{@link #numStates} + i + 1] - 1</code>. Note that this
      * requires the index <code>{@link #predOfsDataLow} + {@link #numInputs} * {@link #numStates}</code> to be valid,
@@ -193,39 +200,20 @@ public class PaigeTarjan {
         return map;
     }
 
-    /**
-     * Initializes the worklist from the block list. This assumes that the worklist is empty.
-     * <p>
-     * If {@code addAll} is {@code true}, all blocks from the block list will be added to the worklist. Otherwise, all
-     * but the largest block will be added.
-     *
-     * @param addAll
-     *         controls if all blocks are added to the worklist, or all but the largest.
-     */
-    public void initWorklist(boolean addAll) {
-        if (addAll) {
-            Block last = null;
-            for (Block b = blocklistHead; b != null; b = b.nextBlock) {
-                b.nextInWorklist = b.nextBlock;
-                last = b;
-            }
-            worklistHead = blocklistHead;
-            worklistTail = last;
-        } else {
-            Block largest = blocklistHead;
-            if (largest == null) {
-                return;
-            }
-            int largestSize = largest.size();
-            for (Block b = largest.nextBlock; b != null; b = b.nextBlock) {
-                int size = b.size();
-                if (size > largestSize) {
-                    addToWorklist(largest);
-                    largest = b;
-                    largestSize = size;
-                } else {
-                    addToWorklist(b);
-                }
+    private void initWorklist() {
+        Block largest = blocklistHead;
+        if (largest == null) {
+            return;
+        }
+        int largestSize = largest.size();
+        for (Block b = largest.nextBlock; b != null; b = b.nextBlock) {
+            int size = b.size();
+            if (size > largestSize) {
+                addToWorklist(largest);
+                largest = b;
+                largestSize = size;
+            } else {
+                addToWorklist(b);
             }
         }
     }
@@ -244,6 +232,7 @@ public class PaigeTarjan {
      * Refines the partition until it stabilizes.
      */
     public void computeCoarsestStablePartition() {
+        initWorklist();
         Block curr;
         while ((curr = poll()) != null) {
             int blockRange = curr.high - curr.low;
@@ -283,14 +272,20 @@ public class PaigeTarjan {
     }
 
     /**
-     * Move the state to the left of its Block ptr, and advance the ptr.
-     * This allows for the grouping of states with similar behavior.
+     * Move the state to the left of its Block ptr, and advance the ptr. This allows for the grouping of states with
+     * similar behavior.
      *
      * @param state
      *         state to be moved left within its Block.
      */
     private void moveLeft(int state) {
         Block b = blockForState[state];
+
+        // singletons need no splitting
+        if (b.size() == 1) {
+            return;
+        }
+
         int posIdx = posDataLow + state;
         int inBlockIdx = posData[posIdx];
         int ptr = b.ptr;
@@ -335,9 +330,10 @@ public class PaigeTarjan {
     /**
      * Invoke Block's split, and if it is successful, update PaigeTarjan fields to reflect the new block.
      *
-     * @param b block to split
-     * @return smaller split block, or null if split is not successful
-     * Post-conditions: b.ptr = -1.
+     * @param b
+     *         block to split
+     *
+     * @return smaller split block, or null if split is not successful Post-conditions: b.ptr = -1.
      */
     private @Nullable Block split(Block b) {
         Block splt = b.split(numBlocks);
@@ -452,19 +448,4 @@ public class PaigeTarjan {
     public int getNumBlocks() {
         return numBlocks;
     }
-
-    /**
-     * Determines how the worklist is managed, i.e., where newly created blocks are inserted.
-     */
-    public enum WorklistPolicy {
-        /**
-         * Newly created blocks are inserted at the beginning of the worklist.
-         */
-        FIFO,
-        /**
-         * Newly created blocks are inserted at the end of the worklist.
-         */
-        LIFO
-    }
-
 }

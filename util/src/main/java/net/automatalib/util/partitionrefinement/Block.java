@@ -22,16 +22,16 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A block (i.e., partition class) that is maintained during the Paige/Tarjan partition refinement algorithm (see {@link
- * PaigeTarjan}).
+ * Hopcroft}).
  * <p>
- * Like {@link PaigeTarjan}, this is a very low-level class that exposes a lot (almost all) of its fields directly. Care
+ * Like {@link Hopcroft}, this is a very low-level class that exposes a lot (almost all) of its fields directly. Care
  * should be taken that instances of this class are not returned (in any form) to the API user, but are hidden behind a
  * facade.
  */
 public class Block {
 
     /**
-     * The index of the first element in this block in the {@link PaigeTarjan#blockData} array.
+     * The index of the first element in this block in the {@link Hopcroft#blockData} array.
      */
     public int low;
     /**
@@ -43,7 +43,7 @@ public class Block {
      */
     public int ptr = -1;
     /**
-     * The index of the last element in this block in the {@link PaigeTarjan#blockData} array, plus one.
+     * The index of the last element in this block in the {@link Hopcroft#blockData} array, plus one.
      */
     public int high;
     public @Nullable Block nextBlock;
@@ -55,9 +55,9 @@ public class Block {
      * Constructor. Creates a new block with the specified parameters.
      *
      * @param low
-     *         the low index of this block's data in the {@link PaigeTarjan#blockData} array
+     *         the low index of this block's data in the {@link Hopcroft#blockData} array
      * @param high
-     *         the high index of this block's data in the {@link PaigeTarjan#blockData} array
+     *         the high index of this block's data in the {@link Hopcroft#blockData} array
      * @param id
      *         the ID of this block
      * @param next

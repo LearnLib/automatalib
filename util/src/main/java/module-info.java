@@ -46,8 +46,7 @@ open module net.automatalib.util {
     exports net.automatalib.util.automaton.cover;
     exports net.automatalib.util.automaton.equivalence;
     exports net.automatalib.util.automaton.fsa;
-    exports net.automatalib.util.automaton.minimizer.hopcroft;
-    exports net.automatalib.util.automaton.minimizer.paigetarjan;
+    exports net.automatalib.util.automaton.minimizer;
     exports net.automatalib.util.automaton.predicate;
     exports net.automatalib.util.automaton.procedural;
     exports net.automatalib.util.automaton.random;

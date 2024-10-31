@@ -19,9 +19,9 @@ import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.impl.Location;
+import net.automatalib.common.util.array.ArrayUtil;
 import net.automatalib.util.partitionrefinement.Block;
-import net.automatalib.util.partitionrefinement.PaigeTarjan;
-import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers;
+import net.automatalib.util.partitionrefinement.Hopcroft;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -32,15 +32,13 @@ public final class OneSEVPAMinimizer {
     private OneSEVPAMinimizer() {}
 
     public static <I> DefaultOneSEVPA<I> minimize(OneSEVPA<?, I> sevpa, VPAlphabet<I> alphabet) {
-        final PaigeTarjan pt = new PaigeTarjan();
-        initPaigeTarjan(pt, sevpa, alphabet);
-        pt.initWorklist(false);
-        pt.computeCoarsestStablePartition();
-
-        return fromPaigeTarjan(pt, sevpa, alphabet);
+        final Hopcroft hopcroft = new Hopcroft();
+        initHopcroft(hopcroft, sevpa, alphabet);
+        hopcroft.computeCoarsestStablePartition();
+        return fromHopcroft(hopcroft, sevpa, alphabet);
     }
 
-    private static <L, I> void initPaigeTarjan(PaigeTarjan pt, OneSEVPA<L, I> sevpa, VPAlphabet<I> alphabet) {
+    private static <L, I> void initHopcroft(Hopcroft hopcroft, OneSEVPA<L, I> sevpa, VPAlphabet<I> alphabet) {
         final int numStates = sevpa.size();
         final int numInputs =
                 alphabet.getNumInternals() + alphabet.getNumCalls() * alphabet.getNumReturns() * sevpa.size() * 2;
@@ -61,7 +59,7 @@ public final class OneSEVPAMinimizer {
             final int initBlockIdx = sevpa.isAcceptingLocation(loc) ? 1 : 0;
             Block block = initBlocks[initBlockIdx];
             if (block == null) {
-                block = pt.createBlock();
+                block = hopcroft.createBlock();
                 block.high = 0;
                 initBlocks[initBlockIdx] = block;
             }
@@ -105,10 +103,10 @@ public final class OneSEVPAMinimizer {
             }
         }
 
-        pt.canonizeBlocks();
+        hopcroft.canonizeBlocks();
 
         data[predOfsDataLow] += predDataLow;
-        PaigeTarjanInitializers.prefixSum(data, predOfsDataLow, predDataLow);
+        ArrayUtil.prefixSum(data, predOfsDataLow, predDataLow);
 
         for (int i = 0; i < numStates; i++) {
             final Block b = blockForState[i];
@@ -153,17 +151,17 @@ public final class OneSEVPAMinimizer {
             }
         }
 
-        pt.setBlockData(data);
-        pt.setPosData(data, posDataLow);
-        pt.setPredOfsData(data, predOfsDataLow);
-        pt.setPredData(data);
-        pt.setBlockForState(blockForState);
-        pt.setSize(numStates, numInputs);
+        hopcroft.setBlockData(data);
+        hopcroft.setPosData(data, posDataLow);
+        hopcroft.setPredOfsData(data, predOfsDataLow);
+        hopcroft.setPredData(data);
+        hopcroft.setBlockForState(blockForState);
+        hopcroft.setSize(numStates, numInputs);
     }
 
-    private static <L, I> DefaultOneSEVPA<I> fromPaigeTarjan(PaigeTarjan pt,
-                                                             OneSEVPA<L, I> original,
-                                                             VPAlphabet<I> alphabet) {
+    private static <L, I> DefaultOneSEVPA<I> fromHopcroft(Hopcroft pt,
+                                                          OneSEVPA<L, I> original,
+                                                          VPAlphabet<I> alphabet) {
 
         final int numBlocks = pt.getNumBlocks();
         final DefaultOneSEVPA<I> result = new DefaultOneSEVPA<>(alphabet, numBlocks);

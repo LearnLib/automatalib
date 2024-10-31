@@ -90,6 +90,12 @@ public final class ArrayUtil {
         return new ArrayIterator<>(array);
     }
 
+    public static void prefixSum(int[] array, int startInclusive, int endExclusive) {
+        for (int i = startInclusive + 1; i < endExclusive; i++) {
+            array[i] += array[i- 1];
+        }
+    }
+
 
     public static void heapsort(int[] arr, int[] keys) {
 

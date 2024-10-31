@@ -29,7 +29,7 @@ import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
-import net.automatalib.util.automaton.minimizer.hopcroft.HopcroftMinimization;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
 import net.automatalib.util.ts.acceptor.Acceptors;
 import net.automatalib.util.ts.copy.TSCopy;
@@ -484,7 +484,7 @@ public final class DFAs {
      * @return a minimized version of the specified DFA
      */
     public static <I> CompactDFA<I> minimize(DFA<?, I> dfa, Alphabet<I> alphabet) {
-        return HopcroftMinimization.minimizeDFA(dfa, alphabet);
+        return HopcroftMinimizer.minimizeDFA(dfa, alphabet);
     }
 
     /**
@@ -505,7 +505,7 @@ public final class DFAs {
      * @return a minimized version of the specified DFA
      */
     public static <S, I, A extends DFA<S, I> & InputAlphabetHolder<I>> CompactDFA<I> minimize(A dfa) {
-        return HopcroftMinimization.minimizeDFA(dfa);
+        return HopcroftMinimizer.minimizeDFA(dfa);
     }
 
     /**

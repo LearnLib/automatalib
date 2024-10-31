@@ -20,28 +20,42 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
-import net.automatalib.util.automaton.minimizer.paigetarjan.PaigeTarjanMinimization;
+import net.automatalib.util.partitionrefinement.PruningMode;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 
-public class PaigeTarjanMinimizationTest extends AbstractMinimizationTest {
+public class HopcroftMinimizerTest extends AbstractMinimizationTest {
+
+    private final PruningMode pruningMode;
+
+    @Factory(dataProvider = "pruningModes")
+    public HopcroftMinimizerTest(PruningMode pruningMode) {
+        this.pruningMode = pruningMode;
+    }
+
+    @DataProvider(name = "pruningModes")
+    public static Object[][] pruningModes() {
+        return new Object[][] {{PruningMode.PRUNE_BEFORE}, {PruningMode.PRUNE_AFTER}, {PruningMode.DONT_PRUNE}};
+    }
 
     @Override
     protected <I> DFA<?, I> minimizeDFA(MutableDFA<?, I> dfa, Alphabet<I> alphabet) {
-        return PaigeTarjanMinimization.minimizeDFA(dfa, alphabet);
+        return HopcroftMinimizer.minimizeDFA(dfa, alphabet, this.pruningMode);
     }
 
     @Override
     protected <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
                                                             Alphabet<I> alphabet) {
-        return PaigeTarjanMinimization.minimizeMealy(mealy, alphabet);
+        return HopcroftMinimizer.minimizeMealy(mealy, alphabet, this.pruningMode);
     }
 
     @Override
     protected boolean isPruned() {
-        return true;
+        return this.pruningMode != PruningMode.DONT_PRUNE;
     }
 
     @Override
     protected boolean supportsPartial() {
-        return true;
+        return false;
     }
 }

@@ -9,7 +9,7 @@ import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.fsa.NFAs;
-import net.automatalib.util.automaton.minimizer.paigetarjan.PaigeTarjanMinimization;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.automaton.random.TabakovVardiRandomAutomata;
 import net.automatalib.util.partitionrefinement.Valmari;
@@ -30,7 +30,7 @@ public class ValmariTest {
         for (int size = 5; size < 20; size++) {
             for (int seed = 0; seed < 500; seed++) {
                 final CompactDFA<Integer> src = RandomAutomata.randomDFA(new Random(seed), size, alphabet, false);
-                final CompactDFA<Integer> tgt1 = PaigeTarjanMinimization.minimizeDFA(src);
+                final CompactDFA<Integer> tgt1 = HopcroftMinimizer.minimizeDFA(src);
 
                 final Valmari valmari = ValmariInitializers.initializeNFA(src);
                 valmari.computeCoarsestStablePartition();

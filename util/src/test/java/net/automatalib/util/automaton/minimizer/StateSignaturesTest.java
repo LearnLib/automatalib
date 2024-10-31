@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.partitionrefinement;
+package net.automatalib.util.automaton.minimizer;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -22,11 +22,12 @@ import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
-import net.automatalib.util.automaton.minimizer.paigetarjan.PaigeTarjanMinimization;
+import net.automatalib.util.partitionrefinement.AutomatonInitialPartitioning;
+import net.automatalib.util.partitionrefinement.StateSignature;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class PaigeTarjanTest {
+public class StateSignaturesTest {
 
     private static final String SINK_OUTPUT = "sink";
 
@@ -80,7 +81,7 @@ public class PaigeTarjanTest {
     @Test
     public void testDFAMinimization() {
         final CompactDFA<Character> dfa = getDFA();
-        final CompactDFA<Character> stateMinimized = PaigeTarjanMinimization.minimizeDFA(dfa);
+        final CompactDFA<Character> stateMinimized = HopcroftMinimizer.minimizePartialDFA(dfa);
 
         // here, states 1, 2, 3 should fall together because they are all rejecting
         Assert.assertEquals(stateMinimized.size(), 2);
@@ -92,11 +93,11 @@ public class PaigeTarjanTest {
                                                                        dfa.getInputAlphabet(),
                                                                        true));
 
-        final CompactDFA<Character> fullMinimized = PaigeTarjanMinimization.minimizeUniversal(dfa,
-                                                                                              dfa.getInputAlphabet(),
-                                                                                              new CompactDFA.Creator<>(),
-                                                                                              AutomatonInitialPartitioning.BY_FULL_SIGNATURE,
-                                                                                              null);
+        final CompactDFA<Character> fullMinimized = HopcroftMinimizer.minimizePartialUniversal(dfa,
+                                                                                               dfa.getInputAlphabet(),
+                                                                                               new CompactDFA.Creator<>(),
+                                                                                               AutomatonInitialPartitioning.BY_FULL_SIGNATURE,
+                                                                                               null);
 
         Assert.assertEquals(fullMinimized.size(), 3);
         // BY_FULL_SIGNATURE should yield full-signature-equivalent model
@@ -151,11 +152,11 @@ public class PaigeTarjanTest {
                                         boolean equivalent) {
         final CompactMealy<Integer, String> mealy = getMealy();
 
-        final CompactMealy<Integer, String> minimized = PaigeTarjanMinimization.minimizeUniversal(mealy,
-                                                                                                  mealy.getInputAlphabet(),
-                                                                                                  new CompactMealy.Creator<>(),
-                                                                                                  ap,
-                                                                                                  sinkClassification);
+        final CompactMealy<Integer, String> minimized = HopcroftMinimizer.minimizePartialUniversal(mealy,
+                                                                                                   mealy.getInputAlphabet(),
+                                                                                                   new CompactMealy.Creator<>(),
+                                                                                                   ap,
+                                                                                                   sinkClassification);
 
         Assert.assertEquals(minimized.size(), expectedSize);
         Assert.assertEquals(Automata.testEquivalence(mealy, minimized, mealy.getInputAlphabet()), equivalent);
