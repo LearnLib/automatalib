@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2024 TU Dortmund University
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.util.partitionrefinement;
 
 import java.util.Set;
@@ -11,40 +26,159 @@ import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 
-public class ValmariExtractors {
+/**
+ * Utility methods for extracting various automaton types from {@link Valmari} objects.
+ */
+public final class ValmariExtractors {
 
+    private ValmariExtractors() {
+        // prevent instantiation
+    }
+
+    /**
+     * Extracts from the given partition refinement data structure the "quotiented" NFA of the original one.
+     * Automatically prunes states that are unreachable in the original automaton.
+     *
+     * @param valmari
+     *         the partition refinement data structure
+     * @param original
+     *         the original automaton from which the initial partitioning has been constructed
+     * @param alphabet
+     *         the input symbols to consider when constructing the new automaton
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the "quotiented" automaton of the original one
+     */
     public static <I> CompactNFA<I> toNFA(Valmari valmari, NFA<?, I> original, Alphabet<I> alphabet) {
         return toNFA(valmari, original, alphabet, new CompactNFA.Creator<>());
     }
 
+    /**
+     * Extracts from the given partition refinement data structure the "quotiented" NFA of the original one.
+     * Automatically prunes states that are unreachable in the original automaton.
+     *
+     * @param valmari
+     *         the partition refinement data structure
+     * @param original
+     *         the original automaton from which the initial partitioning has been constructed
+     * @param alphabet
+     *         the input symbols to consider when constructing the new automaton
+     * @param creator
+     *         the provider of the new automaton instance
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the "quotiented" automaton of the original one
+     */
     public static <S, I, A extends MutableNFA<S, I>> A toNFA(Valmari valmari,
                                                              NFA<?, I> original,
                                                              Alphabet<I> alphabet,
                                                              AutomatonCreator<A, I> creator) {
-        return toNFA(valmari, original, alphabet, creator, PruningMode.PRUNE_AFTER);
+        return toNFA(valmari, original, alphabet, creator, true);
     }
 
+    /**
+     * Extracts from the given partition refinement data structure the "quotiented" NFA of the original one.
+     *
+     * @param valmari
+     *         the partition refinement data structure
+     * @param original
+     *         the original automaton from which the initial partitioning has been constructed
+     * @param alphabet
+     *         the input symbols to consider when constructing the new automaton
+     * @param creator
+     *         the provider of the new automaton instance
+     * @param pruneUnreachable
+     *         a flag indicating whether unreachable states (in the original automaton) should be pruned during
+     *         construction.
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the "quotiented" automaton of the original one
+     */
     public static <S, I, A extends MutableNFA<S, I>> A toNFA(Valmari valmari,
                                                              NFA<?, I> original,
                                                              Alphabet<I> alphabet,
                                                              AutomatonCreator<A, I> creator,
-                                                             PruningMode pruningMode) {
-        return toUniversal(valmari, original, alphabet, creator, pruningMode);
+                                                             boolean pruneUnreachable) {
+        return toUniversal(valmari, original, alphabet, creator, pruneUnreachable);
     }
 
-    public static <S1, S2, I, T, SP, TP, A extends MutableAutomaton<S2, I, ?, SP, TP>> A toUniversal(Valmari valmari,
-                                                                                                     UniversalAutomaton<S1, I, T, SP, TP> original,
-                                                                                                     Alphabet<I> alphabet,
-                                                                                                     AutomatonCreator<A, I> creator) {
-        return toUniversal(valmari, original, alphabet, creator, PruningMode.PRUNE_AFTER);
+    /**
+     * Extracts from the given partition refinement data structure the "quotiented" automaton of the original one, using
+     * its state and transition properties. Automatically prunes states that are unreachable in the original automaton.
+     *
+     * @param valmari
+     *         the partition refinement data structure
+     * @param original
+     *         the original automaton from which the initial partitioning has been constructed
+     * @param alphabet
+     *         the input symbols to consider when constructing the new automaton
+     * @param creator
+     *         the provider of the new automaton instance
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the "quotiented" automaton of the original one
+     */
+    public static <S, I, SP, TP, A extends MutableAutomaton<S, I, ?, SP, TP>> A toUniversal(Valmari valmari,
+                                                                                            UniversalAutomaton<?, I, ?, SP, TP> original,
+                                                                                            Alphabet<I> alphabet,
+                                                                                            AutomatonCreator<A, I> creator) {
+        return toUniversal(valmari, original, alphabet, creator, true);
     }
 
-    public static <S1, S2, I, T, SP, TP, A extends MutableAutomaton<S2, I, ?, SP, TP>> A toUniversal(Valmari valmari,
-                                                                                                     UniversalAutomaton<S1, I, T, SP, TP> original,
-                                                                                                     Alphabet<I> alphabet,
-                                                                                                     AutomatonCreator<A, I> creator,
-                                                                                                     PruningMode pruningMode) {
-        return pruningMode == PruningMode.PRUNE_AFTER ?
+    /**
+     * Extracts from the given partition refinement data structure the "quotiented" automaton of the original one, using
+     * its state and transition properties.
+     *
+     * @param valmari
+     *         the partition refinement data structure
+     * @param original
+     *         the original automaton from which the initial partitioning has been constructed
+     * @param alphabet
+     *         the input symbols to consider when constructing the new automaton
+     * @param creator
+     *         the provider of the new automaton instance
+     * @param pruneUnreachable
+     *         a flag indicating whether unreachable states (in the original automaton) should be pruned during
+     *         construction.
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the "quotiented" automaton of the original one
+     */
+    public static <S, I, SP, TP, A extends MutableAutomaton<S, I, ?, SP, TP>> A toUniversal(Valmari valmari,
+                                                                                            UniversalAutomaton<?, I, ?, SP, TP> original,
+                                                                                            Alphabet<I> alphabet,
+                                                                                            AutomatonCreator<A, I> creator,
+                                                                                            boolean pruneUnreachable) {
+        return pruneUnreachable ?
                 toUniversalPrune(valmari, original, alphabet, creator) :
                 toUniversalNoPrune(valmari, original, alphabet, creator);
     }

@@ -1,7 +1,31 @@
+/* Copyright (C) 2013-2024 TU Dortmund University
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.util.partitionrefinement;
 
 import net.automatalib.common.util.array.ArrayUtil;
 
+/**
+ * Valmari's algorithm for computing the relational coarsest partition as presented in <a
+ * href="https://dx.doi.org/10.3233/FI-2010-369">Simple Bisimilarity Minimization in O(m log n) Time</a> by Antti
+ * Valmari.
+ * <p>
+ * To ensure maximal performance, this class is designed in a very low-level fashion, exposing most of its internal
+ * fields directly. For a more convenient access to its functionality, resort to the utility functions in
+ * {@link ValmariInitializers} and {@link ValmariExtractors}, respectively.
+ */
 public class Valmari {
 
     public final RefinablePartition blocks;
@@ -24,6 +48,40 @@ public class Valmari {
     private final int[] lCount;
     private int lCounters;
 
+    /**
+     * Default constructor. Note that the transitions are expected to be sorted first by their label and second by their
+     * source states. This can be typically achieved by initializing the arrays in a nested loop similar to
+     * <pre> {@code
+     * for (int in : inputs) {
+     *     for (int src : states) {
+     *         for (int tgt : successors(src, in)) {
+     *             tail[m] = src;
+     *             label[m] = in;
+     *             head[m] = tgt;
+     *             m++;
+     *         }
+     *     }
+     * }
+     * }</pre>
+     * Further constraints are documented in the respective parameter descriptions.
+     * <p>
+     * Note that the contents of the arrays may be modified during the computation of the relational coarsest
+     * partition.
+     *
+     * @param blocks
+     *         The initial classification of states. That is, {@code blocks[i]} denotes that class of state {@code i}.
+     *         The classes need to be numbered continuously from 0 to k - 1, where k denotes the number of initial
+     *         partition classes. Thus, the length of {@code blocks} implies the number of states.
+     * @param tail
+     *         The source states of transitions. That is, {@code tail[i]} denotes the source state of transition
+     *         {@code i}. Each value must be smaller than {@code blocks.length}.
+     * @param label
+     *         The labels of transitions. That is, {@code label[i]} denotes the label of transition {@code i}. The
+     *         labels need to be numbered continuously from 0 to l - 1, where l denotes the number of labels.
+     * @param head
+     *         The target states of transitions. That is, {@code tail[i]} denotes the target state of transition
+     *         {@code i}. Each value must be smaller than {@code blocks.length}.
+     */
     public Valmari(int[] blocks, int[] tail, int[] label, int[] head) {
 
         this.n = blocks.length;
@@ -218,14 +276,47 @@ public class Valmari {
         }
     }
 
+    /**
+     * A refinable partition data structure. It maintains a partition {A<sub>0</sub>, A<sub>1</sub>, ..., A<sub>sets -
+     * 1</sub>} of the set {0, 1, ..., items - 1} for some integer constant {@code items}.
+     */
     public static class RefinablePartition {
 
+        /**
+         * Tells the number of sets. This value is 0-indexed, so there exist {@code sets + 1} partition classes.
+         */
         public int sets;
+        /**
+         * Contains {@code 0, 1, ..., items-1} in such an order that elements that belong to the same set are adjacent.
+         */
         public final int[] elems;
+        /**
+         * This field and {@code end} indicate the segment in {@code elems} where the elements of a set are stored. That
+         * is, A<sub>s</sub> = {{@code elems[f]}, {@code elems[f+1]}, ..., {@code elems[l−1]}}, where f =
+         * {@code first[s]} and l = {@code end[s]}.
+         */
         public final int[] first;
+        /**
+         * Divides the segment of a set to the subsegments of marked and unmarked elements. Let f = {@code first[s]} and
+         * l = {@code end[s]}. Then A'<sub>s</sub> = {elems[f], ..., elems[mid[s]−1]} and the unmarked elements are
+         * {elems[mid[s]], ..., elems[l−1]}.
+         */
         public final int[] mid;
+        /**
+         * This field and {@code first} indicate the segment in {@code elems} where the elements of a set are stored.
+         * That is, A<sub>s</sub> = {{@code elems[f]}, {@code elems[f+1]}, ..., {@code elems[l−1]}}, where f =
+         * {@code first[s]} and l = {@code end[s]}.
+         */
         public final int[] end;
+        /**
+         * Tells the locations of elements in {@code elems}. That is, {@code elems[loc[e]] = e} and
+         * {@code loc[elems[i]] = i}.
+         */
         public final int[] loc;
+        /**
+         * Maps elements to the indices of the sets that the elements belong to. That is, e &isin;
+         * A<sub>{@code sidx[e]}</sub>.
+         */
         public final int[] sidx;
 
         RefinablePartition(int size) {

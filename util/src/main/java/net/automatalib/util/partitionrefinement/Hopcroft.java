@@ -24,7 +24,7 @@ import java.util.Spliterators;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * An implementation of Hopcroft's partition refinement algorithm.
+ * An implementation of Hopcroft's algorithm for computing the functional coarsest partition.
  * <p>
  * To ensure maximal performance, this class is designed in a very low-level fashion, exposing most of its internal
  * fields directly. It should only ever be used directly, and its use should be hidden behind a facade such that neither
