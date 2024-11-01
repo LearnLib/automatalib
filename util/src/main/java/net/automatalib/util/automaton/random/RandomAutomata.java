@@ -47,6 +47,7 @@ import net.automatalib.automaton.vpa.impl.Location;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.DFAs;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.automaton.procedural.SPAs;
 import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -258,12 +259,10 @@ public final class RandomAutomata {
                 }
             }
 
-            if (minimize) {
-                Automata.invasiveMinimize(dfa, alphabet);
-            }
+            final DFA<?, I> finalDFA = minimize ? HopcroftMinimizer.minimizeDFA(dfa, alphabet) : dfa;
 
-            assert DFAs.isPrefixClosed(dfa, alphabet);
-            dfas.put(procedure, dfa);
+            assert DFAs.isPrefixClosed(finalDFA, alphabet);
+            dfas.put(procedure, finalDFA);
         }
 
         return new StackSBA<>(alphabet, alphabet.getCallSymbol(random.nextInt(alphabet.getNumCalls())), dfas);
@@ -322,11 +321,7 @@ public final class RandomAutomata {
                 }
             }
 
-            if (minimize) {
-                Automata.invasiveMinimize(mealy, inputAlphabet);
-            }
-
-            mealies.put(procedure, mealy);
+            mealies.put(procedure, minimize ? HopcroftMinimizer.minimizeMealy(mealy, inputAlphabet) : mealy);
         }
 
         final Alphabet<O> internalOutputs = outputAlphabet.getRegularAlphabet();

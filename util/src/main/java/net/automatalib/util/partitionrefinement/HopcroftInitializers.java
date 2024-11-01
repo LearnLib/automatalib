@@ -78,12 +78,12 @@ public final class HopcroftInitializers {
                 initializeCompleteNoPrune(abs, initialClassification);
     }
 
-    private static Hopcroft initializeCompletePrune(SimpleDeterministicAutomaton.FullIntAbstraction absAutomaton,
+    private static Hopcroft initializeCompletePrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
                                                     IntFunction<?> initialClassification) {
 
         Hopcroft pt = new Hopcroft();
-        int numStates = absAutomaton.size();
-        int numInputs = absAutomaton.numInputs();
+        int numStates = abs.size();
+        int numInputs = abs.numInputs();
 
         int posDataLow = numStates;
         int predOfsDataLow = posDataLow + numStates;
@@ -96,7 +96,7 @@ public final class HopcroftInitializers {
 
         Map<@Nullable Object, Block> blockMap = new HashMap<>();
 
-        int init = absAutomaton.getIntInitialState();
+        int init = abs.getIntInitialState();
         Object initClass = initialClassification.apply(init);
 
         blockForState[init] = getOrCreateBlock(blockMap, initClass, pt);
@@ -112,7 +112,7 @@ public final class HopcroftInitializers {
             int predCountBase = predOfsDataLow;
 
             for (int i = 0; i < numInputs; i++) {
-                int succ = absAutomaton.getSuccessor(curr, i);
+                int succ = abs.getSuccessor(curr, i);
                 if (succ < 0) {
                     throw new IllegalArgumentException("Automaton must not be partial");
                 }
@@ -140,7 +140,7 @@ public final class HopcroftInitializers {
             int predOfsBase = predOfsDataLow;
 
             for (int j = 0; j < numInputs; j++) {
-                int succ = absAutomaton.getSuccessor(stateId, j);
+                int succ = abs.getSuccessor(stateId, j);
                 assert succ >= 0;
 
                 data[--data[predOfsBase + succ]] = stateId;
@@ -153,11 +153,11 @@ public final class HopcroftInitializers {
         return pt;
     }
 
-    private static Hopcroft initializeCompleteNoPrune(SimpleDeterministicAutomaton.FullIntAbstraction absAutomaton,
+    private static Hopcroft initializeCompleteNoPrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
                                                       IntFunction<?> initialClassification) {
         Hopcroft pt = new Hopcroft();
-        int numStates = absAutomaton.size();
-        int numInputs = absAutomaton.numInputs();
+        int numStates = abs.size();
+        int numInputs = abs.numInputs();
 
         int posDataLow = numStates;
         int predOfsDataLow = posDataLow + numStates;
@@ -177,7 +177,7 @@ public final class HopcroftInitializers {
             int predCountBase = predOfsDataLow;
 
             for (int j = 0; j < numInputs; j++) {
-                int succ = absAutomaton.getSuccessor(i, j);
+                int succ = abs.getSuccessor(i, j);
                 if (succ < 0) {
                     throw new IllegalArgumentException("Automaton must not be partial");
                 }
@@ -197,7 +197,7 @@ public final class HopcroftInitializers {
             int predOfsBase = predOfsDataLow;
 
             for (int j = 0; j < numInputs; j++) {
-                int succ = absAutomaton.getSuccessor(i, j);
+                int succ = abs.getSuccessor(i, j);
                 assert succ >= 0;
 
                 data[--data[predOfsBase + succ]] = i;
@@ -239,13 +239,13 @@ public final class HopcroftInitializers {
                 initializePartialNoPrune(abs, initialClassification, sinkClassification);
     }
 
-    private static Hopcroft initializePartialPrune(SimpleDeterministicAutomaton.FullIntAbstraction absAutomaton,
-                                                  IntFunction<?> initialClassification,
-                                                  Object sinkClassification) {
+    private static Hopcroft initializePartialPrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                                   IntFunction<?> initialClassification,
+                                                   Object sinkClassification) {
 
         Hopcroft pt = new Hopcroft();
-        int numStates = absAutomaton.size();
-        int numInputs = absAutomaton.numInputs();
+        int numStates = abs.size();
+        int numInputs = abs.numInputs();
 
         int sinkId = numStates;
         int numStatesWithSink = numStates + 1;
@@ -260,7 +260,7 @@ public final class HopcroftInitializers {
 
         Map<@Nullable Object, Block> blockMap = new HashMap<>();
 
-        int initId = absAutomaton.getIntInitialState();
+        int initId = abs.getIntInitialState();
 
         Object initClass = initialClassification.apply(initId);
 
@@ -283,7 +283,7 @@ public final class HopcroftInitializers {
 
             for (int i = 0; i < numInputs; i++) {
 
-                int succ = absAutomaton.getSuccessor(currId, i);
+                int succ = abs.getSuccessor(currId, i);
                 int succId;
                 if (succ < 0) {
                     succId = sinkId;
@@ -338,7 +338,7 @@ public final class HopcroftInitializers {
                 if (stateId == sinkId) { // state is new artificial sink
                     succId = sinkId;
                 } else {
-                    int succ = absAutomaton.getSuccessor(stateId, j);
+                    int succ = abs.getSuccessor(stateId, j);
                     if (succ < 0) {
                         succId = sinkId;
                     } else {
@@ -359,8 +359,8 @@ public final class HopcroftInitializers {
     }
 
     private static Hopcroft initializePartialNoPrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
-                                                    IntFunction<?> initialClassification,
-                                                    Object sinkClassification) {
+                                                     IntFunction<?> initialClassification,
+                                                     Object sinkClassification) {
 
         Hopcroft pt = new Hopcroft();
         int numStates = abs.size();

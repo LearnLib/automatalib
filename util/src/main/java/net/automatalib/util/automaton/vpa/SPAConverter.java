@@ -41,8 +41,8 @@ import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.array.ArrayStorage;
-import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.automaton.procedural.ATRSequences;
 import net.automatalib.util.automaton.procedural.SPAs;
 import net.automatalib.word.Word;
@@ -140,9 +140,8 @@ final class SPAConverter {
             for (Entry<CI, CompactDFA<CI>> e : new HashMap<>(procedures).entrySet()) {
                 final CI proc = e.getKey();
                 final CompactDFA<CI> oldDFA = e.getValue();
-                final CompactDFA<CI> newDFA = new CompactDFA<>(minimizedProceduralInputAlphabet);
+                final CompactDFA<CI> newDFA = HopcroftMinimizer.minimizeDFA(oldDFA, minimizedProceduralInputAlphabet);
 
-                Automata.minimize(oldDFA, minimizedProceduralInputAlphabet, newDFA);
                 procedures.put(proc, newDFA);
             }
 

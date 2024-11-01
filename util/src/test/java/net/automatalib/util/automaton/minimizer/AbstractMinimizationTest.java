@@ -134,7 +134,7 @@ public abstract class AbstractMinimizationTest {
 
     @Test
     public void createTestMealy1() {
-        final CompactMealy<Integer, String> mealy =  StateSignaturesTest.getMealy();
+        final CompactMealy<Integer, String> mealy = StateSignaturesTest.getMealy();
         TestConfig<Integer, CompactMealy<Integer, String>> config =
                 new TestConfig<>(mealy.getInputAlphabet(), mealy, 7, 8);
 
