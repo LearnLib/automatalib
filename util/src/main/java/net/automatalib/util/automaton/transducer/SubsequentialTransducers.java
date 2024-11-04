@@ -27,9 +27,9 @@ import net.automatalib.automaton.transducer.SubsequentialTransducer;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.word.Word;
 
 /**
@@ -168,7 +168,7 @@ public final class SubsequentialTransducers {
             }
         }
 
-        return minimize ? Automata.invasiveMinimize(out, inputs) : out;
+        return minimize ? HopcroftMinimizer.minimizeUniversalInvasive(out, inputs) : out;
     }
 
     /**

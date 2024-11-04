@@ -22,7 +22,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.util.automaton.Automata;
 
-public class InvasiveMinimizationTest extends AbstractMinimizationTest {
+public class AutomataMinimizationTest extends AbstractMinimizationTest {
 
     @Override
     protected <I> DFA<?, I> minimizeDFA(MutableDFA<?, I> dfa, Alphabet<I> alphabet) {

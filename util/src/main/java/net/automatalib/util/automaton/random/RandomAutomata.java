@@ -45,7 +45,6 @@ import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.impl.Location;
 import net.automatalib.common.util.HashUtil;
-import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.DFAs;
 import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.automaton.procedural.SPAs;
@@ -259,7 +258,7 @@ public final class RandomAutomata {
                 }
             }
 
-            final DFA<?, I> finalDFA = minimize ? HopcroftMinimizer.minimizeDFA(dfa, alphabet) : dfa;
+            final DFA<?, I> finalDFA = minimize ? HopcroftMinimizer.minimizeDFA(dfa) : dfa;
 
             assert DFAs.isPrefixClosed(finalDFA, alphabet);
             dfas.put(procedure, finalDFA);
@@ -321,7 +320,7 @@ public final class RandomAutomata {
                 }
             }
 
-            mealies.put(procedure, minimize ? HopcroftMinimizer.minimizeMealy(mealy, inputAlphabet) : mealy);
+            mealies.put(procedure, minimize ? HopcroftMinimizer.minimizeMealy(mealy) : mealy);
         }
 
         final Alphabet<O> internalOutputs = outputAlphabet.getRegularAlphabet();
@@ -357,7 +356,7 @@ public final class RandomAutomata {
         gen.chooseInitial();
 
         if (minimize) {
-            Automata.invasiveMinimize(out, inputs);
+            HopcroftMinimizer.minimizeUniversalInvasive(out, inputs);
         }
 
         return out;

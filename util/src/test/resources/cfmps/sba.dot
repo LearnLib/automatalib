@@ -27,10 +27,10 @@ digraph g {
 	s7 -> s9 [style="bold" label="P3"];
 	s7 -> s9 [style="bold" label="P4"];
 	s8 -> s6 [style="" label="R"];
-	s10 -> s12 [style="" label="P3"];
-	s12 -> s13 [style="" label="c"];
-	s12 -> s14 [style="bold" label="P4"];
-	s13 -> s14 [style="" label="d"];
+	s10 -> s13 [style="" label="P3"];
+	s13 -> s14 [style="" label="c"];
+	s13 -> s12 [style="bold" label="P4"];
+	s14 -> s12 [style="" label="d"];
 	s15 -> s17 [style="" label="P4"];
 
 __start0 [label="" shape="none" width="0" height="0"];
