@@ -16,6 +16,8 @@
 package net.automatalib.util.automaton.minimizer;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -47,6 +49,12 @@ public class PartialHopcroftMinimizerTest extends AbstractMinimizationTest {
     protected <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
                                                             Alphabet<I> alphabet) {
         return HopcroftMinimizer.minimizePartialMealy(mealy, alphabet, this.pruningMode);
+    }
+
+    @Override
+    protected <I, SP, TP> UniversalDeterministicAutomaton<?, I, ?, SP, TP> minimizeUniversal(MutableDeterministic<?, I, ?, SP, TP> automaton,
+                                                                                             Alphabet<I> alphabet) {
+        return HopcroftMinimizer.minimizePartialUniversal(automaton, alphabet, this.pruningMode);
     }
 
     @Override

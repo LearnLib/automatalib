@@ -51,12 +51,11 @@ public final class ValmariExtractors {
      * @return the "quotiented" automaton of the original one
      */
     public static <I> CompactNFA<I> toNFA(Valmari valmari, NFA<?, I> original, Alphabet<I> alphabet) {
-        return toNFA(valmari, original, alphabet, new CompactNFA.Creator<>());
+        return toNFA(valmari, original, alphabet, true);
     }
 
     /**
      * Extracts from the given partition refinement data structure the "quotiented" NFA of the original one.
-     * Automatically prunes states that are unreachable in the original automaton.
      *
      * @param valmari
      *         the partition refinement data structure
@@ -64,22 +63,19 @@ public final class ValmariExtractors {
      *         the original automaton from which the initial partitioning has been constructed
      * @param alphabet
      *         the input symbols to consider when constructing the new automaton
-     * @param creator
-     *         the provider of the new automaton instance
-     * @param <S>
-     *         state type
+     * @param pruneUnreachable
+     *         a flag indicating whether unreachable states (in the original automaton) should be pruned during
+     *         construction.
      * @param <I>
      *         input symbol type
-     * @param <A>
-     *         automaton type
      *
      * @return the "quotiented" automaton of the original one
      */
-    public static <S, I, A extends MutableNFA<S, I>> A toNFA(Valmari valmari,
-                                                             NFA<?, I> original,
-                                                             Alphabet<I> alphabet,
-                                                             AutomatonCreator<A, I> creator) {
-        return toNFA(valmari, original, alphabet, creator, true);
+    public static <I> CompactNFA<I> toNFA(Valmari valmari,
+                                          NFA<?, I> original,
+                                          Alphabet<I> alphabet,
+                                          boolean pruneUnreachable) {
+        return toNFA(valmari, original, alphabet, pruneUnreachable, new CompactNFA.Creator<>());
     }
 
     /**
@@ -108,8 +104,8 @@ public final class ValmariExtractors {
     public static <S, I, A extends MutableNFA<S, I>> A toNFA(Valmari valmari,
                                                              NFA<?, I> original,
                                                              Alphabet<I> alphabet,
-                                                             AutomatonCreator<A, I> creator,
-                                                             boolean pruneUnreachable) {
+                                                             boolean pruneUnreachable,
+                                                             AutomatonCreator<A, I> creator) {
         return toUniversal(valmari, original, alphabet, creator, pruneUnreachable);
     }
 
@@ -273,8 +269,9 @@ public final class ValmariExtractors {
                 for (T t : original.getTransitions(s, sym)) {
                     final S1 succ = original.getSuccessor(t);
                     final int succId = stateIDs.getStateId(succ);
+                    final int blockId = valmari.blocks.sidx[succId];
 
-                    result.addTransition(stateArray[i], sym, stateArray[succId], original.getTransitionProperty(t));
+                    result.addTransition(stateArray[i], sym, stateArray[blockId], original.getTransitionProperty(t));
                 }
             }
         }

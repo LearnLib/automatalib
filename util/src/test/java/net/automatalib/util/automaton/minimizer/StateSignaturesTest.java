@@ -23,6 +23,7 @@ import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.util.partitionrefinement.AutomatonInitialPartitioning;
+import net.automatalib.util.partitionrefinement.PruningMode;
 import net.automatalib.util.partitionrefinement.StateSignature;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -95,9 +96,10 @@ public class StateSignaturesTest {
 
         final CompactDFA<Character> fullMinimized = HopcroftMinimizer.minimizePartialUniversal(dfa,
                                                                                                dfa.getInputAlphabet(),
-                                                                                               new CompactDFA.Creator<>(),
+                                                                                               PruningMode.PRUNE_AFTER,
                                                                                                AutomatonInitialPartitioning.BY_FULL_SIGNATURE,
-                                                                                               null);
+                                                                                               null,
+                                                                                               new CompactDFA.Creator<>());
 
         Assert.assertEquals(fullMinimized.size(), 3);
         // BY_FULL_SIGNATURE should yield full-signature-equivalent model
@@ -154,9 +156,10 @@ public class StateSignaturesTest {
 
         final CompactMealy<Integer, String> minimized = HopcroftMinimizer.minimizePartialUniversal(mealy,
                                                                                                    mealy.getInputAlphabet(),
-                                                                                                   new CompactMealy.Creator<>(),
+                                                                                                   PruningMode.PRUNE_AFTER,
                                                                                                    ap,
-                                                                                                   sinkClassification);
+                                                                                                   sinkClassification,
+                                                                                                   new CompactMealy.Creator<>());
 
         Assert.assertEquals(minimized.size(), expectedSize);
         Assert.assertEquals(Automata.testEquivalence(mealy, minimized, mealy.getInputAlphabet()), equivalent);

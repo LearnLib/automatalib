@@ -119,4 +119,35 @@ public class ValmariTest {
         Assert.assertEquals(nfa.size(), 5);
         Assert.assertEquals(min.size(), 2);
     }
+
+    @Test
+    void testNFAPrune() {
+        final Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
+        final CompactNFA<Integer> nfa = new CompactNFA<>(alphabet);
+
+        // @formatter:off
+        AutomatonBuilders.forNFA(nfa)
+                         .from("q0")
+                            .on(0).to("q1")
+                            .on(1).to("q2")
+                         .from("q'0")
+                            .on(0).to("q'1")
+                            .on(1).to("q'2")
+                         .withInitial("q0")
+                         .withAccepting("q0", "q'1", "q'2")
+                         .create();
+        // @formatter:on
+
+        Valmari valmari = ValmariInitializers.initializeNFA(nfa, alphabet);
+        valmari.computeCoarsestStablePartition();
+
+        CompactNFA<Integer> min = ValmariExtractors.toNFA(valmari, nfa, alphabet, false);
+
+        Assert.assertEquals(nfa.size(), 6);
+        Assert.assertEquals(min.size(), 4);
+
+        min = ValmariExtractors.toNFA(valmari, nfa, alphabet);
+
+        Assert.assertEquals(min.size(), 2);
+    }
 }

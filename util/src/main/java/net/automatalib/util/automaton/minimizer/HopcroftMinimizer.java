@@ -28,6 +28,7 @@ import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.impl.UniversalCompactDet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
@@ -165,7 +166,7 @@ public final class HopcroftMinimizer {
                                                                 Alphabet<I> alphabet,
                                                                 PruningMode pruningMode,
                                                                 AutomatonCreator<A, I> creator) {
-        return minimizeUniversal(dfa, alphabet, creator, AutomatonInitialPartitioning.BY_STATE_PROPERTY, pruningMode);
+        return minimizeUniversal(dfa, alphabet, pruningMode, AutomatonInitialPartitioning.BY_STATE_PROPERTY, creator);
     }
 
     /**
@@ -288,10 +289,10 @@ public final class HopcroftMinimizer {
                                                                        AutomatonCreator<A, I> creator) {
         return minimizePartialUniversal(dfa,
                                         alphabet,
-                                        creator,
+                                        pruningMode,
                                         AutomatonInitialPartitioning.BY_STATE_PROPERTY,
                                         Boolean.FALSE,
-                                        pruningMode);
+                                        creator);
     }
 
     /**
@@ -404,9 +405,9 @@ public final class HopcroftMinimizer {
                                                                                     AutomatonCreator<A, I> creator) {
         return minimizeUniversal(mealy,
                                  alphabet,
-                                 creator,
+                                 pruningMode,
                                  AutomatonInitialPartitioning.BY_TRANSITION_PROPERTIES,
-                                 pruningMode);
+                                 creator);
     }
 
     /**
@@ -547,10 +548,10 @@ public final class HopcroftMinimizer {
                                                                                            AutomatonCreator<A, I> creator) {
         return minimizePartialUniversal(mealy,
                                         alphabet,
-                                        creator,
+                                        pruningMode,
                                         AutomatonInitialPartitioning.BY_TRANSITION_PROPERTIES,
                                         StateSignature.byTransitionProperties(new Object[alphabet.size()]),
-                                        pruningMode);
+                                        creator);
     }
 
     /**
@@ -561,55 +562,42 @@ public final class HopcroftMinimizer {
      *         the automaton to minimize
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
-     * @param creator
-     *         the creator for constructing the automata instance to return
      * @param <I>
      *         input symbol type
      * @param <SP>
      *         state property type
      * @param <TP>
      *         transition property type
-     * @param <A>
-     *         automaton type
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A minimizeUniversal(
-            UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
-            Alphabet<I> alphabet,
-            AutomatonCreator<A, I> creator) {
-        return minimizeUniversal(automaton, alphabet, creator, AutomatonInitialPartitioning.BY_FULL_SIGNATURE);
+    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+                                                                               Alphabet<I> alphabet) {
+        return minimizeUniversal(automaton, alphabet, PruningMode.PRUNE_AFTER);
     }
 
     /**
-     * Minimizes the given, complete automaton depending on the given partitioning function. Pruning is performed after
-     * computing state equivalences.
+     * Minimizes the given, complete automaton using the full state signature.
      *
      * @param automaton
      *         the automaton to minimize
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
-     * @param creator
-     *         the creator for constructing the automata instance to return
-     * @param ip
-     *         the initial partitioning function, determining how states will be distinguished
+     * @param pruningMode
+     *         the pruning mode
      * @param <I>
      *         input symbol type
      * @param <SP>
      *         state property type
      * @param <TP>
      *         transition property type
-     * @param <A>
-     *         automaton type
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A minimizeUniversal(
-            UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
-            Alphabet<I> alphabet,
-            AutomatonCreator<A, I> creator,
-            AutomatonInitialPartitioning ip) {
-        return minimizeUniversal(automaton, alphabet, creator, ip, PruningMode.PRUNE_AFTER);
+    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+                                                                               Alphabet<I> alphabet,
+                                                                               PruningMode pruningMode) {
+        return minimizeUniversal(automaton, alphabet, pruningMode, AutomatonInitialPartitioning.BY_FULL_SIGNATURE);
     }
 
     /**
@@ -619,12 +607,40 @@ public final class HopcroftMinimizer {
      *         the automaton to minimize
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
-     * @param creator
-     *         the creator for constructing the automata instance to return
+     * @param pruningMode
+     *         the pruning mode
+     * @param ip
+     *         the initial partitioning function, determining how states will be distinguished
+     * @param <I>
+     *         input symbol type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     *
+     * @return the minimized automaton, initially constructed from the given {@code creator}.
+     */
+    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+                                                                               Alphabet<I> alphabet,
+                                                                               PruningMode pruningMode,
+                                                                               AutomatonInitialPartitioning ip) {
+        return minimizeUniversal(automaton, alphabet, pruningMode, ip, new UniversalCompactDet.Creator<>());
+    }
+
+    /**
+     * Minimizes the given, complete automaton depending on the given partitioning function. The result is returned in
+     * the form of the automaton created by the given creator.
+     *
+     * @param automaton
+     *         the automaton to minimize
+     * @param alphabet
+     *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
      * @param ip
      *         the initial partitioning function, determining how states will be distinguished
      * @param pruningMode
      *         the pruning mode
+     * @param creator
+     *         the creator for constructing the automata instance to return
      * @param <I>
      *         input symbol type
      * @param <SP>
@@ -639,9 +655,9 @@ public final class HopcroftMinimizer {
     public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A minimizeUniversal(
             UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
             Alphabet<I> alphabet,
-            AutomatonCreator<A, I> creator,
+            PruningMode pruningMode,
             AutomatonInitialPartitioning ip,
-            PruningMode pruningMode) {
+            AutomatonCreator<A, I> creator) {
 
         final FullIntAbstraction<?, SP, TP> abs = automaton.fullIntAbstraction(alphabet);
         final Hopcroft hopcroft =
@@ -711,36 +727,54 @@ public final class HopcroftMinimizer {
     }
 
     /**
-     * Minimizes the given, potentially partial depending on the given partitioning function. Pruning is performed after
-     * computing state equivalences.
+     * Minimizes the given, potentially partial automaton using the full signature as initial partitioning. Pruning is
+     * performed after computing state equivalences.
      *
      * @param automaton
      *         the automaton to minimize
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
-     * @param creator
-     *         the creator for constructing the automata instance to return
-     * @param ip
-     *         the initial partitioning function, determining how states will be distinguished
      * @param <I>
      *         input symbol type
      * @param <SP>
      *         state property type
      * @param <TP>
      *         transition property type
-     * @param <A>
-     *         automaton type
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A minimizePartialUniversal(
-            UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
-            Alphabet<I> alphabet,
-            AutomatonCreator<A, I> creator,
-            AutomatonInitialPartitioning ip,
-            Object sinkClassification) {
+    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizePartialUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+                                                                                      Alphabet<I> alphabet) {
+        return minimizePartialUniversal(automaton, alphabet, PruningMode.PRUNE_AFTER);
+    }
 
-        return minimizePartialUniversal(automaton, alphabet, creator, ip, sinkClassification, PruningMode.PRUNE_AFTER);
+    /**
+     * Minimizes the given, potentially partial automaton using the full signature as initial partitioning.
+     *
+     * @param automaton
+     *         the automaton to minimize
+     * @param alphabet
+     *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
+     * @param pruningMode
+     *         the pruning mode
+     * @param <I>
+     *         input symbol type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     *
+     * @return the minimized automaton, initially constructed from the given {@code creator}.
+     */
+    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizePartialUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+                                                                                      Alphabet<I> alphabet,
+                                                                                      PruningMode pruningMode) {
+
+        return minimizePartialUniversal(automaton,
+                                        alphabet,
+                                        pruningMode,
+                                        AutomatonInitialPartitioning.BY_FULL_SIGNATURE,
+                                        StateSignature.byFullSignature(null, new Object[alphabet.size()]));
     }
 
     /**
@@ -750,12 +784,51 @@ public final class HopcroftMinimizer {
      *         the automaton to minimize
      * @param alphabet
      *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
-     * @param creator
-     *         the creator for constructing the automata instance to return
-     * @param ip
-     *         the initial partitioning function, determining how states will be distinguished
      * @param pruningMode
      *         the pruning mode
+     * @param ip
+     *         the initial partitioning function, determining how states will be distinguished
+     * @param sinkClassification
+     *         the signature identifying the artificial sink state
+     * @param <I>
+     *         input symbol type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     *
+     * @return the minimized automaton, initially constructed from the given {@code creator}.
+     */
+    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizePartialUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+                                                                                      Alphabet<I> alphabet,
+                                                                                      PruningMode pruningMode,
+                                                                                      AutomatonInitialPartitioning ip,
+                                                                                      Object sinkClassification) {
+
+        return minimizePartialUniversal(automaton,
+                                        alphabet,
+                                        pruningMode,
+                                        ip,
+                                        sinkClassification,
+                                        new UniversalCompactDet.Creator<>());
+    }
+
+    /**
+     * Minimizes the given, potentially partial automaton depending on the given partitioning function. The result is
+     * returned in the form of the automaton created by the given creator.
+     *
+     * @param automaton
+     *         the automaton to minimize
+     * @param alphabet
+     *         the input alphabet (this will be the input alphabet of the resulting Mealy machine)
+     * @param pruningMode
+     *         the pruning mode
+     * @param ip
+     *         the initial partitioning function, determining how states will be distinguished
+     * @param sinkClassification
+     *         the signature identifying the artificial sink state
+     * @param creator
+     *         the creator for constructing the automata instance to return
      * @param <I>
      *         input symbol type
      * @param <SP>
@@ -770,10 +843,10 @@ public final class HopcroftMinimizer {
     public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A minimizePartialUniversal(
             UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
             Alphabet<I> alphabet,
-            AutomatonCreator<A, I> creator,
+            PruningMode pruningMode,
             AutomatonInitialPartitioning ip,
             Object sinkClassification,
-            PruningMode pruningMode) {
+            AutomatonCreator<A, I> creator) {
 
         final FullIntAbstraction<?, SP, TP> abs = automaton.fullIntAbstraction(alphabet);
         final Hopcroft hopcroft = HopcroftInitializers.initializePartial(abs,
