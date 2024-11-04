@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.minimizer;
+package net.automatalib.util.automaton.minimizer;
 
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.OneSEVPA;
@@ -25,7 +25,7 @@ import net.automatalib.util.partitionrefinement.Hopcroft;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * A Paige/Tarjan partition refinement based minimizer for {@link OneSEVPA}s.
+ * A Hopcroft-based minimizer for {@link OneSEVPA}s.
  */
 public final class OneSEVPAMinimizer {
 

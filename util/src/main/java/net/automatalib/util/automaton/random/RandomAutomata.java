@@ -47,8 +47,8 @@ import net.automatalib.automaton.vpa.impl.Location;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.util.automaton.fsa.DFAs;
 import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
+import net.automatalib.util.automaton.minimizer.OneSEVPAMinimizer;
 import net.automatalib.util.automaton.procedural.SPAs;
-import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 public final class RandomAutomata {
