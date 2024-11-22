@@ -39,9 +39,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An implementation for generating witnesses of satisfied µ-calculus formulae based on the tableau algorithm of <a
- * href="https://link.springer.com/chapter/10.1007/3-540-50939-9_144">Colin Stirling &amp; David Walker</a>. This
- * implementation is (currently) restricted to witnesses of negated safety-properties, as for these properties a single
- * witness is sufficient and the witnesses are guaranteed to be finite.
+ * href="https://doi.org/10.1007/3-540-50939-9_144">Colin Stirling &amp; David Walker</a>. This implementation is
+ * (currently) restricted to witnesses of negated safety-properties, as for these properties a single witness is
+ * sufficient and the witnesses are guaranteed to be finite.
  *
  * @param <L>
  *         label type

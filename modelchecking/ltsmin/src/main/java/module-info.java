@@ -16,7 +16,7 @@
 
 /**
  * This module contains the integration of the model checker <a href="https://ltsmin.utwente.nl/">LTSmin</a> as
- * described in the paper <a href="https://dx.doi.org/10.1007/s11334-019-00342-6">Sound Black-Box Checking in the
+ * described in the paper <a href="https://doi.org/10.1007/s11334-019-00342-6">Sound Black-Box Checking in the
  * LearnLib</a> by Jeroen Meijer and Jaco van de Pol.
  * <p>
  * Note that this implementation requires a local installation of the <a href="https://ltsmin.utwente.nl/">LTSmin

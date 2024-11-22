@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * A parser that verifies the syntax of LTL formulae of LTSmin.
  * <p>
  * The syntax definition is based on the grammar in the paper
- * <a href="https://link.springer.com/chapter/10.1007/978-3-662-46681-0_61">LTSmin: High-Performance
+ * <a href="https://doi.org/10.1007/978-3-662-46681-0_61">LTSmin: High-Performance
  * Language-Independent Model Checking</a>.
  * <p>
  * This parser offers two flavors of formulae which correspond to the two types of LTSmin model-checker currently

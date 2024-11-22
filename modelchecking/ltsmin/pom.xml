@@ -30,8 +30,8 @@ limitations under the License.
     <name>AutomataLib :: Model Checking :: LTSmin</name>
     <description>
         This artifact provides the integration of the model checker "LTSmin" (https://ltsmin.utwente.nl/) as described
-        in the paper "Sound Black-Box Checking in the LearnLib" (https://dx.doi.org/10.1007/s11334-019-00342-6) by
-        Jeroen Meijer and Jaco van de Pol.
+        in the paper "Sound Black-Box Checking in the LearnLib" (https://doi.org/10.1007/s11334-019-00342-6) by Jeroen
+        Meijer and Jaco van de Pol.
 
         Note that this implementation requires a local installation of the LTSmin binaries (see
         https://ltsmin.utwente.nl/) which are not explicitly included in this artifact due to packaging reasons.

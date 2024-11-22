@@ -91,5 +91,5 @@ If you have any questions regarding the usage of AutomataLib or if you want to d
 [intellij]: https://www.jetbrains.com/idea/
 [eclipse]: https://www.eclipse.org/
 [ltsmin]: https://ltsmin.utwente.nl/
-[m3c]: http://dx.doi.org/10.1007/978-3-030-00244-2_15
+[m3c]: http://doi.org/10.1007/978-3-030-00244-2_15
 [addlib]: https://add-lib.scce.info/

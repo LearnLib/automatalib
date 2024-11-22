@@ -16,9 +16,9 @@
 
 /**
  * This module contains the implementation of the model checker presented in the paper <a
- * href="https://dx.doi.org/10.1007/978-3-030-00244-2_15">M3C: Modal Meta Model Checking</a> by Bernhard Steffen and
- * Alnis Murtovi. The paper is based on <a href="https://link.springer.com/chapter/10.1007/BFb0084787">Model Checking
- * for Context-Free Processes</a> by Olaf Burkart and Bernhard Steffen.
+ * href="https://doi.org/10.1007/978-3-030-00244-2_15">M3C: Modal Meta Model Checking</a> by Bernhard Steffen and Alnis
+ * Murtovi. The paper is based on <a href="https://doi.org/10.1007/BFb0084787">Model Checking for Context-Free
+ * Processes</a> by Olaf Burkart and Bernhard Steffen.
  * <p>
  * Note that this implementation requires a runtime dependency to a specific ADDLib backend (see
  * <a href="https://add-lib.scce.info/">https://add-lib.scce.info/</a>), which is not explicitly included in this
