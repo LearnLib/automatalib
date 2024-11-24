@@ -30,6 +30,10 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Implements Hopcroft and Karp's equivalence test, as described in <a href="https://doi.org/1813/5958">A linear
+ * algorithm for testing equivalence of finite automata</a>.
+ */
 public final class NearLinearEquivalenceTest {
 
     private NearLinearEquivalenceTest() {

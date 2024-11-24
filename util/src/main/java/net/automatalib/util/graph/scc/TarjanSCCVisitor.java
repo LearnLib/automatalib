@@ -27,7 +27,7 @@ import net.automatalib.util.graph.traversal.GraphTraversalVisitor;
 
 /**
  * Depth-first traversal visitor realizing Tarjan's algorithm for finding all strongly-connected components (SCCs) in a
- * graph.
+ * graph, as described in <a href="https://doi.org/10.1137/0201010">Depth-First Search and Linear Graph Algorithms</a>.
  *
  * @param <N>
  *         node class

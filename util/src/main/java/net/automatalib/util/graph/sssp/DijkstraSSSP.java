@@ -30,7 +30,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
- * Implementation of Dijkstras algorithm for the single-source shortest path problem.
+ * Implementation of Dijkstra's algorithm for the single-source shortest path problem, as described in <a
+ * href="https://doi.org/10.1007/BF01386390">A note on two problems in connexion with graphs</a>.
  *
  * @param <N>
  *         node class

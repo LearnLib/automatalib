@@ -28,7 +28,8 @@ import net.automatalib.util.graph.Graphs;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Implementation of the Floyd-Warshall dynamic programming algorithm for the all pairs shortest paths problem.
+ * Implementation of the Floyd-Warshall dynamic programming algorithm for the all pairs shortest paths problem, as
+ * described in <a href="https://doi.org/10.1145/367766.368168">Algorithm 97: Shortest path</a>.
  *
  * @param <N>
  *         node class
