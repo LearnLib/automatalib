@@ -15,10 +15,10 @@
  */
 package net.automatalib.ts;
 
-import net.automatalib.automaton.Automaton;
+import net.automatalib.graph.concept.KripkeInterpretation;
 
 /**
- * A finite Kripke Transition System.
+ * A Kripke Transition System combines the properties of a {@link TransitionSystem} and a {@link KripkeInterpretation}.
  *
  * @param <S>
  *         state class
@@ -28,7 +28,5 @@ import net.automatalib.automaton.Automaton;
  *         transition class
  * @param <AP>
  *         atomic proposition class
- *
- * @see KTS
  */
-public interface FiniteKTS<S, I, T, AP> extends Automaton<S, I, T>, KTS<S, I, T, AP> {}
+public interface KTS<S, I, T, AP> extends TransitionSystem<S, I, T>, KripkeInterpretation<S, AP> {}
