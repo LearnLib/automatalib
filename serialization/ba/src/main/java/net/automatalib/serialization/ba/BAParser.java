@@ -23,7 +23,6 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.IOUtil;
-import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelDeserializer;
 
@@ -34,9 +33,9 @@ import net.automatalib.serialization.InputModelDeserializer;
  */
 public class BAParser<I> implements
                 InputModelDeserializer<String, CompactNFA<String>> {
-    private static final Pattern transSplit = Pattern.compile("[,\\->]");
-    private int stateSize = 0;
-    private Set<String> alphabet =  new HashSet<>();
+    private static final Pattern TRANS_SPLIT_PATTERN = Pattern.compile("[,\\->]");
+    private int stateSize;
+    private final Set<String> alphabet;
     private final List<Integer> initialStates;
     private final BitSet finalStates;
     private final Map<Integer,Map<String, Set<Integer>>> transitions; // state->symbol->state
@@ -44,12 +43,13 @@ public class BAParser<I> implements
     private boolean inTransitionsSection;
 
     @Override
-    public InputModelData<String, CompactNFA<String>> readModel(InputStream is) throws IOException, FormatException {
+    public InputModelData<String, CompactNFA<String>> readModel(InputStream is) throws IOException {
         final CompactNFA<String> automaton = readGenericNFA(is);
         return new InputModelData<>(automaton, automaton.getInputAlphabet());
     }
 
     public BAParser() {
+        alphabet = new HashSet<>();
         initialStates = new ArrayList<>();
         finalStates = new BitSet();
         transitions = new HashMap<>();
@@ -57,9 +57,8 @@ public class BAParser<I> implements
         inTransitionsSection = true;
     }
 
-
-    public CompactNFA<String> readGenericNFA(InputStream is) {
-        parseLines(IOUtil.asNonClosingUTF8Reader(is));
+    public CompactNFA<String> readGenericNFA(InputStream is) throws IOException {
+        parseBufferedLines(new BufferedReader(IOUtil.asNonClosingUTF8Reader(is)));
         Alphabet<String> alph = Alphabets.fromCollections(alphabet);
         CompactNFA<String> result = new CompactNFA<>(alph, stateSize);
         for(int i=0;i<stateSize;i++) {
@@ -78,18 +77,12 @@ public class BAParser<I> implements
         return result;
     }
 
-    private void parseLines(Reader r) {
-        try (BufferedReader input = new BufferedReader(r)) {
-            parseBufferedLines(input);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     private void parseBufferedLines(BufferedReader input) throws IOException {
         while (input.ready()) {
-            final String line = input.readLine();
-            parseLine(line);
+            String line = input.readLine();
+            if (line != null) {
+                parseLine(line);
+            }
         }
         if (finalStates.isEmpty()) {
             // In this case, all states are marked as final
@@ -105,22 +98,20 @@ public class BAParser<I> implements
      * transition alphabet is numeric, but may need to be renumbered.
      * we'll also renumber states, just in case.
      */
-    private void parseLine(String line) {
+    private void parseLine(String line) throws IOException {
         // Lines starting with % are comments and ignored.
         if (line.charAt(0) == '%') {
             return;
         }
-        if (inInitialSection) {
-            if (line.indexOf(',') < 0) {
+        if (inInitialSection && line.indexOf(',') < 0) {
                 int foundState = parseState(line);
                 initialStates.add(foundState);
                 return;
-            }
         }
         if (inTransitionsSection) {
-            String[] ss = transSplit.split(line);
+            String[] ss = TRANS_SPLIT_PATTERN.split(line);
             if (ss.length != 1 && ss.length != 4) {
-                throw new RuntimeException("Unexpected BA line: " + line);
+                throw new IOException("Unexpected BA line: " + line);
             }
             if (ss.length == 1) {
                 // done with transitions, in final states

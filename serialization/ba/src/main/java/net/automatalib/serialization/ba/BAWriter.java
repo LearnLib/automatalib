@@ -94,8 +94,6 @@ public final class BAWriter<I> implements InputModelSerializer<I, FiniteStateAcc
     private static <S, I> void writeFinalStates(FiniteStateAcceptor<S, I> automaton,
                                                 Appendable appendable) throws IOException {
 
-        final StateIDs<S> stateIds = automaton.stateIDs();
-
         boolean allAccepting = true;
         for(S state: automaton.getStates()) {
             if (!automaton.isAccepting(state)) {
@@ -108,6 +106,7 @@ public final class BAWriter<I> implements InputModelSerializer<I, FiniteStateAcc
             return; // if all states are accepting, don't append
         }
 
+        final StateIDs<S> stateIds = automaton.stateIDs();
         for (S state: automaton.getStates()) {
             if (automaton.isAccepting(state)) {
                 appendable.append(Integer.toString(stateIds.getStateId(state)));
