@@ -95,7 +95,7 @@ public final class BAWriter<I> implements InputModelSerializer<I, FiniteStateAcc
                                                 Appendable appendable) throws IOException {
 
         boolean allAccepting = true;
-        for(S state: automaton.getStates()) {
+        for (S state: automaton.getStates()) {
             if (!automaton.isAccepting(state)) {
                 allAccepting = false;
                 break;

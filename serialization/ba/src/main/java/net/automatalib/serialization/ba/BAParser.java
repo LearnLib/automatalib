@@ -15,8 +15,16 @@
  */
 package net.automatalib.serialization.ba;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import net.automatalib.alphabet.Alphabet;
@@ -34,13 +42,14 @@ import net.automatalib.serialization.InputModelDeserializer;
 public class BAParser<I> implements
                 InputModelDeserializer<String, CompactNFA<String>> {
     private static final Pattern TRANS_SPLIT_PATTERN = Pattern.compile("[,\\->]");
+    private static final int TRANS_LINE_LENGTH = 4;
     private int stateSize;
-    private final Set<String> alphabet;
-    private final List<Integer> initialStates;
-    private final BitSet finalStates;
-    private final Map<Integer,Map<String, Set<Integer>>> transitions; // state->symbol->state
-    private boolean inInitialSection;
-    private boolean inTransitionsSection;
+    private final Set<String> alphabet = new HashSet<>();
+    private final List<Integer> initialStates = new ArrayList<>();
+    private final BitSet finalStates = new BitSet();
+    private final Map<Integer, Map<String, Set<Integer>>> transitions = new HashMap<>(); // state->symbol->state
+    private boolean inInitialSection = true;
+    private boolean inTransitionsSection = true;
 
     @Override
     public InputModelData<String, CompactNFA<String>> readModel(InputStream is) throws IOException {
@@ -48,29 +57,20 @@ public class BAParser<I> implements
         return new InputModelData<>(automaton, automaton.getInputAlphabet());
     }
 
-    public BAParser() {
-        alphabet = new HashSet<>();
-        initialStates = new ArrayList<>();
-        finalStates = new BitSet();
-        transitions = new HashMap<>();
-        inInitialSection = true;
-        inTransitionsSection = true;
-    }
-
     public CompactNFA<String> readGenericNFA(InputStream is) throws IOException {
         parseBufferedLines(new BufferedReader(IOUtil.asNonClosingUTF8Reader(is)));
         Alphabet<String> alph = Alphabets.fromCollections(alphabet);
         CompactNFA<String> result = new CompactNFA<>(alph, stateSize);
-        for(int i=0;i<stateSize;i++) {
+        for (int i=0; i<stateSize; i++) {
             if (initialStates.contains(i)) {
                 result.addInitialState(finalStates.get(i));
             } else {
                 result.addState(finalStates.get(i));
             }
         }
-        for(int stateSrc=0;stateSrc<stateSize;stateSrc++) {
+        for (int stateSrc=0; stateSrc<stateSize; stateSrc++) {
             Map<String, Set<Integer>> transStateSrc = transitions.get(stateSrc);
-            for(Map.Entry<String, Set<Integer>> entry: transStateSrc.entrySet()) {
+            for (Map.Entry<String, Set<Integer>> entry: transStateSrc.entrySet()) {
                 result.addTransitions(stateSrc, entry.getKey(), entry.getValue());
             }
         }
@@ -86,7 +86,7 @@ public class BAParser<I> implements
         }
         if (finalStates.isEmpty()) {
             // In this case, all states are marked as final
-            for(int i=0;i<stateSize;i++) {
+            for (int i=0; i<stateSize; i++) {
                 finalStates.set(i);
             }
         }
@@ -110,7 +110,7 @@ public class BAParser<I> implements
         }
         if (inTransitionsSection) {
             String[] ss = TRANS_SPLIT_PATTERN.split(line);
-            if (ss.length != 1 && ss.length != 4) {
+            if (ss.length != 1 && ss.length != TRANS_LINE_LENGTH) {
                 throw new IOException("Unexpected BA line: " + line);
             }
             if (ss.length == 1) {
@@ -122,7 +122,7 @@ public class BAParser<I> implements
                 String symbol = parseSymbol(ss[0]);
                 int state1 = parseState(ss[1]);
                 int state2 = parseState(ss[3]);
-                Map<String,Set<Integer>> transMap = transitions.get(state1);
+                Map<String, Set<Integer>> transMap = transitions.get(state1);
                 if (transMap == null) {
                     transMap = new HashMap<>();
                     transitions.put(state1, transMap);

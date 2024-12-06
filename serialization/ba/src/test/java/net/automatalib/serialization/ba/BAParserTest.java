@@ -20,7 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -28,7 +30,6 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.common.util.io.UnclosableOutputStream;
-import net.automatalib.exception.FormatException;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -46,9 +47,9 @@ public class BAParserTest {
             Assert.assertFalse(automaton.isAccepting(0));
             Assert.assertTrue(automaton.isAccepting(1));
 
-            Assert.assertEquals(automaton.getTransitions(0), List.of(1,2,2,1,1));
-            Assert.assertEquals(automaton.getTransitions(1), List.of(1,2,2,1,1));
-            Assert.assertEquals(automaton.getTransitions(2), List.of(2,2,1));
+            Assert.assertEquals(automaton.getTransitions(0), List.of(1, 2, 2, 1, 1));
+            Assert.assertEquals(automaton.getTransitions(1), List.of(1, 2, 2, 1, 1));
+            Assert.assertEquals(automaton.getTransitions(2), List.of(2, 2, 1));
         }
     }
 
@@ -63,9 +64,9 @@ public class BAParserTest {
             Assert.assertFalse(automaton.isAccepting(0));
             Assert.assertTrue(automaton.isAccepting(1));
 
-            Assert.assertEquals(automaton.getTransitions(0), List.of(1,1,1,2,2));
-            Assert.assertEquals(automaton.getTransitions(1), List.of(1,1,1,2,2));
-            Assert.assertEquals(automaton.getTransitions(2), List.of(1,2,2));
+            Assert.assertEquals(automaton.getTransitions(0), List.of(1, 1, 1, 2, 2));
+            Assert.assertEquals(automaton.getTransitions(1), List.of(1, 1, 1, 2, 2));
+            Assert.assertEquals(automaton.getTransitions(2), List.of(1, 2, 2));
         }
     }
 
@@ -79,8 +80,8 @@ public class BAParserTest {
             Assert.assertFalse(automaton.isAccepting(0));
             Assert.assertTrue(automaton.isAccepting(1));
 
-            Assert.assertEquals(automaton.getTransitions(0), List.of(0,1));
-            Assert.assertEquals(automaton.getTransitions(1), List.of(1,1));
+            Assert.assertEquals(automaton.getTransitions(0), List.of(0, 1));
+            Assert.assertEquals(automaton.getTransitions(1), List.of(1, 1));
         }
     }
 
@@ -94,14 +95,14 @@ public class BAParserTest {
             Assert.assertTrue(automaton.isAccepting(0));
             Assert.assertTrue(automaton.isAccepting(1));
 
-            Assert.assertEquals(automaton.getTransitions(0), List.of(0,1));
-            Assert.assertEquals(automaton.getTransitions(1), List.of(1,1));
+            Assert.assertEquals(automaton.getTransitions(0), List.of(0, 1));
+            Assert.assertEquals(automaton.getTransitions(1), List.of(1, 1));
         }
     }
 
     @Test
     public void serializationTest() throws Exception {
-        final Alphabet<String> alphabet = Alphabets.fromList(List.of("0","1"));
+        final Alphabet<String> alphabet = Alphabets.fromList(List.of("0", "1"));
         final Random random = new Random(0);
         final CompactDFA<String> automaton = RandomAutomata.randomDFA(random, 20, alphabet);
 
@@ -136,7 +137,7 @@ public class BAParserTest {
     }
 
     @Test
-    public void doNotCloseInputStreamTest() throws IOException, FormatException {
+    public void doNotCloseInputStreamTest() throws IOException {
         try (InputStream is = BAParserTest.class.getResourceAsStream("/test1.ba")) {
             new BAParser<>().readModel(new UnclosableInputStream(is));
         }
