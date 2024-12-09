@@ -33,6 +33,7 @@ limitations under the License.
 
     <modules>
         <module>aut</module>
+        <module>ba</module>
         <module>dot</module>
         <module>etf</module>
         <module>fsm</module>
