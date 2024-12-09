@@ -18,7 +18,7 @@ package net.automatalib.serialization.ba;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
@@ -39,93 +39,68 @@ public final class BAWriter<I> implements InputModelSerializer<I, FiniteStateAcc
         writeAutomaton(model, alphabet, os);
     }
 
-    public static <S, I> void writeAutomaton(FiniteStateAcceptor<S, I> automaton,
-                                             Alphabet<I> alphabet,
-                                             OutputStream os) throws IOException {
+    public static <S, I> void writeAutomaton(FiniteStateAcceptor<S, I> automaton, Alphabet<I> alphabet, OutputStream os)
+            throws IOException {
 
-        final Set<TransitionTriple<S, I>> transitions = new HashSet<>();
-
-        for (S s : automaton.getStates()) {
-            for (I i : alphabet) {
-                for (S succ : automaton.getSuccessors(s, i)) {
-                    transitions.add(new TransitionTriple<>(s, i, succ));
-                }
-            }
-        }
+        final StateIDs<S> stateIds = automaton.stateIDs();
 
         try (Writer w = IOUtil.asNonClosingUTF8Writer(os)) {
-            writeInitialState(automaton, w);
-            writeTransitions(automaton, transitions, w);
-            writeFinalStates(automaton, w);
+            writeInitialState(automaton, stateIds, w);
+            writeTransitions(automaton, stateIds, alphabet, w);
+            writeFinalStates(automaton, stateIds, w);
         }
     }
 
     private static <S, I> void writeInitialState(FiniteStateAcceptor<S, I> automaton,
-                                           Appendable appendable) throws IOException {
+                                                 StateIDs<S> stateIds,
+                                                 Appendable appendable) throws IOException {
 
         final Set<S> inits = automaton.getInitialStates();
 
-        if (inits.size() != 1) {
-            throw new IllegalArgumentException("Automaton needs to exactly specify a single initial state");
+        if (inits.size() == 1) {
+            final S init = inits.iterator().next();
+            appendable.append(Integer.toString(stateIds.getStateId(init))).append(System.lineSeparator());
+        } else if (inits.size() > 1) {
+            throw new IllegalArgumentException("The BA format only allows for at most one initial state");
         }
-
-        final S init = inits.iterator().next();
-        final StateIDs<S> stateIds = automaton.stateIDs();
-        appendable.append(Integer.toString(stateIds.getStateId(init)));
-        appendable.append(System.lineSeparator());
     }
 
     private static <S, I> void writeTransitions(FiniteStateAcceptor<S, I> automaton,
-                                                Set<TransitionTriple<S, I>> transitions,
+                                                StateIDs<S> stateIds,
+                                                Alphabet<I> alphabet,
                                                 Appendable appendable) throws IOException {
-
-        final StateIDs<S> stateIds = automaton.stateIDs();
-
-        for (TransitionTriple<S, I> trans : transitions) {
-            appendable.append(trans.input.toString());
-            appendable.append(",");
-            appendable.append(Integer.toString(stateIds.getStateId(trans.src)));
-            appendable.append("->");
-            appendable.append(Integer.toString(stateIds.getStateId(trans.dest)));
-            appendable.append(System.lineSeparator());
+        for (S src : automaton) {
+            for (I label : alphabet) {
+                for (S tgt : automaton.getSuccessors(src, label)) {
+                    appendable.append(Objects.toString(label))
+                              .append(',')
+                              .append(Integer.toString(stateIds.getStateId(src)))
+                              .append("->")
+                              .append(Integer.toString(stateIds.getStateId(tgt)))
+                              .append(System.lineSeparator());
+                }
+            }
         }
     }
 
     private static <S, I> void writeFinalStates(FiniteStateAcceptor<S, I> automaton,
+                                                StateIDs<S> stateIds,
                                                 Appendable appendable) throws IOException {
 
         boolean allAccepting = true;
-        for (S state: automaton.getStates()) {
+        for (S state : automaton.getStates()) {
             if (!automaton.isAccepting(state)) {
                 allAccepting = false;
                 break;
             }
         }
 
-        if (allAccepting) {
-            return; // if all states are accepting, don't append
-        }
-
-        final StateIDs<S> stateIds = automaton.stateIDs();
-        for (S state: automaton.getStates()) {
-            if (automaton.isAccepting(state)) {
-                appendable.append(Integer.toString(stateIds.getStateId(state)));
-                appendable.append(System.lineSeparator());
+        if (!allAccepting) {
+            for (S state : automaton.getStates()) {
+                if (automaton.isAccepting(state)) {
+                    appendable.append(Integer.toString(stateIds.getStateId(state))).append(System.lineSeparator());
+                }
             }
         }
     }
-
-    private static class TransitionTriple<S, I> {
-
-        final S src;
-        final I input;
-        final S dest;
-
-        TransitionTriple(S src, I input, S dest) {
-            this.src = src;
-            this.input = input;
-            this.dest = dest;
-        }
-    }
-
 }

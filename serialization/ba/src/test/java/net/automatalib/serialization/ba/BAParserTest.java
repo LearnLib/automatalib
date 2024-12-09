@@ -15,22 +15,15 @@
  */
 package net.automatalib.serialization.ba;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
+import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.common.util.io.UnclosableInputStream;
-import net.automatalib.common.util.io.UnclosableOutputStream;
-import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.exception.FormatException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -39,7 +32,7 @@ public class BAParserTest {
     @Test
     public void smallBATest() throws Exception {
         try (InputStream is = BAParserTest.class.getResourceAsStream("/test1.ba")) {
-            final CompactNFA<String> automaton = new BAParser<>().readModel(is).model;
+            final CompactNFA<String> automaton = BAParsers.nfa().readModel(is).model;
 
             Assert.assertEquals(automaton.size(), 3);
             Assert.assertEquals(automaton.getInputAlphabet().size(), 5);
@@ -47,16 +40,16 @@ public class BAParserTest {
             Assert.assertFalse(automaton.isAccepting(0));
             Assert.assertTrue(automaton.isAccepting(1));
 
-            Assert.assertEquals(automaton.getTransitions(0), List.of(1, 2, 2, 1, 1));
-            Assert.assertEquals(automaton.getTransitions(1), List.of(1, 2, 2, 1, 1));
-            Assert.assertEquals(automaton.getTransitions(2), List.of(2, 2, 1));
+            Assert.assertEquals(automaton.getTransitions(0), List.of(1, 2, 1, 2, 1));
+            Assert.assertEquals(automaton.getTransitions(1), List.of(1, 2, 1, 2, 1));
+            Assert.assertEquals(automaton.getTransitions(2), List.of(2, 1, 2));
         }
     }
 
     @Test
     public void smallBARenumberTest() throws Exception {
         try (InputStream is = BAParserTest.class.getResourceAsStream("/test1_renumber.ba")) {
-            final CompactNFA<String> automaton = new BAParser<>().readModel(is).model;
+            final CompactNFA<String> automaton = BAParsers.nfa().readModel(is).model;
 
             Assert.assertEquals(automaton.size(), 3);
             Assert.assertEquals(automaton.getInputAlphabet().size(), 5);
@@ -73,22 +66,22 @@ public class BAParserTest {
     @Test
     public void smallBA2Test() throws Exception {
         try (InputStream is = BAParserTest.class.getResourceAsStream("/test2.ba")) {
-            final CompactNFA<String> automaton = new BAParser<>().readModel(is).model;
+            final CompactNFA<String> automaton = BAParsers.nfa().readModel(is).model;
             Assert.assertEquals(automaton.size(), 2);
             Assert.assertEquals(automaton.getInputAlphabet().size(), 2);
-            Assert.assertEquals(automaton.getInitialStates(), Collections.singleton(0));
-            Assert.assertFalse(automaton.isAccepting(0));
-            Assert.assertTrue(automaton.isAccepting(1));
+            Assert.assertEquals(automaton.getInitialStates(), Collections.singleton(1));
+            Assert.assertFalse(automaton.isAccepting(1));
+            Assert.assertTrue(automaton.isAccepting(0));
 
-            Assert.assertEquals(automaton.getTransitions(0), List.of(0, 1));
-            Assert.assertEquals(automaton.getTransitions(1), List.of(1, 1));
+            Assert.assertEquals(automaton.getTransitions(0), List.of(0, 0));
+            Assert.assertEquals(automaton.getTransitions(1), List.of(1, 0));
         }
     }
 
     @Test
     public void allAcceptTest() throws Exception {
         try (InputStream is = BAParserTest.class.getResourceAsStream("/test_all_accept.ba")) {
-            final CompactNFA<String> automaton = new BAParser<>().readModel(is).model;
+            final CompactNFA<String> automaton = BAParsers.nfa().readModel(is).model;
             Assert.assertEquals(automaton.size(), 2);
             Assert.assertEquals(automaton.getInputAlphabet().size(), 2);
             Assert.assertEquals(automaton.getInitialStates(), Collections.singleton(0));
@@ -101,45 +94,60 @@ public class BAParserTest {
     }
 
     @Test
-    public void serializationTest() throws Exception {
-        final Alphabet<String> alphabet = Alphabets.fromList(List.of("0", "1"));
-        final Random random = new Random(0);
-        final CompactDFA<String> automaton = RandomAutomata.randomDFA(random, 20, alphabet);
-
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        new BAWriter<String>().writeModel(baos, automaton, alphabet);
-
-        final InputStream is = new ByteArrayInputStream(baos.toByteArray());
-        final CompactNFA<String> deserialized = new BAParser<>().readModel(is).model;
-
-        equalityTest(automaton, deserialized, alphabet);
-    }
-
-    private <I> void equalityTest(CompactDFA<I> src, CompactNFA<I> target, Alphabet<I> inputs) {
-        Assert.assertEquals(target.getInitialStates(), src.getInitialStates());
-        for (Integer s : src.getStates()) {
-            Assert.assertEquals(target.isAccepting(s), src.isAccepting(s));
-        }
-        for (Integer s : src.getStates()) {
-            for (I i : inputs) {
-                Assert.assertEquals(target.getSuccessors(s, i), src.getSuccessors(s, i));
-            }
+    public void emptyTest() throws Exception {
+        try (InputStream is = BAParserTest.class.getResourceAsStream("/empty.ba")) {
+            final FastDFA<String> automaton = BAParsers.fsa(FastDFA::new).readModel(is).model;
+            Assert.assertEquals(automaton.size(), 0);
+            Assert.assertEquals(automaton.getInputAlphabet().size(), 0);
         }
     }
 
     @Test
-    public void doNotCloseOutputStreamTest() throws IOException {
-        final CompactDFA<Integer> automaton = RandomAutomata.randomDFA(new Random(0), 10, Alphabets.integers(0, 2));
-
-        new BAWriter<Integer>().writeModel(new UnclosableOutputStream(OutputStream.nullOutputStream()),
-                                            automaton,
-                                            automaton.getInputAlphabet());
+    public void error1Test() throws Exception {
+        try (InputStream is = BAParserTest.class.getResourceAsStream("/err1.ba")) {
+            Assert.assertThrows(FormatException.class, () -> BAParsers.dfa().readModel(is));
+        }
     }
 
     @Test
-    public void doNotCloseInputStreamTest() throws IOException {
+    public void error2Test() throws Exception {
+        try (InputStream is = BAParserTest.class.getResourceAsStream("/err2.ba")) {
+            Assert.assertThrows(FormatException.class, () -> BAParsers.dfa().readModel(is));
+        }
+    }
+
+    @Test
+    public void error3Test() throws Exception {
+        try (InputStream is = BAParserTest.class.getResourceAsStream("/err3.ba")) {
+            Assert.assertThrows(FormatException.class, () -> BAParsers.dfa().readModel(is));
+        }
+    }
+
+    @Test
+    public void error4Test() throws Exception {
+        try (InputStream is = BAParserTest.class.getResourceAsStream("/err4.ba")) {
+            Assert.assertThrows(FormatException.class, () -> BAParsers.dfa().readModel(is));
+        }
+    }
+
+    @Test
+    public void error5Test() throws Exception {
+        try (InputStream is = BAParserTest.class.getResourceAsStream("/err5.ba")) {
+            Assert.assertThrows(FormatException.class, () -> BAParsers.dfa().readModel(is));
+        }
+    }
+
+    @Test
+    public void error6Test() throws Exception {
+        try (InputStream is = BAParserTest.class.getResourceAsStream("/err6.ba")) {
+            Assert.assertThrows(FormatException.class, () -> BAParsers.dfa().readModel(is));
+        }
+    }
+
+    @Test
+    public void doNotCloseInputStreamTest() throws IOException, FormatException {
         try (InputStream is = BAParserTest.class.getResourceAsStream("/test1.ba")) {
-            new BAParser<>().readModel(new UnclosableInputStream(is));
+            BAParsers.nfa().readModel(new UnclosableInputStream(is));
         }
     }
 }
