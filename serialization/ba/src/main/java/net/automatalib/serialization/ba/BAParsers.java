@@ -105,6 +105,8 @@ public final class BAParsers {
      *
      * @param creator
      *         the creator for the concrete automaton instance
+     * @param labelParser
+     *         the type-safe parser for input symbols
      * @param <S>
      *         state type
      * @param <I>
