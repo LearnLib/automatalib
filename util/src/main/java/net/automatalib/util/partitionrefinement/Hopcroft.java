@@ -333,7 +333,7 @@ public class Hopcroft {
      * @param b
      *         block to split
      *
-     * @return smaller split block, or null if split is not successful Post-conditions: b.ptr = -1.
+     * @return smaller split block, or null if split is not successful
      */
     private @Nullable Block split(Block b) {
         Block splt = b.split(numBlocks);

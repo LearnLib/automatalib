@@ -258,10 +258,12 @@ public final class RandomAutomata {
                 }
             }
 
-            final DFA<?, I> finalDFA = minimize ? HopcroftMinimizer.minimizeDFA(dfa) : dfa;
+            if (minimize) {
+                HopcroftMinimizer.minimizeDFAInvasive(dfa, alphabet);
+            }
 
-            assert DFAs.isPrefixClosed(finalDFA, alphabet);
-            dfas.put(procedure, finalDFA);
+            assert DFAs.isPrefixClosed(dfa, alphabet);
+            dfas.put(procedure, dfa);
         }
 
         return new StackSBA<>(alphabet, alphabet.getCallSymbol(random.nextInt(alphabet.getNumCalls())), dfas);
@@ -320,7 +322,11 @@ public final class RandomAutomata {
                 }
             }
 
-            mealies.put(procedure, minimize ? HopcroftMinimizer.minimizeMealy(mealy) : mealy);
+            if (minimize) {
+                HopcroftMinimizer.minimizeMealyInvasive(mealy, inputAlphabet);
+            }
+
+            mealies.put(procedure, mealy);
         }
 
         final Alphabet<O> internalOutputs = outputAlphabet.getRegularAlphabet();

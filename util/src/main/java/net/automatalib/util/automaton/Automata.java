@@ -32,6 +32,7 @@ import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
 import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.BlockMap;
 import net.automatalib.util.minimizer.MinimizationResult;
@@ -52,6 +53,36 @@ public final class Automata {
         return automaton.transitionGraphView(inputs);
     }
 
+    /**
+     * Minimizes the given automaton. Internally, this method delegates to the
+     * {@link Minimizer Beal-Crochemore algorithm} which performs well especially for partial automata. If you have a
+     * total (or very dense) automaton, {@link HopcroftMinimizer} may provide better performance.
+     *
+     * @param automaton
+     *         the automaton to minimize
+     * @param inputs
+     *         the inputs to consider for minimization
+     * @param output
+     *         the object to write the minimized automaton to
+     * @param <S>
+     *         (input) state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         (input) transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     * @param <SO>
+     *         (output) state type
+     * @param <TO>
+     *         (output) transition type
+     * @param <A>
+     *         explicit automaton type
+     *
+     * @return {@code output}, for convenience
+     */
     public static <S, I, T, SP, TP, SO, TO, A extends MutableDeterministic<SO, ? super I, TO, ? super SP, ? super TP>> A minimize(
             UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
             Collection<? extends I> inputs,
@@ -98,12 +129,14 @@ public final class Automata {
     }
 
     /**
-     * Minimize the given mutable DFA in-place.
+     * Minimizes the given automaton in-place. Internally, this method delegates to the
+     * {@link Minimizer Beal-Crochemore algorithm} which performs well especially for partial automata. If you have a
+     * total automaton, {@link HopcroftMinimizer} may provide better performance.
      *
      * @param automaton
-     *         mutable DFA
+     *         the automaton to minimize
      * @param inputs
-     *         the input symbols
+     *         the inputs to consider for minimization
      * @param <S>
      *         state type
      * @param <I>
@@ -117,9 +150,8 @@ public final class Automata {
      * @param <A>
      *         automaton type
      *
-     * @return the same mutable DFA (for convenience)
+     * @return {@code automaton}, for convenience
      */
-    @SuppressWarnings("unchecked")
     public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A invasiveMinimize(A automaton,
                                                                                                         Collection<? extends I> inputs) {
 
@@ -136,6 +168,7 @@ public final class Automata {
         S init = automaton.getInitialState();
         int initId = init == null ? -1 : mr.getBlockForState(init).getId();
 
+        @SuppressWarnings("unchecked")
         ResultStateRecord<SP, TP>[] records = new ResultStateRecord[mr.getNumBlocks()];
 
         // Store minimized automaton data in the records array
@@ -162,7 +195,8 @@ public final class Automata {
         automaton.clear();
 
         // Add states from records
-        @Nullable Object[] states = new Object[records.length];
+        @Nullable
+        Object[] states = new Object[records.length];
         for (int i = 0; i < records.length; i++) {
             ResultStateRecord<SP, TP> rec = records[i];
             SP prop = rec.property;
@@ -178,6 +212,7 @@ public final class Automata {
         // Add transitions from records
         for (int i = 0; i < records.length; i++) {
             ResultStateRecord<SP, TP> rec = records[i];
+            @SuppressWarnings("unchecked")
             S state = (S) states[i];
 
             for (int j = 0; j < numInputs; j++) {
@@ -185,6 +220,7 @@ public final class Automata {
                 if (transRec == null) {
                     continue;
                 }
+                @SuppressWarnings("unchecked")
                 S succ = (S) states[transRec.targetId];
                 I input = inputList.get(j);
                 automaton.addTransition(state, input, succ, transRec.property);
