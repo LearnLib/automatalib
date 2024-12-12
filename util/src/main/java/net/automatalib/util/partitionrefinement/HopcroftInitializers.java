@@ -46,6 +46,8 @@ public final class HopcroftInitializers {
      *         the initial partitioning mode
      * @param pruneUnreachable
      *         whether to prune unreachable states during initialization
+     *
+     * @return the initialized partition refinement data structure
      */
     public static Hopcroft initializeComplete(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> abs,
                                               AutomatonInitialPartitioning ip,
@@ -68,6 +70,8 @@ public final class HopcroftInitializers {
      *         the function determining the initial classification
      * @param pruneUnreachable
      *         whether to prune unreachable states during initialization
+     *
+     * @return the initialized partition refinement data structure
      */
     public static Hopcroft initializeComplete(SimpleDeterministicAutomaton.FullIntAbstraction abs,
                                               IntFunction<?> initialClassification,
@@ -228,7 +232,11 @@ public final class HopcroftInitializers {
      * @param initialClassification
      *         the initial classification function
      * @param sinkClassification
-     *         determines how a sink is being classified.
+     *         determines how a sink is being classified
+     * @param pruneUnreachable
+     *         whether to prune unreachable states during initialization
+     *
+     * @return the initialized partition refinement data structure
      */
     public static Hopcroft initializePartial(SimpleDeterministicAutomaton.FullIntAbstraction abs,
                                              IntFunction<?> initialClassification,
