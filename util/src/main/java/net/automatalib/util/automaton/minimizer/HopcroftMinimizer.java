@@ -85,27 +85,7 @@ public final class HopcroftMinimizer {
      * @return a minimized version of the specified DFA
      */
     public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa) {
-        return minimizeDFA(dfa, PruningMode.PRUNE_AFTER);
-    }
-
-    /**
-     * Minimizes the given, complete DFA. The result is returned in the form of a {@link CompactDFA}, using the input
-     * alphabet obtained via {@link InputAlphabetHolder#getInputAlphabet()}.
-     *
-     * @param dfa
-     *         the DFA to minimize
-     * @param pruningMode
-     *         the pruning mode
-     * @param <I>
-     *         input symbol type
-     * @param <A>
-     *         automaton type
-     *
-     * @return a minimized version of the specified DFA
-     */
-    public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa,
-                                                                                              PruningMode pruningMode) {
-        return minimizeDFA(dfa, dfa.getInputAlphabet(), pruningMode);
+        return minimizeDFA(dfa, dfa.getInputAlphabet());
     }
 
     /**
@@ -206,27 +186,7 @@ public final class HopcroftMinimizer {
      * @return a minimized version of the specified DFA
      */
     public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizePartialDFA(A dfa) {
-        return minimizePartialDFA(dfa, PruningMode.PRUNE_AFTER);
-    }
-
-    /**
-     * Minimizes the given, potentially partial DFA. The result is returned in the form of a {@link CompactDFA}, using
-     * the input alphabet obtained via {@link InputAlphabetHolder#getInputAlphabet()}.
-     *
-     * @param dfa
-     *         the DFA to minimize
-     * @param pruningMode
-     *         the pruning mode
-     * @param <I>
-     *         input symbol type
-     * @param <A>
-     *         automaton type
-     *
-     * @return a minimized version of the specified DFA
-     */
-    public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizePartialDFA(A dfa,
-                                                                                                     PruningMode pruningMode) {
-        return minimizePartialDFA(dfa, dfa.getInputAlphabet(), pruningMode);
+        return minimizePartialDFA(dfa, dfa.getInputAlphabet());
     }
 
     /**
@@ -312,29 +272,7 @@ public final class HopcroftMinimizer {
      * @return a minimized version of the specified Mealy machine
      */
     public static <I, O, A extends MealyMachine<?, I, ?, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(A mealy) {
-        return minimizeMealy(mealy, PruningMode.PRUNE_AFTER);
-    }
-
-    /**
-     * Minimizes the given, complete Mealy machine. The result is returned in the form of a {@link CompactMealy}, using
-     * the alphabet obtained via {@link InputAlphabetHolder#getInputAlphabet()}.
-     *
-     * @param mealy
-     *         the Mealy machine to minimize
-     * @param pruningMode
-     *         the pruning mode
-     * @param <I>
-     *         input symbol type
-     * @param <O>
-     *         output symbol type
-     * @param <A>
-     *         automaton type
-     *
-     * @return a minimized version of the specified Mealy machine
-     */
-    public static <I, O, A extends MealyMachine<?, I, ?, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(A mealy,
-                                                                                                                       PruningMode pruningMode) {
-        return minimizeMealy(mealy, mealy.getInputAlphabet(), pruningMode);
+        return minimizeMealy(mealy, mealy.getInputAlphabet());
     }
 
     /**
@@ -453,30 +391,7 @@ public final class HopcroftMinimizer {
      */
     public static <I, O, A extends MealyMachine<?, I, ?, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizePartialMealy(
             A mealy) {
-        return minimizePartialMealy(mealy, PruningMode.PRUNE_AFTER);
-    }
-
-    /**
-     * Minimizes the given, potentially partial Mealy machine. The result is returned in the form of a
-     * {@link CompactMealy}, using the alphabet obtained via {@link InputAlphabetHolder#getInputAlphabet()}.
-     *
-     * @param mealy
-     *         the Mealy machine to minimize
-     * @param pruningMode
-     *         the pruning mode
-     * @param <I>
-     *         input symbol type
-     * @param <O>
-     *         output symbol type
-     * @param <A>
-     *         automaton type
-     *
-     * @return a minimized version of the specified Mealy machine
-     */
-    public static <I, O, A extends MealyMachine<?, I, ?, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizePartialMealy(
-            A mealy,
-            PruningMode pruningMode) {
-        return minimizePartialMealy(mealy, mealy.getInputAlphabet(), pruningMode);
+        return minimizePartialMealy(mealy, mealy.getInputAlphabet());
     }
 
     /**
