@@ -19,17 +19,18 @@ import java.util.Collection;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.impl.UniversalCompactDet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
-import net.automatalib.util.partitionrefinement.PaigeTarjanTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -135,7 +136,7 @@ public abstract class AbstractMinimizationTest {
 
     @Test
     public void createTestMealy1() {
-        final CompactMealy<Integer, String> mealy = PaigeTarjanTest.getMealy();
+        final CompactMealy<Integer, String> mealy = StateSignaturesTest.getMealy();
         TestConfig<Integer, CompactMealy<Integer, String>> config =
                 new TestConfig<>(mealy.getInputAlphabet(), mealy, 7, 8);
 
@@ -143,6 +144,53 @@ public abstract class AbstractMinimizationTest {
             testMinimizeMealy(config);
         } else {
             Assert.assertThrows(IllegalArgumentException.class, () -> testMinimizeMealy(config));
+        }
+    }
+
+    @Test
+    public void createTestUniversal1() {
+
+        final Alphabet<Character> alphabet = Alphabets.characters('a', 'd');
+        final char input1 = 'a';
+        final char input2 = 'b';
+        final char input3 = 'c';
+        final char input4 = 'd';
+
+        final UniversalCompactDet<Character, Integer, Boolean> automaton = new UniversalCompactDet<>(alphabet);
+
+        // @formatter:off
+        AutomatonBuilders.forAutomaton(automaton)
+                         .withInitial("s0")
+                         .from("s0")
+                         .on(input1).to("s1")
+                         .on(input2).to("s2")
+                         .on(input3).to("s3")
+                         .on(input4).to("s4")
+                         .from("s1")
+                         .on(input1).withProperty(true).to("s5")
+                         .from("s2")
+                         .on(input1).withProperty(true).to("s5")
+                         .from("s3")
+                         .on(input1).withProperty(false).to("s5")
+                         .from("s4")
+                         .on(input1).withProperty(false).to("s5")
+                         .from("s5")
+                         .on(input1, input2, input3, input4).loop()
+                         .withStateProperty(0, "s1")
+                         .withStateProperty(0, "s2")
+                         .withStateProperty(1, "s3")
+                         .withStateProperty(0, "s4")
+                         .withStateProperty(2, "s6")
+                         .create();
+        // @formatter:on
+
+        final TestConfig<Character, UniversalCompactDet<Character, Integer, Boolean>> config =
+                new TestConfig<>(alphabet, automaton, 5, 6);
+
+        if (supportsPartial()) {
+            testMinimizeUniversal(config);
+        } else {
+            Assert.assertThrows(IllegalArgumentException.class, () -> testMinimizeUniversal(config));
         }
     }
 
@@ -172,10 +220,28 @@ public abstract class AbstractMinimizationTest {
         }
     }
 
+    private <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> void testMinimizeUniversal(TestConfig<I, A> test) {
+
+        final UniversalDeterministicAutomaton<?, I, ?, SP, TP> result =
+                minimizeUniversal(test.automaton, test.alphabet);
+
+        if (isPruned()) {
+            Assert.assertEquals(result.size(), test.prunedSize);
+            Assert.assertTrue(Automata.testEquivalence(test.automaton, result, test.alphabet));
+        } else {
+            Assert.assertEquals(result.size(), test.unprunedSize);
+            assertAllInequivalent(result, test.alphabet);
+        }
+    }
+
     protected abstract <I> DFA<?, I> minimizeDFA(MutableDFA<?, I> dfa, Alphabet<I> alphabet);
 
     protected abstract <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
                                                                      Alphabet<I> alphabet);
+
+    protected abstract <I, SP, TP> UniversalDeterministicAutomaton<?, I, ?, SP, TP> minimizeUniversal(
+            MutableDeterministic<?, I, ?, SP, TP> automaton,
+            Alphabet<I> alphabet);
 
     protected abstract boolean isPruned();
 

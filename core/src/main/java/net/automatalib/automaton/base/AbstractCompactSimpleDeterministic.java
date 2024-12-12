@@ -61,6 +61,12 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
 
     @Override
     // Overridden for performance reasons (to prevent autoboxing of default implementation)
+    public int getSuccessor(int state, int input) {
+        return transitions[toMemoryIndex(state, input)];
+    }
+
+    @Override
+    // Overridden for performance reasons (to prevent autoboxing of default implementation)
     public @Nullable Integer getSuccessor(Integer state, Iterable<? extends I> input) {
         return toState(getIntSuccessor(state.intValue(), input));
     }
@@ -73,6 +79,17 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
     @Override
     protected void updateTransitionStorage(Payload payload) {
         this.transitions = updateTransitionStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
+    }
+
+    @Override
+    // Overridden for performance reasons (to prevent autoboxing of default implementation)
+    public Void getTransitionProperty(int state, int input) {
+        return null;
+    }
+
+    @Override
+    public Void getTransitionProperty(Integer transition) {
+        return null;
     }
 
     @Override
@@ -97,11 +114,6 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
 
     public void setTransition(int state, int inputIdx, int succ) {
         transitions[toMemoryIndex(state, inputIdx)] = succ;
-    }
-
-    @Override
-    public Void getTransitionProperty(Integer transition) {
-        return null;
     }
 
     @Override

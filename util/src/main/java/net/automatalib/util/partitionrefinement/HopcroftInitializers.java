@@ -15,7 +15,6 @@
  */
 package net.automatalib.util.partitionrefinement;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -23,37 +22,37 @@ import java.util.function.IntFunction;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
+import net.automatalib.common.util.array.ArrayUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * This class provides several methods to initialize a {@link PaigeTarjan} partition refinement data structure from
- * common sources, e.g., automata.
+ * This class provides several methods to initialize a {@link Hopcroft} partition refinement data structure from common
+ * sources, e.g., automata.
  * <p>
- * The counterpart of this class is {@link PaigeTarjanExtractors}, which provides methods to translate the contents of
- * the partition refinement data structure after coarsest stable partition computation back to such structures.
+ * The counterpart of this class is {@link HopcroftExtractors}, which provides methods to translate the contents of the
+ * partition refinement data structure after coarsest stable partition computation back to such structures.
  */
-public final class PaigeTarjanInitializers {
+public final class HopcroftInitializers {
 
-    private PaigeTarjanInitializers() {}
+    private HopcroftInitializers() {}
 
     /**
      * Initializes the partition refinement data structure from a given abstracted deterministic automaton, using a
      * predefined initial partitioning mode.
      *
-     * @param pt
-     *         the partition refinement data structure
-     * @param absAutomaton
+     * @param abs
      *         the abstraction of the input automaton
      * @param ip
      *         the initial partitioning mode
      * @param pruneUnreachable
      *         whether to prune unreachable states during initialization
+     *
+     * @return the initialized partition refinement data structure
      */
-    public static void initCompleteDeterministic(PaigeTarjan pt,
-                                                 UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> absAutomaton,
-                                                 AutomatonInitialPartitioning ip,
-                                                 boolean pruneUnreachable) {
-        initCompleteDeterministic(pt, absAutomaton, ip.initialClassifier(absAutomaton), pruneUnreachable);
+    public static Hopcroft initializeComplete(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> abs,
+                                              AutomatonInitialPartitioning ip,
+                                              boolean pruneUnreachable) {
+        return initializeComplete(abs, ip.initialClassifier(abs), pruneUnreachable);
     }
 
     /**
@@ -65,33 +64,30 @@ public final class PaigeTarjanInitializers {
      * {@code initialClassification} have the same hash code (determined according to {@link Objects#hashCode(Object)})
      * and are equal (determined according to {@link Objects#equals(Object, Object)}).
      *
-     * @param pt
-     *         the partition refinement data structure
-     * @param absAutomaton
+     * @param abs
      *         the abstraction of the input automaton
      * @param initialClassification
      *         the function determining the initial classification
      * @param pruneUnreachable
      *         whether to prune unreachable states during initialization
+     *
+     * @return the initialized partition refinement data structure
      */
-    public static void initCompleteDeterministic(PaigeTarjan pt,
-                                                 SimpleDeterministicAutomaton.FullIntAbstraction absAutomaton,
-                                                 IntFunction<?> initialClassification,
-                                                 boolean pruneUnreachable) {
+    public static Hopcroft initializeComplete(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                              IntFunction<?> initialClassification,
+                                              boolean pruneUnreachable) {
 
-        if (pruneUnreachable) {
-            initCompleteDeterministicPrune(pt, absAutomaton, initialClassification);
-        } else {
-            initCompleteDeterministicNoPrune(pt, absAutomaton, initialClassification);
-        }
+        return pruneUnreachable ?
+                initializeCompletePrune(abs, initialClassification) :
+                initializeCompleteNoPrune(abs, initialClassification);
     }
 
-    private static void initCompleteDeterministicPrune(PaigeTarjan pt,
-                                                       SimpleDeterministicAutomaton.FullIntAbstraction absAutomaton,
-                                                       IntFunction<?> initialClassification) {
+    private static Hopcroft initializeCompletePrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                                    IntFunction<?> initialClassification) {
 
-        int numStates = absAutomaton.size();
-        int numInputs = absAutomaton.numInputs();
+        Hopcroft pt = new Hopcroft();
+        int numStates = abs.size();
+        int numInputs = abs.numInputs();
 
         int posDataLow = numStates;
         int predOfsDataLow = posDataLow + numStates;
@@ -104,7 +100,7 @@ public final class PaigeTarjanInitializers {
 
         Map<@Nullable Object, Block> blockMap = new HashMap<>();
 
-        int init = absAutomaton.getIntInitialState();
+        int init = abs.getIntInitialState();
         Object initClass = initialClassification.apply(init);
 
         blockForState[init] = getOrCreateBlock(blockMap, initClass, pt);
@@ -120,7 +116,7 @@ public final class PaigeTarjanInitializers {
             int predCountBase = predOfsDataLow;
 
             for (int i = 0; i < numInputs; i++) {
-                int succ = absAutomaton.getSuccessor(curr, i);
+                int succ = abs.getSuccessor(curr, i);
                 if (succ < 0) {
                     throw new IllegalArgumentException("Automaton must not be partial");
                 }
@@ -139,7 +135,7 @@ public final class PaigeTarjanInitializers {
         pt.canonizeBlocks();
 
         data[predOfsDataLow] += predDataLow;
-        prefixSum(data, predOfsDataLow, predDataLow);
+        ArrayUtil.prefixSum(data, predOfsDataLow, predDataLow);
 
         for (int i = 0; i < reachableStates; i++) {
             int stateId = statesBuff[i];
@@ -148,7 +144,7 @@ public final class PaigeTarjanInitializers {
             int predOfsBase = predOfsDataLow;
 
             for (int j = 0; j < numInputs; j++) {
-                int succ = absAutomaton.getSuccessor(stateId, j);
+                int succ = abs.getSuccessor(stateId, j);
                 assert succ >= 0;
 
                 data[--data[predOfsBase + succ]] = stateId;
@@ -157,13 +153,15 @@ public final class PaigeTarjanInitializers {
         }
 
         updatePTFields(pt, data, posDataLow, predOfsDataLow, blockForState, numStates, numInputs);
+
+        return pt;
     }
 
-    private static void initCompleteDeterministicNoPrune(PaigeTarjan pt,
-                                                         SimpleDeterministicAutomaton.FullIntAbstraction absAutomaton,
-                                                         IntFunction<?> initialClassification) {
-        int numStates = absAutomaton.size();
-        int numInputs = absAutomaton.numInputs();
+    private static Hopcroft initializeCompleteNoPrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                                      IntFunction<?> initialClassification) {
+        Hopcroft pt = new Hopcroft();
+        int numStates = abs.size();
+        int numInputs = abs.numInputs();
 
         int posDataLow = numStates;
         int predOfsDataLow = posDataLow + numStates;
@@ -183,7 +181,7 @@ public final class PaigeTarjanInitializers {
             int predCountBase = predOfsDataLow;
 
             for (int j = 0; j < numInputs; j++) {
-                int succ = absAutomaton.getSuccessor(i, j);
+                int succ = abs.getSuccessor(i, j);
                 if (succ < 0) {
                     throw new IllegalArgumentException("Automaton must not be partial");
                 }
@@ -196,14 +194,14 @@ public final class PaigeTarjanInitializers {
         pt.canonizeBlocks();
 
         data[predOfsDataLow] += predDataLow;
-        prefixSum(data, predOfsDataLow, predDataLow);
+        ArrayUtil.prefixSum(data, predOfsDataLow, predDataLow);
 
         for (int i = 0; i < numStates; i++) {
             updateBlockAndPosData(blockForState, i, data, posDataLow);
             int predOfsBase = predOfsDataLow;
 
             for (int j = 0; j < numInputs; j++) {
-                int succ = absAutomaton.getSuccessor(i, j);
+                int succ = abs.getSuccessor(i, j);
                 assert succ >= 0;
 
                 data[--data[predOfsBase + succ]] = i;
@@ -212,10 +210,15 @@ public final class PaigeTarjanInitializers {
         }
 
         updatePTFields(pt, data, posDataLow, predOfsDataLow, blockForState, numStates, numInputs);
+
+        return pt;
     }
 
-    public static void prefixSum(int[] array, int startInclusive, int endExclusive) {
-        Arrays.parallelPrefix(array, startInclusive, endExclusive, Integer::sum);
+    public static Hopcroft initializePartial(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> abs,
+                                             AutomatonInitialPartitioning ip,
+                                             Object sinkClassification,
+                                             boolean pruneUnreachable) {
+        return initializePartial(abs, ip.initialClassifier(abs), sinkClassification, pruneUnreachable);
     }
 
     /**
@@ -224,22 +227,33 @@ public final class PaigeTarjanInitializers {
      * <p>
      * This method can be used for automata with partially defined transition functions.
      *
-     * @param pt
-     *         the partition refinement data structure
-     * @param absAutomaton
+     * @param abs
      *         the abstraction of the input automaton
      * @param initialClassification
      *         the initial classification function
      * @param sinkClassification
-     *         determines how a sink is being classified.
+     *         determines how a sink is being classified
+     * @param pruneUnreachable
+     *         whether to prune unreachable states during initialization
+     *
+     * @return the initialized partition refinement data structure
      */
-    public static void initDeterministic(PaigeTarjan pt,
-                                         SimpleDeterministicAutomaton.FullIntAbstraction absAutomaton,
-                                         IntFunction<?> initialClassification,
-                                         Object sinkClassification) {
+    public static Hopcroft initializePartial(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                             IntFunction<?> initialClassification,
+                                             Object sinkClassification,
+                                             boolean pruneUnreachable) {
+        return pruneUnreachable ?
+                initializePartialPrune(abs, initialClassification, sinkClassification) :
+                initializePartialNoPrune(abs, initialClassification, sinkClassification);
+    }
 
-        int numStates = absAutomaton.size();
-        int numInputs = absAutomaton.numInputs();
+    private static Hopcroft initializePartialPrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                                   IntFunction<?> initialClassification,
+                                                   Object sinkClassification) {
+
+        Hopcroft pt = new Hopcroft();
+        int numStates = abs.size();
+        int numInputs = abs.numInputs();
 
         int sinkId = numStates;
         int numStatesWithSink = numStates + 1;
@@ -254,7 +268,7 @@ public final class PaigeTarjanInitializers {
 
         Map<@Nullable Object, Block> blockMap = new HashMap<>();
 
-        int initId = absAutomaton.getIntInitialState();
+        int initId = abs.getIntInitialState();
 
         Object initClass = initialClassification.apply(initId);
 
@@ -277,7 +291,7 @@ public final class PaigeTarjanInitializers {
 
             for (int i = 0; i < numInputs; i++) {
 
-                int succ = absAutomaton.getSuccessor(currId, i);
+                int succ = abs.getSuccessor(currId, i);
                 int succId;
                 if (succ < 0) {
                     succId = sinkId;
@@ -315,7 +329,7 @@ public final class PaigeTarjanInitializers {
 
         // Make predOfsData cumulative
         data[predOfsDataLow] += predDataLow;
-        prefixSum(data, predOfsDataLow, predDataLow);
+        ArrayUtil.prefixSum(data, predOfsDataLow, predDataLow);
 
         // data[predOfsDataLow + j*numStatesWithSink+i] now contains
         // the final predOfsData value plus the count of transitions to state i from input j
@@ -332,7 +346,7 @@ public final class PaigeTarjanInitializers {
                 if (stateId == sinkId) { // state is new artificial sink
                     succId = sinkId;
                 } else {
-                    int succ = absAutomaton.getSuccessor(stateId, j);
+                    int succ = abs.getSuccessor(stateId, j);
                     if (succ < 0) {
                         succId = sinkId;
                     } else {
@@ -348,6 +362,100 @@ public final class PaigeTarjanInitializers {
         updatePTFields(pt, data, posDataLow, predOfsDataLow, blockForState, numStatesWithSink, numInputs);
 
         pt.removeEmptyBlocks();
+
+        return pt;
+    }
+
+    private static Hopcroft initializePartialNoPrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                                     IntFunction<?> initialClassification,
+                                                     Object sinkClassification) {
+
+        Hopcroft pt = new Hopcroft();
+        int numStates = abs.size();
+        int numInputs = abs.numInputs();
+
+        int sinkId = numStates;
+        int numStatesWithSink = numStates + 1;
+        int posDataLow = numStatesWithSink;
+        int predOfsDataLow = posDataLow + numStatesWithSink;
+        int numTransitionsFull = numStatesWithSink * numInputs;
+        int predDataLow = predOfsDataLow + numTransitionsFull + 1;
+        int dataSize = predDataLow + numTransitionsFull;
+
+        int[] data = new int[dataSize];
+        Block[] blockForState = new Block[numStatesWithSink];
+
+        Map<@Nullable Object, Block> blockMap = new HashMap<>();
+
+        boolean partial = false;
+        for (int i = 0; i < numStates; i++) {
+            Object classification = initialClassification.apply(i);
+            blockForState[i] = getOrCreateBlock(blockMap, classification, pt);
+
+            int predCountBase = predOfsDataLow;
+
+            for (int j = 0; j < numInputs; j++) {
+                int succ = abs.getSuccessor(i, j);
+                int succId;
+                if (succ < 0) {
+                    succId = sinkId;
+                    partial = true;
+                } else {
+                    succId = succ;
+                }
+
+                data[predCountBase + succId]++;
+                predCountBase += numStatesWithSink;
+            }
+        }
+
+        if (partial) {
+            blockForState[sinkId] = getOrCreateBlock(blockMap, sinkClassification, pt);
+            int predCountIdx = predOfsDataLow + sinkId;
+            for (int i = 0; i < numInputs; i++) {
+                data[predCountIdx]++; // predOfsData - sink state has all its symbols pointing to itself
+                predCountIdx += numStatesWithSink;
+            }
+        }
+
+        pt.canonizeBlocks();
+
+        data[predOfsDataLow] += predDataLow;
+        ArrayUtil.prefixSum(data, predOfsDataLow, predDataLow);
+
+        for (int i = 0; i < numStates; i++) {
+            updateBlockAndPosData(blockForState, i, data, posDataLow);
+            int predOfsBase = predOfsDataLow;
+
+            for (int j = 0; j < numInputs; j++) {
+                int succ = abs.getSuccessor(i, j);
+
+                final int succId;
+                if (succ < 0) {
+                    succId = sinkId;
+                } else {
+                    succId = succ;
+                }
+
+                data[--data[predOfsBase + succId]] = i;
+                predOfsBase += numStatesWithSink;
+            }
+        }
+
+        if (partial) {
+            updateBlockAndPosData(blockForState, sinkId, data, posDataLow);
+            int predOfsBase = predOfsDataLow;
+            for (int i = 0; i < numInputs; i++) {
+                data[--data[predOfsBase + sinkId]] = sinkId;
+                predOfsBase += numStatesWithSink;
+            }
+        }
+
+        updatePTFields(pt, data, posDataLow, predOfsDataLow, blockForState, numStatesWithSink, numInputs);
+
+        pt.removeEmptyBlocks();
+
+        return pt;
     }
 
     private static void updateBlockAndPosData(Block[] blockForState, int i, int[] data, int posDataLow) {
@@ -357,8 +465,7 @@ public final class PaigeTarjanInitializers {
         data[posDataLow + i] = pos;
     }
 
-    private static Block getOrCreateBlock(
-            Map<@Nullable Object, Block> blockMap, Object classification, PaigeTarjan pt) {
+    private static Block getOrCreateBlock(Map<@Nullable Object, Block> blockMap, Object classification, Hopcroft pt) {
         Block block = blockMap.get(classification);
         if (block == null) {
             block = pt.createBlock();
@@ -369,9 +476,13 @@ public final class PaigeTarjanInitializers {
         return block;
     }
 
-    private static void updatePTFields(
-            PaigeTarjan pt, int[] data, int posDataLow, int predOfsDataLow,
-            Block[] blockForState, int numStates, int numInputs) {
+    private static void updatePTFields(Hopcroft pt,
+                                       int[] data,
+                                       int posDataLow,
+                                       int predOfsDataLow,
+                                       Block[] blockForState,
+                                       int numStates,
+                                       int numInputs) {
         pt.setBlockData(data);
         pt.setPosData(data, posDataLow);
         pt.setPredOfsData(data, predOfsDataLow);

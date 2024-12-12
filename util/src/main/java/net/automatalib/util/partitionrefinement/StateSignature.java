@@ -22,7 +22,7 @@ import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Utility class for constructing state signatures used for classifying states during {@link PaigeTarjanInitializers}.
+ * Utility class for constructing state signatures used for classifying states during minimization / bisimulation,.
  */
 public final class StateSignature {
 

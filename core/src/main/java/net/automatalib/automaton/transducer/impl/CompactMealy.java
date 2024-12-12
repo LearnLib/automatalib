@@ -88,6 +88,13 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactT
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    // Overridden for performance reasons (to prevent object instantiation of default implementation)
+    public O getTransitionProperty(int state, int input) {
+        return (O) outputs[toMemoryIndex(state, input)];
+    }
+
+    @Override
     public void setTransitionProperty(CompactTransition<O> transition, O property) {
         transition.setProperty(property);
 
@@ -107,6 +114,12 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactT
         final int upper = lower + numInputs();
         Arrays.fill(transitions, lower, upper, AbstractCompact.INVALID_STATE);
         Arrays.fill(outputs, lower, upper, null);
+    }
+
+    @Override
+    // Overridden for performance reasons (to prevent object instantiation of default implementation)
+    public int getSuccessor(int state, int input) {
+        return transitions[toMemoryIndex(state, input)];
     }
 
     @Override

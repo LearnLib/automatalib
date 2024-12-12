@@ -18,6 +18,7 @@ package net.automatalib.automaton.impl;
 import java.util.Arrays;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.base.AbstractCompact;
 import net.automatalib.automaton.base.AbstractCompactDeterministic;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -41,6 +42,10 @@ public class UniversalCompactDet<I, SP, TP> extends AbstractCompactDeterministic
 
     public UniversalCompactDet(Alphabet<I> alphabet) {
         this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
+    }
+
+    public UniversalCompactDet(Alphabet<I> alphabet, int stateCapacity) {
+        this(alphabet, stateCapacity, DEFAULT_RESIZE_FACTOR);
     }
 
     public UniversalCompactDet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
@@ -157,5 +162,18 @@ public class UniversalCompactDet<I, SP, TP> extends AbstractCompactDeterministic
     protected void updateTransitionStorage(Payload payload) {
         this.transitions = updateTransitionStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
         this.transitionProperties = updateTransitionStorage(this.transitionProperties, null, payload);
+    }
+
+    public static final class Creator<I, SP, TP> implements AutomatonCreator<UniversalCompactDet<I, SP, TP>, I> {
+
+        @Override
+        public UniversalCompactDet<I, SP, TP> createAutomaton(Alphabet<I> alphabet, int numStates) {
+            return new UniversalCompactDet<>(alphabet, numStates);
+        }
+
+        @Override
+        public UniversalCompactDet<I, SP, TP> createAutomaton(Alphabet<I> alphabet) {
+            return new UniversalCompactDet<>(alphabet);
+        }
     }
 }

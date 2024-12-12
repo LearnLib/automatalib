@@ -42,7 +42,7 @@ public enum AutomatonInitialPartitioning {
      * symbol/transition property combinations are initially placed in the same partition class. Note that if
      * transitions are missing, a {@code null} property is assumed.
      * <p>
-     * For constructing custom sink classifications required by the partial {@link PaigeTarjanInitializers}, please
+     * For constructing custom sink classifications required by the partial {@link HopcroftInitializers}, please
      * refer to the {@link StateSignature} methods.
      *
      * @see StateSignature#byTransitionProperties(Object[])
@@ -61,7 +61,7 @@ public enum AutomatonInitialPartitioning {
      * regarded as a combination of {@link #BY_STATE_PROPERTY} and {@link #BY_TRANSITION_PROPERTIES}, resulting in the
      * coarsest initial partition that refines both partitions obtained using the other modes.
      * <p>
-     * For constructing custom sink classifications required by the partial {@link PaigeTarjanInitializers}, please
+     * For constructing custom sink classifications required by the partial {@link HopcroftInitializers}, please
      * refer to the {@link StateSignature} methods.
      *
      * @see StateSignature#byFullSignature(Object, Object[])

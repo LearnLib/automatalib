@@ -19,10 +19,13 @@ import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.graph.TransitionEdge.Property;
+import net.automatalib.automaton.impl.UniversalCompactDet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
@@ -47,6 +50,14 @@ public class MinimizerTest extends AbstractMinimizationTest {
                                                             Alphabet<I> alphabet) {
         final CompactMealy<I, O> result = new CompactMealy<>(alphabet, mealy.size());
         Automata.minimize(mealy, alphabet, result);
+        return result;
+    }
+
+    @Override
+    protected <I, SP, TP> UniversalDeterministicAutomaton<?, I, ?, SP, TP> minimizeUniversal(MutableDeterministic<?, I, ?, SP, TP> automaton,
+                                                                                             Alphabet<I> alphabet) {
+        final UniversalCompactDet<I, SP, TP> result = new UniversalCompactDet<>(alphabet, automaton.size());
+        Automata.minimize(automaton, alphabet, result);
         return result;
     }
 

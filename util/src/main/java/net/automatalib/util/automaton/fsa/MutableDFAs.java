@@ -18,7 +18,7 @@ package net.automatalib.util.automaton.fsa;
 import java.util.Collection;
 
 import net.automatalib.automaton.fsa.MutableDFA;
-import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 
 public final class MutableDFAs {
 
@@ -56,7 +56,7 @@ public final class MutableDFAs {
         }
 
         if (minimize) {
-            Automata.invasiveMinimize(dfa, inputs);
+            HopcroftMinimizer.minimizeDFAInvasive(dfa, inputs);
         }
     }
 

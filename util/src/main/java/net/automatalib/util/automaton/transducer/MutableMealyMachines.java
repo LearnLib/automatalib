@@ -18,7 +18,7 @@ package net.automatalib.util.automaton.transducer;
 import java.util.Collection;
 
 import net.automatalib.automaton.transducer.MutableMealyMachine;
-import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 
 public final class MutableMealyMachines {
 
@@ -54,7 +54,7 @@ public final class MutableMealyMachines {
         }
 
         if (minimize) {
-            Automata.invasiveMinimize(mealy, inputs);
+            HopcroftMinimizer.minimizeMealyInvasive(mealy, inputs);
         }
     }
 }

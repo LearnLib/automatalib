@@ -21,55 +21,35 @@ import java.util.function.IntFunction;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
-import net.automatalib.automaton.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
 import net.automatalib.common.util.function.BiIntFunction;
 
 /**
- * This class provides methods for translating the result of a {@link PaigeTarjan} coarsest stable partition computation
+ * This class provides methods for translating the result of a {@link Hopcroft} coarsest stable partition computation
  * into several common, more usable forms such as automata.
  * <p>
  * Most of the methods defined in this class expect the partition data to be in a certain form, and moreover may require
- * additional information, both of which is provided by corresponding methods defined in {@link
- * PaigeTarjanInitializers}.
+ * additional information, both of which is provided by corresponding methods defined in {@link HopcroftInitializers}.
  */
-public final class PaigeTarjanExtractors {
+public final class HopcroftExtractors {
 
-    private PaigeTarjanExtractors() {}
+    private HopcroftExtractors() {}
 
     /**
      * Translates the results of the coarsest stable partition computation into a deterministic automaton.
-     * <p>
-     * This method is designed to match the following methods from {@link PaigeTarjanInitializers}:
-     * <ul>
-     * <li> {@link PaigeTarjanInitializers#initCompleteDeterministic(PaigeTarjan, FullIntAbstraction, IntFunction,
-     * boolean)}
-     * </li>
-     * <li> {@link PaigeTarjanInitializers#initCompleteDeterministic(PaigeTarjan,
-     * UniversalDeterministicAutomaton.FullIntAbstraction, AutomatonInitialPartitioning,
-     * boolean)}
-     * </li>
-     * <li> and {@link PaigeTarjanInitializers#initDeterministic(PaigeTarjan, FullIntAbstraction, IntFunction, Object)}
-     * if called with {@code pruneUnreachable = true}.
-     * </li>
-     * </ul>
-     * <p>
-     * Both the {@code spExtractor} and the {@code tpExtractor} can be {@code null}, in which case they are replaced by
-     * a function always returning {@code null}.
      *
-     * @param pt
+     * @param hopcroft
      *         the partition refinement data structure, after computing the coarsest stable partition
      * @param creator
      *         an {@link AutomatonCreator} for creating the resulting automaton
      * @param inputs
      *         the input alphabet to use
-     * @param absOriginal
+     * @param abs
      *         the abstraction of the original automaton that was used to build the partition refinement data structure
      * @param spExtractor
-     *         the state property extractor, or {@code null}
+     *         the state property extractor
      * @param tpExtractor
-     *         the transition property extractor, or {@code null}
+     *         the transition property extractor
      * @param pruneUnreachable
      *         {@code true} if unreachable states should be pruned during construction, {@code false} otherwise
      * @param <I>
@@ -82,29 +62,28 @@ public final class PaigeTarjanExtractors {
      *         automaton type
      *
      * @return an automaton created using the specified creator, over the specified input alphabet, and reflecting the
-     * partition data of the specified {@link PaigeTarjan} object
+     * partition data of the specified {@link Hopcroft} object
      */
-    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministic(PaigeTarjan pt,
+    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministic(Hopcroft hopcroft,
                                                                                                  AutomatonCreator<A, I> creator,
                                                                                                  Alphabet<I> inputs,
-                                                                                                 SimpleDeterministicAutomaton.FullIntAbstraction absOriginal,
+                                                                                                 SimpleDeterministicAutomaton.FullIntAbstraction abs,
                                                                                                  IntFunction<? extends SP> spExtractor,
                                                                                                  BiIntFunction<? extends TP> tpExtractor,
                                                                                                  boolean pruneUnreachable) {
-        if (pruneUnreachable) {
-            return toDeterministicPruned(pt, creator, inputs, absOriginal, spExtractor, tpExtractor);
-        }
-        return toDeterministicUnpruned(pt, creator, inputs, absOriginal, spExtractor, tpExtractor);
+        return pruneUnreachable ?
+                toDeterministicPruned(hopcroft, creator, inputs, abs, spExtractor, tpExtractor) :
+                toDeterministicUnpruned(hopcroft, creator, inputs, abs, spExtractor, tpExtractor);
     }
 
-    private static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicPruned(PaigeTarjan pt,
+    private static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicPruned(Hopcroft hopcroft,
                                                                                                         AutomatonCreator<A, I> creator,
                                                                                                         Alphabet<I> inputs,
-                                                                                                        SimpleDeterministicAutomaton.FullIntAbstraction absOriginal,
+                                                                                                        SimpleDeterministicAutomaton.FullIntAbstraction abs,
                                                                                                         IntFunction<? extends SP> spExtractor,
                                                                                                         BiIntFunction<? extends TP> tpExtractor) {
 
-        int numBlocks = pt.getNumBlocks();
+        int numBlocks = hopcroft.getNumBlocks();
         int numInputs = inputs.size();
         int[] repMap = new int[numBlocks];
         int[] stateMap = new int[numBlocks];
@@ -113,11 +92,11 @@ public final class PaigeTarjanExtractors {
         A result = creator.createAutomaton(inputs, numBlocks);
         MutableDeterministic.FullIntAbstraction<?, SP, TP> resultAbs = result.fullIntAbstraction(inputs);
 
-        int origInit = absOriginal.getIntInitialState();
+        int origInit = abs.getIntInitialState();
         SP initSp = spExtractor.apply(origInit);
         int resInit = resultAbs.addIntInitialState(initSp);
 
-        Block initBlock = pt.getBlockForState(origInit);
+        Block initBlock = hopcroft.getBlockForState(origInit);
         stateMap[initBlock.id] = resInit;
         repMap[resInit] = origInit;
 
@@ -127,10 +106,10 @@ public final class PaigeTarjanExtractors {
             int resState = statesPtr++;
             int rep = repMap[resState];
             for (int i = 0; i < numInputs; i++) {
-                int succ = absOriginal.getSuccessor(rep, i);
+                int succ = abs.getSuccessor(rep, i);
                 if (succ >= 0) {
                     TP tp = tpExtractor.apply(rep, i);
-                    Block succBlock = pt.getBlockForState(succ);
+                    Block succBlock = hopcroft.getBlockForState(succ);
                     int succBlockId = succBlock.id;
                     int resSucc = stateMap[succBlockId];
                     if (resSucc < 0) {
@@ -148,14 +127,14 @@ public final class PaigeTarjanExtractors {
         return result;
     }
 
-    private static <I, T, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicUnpruned(PaigeTarjan pt,
-                                                                                                             AutomatonCreator<A, I> creator,
-                                                                                                             Alphabet<I> inputs,
-                                                                                                             SimpleDeterministicAutomaton.FullIntAbstraction absOriginal,
-                                                                                                             IntFunction<? extends SP> spExtractor,
-                                                                                                             BiIntFunction<? extends TP> tpExtractor) {
+    private static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicUnpruned(Hopcroft hopcroft,
+                                                                                                          AutomatonCreator<A, I> creator,
+                                                                                                          Alphabet<I> inputs,
+                                                                                                          SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                                                                                          IntFunction<? extends SP> spExtractor,
+                                                                                                          BiIntFunction<? extends TP> tpExtractor) {
 
-        int numBlocks = pt.getNumBlocks();
+        int numBlocks = hopcroft.getNumBlocks();
         int numInputs = inputs.size();
 
         A result = creator.createAutomaton(inputs, numBlocks);
@@ -165,23 +144,23 @@ public final class PaigeTarjanExtractors {
             resultAbs.addIntState();
         }
 
-        for (Block curr : pt.blockList()) {
+        for (Block curr : hopcroft.blockList()) {
             int blockId = curr.id;
-            int rep = pt.getRepresentative(curr);
+            int rep = hopcroft.getRepresentative(curr);
             SP sp = spExtractor.apply(rep);
             resultAbs.setStateProperty(blockId, sp);
 
             for (int i = 0; i < numInputs; i++) {
-                int succ = absOriginal.getSuccessor(rep, i);
+                int succ = abs.getSuccessor(rep, i);
                 if (succ >= 0) {
-                    int resSucc = pt.getBlockForState(succ).id;
+                    int resSucc = hopcroft.getBlockForState(succ).id;
                     TP tp = tpExtractor.apply(rep, i);
                     resultAbs.setTransition(blockId, i, resSucc, tp);
                 }
             }
         }
-        int origInit = absOriginal.getIntInitialState();
-        resultAbs.setInitialState(pt.getBlockForState(origInit).id);
+        int origInit = abs.getIntInitialState();
+        resultAbs.setInitialState(hopcroft.getBlockForState(origInit).id);
 
         return result;
     }

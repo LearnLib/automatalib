@@ -36,7 +36,7 @@ import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.acceptor.AcceptorTS;
-import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
 import net.automatalib.util.ts.acceptor.Acceptors;
 import net.automatalib.util.ts.copy.TSCopy;
@@ -605,7 +605,7 @@ public final class NFAs {
                                        boolean minimize) {
         doDeterminize(nfa.powersetView(), inputs, out, partial);
         if (minimize) {
-            Automata.invasiveMinimize(out, inputs);
+            HopcroftMinimizer.minimizeDFAInvasive(out, inputs);
         }
     }
 

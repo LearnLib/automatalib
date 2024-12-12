@@ -89,4 +89,64 @@ public final class ArrayUtil {
     public static <E> Iterator<E> iterator(E[] array) {
         return new ArrayIterator<>(array);
     }
+
+    /**
+     * Computes for the given array its prefix sum and directly stores the result in the given array.
+     *
+     * @param array
+     *         the elements of the sum
+     * @param startInclusive
+     *         the start index from which to begin the computation (inclusive)
+     * @param endExclusive
+     *         the end index at which to stop the computation (exclusive)
+     */
+    public static void prefixSum(int[] array, int startInclusive, int endExclusive) {
+        for (int i = startInclusive + 1; i < endExclusive; i++) {
+            array[i] += array[i - 1];
+        }
+    }
+
+    /**
+     * Sorts the given array according to the given keys using the heapsort sorting algorithm.
+     *
+     * @param arr
+     *         the array to sort
+     * @param keys
+     *         the array of keys, i.e. element i will be sorted according to {@code keys[i]}.
+     */
+    public static void heapsort(int[] arr, int[] keys) {
+
+        int start = arr.length / 2;
+        int end = arr.length;
+
+        while (end > 1) {
+            if (start > 0) {
+                start--;
+            } else {
+                end--;
+                swap(arr, end, 0);
+            }
+
+            int root = start;
+            while (2 * root + 1 < end) {
+                int child = 2 * root + 1;
+                if (child + 1 < end && keys[arr[child]] < keys[arr[child + 1]]) {
+                    child++;
+                }
+
+                if (keys[arr[root]] < keys[arr[child]]) {
+                    swap(arr, root, child);
+                    root = child;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    private static void swap(int[] arr, int i, int j) {
+        int tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
 }

@@ -17,38 +17,35 @@ package net.automatalib.util.automaton.equivalence;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.Pair;
 import net.automatalib.ts.modal.impl.CompactMTS;
+import net.automatalib.util.automaton.random.TabakovVardiRandomAutomata;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class BisimulationTest {
 
     @Test
-    public void bisimTestLoop() {
+    public void testIsomorphism() {
 
         final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'd');
-        final CompactMTS<String> a = new CompactMTS<>(alphabet);
-        final CompactMTS<String> b = new CompactMTS<>(alphabet);
+        final CompactNFA<String> automaton =
+                TabakovVardiRandomAutomata.generateNFA(new Random(42), 100, 200, 10, alphabet);
 
-        final Integer as0 = a.addInitialState();
-        final Integer as1 = a.addState();
-        final Integer as2 = a.addState();
+        final Set<Pair<Integer, Integer>> pairs =
+                Bisimulation.bisimulationEquivalenceRelation(automaton, automaton, alphabet);
 
-        final Integer bs0 = b.addInitialState();
-
-        a.addTransition(as0, "a", as1, null);
-        a.addTransition(as1, "a", as2, null);
-        a.addTransition(as2, "a", as2, null);
-
-        b.addTransition(bs0, "a", bs0, null);
-
-        Assert.assertTrue(testBisimulationEquivalence(a, b, alphabet));
+        Assert.assertEquals(pairs.size(), automaton.size());
+        for (Pair<Integer, Integer> pair : pairs) {
+            Assert.assertEquals(pair.getFirst(), pair.getSecond());
+        }
     }
 
     @Test
@@ -74,6 +71,28 @@ public class BisimulationTest {
         final Set<Pair<Integer, Integer>> equivalentStates =
                 Bisimulation.bisimulationEquivalenceRelation(a, b, alphabet);
         Assert.assertFalse(equivalentStates.contains(Pair.of(as0, bs0)));
+    }
+
+    @Test
+    public void bisimTestLoop() {
+
+        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'd');
+        final CompactMTS<String> a = new CompactMTS<>(alphabet);
+        final CompactMTS<String> b = new CompactMTS<>(alphabet);
+
+        final Integer as0 = a.addInitialState();
+        final Integer as1 = a.addState();
+        final Integer as2 = a.addState();
+
+        final Integer bs0 = b.addInitialState();
+
+        a.addTransition(as0, "a", as1, null);
+        a.addTransition(as1, "a", as2, null);
+        a.addTransition(as2, "a", as2, null);
+
+        b.addTransition(bs0, "a", bs0, null);
+
+        Assert.assertTrue(testBisimulationEquivalence(a, b, alphabet));
     }
 
     private static <AS, I, AT, A extends Automaton<AS, I, AT>, BS, BT, B extends Automaton<BS, I, BT>> boolean testBisimulationEquivalence(

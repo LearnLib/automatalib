@@ -57,7 +57,7 @@ public class ADSRandomMealyTest extends AbstractADSTest {
         result.add(new Object[] {true, true, RandomAutomata.randomMealy(r, 10, input, output)});
         result.add(new Object[] {true, true, RandomAutomata.randomMealy(r, 20, input, output)});
         result.add(new Object[] {true, true, RandomAutomata.randomMealy(r, 30, input, output)});
-        result.add(new Object[] {false, true, RandomAutomata.randomMealy(r, 40, input, output)});
+        result.add(new Object[] {false, false, RandomAutomata.randomMealy(r, 40, input, output)});
         result.add(new Object[] {false, true, RandomAutomata.randomMealy(r, 50, input, output)});
         result.add(new Object[] {false, false, RandomAutomata.randomMealy(r, 60, input, output)});
         result.add(new Object[] {false, true, RandomAutomata.randomMealy(r, 70, input, output)});

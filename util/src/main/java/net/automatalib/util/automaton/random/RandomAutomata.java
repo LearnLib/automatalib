@@ -45,10 +45,10 @@ import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.impl.Location;
 import net.automatalib.common.util.HashUtil;
-import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.DFAs;
+import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
+import net.automatalib.util.automaton.minimizer.OneSEVPAMinimizer;
 import net.automatalib.util.automaton.procedural.SPAs;
-import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 public final class RandomAutomata {
@@ -259,7 +259,7 @@ public final class RandomAutomata {
             }
 
             if (minimize) {
-                Automata.invasiveMinimize(dfa, alphabet);
+                HopcroftMinimizer.minimizeDFAInvasive(dfa, alphabet);
             }
 
             assert DFAs.isPrefixClosed(dfa, alphabet);
@@ -323,7 +323,7 @@ public final class RandomAutomata {
             }
 
             if (minimize) {
-                Automata.invasiveMinimize(mealy, inputAlphabet);
+                HopcroftMinimizer.minimizeMealyInvasive(mealy, inputAlphabet);
             }
 
             mealies.put(procedure, mealy);
@@ -362,7 +362,7 @@ public final class RandomAutomata {
         gen.chooseInitial();
 
         if (minimize) {
-            Automata.invasiveMinimize(out, inputs);
+            HopcroftMinimizer.minimizeUniversalInvasive(out, inputs);
         }
 
         return out;
