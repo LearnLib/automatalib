@@ -16,12 +16,13 @@
 package net.automatalib.word;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Function;
 
+import net.automatalib.common.util.collection.IteratorUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -52,8 +53,8 @@ final class LetterWord<I> extends Word<I> {
     }
 
     @Override
-    public java.util.Iterator<I> iterator() {
-        return new Iterator<>(letter);
+    public Iterator<I> iterator() {
+        return IteratorUtil.singleton(letter);
     }
 
     @Override
@@ -147,33 +148,4 @@ final class LetterWord<I> extends Word<I> {
         T transformed = transformer.apply(letter);
         return new LetterWord<>(transformed);
     }
-
-    /*
-     * Iterator
-     */
-    private static final class Iterator<I> implements java.util.Iterator<I> {
-
-        private final I letter;
-        private boolean next = true;
-
-        Iterator(I letter) {
-            this.letter = letter;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return next;
-        }
-
-        @Override
-        public I next() {
-            if (next) {
-                next = false;
-                return letter;
-            }
-            throw new NoSuchElementException();
-        }
-
-    }
-
 }

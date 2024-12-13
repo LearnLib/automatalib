@@ -39,7 +39,7 @@ import org.checkerframework.dataflow.qual.Pure;
  * recursive data structure. Algorithms may use more simplified sub-interfaces such as {@link ADSNode}.
  *
  * @param <S>
- *         (hypothesis) state type
+ *         state type
  * @param <I>
  *         input alphabet type
  * @param <O>
@@ -134,7 +134,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
             public boolean getNodeProperties(N node, Map<String, String> properties) {
                 if (node.isLeaf()) {
                     properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
-                    properties.put(NodeAttrs.LABEL, String.valueOf(node.getHypothesisState()));
+                    properties.put(NodeAttrs.LABEL, String.valueOf(node.getState()));
                 } else {
                     properties.put(NodeAttrs.LABEL, node.toString());
                     properties.put(NodeAttrs.SHAPE, NodeShapes.OVAL);
@@ -166,15 +166,14 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
     boolean isLeaf();
 
     /**
-     * Returns the hypothesis state associated with this ADS node.
+     * Returns the automaton state associated with this ADS node.
      *
-     * @return {@code null} if {@code this} is an inner node (see {@link #isLeaf()}), the associated hypothesis state
-     * otherwise.
+     * @return {@code null} if {@code this} is an inner node (see {@link #isLeaf()}), the associated state otherwise.
      */
-    @Nullable S getHypothesisState();
+    @Nullable S getState();
 
     /**
-     * See {@link #getHypothesisState()}.
+     * See {@link #getState()}.
      *
      * @param state
      *         the hypothesis state to be associated with this ADS node.
@@ -182,5 +181,5 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @throws UnsupportedOperationException
      *         if trying to set a hypothesis state on an inner node (see {@link #isLeaf()}).
      */
-    void setHypothesisState(S state);
+    void setState(S state);
 }

@@ -75,18 +75,18 @@ public abstract class AbstractRecursiveADSLeafNode<S, I, O, N extends RecursiveA
     }
 
     @Override
-    public S getHypothesisState() {
+    public S getState() {
         return this.hypothesisState;
     }
 
     @Override
-    public void setHypothesisState(S state) {
+    public void setState(S state) {
         this.hypothesisState = state;
     }
 
     @Override
     public String toString() {
-        final S state = this.getHypothesisState();
+        final S state = this.getState();
         return state == null ? "<null>" : state.toString();
     }
 }

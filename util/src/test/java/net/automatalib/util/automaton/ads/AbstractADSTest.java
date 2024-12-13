@@ -91,7 +91,7 @@ public abstract class AbstractADSTest {
 
         final Set<ADSNode<Integer, I, O>> leaves = ADSUtil.collectLeaves(ads);
 
-        Assert.assertEquals(targets, leaves.stream().map(ADSNode::getHypothesisState).collect(Collectors.toSet()));
+        Assert.assertEquals(targets, leaves.stream().map(ADSNode::getState).collect(Collectors.toSet()));
 
         final Map<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> traces =
                 new HashMap<>(HashUtil.capacity(leaves.size()));
@@ -101,7 +101,7 @@ public abstract class AbstractADSTest {
 
         // check matching outputs
         for (Map.Entry<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> entry : traces.entrySet()) {
-            final Integer state = entry.getKey().getHypothesisState();
+            final Integer state = entry.getKey().getState();
             final Word<I> input = entry.getValue().getFirst();
             final Word<O> output = entry.getValue().getSecond();
             Assert.assertEquals(mealy.computeStateOutput(state, input), output);
