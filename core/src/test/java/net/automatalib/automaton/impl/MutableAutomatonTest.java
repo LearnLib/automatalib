@@ -134,6 +134,7 @@ public class MutableAutomatonTest {
         addInitialAndCheck(automaton, stateProps);
 
         removeSingleTransitionAndCheck(automaton, alphabet);
+        removeAllStateTransitionAndCheck(automaton, alphabet);
         removeAllTransitionAndCheck(automaton, alphabet);
         clearAndCheck(automaton, alphabet);
     }
@@ -207,7 +208,15 @@ public class MutableAutomatonTest {
 
         final Object[] oldTpProps = buildTPSignature(automaton, alphabet);
 
-        automaton.removeAllTransitions(s, i);
+        final Collection<T> transitions = automaton.getTransitions(s, i);
+
+        // we may sample a partial initial state
+        Assert.assertTrue(transitions.size() < 2);
+
+        if (!transitions.isEmpty()) {
+            final T t = transitions.iterator().next();
+            automaton.removeTransition(s, i, t);
+        }
 
         Assert.assertTrue(automaton.getSuccessors(s, i).isEmpty());
         Assert.assertTrue(automaton.getTransitions(s, i).isEmpty());
@@ -226,6 +235,33 @@ public class MutableAutomatonTest {
 
     private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void removeAllTransitionAndCheck(M automaton,
                                                                                                             Alphabet<I> alphabet) {
+
+        final int stateIndex = RANDOM.nextInt(automaton.size());
+        final int inputIndex = RANDOM.nextInt(alphabet.size());
+        final S s = automaton.stateIDs().getState(stateIndex);
+        final I i = alphabet.getSymbol(inputIndex);
+
+        final Object[] oldTpProps = buildTPSignature(automaton, alphabet);
+
+        automaton.removeAllTransitions(s, i);
+
+        Assert.assertTrue(automaton.getSuccessors(s, i).isEmpty());
+        Assert.assertTrue(automaton.getTransitions(s, i).isEmpty());
+
+        if (automaton instanceof MutableDeterministic) {
+            @SuppressWarnings("unchecked")
+            MutableDeterministic<S, I, T, SP, TP> detAutomaton = (MutableDeterministic<S, I, T, SP, TP>) automaton;
+
+            Assert.assertNull(detAutomaton.getSuccessor(s, i));
+            Assert.assertNull(detAutomaton.getTransition(s, i));
+        }
+
+        final Object[] newTpProps = buildTPSignature(automaton, alphabet);
+        checkSignature(oldTpProps, newTpProps, stateIndex * alphabet.size() + inputIndex, 1);
+    }
+
+    private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void removeAllStateTransitionAndCheck(M automaton,
+                                                                                                                 Alphabet<I> alphabet) {
 
         final int stateIndex = RANDOM.nextInt(automaton.size());
         final S s = automaton.stateIDs().getState(stateIndex);

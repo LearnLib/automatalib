@@ -128,7 +128,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create() {
-        return new BinaryHeap<>(DEFAULT_INITIAL_CAPACITY, Comparator.naturalOrder());
+        return create(DEFAULT_INITIAL_CAPACITY);
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create(int initialCapacity) {
@@ -136,7 +136,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create(Collection<? extends E> initValues) {
-        return new BinaryHeap<>(0, initValues, Comparator.naturalOrder());
+        return create(0, initValues);
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create(int initialCapacity,
@@ -145,7 +145,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     public static <E> BinaryHeap<E> createCmp(Comparator<? super E> comparator) {
-        return new BinaryHeap<>(DEFAULT_INITIAL_CAPACITY, comparator);
+        return createCmp(comparator, DEFAULT_INITIAL_CAPACITY);
     }
 
     public static <E> BinaryHeap<E> createCmp(Comparator<? super E> comparator, int initialCapacity) {
@@ -153,7 +153,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     public static <E> BinaryHeap<E> createCmp(Comparator<? super E> comparator, Collection<? extends E> initValues) {
-        return new BinaryHeap<>(0, initValues, comparator);
+        return createCmp(comparator, 0, initValues);
     }
 
     public static <E> BinaryHeap<E> createCmp(Comparator<? super E> comparator,
@@ -309,6 +309,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     @SuppressWarnings("nullness") // setting 'null' is fine, when (according to JavaDoc) calling quickClear() first
     @Override
     public void deepClear() {
+        quickClear();
         entries.setAll(null);
     }
 

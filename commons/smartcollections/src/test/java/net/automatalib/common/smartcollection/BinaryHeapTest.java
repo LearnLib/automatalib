@@ -15,7 +15,7 @@
  */
 package net.automatalib.common.smartcollection;
 
-import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -23,38 +23,54 @@ import org.testng.annotations.Test;
 @Test
 public class BinaryHeapTest {
 
-    private final BinaryHeap<Integer> heap = BinaryHeap.create(Arrays.asList(42, 37));
-
     @Test
     public void testHeapOps() {
-        Assert.assertEquals(heap.size(), 2);
+        final BinaryHeap<Integer> heap = BinaryHeap.create();
+
+        final ElementReference ref = heap.referencedAdd(42);
+        Assert.assertNotNull(ref);
+
+        Assert.assertTrue(heap.offer(23));
+        Assert.assertTrue(heap.offer(37));
+
+        Assert.assertEquals(heap.size(), 3);
         Assert.assertFalse(heap.isEmpty());
         Assert.assertFalse(heap.contains(13));
 
-        Assert.assertEquals(heap.peekMin().intValue(), 37);
+        Assert.assertEquals(heap.peek(), 23);
 
         Assert.assertTrue(heap.add(13));
-        Assert.assertEquals(heap.size(), 3);
+        Assert.assertEquals(heap.size(), 4);
 
-        Assert.assertEquals(heap.peekMin().intValue(), 13);
-        Assert.assertEquals(heap.extractMin().intValue(), 13);
+        Assert.assertEquals(heap.peek(), 13);
+        Assert.assertEquals(heap.poll(), 13);
+        Assert.assertEquals(heap.size(), 3);
+        Assert.assertEquals(heap.peek(), 23);
+
+        Assert.assertEquals(heap.get(ref), 42);
+        heap.replace(ref, 5);
+
+        Assert.assertEquals(heap.size(), 3);
+        Assert.assertEquals(heap.peek(), 5);
+        heap.remove(ref);
+        Assert.assertEquals(heap.size(), 2);
+        Assert.assertEquals(heap.peek(), 23);
+
+        Assert.assertTrue(heap.offer(40));
+        Assert.assertEquals(heap.size(), 3);
+        Assert.assertEquals(heap.peek(), 23);
+        Assert.assertEquals(heap.poll(), 23);
         Assert.assertEquals(heap.size(), 2);
 
-        Assert.assertEquals(heap.peekMin().intValue(), 37);
-        heap.add(40);
-        Assert.assertEquals(heap.size(), 3);
-        Assert.assertEquals(heap.peekMin().intValue(), 37);
-        Assert.assertEquals(heap.extractMin().intValue(), 37);
-        Assert.assertEquals(heap.size(), 2);
-
-        Assert.assertEquals(heap.peekMin().intValue(), 40);
-        Assert.assertEquals(heap.extractMin().intValue(), 40);
+        Assert.assertEquals(heap.peek(), 37);
+        Assert.assertEquals(heap.poll(), 37);
         Assert.assertEquals(heap.size(), 1);
 
-        Assert.assertEquals(heap.peekMin().intValue(), 42);
-        Assert.assertEquals(heap.extractMin().intValue(), 42);
+        heap.deepClear();
 
         Assert.assertEquals(heap.size(), 0);
+        Assert.assertNull(heap.peek());
+        Assert.assertThrows(NoSuchElementException.class, heap::element);
         Assert.assertTrue(heap.isEmpty());
     }
 
