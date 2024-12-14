@@ -207,13 +207,13 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
     /**
      * Associates with the given state the given state property.
      *
-     * @param stateProperty
-     *         the property to associate with the state
      * @param stateId
      *         the object to identify the state
+     * @param stateProperty
+     *         the property to associate with the state
      */
     @Action
-    void withStateProperty(SP stateProperty, Object stateId) {
+    void withStateProperty(Object stateId, SP stateProperty) {
         S state = getState(stateId);
         automaton.setStateProperty(state, stateProperty);
     }

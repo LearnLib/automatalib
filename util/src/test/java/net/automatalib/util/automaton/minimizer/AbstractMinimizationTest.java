@@ -176,11 +176,11 @@ public abstract class AbstractMinimizationTest {
                          .on(input1).withProperty(false).to("s5")
                          .from("s5")
                          .on(input1, input2, input3, input4).loop()
-                         .withStateProperty(0, "s1")
-                         .withStateProperty(0, "s2")
-                         .withStateProperty(1, "s3")
-                         .withStateProperty(0, "s4")
-                         .withStateProperty(2, "s6")
+                         .withStateProperty("s1", 0)
+                         .withStateProperty("s2", 0)
+                         .withStateProperty("s3", 1)
+                         .withStateProperty("s4", 0)
+                         .withStateProperty("s6", 2)
                          .create();
         // @formatter:on
 
