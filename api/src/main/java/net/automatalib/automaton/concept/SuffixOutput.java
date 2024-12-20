@@ -21,8 +21,8 @@ import net.automatalib.word.Word;
  * Feature for automata that compute a <i>suffix-observable</i> output function, i.e., they compute an output containing
  * a part that can be attributed to a suffix of the input.
  * <p>
- * Note that this is a special case of the {@link Output} feature, as <code>computeOutput(input) =
- * computeSuffixOutput(epsilon, input)</code>.
+ * Note that this is a special case of the {@link Output} feature, as
+ * {@code computeOutput(input) = computeSuffixOutput(epsilon, input)}.
  *
  * @param <I>
  *         input symbol type

@@ -32,7 +32,7 @@ import net.automatalib.ts.acceptor.AcceptorTS;
 import net.automatalib.visualization.VisualizationHelper;
 
 /**
- * <code>FiniteStateAcceptor</code>s accept regular languages.
+ * {@code FiniteStateAcceptor}s accept regular languages.
  */
 public interface FiniteStateAcceptor<S, I> extends AcceptorTS<S, I>,
                                                    UniversalAutomaton<S, I, S, Boolean, Void>,

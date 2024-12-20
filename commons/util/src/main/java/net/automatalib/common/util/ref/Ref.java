@@ -30,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public interface Ref<T> {
 
     /**
-     * Retrieves the referent. In case of {@link WeakRef}s, the return value may become <code>null</code>.
+     * Retrieves the referent. In case of {@link WeakRef}s, the return value may become {@code null}.
      *
      * @return the referent.
      */

@@ -111,7 +111,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
      * @param state
      *         the state to add.
      *
-     * @return <code>true</code> iff this was the first state to be added to the bucket, <code>false</code> otherwise.
+     * @return {@code true} iff this was the first state to be added to the bucket, {@code false} otherwise.
      */
     boolean addToBucket(State<S, L> state) {
         boolean first = bucket.isEmpty();
@@ -181,9 +181,9 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
 
     /**
      * Retrieves the {@link ElementReference} referencing this block in the splitter collection, for efficient removal.
-     * If this block is no potential splitter, <code>null</code> is returned.
+     * If this block is no potential splitter, {@code null} is returned.
      *
-     * @return the reference or <code>null</code>.
+     * @return the reference or {@code null}.
      */
     @Nullable ElementReference getSplitterQueueReference() {
         return splitterQueueReference;
@@ -229,7 +229,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
     /**
      * Checks whether this block is empty, i.e., contains no states.
      *
-     * @return <code>true</code> iff the block is empty, <code>false</code> otherwise.
+     * @return {@code true} iff the block is empty, {@code false} otherwise.
      */
     public boolean isEmpty() {
         return states.isEmpty();
@@ -238,7 +238,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
     /**
      * Checks whether this block is a singleton, i.e., contains only a single state.
      *
-     * @return <code>true</code> iff this block is a singleton, <code>false</code> otherwise.
+     * @return {@code true} iff this block is a singleton, {@code false} otherwise.
      */
     public boolean isSingleton() {
         return states.size() == 1;

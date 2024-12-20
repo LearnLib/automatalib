@@ -34,7 +34,7 @@ public class DefaultVPATest {
 
     /**
      * Tests the language of correctly matched brace-words, which can be described by the EBNF
-     * <code>S -> ( S ) | [ S ] | () | []</code>.
+     * {@code S -> ( S ) | [ S ] | () | []}.
      */
     @Test
     public void testBracketLanguageOneSevpa() {
@@ -59,7 +59,7 @@ public class DefaultVPATest {
 
     /**
      * Tests the language of correctly matched brace-words, which can be described by the EBNF
-     * <code>S -> ( S ) | [ S ] | () | []</code>.
+     * {@code S -> ( S ) | [ S ] | () | []}.
      */
     @Test
     public void testBracketLanguageNSevpa() {

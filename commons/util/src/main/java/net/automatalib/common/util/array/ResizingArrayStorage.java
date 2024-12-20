@@ -93,7 +93,7 @@ public final class ResizingArrayStorage<T> {
      * @param maxCapacity
      *         the maximal number of elements the storage array has to provide room for.
      *
-     * @return <code>true</code> iff the storage array had to be resized, <code>false</code> otherwise.
+     * @return {@code true} iff the storage array had to be resized, {@code false} otherwise.
      */
     public boolean shrink(int maxCapacity) {
         if (maxCapacity >= array.length) {

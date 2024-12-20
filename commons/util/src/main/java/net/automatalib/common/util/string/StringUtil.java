@@ -118,8 +118,7 @@ public final class StringUtil {
     }
 
     /**
-     * Unescapes escaped double quotes in a string, i.e. replaces <code>\"</code> by <code>"</code> and <code>\\</code>
-     * by <code>\</code>.
+     * Unescapes escaped double quotes in a string, i.e. replaces {@code \"} by {@code "} and {@code \\} by {@code \}.
      *
      * @param s
      *         the string in which to unescape double quotes.
@@ -162,8 +161,8 @@ public final class StringUtil {
     }
 
     /**
-     * Escapes double quotes in a string. Effectively, <code>"</code> is replaced by <code>\"</code> and <code>\</code>
-     * is replaced by <code>\\</code>.
+     * Escapes double quotes in a string. Effectively, {@code "} is replaced by {@code \"} and {@code \} is replaced by
+     * {@code \\}.
      *
      * @param s
      *         the string to escape.

@@ -24,9 +24,9 @@ public interface DeterministicTransitionOutputTS<S, I, T, O>
         extends DeterministicOutputTS<S, I, T, O>, TransitionOutput<T, O> {
 
     /**
-     * Retrieves the output for the given input symbol in the given state. This is roughly equivalent to calling {@link
-     * #getTransitionOutput(Object)} on the transition returned by {@link #getTransition(Object, Object)}, however it
-     * should be noted that this function does not allow distinguishing between a <code>null</code> output and an
+     * Retrieves the output for the given input symbol in the given state. This is roughly equivalent to calling
+     * {@link #getTransitionOutput(Object)} on the transition returned by {@link #getTransition(Object, Object)},
+     * however it should be noted that this function does not allow distinguishing between a {@code null} output and an
      * undefined transition.
      *
      * @param state
@@ -34,7 +34,7 @@ public interface DeterministicTransitionOutputTS<S, I, T, O>
      * @param input
      *         the input symbol
      *
-     * @return the output symbol (or <code>null</code> if the transition is undefined)
+     * @return the output symbol (or {@code null} if the transition is undefined)
      */
     default @Nullable O getOutput(S state, I input) {
         T trans = getTransition(state, input);

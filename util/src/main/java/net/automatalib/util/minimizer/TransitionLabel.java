@@ -68,7 +68,7 @@ final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<Transiti
      * @param state
      *         the state to be added to the bucket.
      *
-     * @return <code>true</code> if this is the first state to be added to the bucket, <code>false</code> otherwise.
+     * @return {@code true} if this is the first state to be added to the bucket, {@code false} otherwise.
      */
     public boolean addToBucket(State<S, EP> state) {
         boolean first = bucket.isEmpty();
@@ -101,7 +101,7 @@ final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<Transiti
      * @param state
      *         the state to be added.
      *
-     * @return <code>true</code> if this was the first state to be added to the set, <code>false</code> otherwise.
+     * @return {@code true} if this was the first state to be added to the set, {@code false} otherwise.
      */
     public boolean addToSet(State<S, EP> state) {
         boolean first = list.isEmpty();

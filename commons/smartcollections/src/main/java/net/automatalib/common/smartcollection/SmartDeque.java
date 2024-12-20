@@ -44,48 +44,47 @@ public interface SmartDeque<E> extends SmartCollection<E> {
     ElementReference pushBack(E element);
 
     /**
-     * Retrieves the element at the beginning of the sequence, or <code>null</code> if the sequence is empty.
+     * Retrieves the element at the beginning of the sequence, or {@code null} if the sequence is empty.
      *
-     * @return the first element or <code>null</code>.
+     * @return the first element or {@code null}.
      */
     E getFront();
 
     /**
-     * Retrieves the element at the end of the sequence, or <code>null</code> if the sequence is empty.
+     * Retrieves the element at the end of the sequence, or {@code null} if the sequence is empty.
      *
-     * @return the last element or <code>null</code>.
+     * @return the last element or {@code null}.
      */
     E getBack();
 
     /**
-     * Retrieves the reference to the element at the beginning of the sequence, or <code>null</code> if the sequence is
+     * Retrieves the reference to the element at the beginning of the sequence, or {@code null} if the sequence is
      * empty.
      *
-     * @return reference to the first element or <code>null</code>.
+     * @return reference to the first element or {@code null}.
      */
     ElementReference getFrontReference();
 
     /**
-     * Retrieves the reference to the element at the end of the sequence, or <code>null</code> if the sequence is
-     * empty.
+     * Retrieves the reference to the element at the end of the sequence, or {@code null} if the sequence is empty.
      *
-     * @return reference to the last element or <code>null</code>.
+     * @return reference to the last element or {@code null}.
      */
     ElementReference getBackReference();
 
     /**
-     * Retrieves and removes the element at the beginning of the sequence. If the sequence is empty, <code>null</code>
-     * is returned.
+     * Retrieves and removes the element at the beginning of the sequence. If the sequence is empty, {@code null} is
+     * returned.
      *
-     * @return the previously first element or <code>null</code>.
+     * @return the previously first element or {@code null}.
      */
     E popFront();
 
     /**
-     * Retrieves and removes the element at the beginning of the sequence. If the sequence is empty, <code>null</code>
-     * is returned.
+     * Retrieves and removes the element at the beginning of the sequence. If the sequence is empty, {@code null} is
+     * returned.
      *
-     * @return the previously first element or <code>null</code>.
+     * @return the previously first element or {@code null}.
      */
     E popBack();
 

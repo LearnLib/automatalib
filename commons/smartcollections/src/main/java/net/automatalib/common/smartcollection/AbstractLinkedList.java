@@ -25,10 +25,10 @@ import org.checkerframework.framework.qual.EnsuresQualifierIf;
 /**
  * Abstract base class for linked lists.
  * <p>
- * This class implements the base functionality for dealing with linked lists of elements implementing the {@link
- * LinkedListEntry} interface. It provides the logic for the basic operations (esp. the (re-/un-)linking of elements),
- * but not how entries into the lists are created. Therefore, it can be used by both intrusive and non-intrusive linked
- * lists.
+ * This class implements the base functionality for dealing with linked lists of elements implementing the
+ * {@link LinkedListEntry} interface. It provides the logic for the basic operations (esp. the (re-/un-)linking of
+ * elements), but not how entries into the lists are created. Therefore, it can be used by both intrusive and
+ * non-intrusive linked lists.
  *
  * @param <E>
  *         element type
@@ -49,18 +49,18 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
     private int size;
 
     /**
-     * Retrieves the first entry in the list, or <code>null</code> if the list is empty.
+     * Retrieves the first entry in the list, or {@code null} if the list is empty.
      *
-     * @return the first entry or <code>null</code>.
+     * @return the first entry or {@code null}.
      */
     protected @Nullable T getFrontEntry() {
         return head;
     }
 
     /**
-     * Retrieves the last entry in the list, or <code>null</code> if the list is empty.
+     * Retrieves the last entry in the list, or {@code null} if the list is empty.
      *
-     * @return the first entry or <code>null</code>.
+     * @return the first entry or {@code null}.
      */
     protected @Nullable T getBackEntry() {
         return last;
@@ -248,9 +248,9 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
     }
 
     /**
-     * Retrieves a reference to the last element in the list. If the list is empty, <code>null</code> is returned.
+     * Retrieves a reference to the last element in the list. If the list is empty, {@code null} is returned.
      *
-     * @return a reference to the last element, or <code>null</code>.
+     * @return a reference to the last element, or {@code null}.
      */
     public @Nullable ElementReference getBackReference() {
         return last;
@@ -269,9 +269,9 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
     }
 
     /**
-     * Retrieves a reference to the first element in the list. If the list is empty, <code>null</code> is returned.
+     * Retrieves a reference to the first element in the list. If the list is empty, {@code null} is returned.
      *
-     * @return a reference to the first element, or <code>null</code>.
+     * @return a reference to the first element, or {@code null}.
      */
     public @Nullable ElementReference getFrontReference() {
         return head;
@@ -289,10 +289,10 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
     }
 
     /**
-     * Removes and returns the last entry in the list. If the list is empty, it remains unmodified and <code>null</code>
-     * is returned.
+     * Removes and returns the last entry in the list. If the list is empty, it remains unmodified and {@code null} is
+     * returned.
      *
-     * @return the previously first entry in the list, or <code>null</code>.
+     * @return the previously first entry in the list, or {@code null}.
      */
     @SuppressWarnings("nullness") // since intermediate method calls must not change the head reference, e is non-null
     protected @Nullable T popBackEntry() {
@@ -324,10 +324,10 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
     }
 
     /**
-     * Removes and returns the first entry in the list. If the list is empty, it remains unmodified and
-     * <code>null</code> is returned.
+     * Removes and returns the first entry in the list. If the list is empty, it remains unmodified and {@code null} is
+     * returned.
      *
-     * @return the previously first entry in the list, or <code>null</code>.
+     * @return the previously first entry in the list, or {@code null},
      */
     @SuppressWarnings("nullness") // since intermediate method calls must not change the head reference, e is non-null
     protected @Nullable T popFrontEntry() {

@@ -26,9 +26,9 @@ import java.util.Comparator;
  * Since this interface extends the {@link SmartCollection} (and thus also the {@link Collection}) interface, it has to
  * provide the {@link SmartCollection#referencedAdd(Object)} and {@link Collection#add(Object)} methods with no
  * additional key parameters. This is handled by using a <i>default key</i>, which is implicitly used for all elements
- * inserted using the above methods. Initially, the default key is <code>null</code>, whereas the <code>null</code> key
- * is by convention larger than any non-<code>null</code> key. The default key for consequent insertions can be changed
- * by calling {@link #setDefaultKey(Comparable)}.
+ * inserted using the above methods. Initially, the default key is {@code null}, whereas the {@code null} key is by
+ * convention larger than any non-{@code null} key. The default key for consequent insertions can be changed by calling
+ * {@link #setDefaultKey(Comparable)}.
  *
  * @param <E>
  *         element class.

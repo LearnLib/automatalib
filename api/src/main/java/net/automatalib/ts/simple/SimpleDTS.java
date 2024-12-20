@@ -59,7 +59,7 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      * @param input
      *         the input word.
      *
-     * @return the state reachable by the given input word, or <code>null</code> if no state is reachable by this word.
+     * @return the state reachable by the given input word, or {@code null} if no state is reachable by this word.
      *
      * @see TransitionSystem#getStates(Iterable)
      */
@@ -85,7 +85,7 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      * @param input
      *         the input symbol.
      *
-     * @return the successor state reachable by the given sequence of input symbols, or <code>null</code> if no state is
+     * @return the successor state reachable by the given sequence of input symbols, or {@code null} if no state is
      * reachable by this symbol.
      *
      * @see TransitionSystem#getSuccessors(Collection, Iterable)
@@ -110,8 +110,8 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      * @param input
      *         the input symbol.
      *
-     * @return the successor state reachable by the given input symbol, or <code>null</code> if no state is reachable by
-     * this symbol.
+     * @return the successor state reachable by the given input symbol, or {@code null} if no state is reachable by this
+     * symbol.
      *
      * @see TransitionSystem#getSuccessors(Object, Object)
      */

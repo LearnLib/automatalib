@@ -27,8 +27,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public interface SmartSequence<E> extends SmartCollection<E> {
 
     /**
-     * Retrieves the reference to the preceding element, or <code>null</code> if the given reference references the
-     * first element in the list.
+     * Retrieves the reference to the preceding element, or {@code null} if the given reference references the first
+     * element in the list.
      *
      * @param ref
      *         the reference
@@ -38,8 +38,8 @@ public interface SmartSequence<E> extends SmartCollection<E> {
     @Nullable ElementReference pred(ElementReference ref);
 
     /**
-     * Retrieves the reference to the succeeding element, or <code>null</code> if the given reference references the
-     * last element in the list.
+     * Retrieves the reference to the succeeding element, or {@code null} if the given reference references the last
+     * element in the list.
      *
      * @param ref
      *         the reference

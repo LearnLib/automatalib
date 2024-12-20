@@ -35,9 +35,9 @@ public interface LinkedListEntry<E, T extends LinkedListEntry<E, T>> extends Ele
     E getElement();
 
     /**
-     * Retrieves the previous entry in the list, or <code>null</code> if this is the first entry.
+     * Retrieves the previous entry in the list, or {@code null} if this is the first entry.
      *
-     * @return the previous entry or <code>null</code>.
+     * @return the previous entry or {@code null}.
      */
     @Nullable T getPrev();
 
@@ -50,9 +50,9 @@ public interface LinkedListEntry<E, T extends LinkedListEntry<E, T>> extends Ele
     void setPrev(@Nullable T prev);
 
     /**
-     * Retrieves the next entry in the list, or <code>null</code> if this is the last entry.
+     * Retrieves the next entry in the list, or {@code null} if this is the last entry.
      *
-     * @return the next entry or <code>null</code>.
+     * @return the next entry or {@code null}.
      */
     @Nullable T getNext();
 

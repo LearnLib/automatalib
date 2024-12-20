@@ -78,7 +78,7 @@ public interface SimpleTS<S, I> {
 
     /**
      * Retrieves the set of all states reachable by the given sequence of input symbols from an initial state. Calling
-     * this method is equivalent to <code>getSuccessors(getInitialStates(), input)</code>.
+     * this method is equivalent to {@code getSuccessors(getInitialStates(), input)}.
      *
      * @param input
      *         the sequence of input symbols.

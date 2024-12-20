@@ -27,7 +27,7 @@ public interface CapacityManagement {
      * @param minCapacity
      *         the minimal number of elements the storage should have room for.
      *
-     * @return <code>true</code> iff the internal storage had to be resized, <code>false</code> otherwise.
+     * @return {@code true} iff the internal storage had to be resized, {@code false} otherwise.
      */
     boolean ensureCapacity(int minCapacity);
 
@@ -35,12 +35,12 @@ public interface CapacityManagement {
      * Ensures that the internal storage has room for at least the provided number of <i>additional</i> elements.
      * <p>
      * Calling this method is equivalent to calling the above {@link #ensureCapacity(int)} with an argument of
-     * <code>size() + additionalCapacity</code>.
+     * {@code size() + additionalCapacity}.
      *
      * @param additionalCapacity
      *         the number of additional elements the storage should have room for.
      *
-     * @return <code>true</code> iff the internal storage had to be resized, <code>false</code> otherwise.
+     * @return {@code true} iff the internal storage had to be resized, {@code false} otherwise.
      */
     boolean ensureAdditionalCapacity(int additionalCapacity);
 

@@ -93,13 +93,13 @@ public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S
 
     /**
      * Removes a state from the automaton. All ingoing transitions to this state are redirected to the given replacement
-     * state. If a <code>null</code> replacement is given, then this method behaves like the above {@link
-     * #removeState(Object)}.
+     * state. If a {@code null} replacement is given, then this method behaves like the above
+     * {@link #removeState(Object)}.
      *
      * @param state
      *         the state to remove
      * @param replacement
-     *         the replacement state, or <code>null</code>
+     *         the replacement state, or {@code null}
      */
     void removeState(S state, @Nullable S replacement);
 }

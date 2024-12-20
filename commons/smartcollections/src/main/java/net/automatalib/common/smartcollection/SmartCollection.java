@@ -32,19 +32,19 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Efficiently operating on collections data structures is often hampered by the insufficient interface provided by the
  * standard Java collections.
  * <p>
- * For example, linked lists allow constant time removal if the element to be removed is known. However, using {@link
- * List#remove(int)} requires linear time in the provided parameter (and thus, in the worst case, linear time in the
- * size of the list). Removal in constant time is possible when iterating manually using the {@link Iterator#remove()}
- * method, but this is not only inconvenient, but also does not work if one wants to remove the elements later, because
- * {@link Iterator}s can't be cloned, and additionally are invalidated by other modifications of the underlying
- * collection during their existence.
+ * For example, linked lists allow constant time removal if the element to be removed is known. However, using
+ * {@link List#remove(int)} requires linear time in the provided parameter (and thus, in the worst case, linear time in
+ * the size of the list). Removal in constant time is possible when iterating manually using the
+ * {@link Iterator#remove()} method, but this is not only inconvenient, but also does not work if one wants to remove
+ * the elements later, because {@link Iterator}s can't be cloned, and additionally are invalidated by other
+ * modifications of the underlying collection during their existence.
  * <p>
  * This collection interface introduces a <i>reference</i> concept: References (represented by the marker interface
  * {@link ElementReference}) to the elements allow efficient (in terms of what the data structure itself supports)
  * operations on the elements, if the reference to the respective element is known. References can be acquired right at
  * the point when an element is added to the collection (using {@link #referencedAdd(Object)}), by explicitly searching
- * for an element (using {@link #find(Object)}) or during iteration (using the {@link #referenceIterator()} resp. {@link
- * #references()} method).
+ * for an element (using {@link #find(Object)}) or during iteration (using the {@link #referenceIterator()} resp.
+ * {@link #references()} method).
  * <p>
  * The validity of references is retained through all operations on the collection, except for those that cause removal
  * of the respective elements.
@@ -88,8 +88,8 @@ public interface SmartCollection<E> extends Collection<E> {
     void remove(ElementReference elem);
 
     /**
-     * This function is deprecated and should not be used, in favor of the removal by reference {@link
-     * #remove(ElementReference)}.
+     * This function is deprecated and should not be used, in favor of the removal by reference
+     * {@link #remove(ElementReference)}.
      *
      * @deprecated use {@link #remove(ElementReference)} instead
      */
@@ -108,8 +108,8 @@ public interface SmartCollection<E> extends Collection<E> {
     E choose();
 
     /**
-     * Retrieves the reference to an arbitrary element from the collection. If the collection is empty, a {@link
-     * NoSuchElementException} is thrown.
+     * Retrieves the reference to an arbitrary element from the collection. If the collection is empty, a
+     * {@link NoSuchElementException} is thrown.
      *
      * @return the reference to an arbitrary element in the collection
      */
@@ -124,15 +124,15 @@ public interface SmartCollection<E> extends Collection<E> {
 
     /**
      * This is a method provided for convenience, which allows iterating over the element references using a
-     * <i>foreach</i>-style <code>for</code>-loop.
+     * <i>foreach</i>-style {@code for}-loop.
      *
      * @return an {@link Iterable} with the above {@link #referenceIterator()} as its iterator.
      */
     Iterable<ElementReference> references();
 
     /**
-     * Adds all elements from a given iterable. Note that this may be inefficient, compared to adding a {@link
-     * Collection}, because the number of elements to be added is not known a priori.
+     * Adds all elements from a given iterable. Note that this may be inefficient, compared to adding a
+     * {@link Collection}, because the number of elements to be added is not known a priori.
      *
      * @param iterable
      *         the iterable of elements to add.
@@ -143,7 +143,7 @@ public interface SmartCollection<E> extends Collection<E> {
      * Adds all elements from the specified array.
      *
      * @param <T>
-     *         array element class, may be a subclass of <code>E</code>.
+     *         array element class, may be a subclass of {@code E}.
      * @param array
      *         the array of elements to be added.
      */
@@ -160,13 +160,13 @@ public interface SmartCollection<E> extends Collection<E> {
     void replace(ElementReference ref, E newElement);
 
     /**
-     * Retrieves the reference for a given element. If the element is not contained in the collection, <code>null</code>
-     * is returned.
+     * Retrieves the reference for a given element. If the element is not contained in the collection, {@code null} is
+     * returned.
      *
      * @param element
      *         the element to search for.
      *
-     * @return the reference to this element, or <code>null</code>.
+     * @return the reference to this element, or {@code null}.
      */
     @Nullable ElementReference find(@Nullable Object element);
 
@@ -183,8 +183,8 @@ public interface SmartCollection<E> extends Collection<E> {
     void quickClear();
 
     /**
-     * Thoroughly clears the collection, fixing all issues that may have been caused by a call of the above {@link
-     * #quickClear()}.
+     * Thoroughly clears the collection, fixing all issues that may have been caused by a call of the above
+     * {@link #quickClear()}.
      */
     void deepClear();
 }

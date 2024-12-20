@@ -41,14 +41,14 @@ public final class Mappings {
     }
 
     /**
-     * Retrieves the <code>null</code> mapping, which maps each domain value to <code>null</code>.
+     * Retrieves the {@code null} mapping, which maps each domain value to {@code null}.
      *
      * @param <D>
      *         domain type
      * @param <R>
      *         range type
      *
-     * @return the <code>null</code> mapping.
+     * @return the {@code null} mapping.
      */
     @SuppressWarnings("unchecked")
     public static <D, R> Mapping<D, R> nullMapping() {
@@ -69,8 +69,8 @@ public final class Mappings {
     }
 
     /**
-     * Returns a mapping that maps objects to their {@link String} representation, as obtained by {@link
-     * String#valueOf(Object)}.
+     * Returns a mapping that maps objects to their {@link String} representation, as obtained by
+     * {@link String#valueOf(Object)}.
      *
      * @param <D>
      *         domain type
@@ -98,8 +98,8 @@ public final class Mappings {
     }
 
     /**
-     * Retrieves the composition of two mappings, i.e., that mapping that results from applying the {@link
-     * Mapping#get(Object)} method consecutively.
+     * Retrieves the composition of two mappings, i.e., that mapping that results from applying the
+     * {@link Mapping#get(Object)} method consecutively.
      *
      * @param <D>
      *         domain type of the first (and resulting) mapping
@@ -184,8 +184,8 @@ public final class Mappings {
     }
 
     /**
-     * Safely retrieves a value from a mapping. If the mapping is <code>null</code> or returns a <code>null</code>
-     * value, the given fallback value is returned.
+     * Safely retrieves a value from a mapping. If the mapping is {@code null} or returns a {@code null} value, the
+     * given fallback value is returned.
      *
      * @param mapping
      *         the mapping

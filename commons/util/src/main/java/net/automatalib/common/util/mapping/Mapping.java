@@ -40,12 +40,12 @@ public interface Mapping<D, R> extends Function<D, R> {
     }
 
     /**
-     * Get the range object <code>elem</code> maps to.
+     * Get the range object {@code elem} maps to.
      *
      * @param elem
      *         object from the domain.
      *
-     * @return the object from the range corresponding to <code>elem</code>.
+     * @return the object from the range corresponding to {@code elem}.
      */
     R get(D elem);
 }

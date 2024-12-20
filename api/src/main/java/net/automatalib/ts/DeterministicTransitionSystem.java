@@ -57,7 +57,7 @@ public interface DeterministicTransitionSystem<S, I, T> extends TransitionSystem
      * @param input
      *         the input symbol.
      *
-     * @return the transition triggered by the given input symbol, or <code>null</code> if no transition is triggered.
+     * @return the transition triggered by the given input symbol, or {@code null} if no transition is triggered.
      *
      * @see TransitionSystem#getTransitions(Object, Object)
      */

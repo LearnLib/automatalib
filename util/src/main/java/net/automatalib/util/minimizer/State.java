@@ -146,7 +146,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
     /**
      * Retrieves the split point property of this state.
      *
-     * @return <code>true</code> iff this state is a split point, <code>false</code> otherwise.
+     * @return {@code true} iff this state is a split point, {@code false} otherwise.
      */
     public boolean isSplitPoint() {
         return splitPoint;
@@ -181,8 +181,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      * @param letter
      *         the letter to add.
      *
-     * @return <code>true</code> iff this was the first letter to be added to the signature, <code>false</code>
-     * otherwise.
+     * @return {@code true} iff this was the first letter to be added to the signature, {@code false} otherwise.
      */
     public boolean addToSignature(TransitionLabel<S, L> letter) {
         boolean first = signature.isEmpty();
@@ -192,12 +191,12 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
 
     /**
      * Retrieves the letter from the signature with the given index. If there is no such index (because the signature is
-     * shorter), <code>null</code> is returned.
+     * shorter), {@code null} is returned.
      *
      * @param index
      *         the signature index.
      *
-     * @return the respective letter of the signature, or <code>null</code>.
+     * @return the respective letter of the signature, or {@code null}.
      */
     public @Nullable TransitionLabel<S, L> getSignatureLetter(int index) {
         if (index < signature.size()) {
@@ -237,7 +236,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
     /**
      * Retrieves whether the block containing this state is a singleton, i.e., contains <i>only</i> this state.
      *
-     * @return <code>true</code> if the containing block is a singleton, <code>false</code> otherwise.
+     * @return {@code true} if the containing block is a singleton, {@code false} otherwise.
      */
     public boolean isSingletonBlock() {
         return block.size() == 1;

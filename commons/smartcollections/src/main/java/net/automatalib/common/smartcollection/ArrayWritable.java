@@ -37,7 +37,7 @@ public interface ArrayWritable<T> {
 
     /**
      * Writes the contents of this container to an array. The behavior of calling this method should be equivalent to
-     * <code>System.arraycopy(this.toArray(), offset, array, tgtOfs, num);</code>
+     * {@code System.arraycopy(this.toArray(), offset, array, tgtOfs, num);}.
      *
      * @param offset
      *         how many elements of <i>this</i> container to skip.

@@ -45,18 +45,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * A word is an ordered sequence of symbols. {@link Word}s are generally immutable, i.e., a single {@link Word} object
  * will never change (unless symbol objects are modified, which is however highly discouraged).
  * <p>
- * This class provides the following static methods for creating words in the most common scenarios: <ul> <li> {@link
- * #epsilon()} returns the empty word of length 0 <li> {@link #fromLetter(Object)} turns a single letter into a word of
- * length 1 <li> {@link #fromSymbols(Object...)} creates a word from an array of symbols <li> {@link
- * #fromArray(Object[], int, int)} creates a word from a subrange of a symbols array <li> {@link #fromList(List)}
+ * This class provides the following static methods for creating words in the most common scenarios: <ul> <li>
+ * {@link #epsilon()} returns the empty word of length 0 <li> {@link #fromLetter(Object)} turns a single letter into a
+ * word of length 1 <li> {@link #fromSymbols(Object...)} creates a word from an array of symbols <li>
+ * {@link #fromArray(Object[], int, int)} creates a word from a subrange of a symbols array <li> {@link #fromList(List)}
  * creates a word from a {@link List} of symbols </ul>
  * <p>
  * Modification operations like {@link #append(Object)} or {@link #concat(Word...)} create new objects, subsequently
  * invoking these operations on the respective objects returned is therefore highly inefficient. If words need to be
  * dynamically created, a {@link WordBuilder} should be used.
  * <p>
- * This is an abstract base class for word representations. Implementing classes only need to implement <ul> <li> {@link
- * #getSymbol(int)} <li> {@link #length()} </ul>
+ * This is an abstract base class for word representations. Implementing classes only need to implement <ul> <li>
+ * {@link #getSymbol(int)} <li> {@link #length()} </ul>
  * <p>
  * However, for the sake of efficiency it is highly encouraged to overwrite the other methods as well, providing
  * specialized realizations.
@@ -563,8 +563,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     /**
      * Concatenates this word with several other words and returns the result as a new word.
      * <p>
-     * Note that this method cannot be overridden. Implementing classes need to override the {@link
-     * #concatInternal(Word...)} method instead.
+     * Note that this method cannot be overridden. Implementing classes need to override the
+     * {@link #concatInternal(Word...)} method instead.
      *
      * @param words
      *         the words to concatenate with this word
@@ -663,8 +663,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     }
 
     /**
-     * Retrieves a prefix of the given length. If <code>length</code> is negative, then a prefix consisting of all but
-     * the last <code>-length</code> symbols is returned.
+     * Retrieves a prefix of the given length. If {@code length} is negative, then a prefix consisting of all but the
+     * last {@code -length} symbols is returned.
      *
      * @param prefixLen
      *         the length of the prefix (may be negative, see above).
@@ -730,8 +730,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     }
 
     /**
-     * Retrieves a suffix of the given length. If <code>length</code> is negative, then a suffix consisting of all but
-     * the first <code>-length</code> symbols is returned.
+     * Retrieves a suffix of the given length. If {@code length} is negative, then a suffix consisting of all but the
+     * first {@code -length} symbols is returned.
      *
      * @param suffixLen
      *         the length of the suffix (may be negative, see above).

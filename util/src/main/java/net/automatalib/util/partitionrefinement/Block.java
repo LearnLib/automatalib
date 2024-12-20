@@ -21,8 +21,8 @@ import java.util.NoSuchElementException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A block (i.e., partition class) that is maintained during the Paige/Tarjan partition refinement algorithm (see {@link
- * Hopcroft}).
+ * A block (i.e., partition class) that is maintained during the Paige/Tarjan partition refinement algorithm (see
+ * {@link Hopcroft}).
  * <p>
  * Like {@link Hopcroft}, this is a very low-level class that exposes a lot (almost all) of its fields directly. Care
  * should be taken that instances of this class are not returned (in any form) to the API user, but are hidden behind a
@@ -38,7 +38,7 @@ public class Block {
      * The current pointer, i.e., the delimiter between elements of this block which were found to belong to a potential
      * subclass of this block, and those that do not or have not been checked.
      * <p>
-     * This variable will be maintained such that either <code>ptr == -1</code>, or <code>{@link #low} &lt;= ptr &lt;=
+     * This variable will be maintained such that either {@code ptr == -1}, or <code>{@link #low} &lt;= ptr &lt;=
      * {@link #high}</code>.
      */
     public int ptr = -1;
@@ -95,16 +95,16 @@ public class Block {
     /**
      * Splits this block, if applicable. If this block cannot be split, {@code null} is returned.
      * <p>
-     * A new block (the split result) is created if both <code>{@link #ptr} &gt; {@link #low}</code> and <code>{@link
-     * #ptr} &lt; {@link #high}</code>. This new block will contain either the elements between {@link #low} (inclusive)
-     * and {@link #ptr} (exclusive), or between {@link #ptr} (inclusive) and {@link #high} (exclusive), depending on
-     * whichever range is smaller. This block will be updated to contain the remaining elements.
+     * A new block (the split result) is created if both <code>{@link #ptr} &gt; {@link #low}</code> and
+     * <code>{@link #ptr} &lt; {@link #high}</code>. This new block will contain either the elements between
+     * {@link #low} (inclusive) and {@link #ptr} (exclusive), or between {@link #ptr} (inclusive) and {@link #high}
+     * (exclusive), depending on whichever range is smaller. This block will be updated to contain the remaining
+     * elements.
      * <p>
      * When this method returns (regardless of whether a new block is created), the {@link #ptr} field will have been
      * reset to {@code -1}.
      * <p>
-     * Preconditions: this.ptr != -1.
-     * Post-conditions: this.ptr = -1.
+     * Preconditions: this.ptr != -1. Post-conditions: this.ptr = -1.
      *
      * @param newId
      *         the ID of the newly created block, if applicable
