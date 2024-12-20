@@ -24,7 +24,7 @@ import net.automatalib.serialization.InputModelSerializer;
 /**
  * This class provides methods to write automata in LTSmin's ETF format.
  *
- * @see <a href="http://ltsmin.utwente.nl/assets/man/etf.html">the ETF format</a>
+ * @see <a href="https://ltsmin.utwente.nl/assets/man/etf.html">the ETF format</a>
  */
 public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> implements InputModelSerializer<I, A> {
 

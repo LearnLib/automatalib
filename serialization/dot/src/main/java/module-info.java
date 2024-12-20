@@ -15,7 +15,8 @@
  */
 
 /**
- * This module contains (de-) serializers for the DOT format.
+ * This module contains (de-) serializers for the DOT format. For further information about the DOT format, see <a
+ * href="https://graphviz.org/doc/info/lang.html">https://graphviz.org/doc/info/lang.html</a>.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

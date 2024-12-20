@@ -15,7 +15,8 @@
  */
 
 /**
- * This module contains (de-) serializers for the BA format.
+ * This module contains (de-) serializers for the BA format. For further information about the BA format, see <a
+ * href="https://languageinclusion.org/doku.php?id=tools#the_ba_format">https://languageinclusion.org/doku.php?id=tools#the_ba_format</a>.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

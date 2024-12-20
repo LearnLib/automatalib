@@ -15,7 +15,7 @@
  */
 
 /**
- * This module contains (de-) serializers for the Textual Automaton Format (taf).
+ * This module contains (de-) serializers for the Textual Automaton Format (TAF). TAF is a custom bitstream format.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

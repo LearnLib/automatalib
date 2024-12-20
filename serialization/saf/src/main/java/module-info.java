@@ -15,7 +15,8 @@
  */
 
 /**
- * This module contains (de-) serializers for the Simple Automaton Format (saf).
+ * This module contains (de-) serializers for the Simple Automaton Format (SAF). SAF is a custom, human-readable text
+ * format.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

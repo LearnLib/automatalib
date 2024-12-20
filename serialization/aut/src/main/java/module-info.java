@@ -15,7 +15,8 @@
  */
 
 /**
- * This module contains (de-) serializers for the AUT format.
+ * This module contains (de-) serializers for the AUT format. For further information about the AUT format, see <a
+ * href="http://cadp.inria.fr/man/aut.html">http://cadp.inria.fr/man/aut.html</a>.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

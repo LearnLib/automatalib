@@ -15,7 +15,9 @@
  */
 
 /**
- * This module contains deserializers for LTSmin's Finite State Machine (fsm) format.
+ * This module contains deserializers for LTSmin's Finite State Machine (FSM) format. For further information about the
+ * FSM format, see <a
+ * href="https://www.win.tue.nl/vis1/home/apretori/data/fsm.html">https://www.win.tue.nl/vis1/home/apretori/data/fsm.html</a>.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

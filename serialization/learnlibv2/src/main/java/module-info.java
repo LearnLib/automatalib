@@ -15,7 +15,8 @@
  */
 
 /**
- * This module contains (de-) serializers for the legacy LearnLibV2 format.
+ * This module contains (de-) serializers for the legacy LearnLibV2 format. This is a custom text format used by
+ * LearnLib.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

@@ -15,7 +15,9 @@
  */
 
 /**
- * This module contains serializers for LTSmin's Enumerated Table Format (etf).
+ * This module contains serializers for LTSmin's Enumerated Table Format (ETF). For further information about the ETF
+ * format, see <a
+ * href="https://ltsmin.utwente.nl/assets/man/etf.html">https://ltsmin.utwente.nl/assets/man/etf.html</a>.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>
