@@ -169,7 +169,7 @@ public class BDDTransformerTest {
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, dg);
         BDDTransformer<String, String> identity = new BDDTransformer<>(bddManager, dg.getNumVariables());
         BDDTransformer<String, String> composition = transformer.compose(identity);
-        Assert.assertEquals(5, composition.getNumberOfVars());
+        Assert.assertEquals(composition.getNumberOfVars(), 5);
         Assert.assertEquals(transformer, composition);
 
         BDDTransformer<String, String> inverseComposition = identity.compose(transformer);

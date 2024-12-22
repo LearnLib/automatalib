@@ -59,6 +59,6 @@ public class LibLoaderTest {
 
     private void checkGreeter() {
         final NativeGreeter nativeGreeter = new NativeGreeter();
-        Assert.assertEquals("Hello John", nativeGreeter.greet("John"));
+        Assert.assertEquals(nativeGreeter.greet("John"), "Hello John");
     }
 }

@@ -43,10 +43,6 @@ abstract class AbstractGraphCopy<N1, E1, N2, E2, NP2, EP2, G1 extends Indefinite
         this.epMapping = epMapping;
     }
 
-    protected E2 copyEdge(@KeyFor("nodeMapping") N2 src2, E1 edge) {
-        return copyEdge(src2, edge, inGraph.getTarget(edge));
-    }
-
     protected E2 copyEdge(@KeyFor("nodeMapping") N2 src2, E1 edge, N1 tgt1) {
         EP2 prop = epMapping.get(edge);
 

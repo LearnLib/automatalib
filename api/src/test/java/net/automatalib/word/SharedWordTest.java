@@ -30,7 +30,7 @@ public class SharedWordTest extends AbstractNonemptyWordTest {
 
     @Test
     public void testLength() {
-        Assert.assertEquals(LENGTH, testWord.length());
+        Assert.assertEquals(testWord.length(), LENGTH);
     }
 
     @Override

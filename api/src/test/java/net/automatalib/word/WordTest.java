@@ -50,11 +50,11 @@ public class WordTest {
         Assert.assertEquals(Word.fromArray(referenceAsArray, 0, 0), Word.epsilon());
 
         final Word<Character> wordFromArray = Word.fromArray(referenceAsArray, 1, 2);
-        Assert.assertEquals(wordFromArray, reference.subWord(1));
+        Assert.assertEquals(reference.subWord(1), wordFromArray);
 
         // check that mutating the source does not alter the word
         referenceAsArray[1] = 'x';
-        Assert.assertEquals(wordFromArray, reference.subWord(1));
+        Assert.assertEquals(reference.subWord(1), wordFromArray);
     }
 
     @Test
@@ -64,24 +64,24 @@ public class WordTest {
 
         referenceAsArray = new Character[3];
         reference.writeToArray(0, referenceAsArray, 0, 3);
-        Assert.assertEquals('a', referenceAsArray[0].charValue());
-        Assert.assertEquals('b', referenceAsArray[1].charValue());
-        Assert.assertEquals('c', referenceAsArray[2].charValue());
+        Assert.assertEquals(referenceAsArray[0].charValue(), 'a');
+        Assert.assertEquals(referenceAsArray[1].charValue(), 'b');
+        Assert.assertEquals(referenceAsArray[2].charValue(), 'c');
 
         referenceAsArray = new Character[1];
         reference.writeToArray(2, referenceAsArray, 0, 1);
-        Assert.assertEquals('c', referenceAsArray[0].charValue());
+        Assert.assertEquals(referenceAsArray[0].charValue(), 'c');
 
         referenceAsArray = new Character[3];
         reference.writeToArray(1, referenceAsArray, 2, 1);
         Assert.assertNull(referenceAsArray[0]);
         Assert.assertNull(referenceAsArray[1]);
-        Assert.assertEquals('b', referenceAsArray[2].charValue());
+        Assert.assertEquals(referenceAsArray[2].charValue(), 'b');
 
         final int[] wordAsInt = reference.toIntArray(x -> x - 'a');
-        Assert.assertEquals(0, wordAsInt[0]);
-        Assert.assertEquals(1, wordAsInt[1]);
-        Assert.assertEquals(2, wordAsInt[2]);
+        Assert.assertEquals(wordAsInt[0], 0);
+        Assert.assertEquals(wordAsInt[1], 1);
+        Assert.assertEquals(wordAsInt[2], 2);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class WordTest {
 
         final Word<String> transform = source.transform(c -> new String(new char[] {c, c}));
 
-        Assert.assertEquals(target, transform);
+        Assert.assertEquals(transform, target);
     }
 
     @Test
@@ -101,10 +101,10 @@ public class WordTest {
         final Word<Character> bc = Word.fromSymbols('b', 'c');
         final Word<Character> abc = Word.fromString("abc");
 
-        Assert.assertEquals(c, abc.subWord(2));
-        Assert.assertEquals(bc, abc.subWord(1));
-        Assert.assertEquals(abc, abc.subWord(0));
-        Assert.assertEquals(b, abc.subWord(1, 2));
+        Assert.assertEquals(abc.subWord(2), c);
+        Assert.assertEquals(abc.subWord(1), bc);
+        Assert.assertEquals(abc.subWord(0), abc);
+        Assert.assertEquals(abc.subWord(1, 2), b);
     }
 
     @Test

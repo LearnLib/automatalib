@@ -31,7 +31,6 @@
 open module net.automatalib.core {
 
     requires net.automatalib.api;
-    requires net.automatalib.common.smartcollection;
     requires net.automatalib.common.util;
 
     // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented

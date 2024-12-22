@@ -70,7 +70,7 @@ public abstract class AbstractIncrementalDFABuilderTest {
 
     @Test(dependsOnMethods = "testConfluenceBug")
     public void testLookup() {
-        Assert.assertEquals(Acceptance.DONT_KNOW, incDfa.lookup(W_1));
+        Assert.assertEquals(incDfa.lookup(W_1), Acceptance.DONT_KNOW);
         Assert.assertEquals(incDfa.lookup(W_2), Acceptance.DONT_KNOW);
         Assert.assertEquals(incDfa.lookup(W_3), Acceptance.DONT_KNOW);
 

@@ -68,7 +68,7 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
     @Override
     // Overridden for performance reasons (to prevent autoboxing of default implementation)
     public @Nullable Integer getSuccessor(Integer state, Iterable<? extends I> input) {
-        return toState(getIntSuccessor(state.intValue(), input));
+        return toState(getIntSuccessor(state, input));
     }
 
     @Override

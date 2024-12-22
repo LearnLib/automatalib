@@ -92,7 +92,7 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
         } finally {
             // check if we must keep the FSM
             if (!isKeepFiles() && !fsm.delete()) {
-                LOGGER.warn("Could not delete file: " + fsm.getAbsolutePath());
+                LOGGER.warn("Could not delete file: '{}'", fsm.getAbsolutePath());
             }
         }
     }

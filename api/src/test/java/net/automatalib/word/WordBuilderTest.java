@@ -27,40 +27,40 @@ public class WordBuilderTest {
         WordBuilder<Character> wb;
 
         wb = new WordBuilder<>();
-        Assert.assertEquals(0, wb.size());
-        Assert.assertEquals(Word.epsilon(), wb.toWord());
+        Assert.assertEquals(wb.size(), 0);
+        Assert.assertEquals(wb.toWord(), Word.epsilon());
 
         wb = new WordBuilder<>(-1);
-        Assert.assertEquals(0, wb.size());
-        Assert.assertEquals(Word.epsilon(), wb.toWord());
+        Assert.assertEquals(wb.size(), 0);
+        Assert.assertEquals(wb.toWord(), Word.epsilon());
 
         final Word<Character> aaaaa = Word.fromString("aaaaa");
 
         wb = new WordBuilder<>('a', 5);
-        Assert.assertEquals(5, wb.size());
-        Assert.assertEquals(aaaaa, wb.toWord());
+        Assert.assertEquals(wb.size(), 5);
+        Assert.assertEquals(wb.toWord(), aaaaa);
 
         wb = new WordBuilder<>(null, 5);
-        Assert.assertEquals(5, wb.size());
-        Assert.assertEquals(Word.fromSymbols(null, null, null, null, null), wb.toWord());
+        Assert.assertEquals(wb.size(), 5);
+        Assert.assertEquals(wb.toWord(), Word.fromSymbols(null, null, null, null, null));
 
         wb = new WordBuilder<>(10, 'a', 5);
-        Assert.assertEquals(5, wb.size());
-        Assert.assertEquals(aaaaa, wb.toWord());
+        Assert.assertEquals(wb.size(), 5);
+        Assert.assertEquals(wb.toWord(), aaaaa);
 
         wb = new WordBuilder<>(-1, 'a', 5);
-        Assert.assertEquals(5, wb.size());
-        Assert.assertEquals(aaaaa, wb.toWord());
+        Assert.assertEquals(wb.size(), 5);
+        Assert.assertEquals(wb.toWord(), aaaaa);
 
         final Word<Character> abc = Word.fromString("abc");
 
         wb = new WordBuilder<>(abc);
-        Assert.assertEquals(3, wb.size());
-        Assert.assertEquals(abc, wb.toWord());
+        Assert.assertEquals(wb.size(), 3);
+        Assert.assertEquals(wb.toWord(), abc);
 
         wb = new WordBuilder<>(-1, abc);
-        Assert.assertEquals(3, wb.size());
-        Assert.assertEquals(abc, wb.toWord());
+        Assert.assertEquals(wb.size(), 3);
+        Assert.assertEquals(wb.toWord(), abc);
     }
 
     @Test
@@ -71,50 +71,50 @@ public class WordBuilderTest {
         final Word<Character> abcabcabc = abc.concat(abc, abc);
 
         wb.append('a');
-        Assert.assertEquals(1, wb.size());
-        Assert.assertEquals(Word.fromSymbols('a'), wb.toWord());
+        Assert.assertEquals(wb.size(), 1);
+        Assert.assertEquals(wb.toWord(), Word.fromSymbols('a'));
 
         wb.clear();
         wb.append('a', 'b', 'c');
-        Assert.assertEquals(3, wb.size());
-        Assert.assertEquals(abc, wb.toWord());
+        Assert.assertEquals(wb.size(), 3);
+        Assert.assertEquals(wb.toWord(), abc);
 
         wb.clear();
         wb.append(abc);
-        Assert.assertEquals(3, wb.size());
-        Assert.assertEquals(abc, wb.toWord());
+        Assert.assertEquals(wb.size(), 3);
+        Assert.assertEquals(wb.toWord(), abc);
 
         wb.clear();
         wb.append(Arrays.asList('a', 'b', 'c'));
-        Assert.assertEquals(3, wb.size());
-        Assert.assertEquals(abc, wb.toWord());
+        Assert.assertEquals(wb.size(), 3);
+        Assert.assertEquals(wb.toWord(), abc);
 
         wb.clear();
         wb.append(abc, abc, abc);
-        Assert.assertEquals(9, wb.size());
-        Assert.assertEquals(abcabcabc, wb.toWord());
+        Assert.assertEquals(wb.size(), 9);
+        Assert.assertEquals(wb.toWord(), abcabcabc);
 
         wb.clear();
         wb.repeatAppend(3, 'a');
-        Assert.assertEquals(3, wb.size());
-        Assert.assertEquals(aaa, wb.toWord());
+        Assert.assertEquals(wb.size(), 3);
+        Assert.assertEquals(wb.toWord(), aaa);
 
         wb.clear();
         wb.repeatAppend(3, abc);
-        Assert.assertEquals(9, wb.size());
-        Assert.assertEquals(abcabcabc, wb.toWord());
+        Assert.assertEquals(wb.size(), 9);
+        Assert.assertEquals(wb.toWord(), abcabcabc);
 
 
         final int bigChunkSize = 27;
         wb.clear();
         wb.repeatAppend(bigChunkSize, abc);
-        Assert.assertEquals(bigChunkSize * 3, wb.size());
+        Assert.assertEquals(wb.size(), bigChunkSize * 3);
 
         Word<Character> buffer = Word.epsilon();
         for (int i = 0; i < bigChunkSize; i++) {
             buffer = buffer.concat(abc);
         }
-        Assert.assertEquals(buffer, wb.toWord());
+        Assert.assertEquals(wb.toWord(), buffer);
     }
 
     @Test
@@ -124,7 +124,7 @@ public class WordBuilderTest {
         final Word<Character> cba = Word.fromString("cba");
 
         wb.append(abc).reverse();
-        Assert.assertEquals(cba, wb.toWord());
+        Assert.assertEquals(wb.toWord(), cba);
     }
 
     @Test
@@ -133,7 +133,7 @@ public class WordBuilderTest {
         final Word<Character> abc = Word.fromString("abc");
 
         wb.repeatAppend(3, abc);
-        Assert.assertEquals(abc, wb.toWord(3, 6));
+        Assert.assertEquals(wb.toWord(3, 6), abc);
 
         Assert.assertThrows(IndexOutOfBoundsException.class, () -> wb.toWord(-1, wb.size()));
         Assert.assertThrows(IndexOutOfBoundsException.class, () -> wb.toWord(0, wb.size() + 1));
@@ -147,11 +147,11 @@ public class WordBuilderTest {
         final Word<Character> abcabcabc = abcabc.concat(abc);
 
         wb.repeatAppend(3, abc).truncate(12);
-        Assert.assertEquals(abcabcabc, wb.toWord());
+        Assert.assertEquals(wb.toWord(), abcabcabc);
 
         wb.clear();
         wb.repeatAppend(3, abc).truncate(6);
-        Assert.assertEquals(abcabc, wb.toWord());
+        Assert.assertEquals(wb.toWord(), abcabc);
     }
 
 }

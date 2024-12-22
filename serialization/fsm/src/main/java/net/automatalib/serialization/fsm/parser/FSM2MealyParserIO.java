@@ -50,7 +50,7 @@ public final class FSM2MealyParserIO<I, O, A extends MutableMealyMachine<Integer
      *         A collection containing the inputs which should constitute the input alphabet of the parsed automaton.
      *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
      * @param inputParser
-     *         the input parser (see {@link #inputParser}).
+     *         the input parser.
      * @param outputParser
      *         the output parser (similar to {@code inputParser}).
      */

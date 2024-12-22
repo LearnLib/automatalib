@@ -82,7 +82,7 @@ public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA
         } finally {
             // check if we must keep the FSM
             if (!isKeepFiles() && !fsm.delete()) {
-                LOGGER.warn("Could not delete file: " + fsm.getAbsolutePath());
+                LOGGER.warn("Could not delete file: '{}'", fsm.getAbsolutePath());
             }
         }
     }

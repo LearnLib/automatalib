@@ -44,11 +44,11 @@ public class NNFVisitorTest {
 
         FormulaNode<String, String> trueNode = M3CParser.parse("! true");
         FormulaNode<String, String> nnfTrueNode = nnfVisitor.transformToNNF(trueNode);
-        Assert.assertEquals(new FalseNode<>(), nnfTrueNode);
+        Assert.assertEquals(nnfTrueNode, new FalseNode<>());
 
         FormulaNode<String, String> falseNode = M3CParser.parse("! false");
         FormulaNode<String, String> nnfFalseNode = nnfVisitor.transformToNNF(falseNode);
-        Assert.assertEquals(new TrueNode<>(), nnfFalseNode);
+        Assert.assertEquals(nnfFalseNode, new TrueNode<>());
     }
 
     @Test

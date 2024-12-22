@@ -16,7 +16,6 @@
 package net.automatalib.ts.modal;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
@@ -46,16 +45,6 @@ import net.automatalib.visualization.VisualizationHelper;
  */
 public interface ModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>
         extends UniversalFiniteAlphabetAutomaton<S, I, T, Void, TP> {
-
-    @Override
-    default Iterator<S> iterator() {
-        return UniversalFiniteAlphabetAutomaton.super.iterator();
-    }
-
-    @Override
-    default int size() {
-        return UniversalFiniteAlphabetAutomaton.super.size();
-    }
 
     @Override
     default UniversalGraph<S, TransitionEdge<I, T>, Void, Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {

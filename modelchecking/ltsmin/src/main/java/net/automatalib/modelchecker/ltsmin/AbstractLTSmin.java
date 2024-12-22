@@ -169,7 +169,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
                 automaton2ETF(hypothesis, inputs, etf);
             } catch (ModelCheckingException mce) {
                 if (!keepFiles && !etf.delete()) {
-                    LOGGER.warn("Could not delete file: " + etf.getAbsolutePath());
+                    logFileWarning(etf);
                 }
                 throw mce;
             }
@@ -188,7 +188,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
                 w.write(formula);
             } catch (IOException ioe) {
                 if (!keepFiles && !ltlFile.delete()) {
-                    LOGGER.warn("Could not delete file: " + ltlFile.getAbsolutePath());
+                    logFileWarning(ltlFile);
                 }
                 throw ioe;
             }
@@ -203,7 +203,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
             gcf = File.createTempFile("etf2gcf", ".gcf");
         } catch (IOException ioe) {
             if (!keepFiles && !etf.delete()) {
-                LOGGER.warn("Could not delete file: " + etf.getAbsolutePath());
+                logFileWarning(etf);
             }
             throw new ModelCheckingException(ioe);
         }
@@ -276,24 +276,28 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
         } finally {
             if (!keepFiles) {
                 if (!etf.delete()) {
-                    LOGGER.warn("Could not delete file: " + etf.getAbsolutePath());
+                    logFileWarning(etf);
                 }
                 if (!ltlFile.delete()) {
-                    LOGGER.warn("Could not delete file: " + ltlFile.getAbsolutePath());
+                    logFileWarning(ltlFile);
                 }
                 if (!gcf.delete()) {
-                    LOGGER.warn("Could not delete file: " + gcf.getAbsolutePath());
+                    logFileWarning(gcf);
                 }
             }
         }
     }
 
-    static int runCommandLine(List<String> commandLine) {
+    private static int runCommandLine(List<String> commandLine) {
         try {
             LOGGER.debug("Invoking LTSmin binary as: {}", String.join(" ", commandLine));
             return ProcessUtil.invokeProcess(commandLine, LOGGER::debug);
         } catch (IOException | InterruptedException e) {
             throw new ModelCheckingException(e);
         }
+    }
+
+    private static void logFileWarning(File file) {
+        LOGGER.warn("Could not delete file: '{}'", file.getAbsolutePath());
     }
 }

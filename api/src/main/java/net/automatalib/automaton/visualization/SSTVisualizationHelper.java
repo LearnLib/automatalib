@@ -42,8 +42,7 @@ public class SSTVisualizationHelper<S, I, T, O>
     public boolean getNodeProperties(S node, Map<String, String> properties) {
         super.getNodeProperties(node, properties);
 
-        final String oldLabel = properties.get(NodeAttrs.LABEL);
-        properties.put(NodeAttrs.LABEL, oldLabel + " / " + automaton.getStateProperty(node));
+        properties.compute(NodeAttrs.LABEL, (k, oldLabel) -> oldLabel + " / " + automaton.getStateProperty(node));
 
         return true;
     }

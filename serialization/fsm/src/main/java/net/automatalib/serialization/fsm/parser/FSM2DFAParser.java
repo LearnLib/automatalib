@@ -97,7 +97,7 @@ public final class FSM2DFAParser<I, A extends MutableDFA<Integer, I>> extends Ab
      *         A collection containing the inputs which should constitute the input alphabet of the parsed automaton.
      *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
      * @param inputParser
-     *         the input parser (see {@link AbstractFSMParser#inputParser}).
+     *         the input parser.
      * @param acceptingDataVariableName
      *         the variable name for acceptance (see {@link #acceptingDataVariableName})
      * @param acceptingDataValue

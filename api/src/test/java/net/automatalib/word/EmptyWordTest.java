@@ -27,7 +27,7 @@ public class EmptyWordTest extends AbstractWordTest {
 
     @Test
     public void testLength() {
-        Assert.assertEquals(0, testWord.length());
+        Assert.assertEquals(testWord.length(), 0);
     }
 
     @Override

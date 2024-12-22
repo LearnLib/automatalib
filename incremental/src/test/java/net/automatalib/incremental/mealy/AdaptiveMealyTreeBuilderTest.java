@@ -137,13 +137,13 @@ public class AdaptiveMealyTreeBuilderTest {
         for (Pair<Word<Character>, Word<Character>> word : words) {
             adaptiveMealy.insert(word.getFirst(), word.getSecond());
         }
-        Assert.assertEquals(W_1, adaptiveMealy.getOldestInput());
+        Assert.assertEquals(adaptiveMealy.getOldestInput(), W_1);
         adaptiveMealy.insert(W_1, W_1_O);
-        Assert.assertEquals(W_2, adaptiveMealy.getOldestInput());
+        Assert.assertEquals(adaptiveMealy.getOldestInput(), W_2);
         adaptiveMealy.insert(W_2, W_2_O);
-        Assert.assertEquals(W_3, adaptiveMealy.getOldestInput());
+        Assert.assertEquals(adaptiveMealy.getOldestInput(), W_3);
         adaptiveMealy.insert(W_3, W_3_O);
-        Assert.assertEquals(W_1, adaptiveMealy.getOldestInput());
+        Assert.assertEquals(adaptiveMealy.getOldestInput(), W_1);
     }
 
     @Test(dependsOnMethods = "testLookup")

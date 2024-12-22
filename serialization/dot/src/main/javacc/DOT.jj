@@ -394,7 +394,7 @@ private List<String> subgraph():
 private void compass_pt():
 {}
 {
-	("n" | "ne" | "e" | "se" | "s" | "sw" | "w" | "nw" | "c" | "_")
+	"n" | "ne" | "e" | "se" | "s" | "sw" | "w" | "nw" | "c" | "_"
 }
 
 

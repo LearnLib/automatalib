@@ -91,7 +91,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
 
     @Override
     public void setTransition(Integer state, I input, @Nullable T transition) {
-        setTransition(state.intValue(), getSymbolIndex(input), transition);
+        setTransition(state, getSymbolIndex(input), transition);
     }
 
     @Override

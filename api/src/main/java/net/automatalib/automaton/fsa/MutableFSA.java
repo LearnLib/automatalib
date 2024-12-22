@@ -59,7 +59,7 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
 
     @Override
     default void setStateProperty(S state, Boolean property) {
-        setAccepting(state, property.booleanValue());
+        setAccepting(state, property);
     }
 
     @Override

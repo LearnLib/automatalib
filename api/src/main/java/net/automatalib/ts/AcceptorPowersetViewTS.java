@@ -29,10 +29,4 @@ import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
  *         (original) state type
  */
 public interface AcceptorPowersetViewTS<S, I, OS>
-        extends PowersetViewTS<S, I, S, OS, OS>, DeterministicAcceptorTS<S, I> {
-
-    @Override
-    default AcceptorPowersetViewTS<?, I, S> powersetView() {
-        return DeterministicAcceptorTS.super.powersetView();
-    }
-}
+        extends PowersetViewTS<S, I, S, OS, OS>, DeterministicAcceptorTS<S, I> {}

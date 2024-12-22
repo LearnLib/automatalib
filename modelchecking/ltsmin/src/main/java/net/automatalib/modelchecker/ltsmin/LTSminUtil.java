@@ -179,7 +179,7 @@ public final class LTSminUtil {
             final int exitValue = ProcessUtil.invokeProcess(commandLine, stringWriter::append);
 
             if (exitValue != VERSION_EXIT) {
-                LOGGER.debug(String.format("Command '%s --version' did not exit with %d", bin, VERSION_EXIT));
+                LOGGER.debug("Command '{} --version' did not exit with {}", bin, VERSION_EXIT);
                 return null;
             } else {
                 return LTSminVersion.parse(stringWriter.toString());

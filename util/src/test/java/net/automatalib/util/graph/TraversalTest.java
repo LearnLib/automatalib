@@ -150,7 +150,7 @@ public class TraversalTest {
 
         final List<Word<Integer>> accessSequences = collectPathInputs(paths);
 
-        Assert.assertEquals(1, accessSequences.size());
+        Assert.assertEquals(accessSequences.size(), 1);
         accessSequences.forEach(as -> Assert.assertEquals(Word.epsilon(), as));
     }
 

@@ -73,6 +73,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
      * @param other
      *         the list to append,
      */
+    @SuppressWarnings("unchecked")
     public void concat(AbstractLinkedList<? extends E, ? extends T> other) {
         if (other.isEmpty()) {
             return;

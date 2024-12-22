@@ -139,7 +139,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
         } finally {
             // check if we must keep the FSM
             if (!isKeepFiles() && !fsm.delete()) {
-                LOGGER.warn("Could not delete file: " + fsm.getAbsolutePath());
+                LOGGER.warn("Could not delete file: '{}'", fsm.getAbsolutePath());
             }
         }
     }

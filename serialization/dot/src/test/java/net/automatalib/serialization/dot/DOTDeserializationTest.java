@@ -84,8 +84,8 @@ public class DOTDeserializationTest {
                                                     .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.NFA2_RESOURCE)).
                 model;
 
-        Assert.assertEquals(3, parsed.size());
-        Assert.assertEquals(3, parsed.getInitialStates().size());
+        Assert.assertEquals(parsed.size(), 3);
+        Assert.assertEquals(parsed.getInitialStates().size(), 3);
         Assert.assertFalse(parsed.accepts(Word.fromSymbols("a", "a", "a")));
         Assert.assertFalse(parsed.accepts(Word.fromSymbols("b", "b")));
         Assert.assertFalse(parsed.accepts(Word.fromSymbols("c")));

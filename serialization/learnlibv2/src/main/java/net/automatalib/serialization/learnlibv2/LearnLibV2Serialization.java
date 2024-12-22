@@ -15,7 +15,6 @@
  */
 package net.automatalib.serialization.learnlibv2;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -50,12 +49,12 @@ public class LearnLibV2Serialization<I>
     }
 
     @Override
-    public InputModelData<Integer, DFA<Integer, Integer>> readModel(InputStream is) throws IOException {
+    public InputModelData<Integer, DFA<Integer, Integer>> readModel(InputStream is) {
         final CompactDFA<Integer> automaton = readGenericDFA(is);
         return new InputModelData<>(automaton, automaton.getInputAlphabet());
     }
 
-    public CompactDFA<Integer> readGenericDFA(InputStream is) throws IOException {
+    public CompactDFA<Integer> readGenericDFA(InputStream is) {
         try (Scanner sc = new Scanner(IOUtil.asNonClosingUTF8Reader(is))) {
 
             int numStates = sc.nextInt();

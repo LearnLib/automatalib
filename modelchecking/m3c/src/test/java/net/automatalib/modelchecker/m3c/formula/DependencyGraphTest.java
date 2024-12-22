@@ -33,13 +33,13 @@ public class DependencyGraphTest {
         DependencyGraph<String, String> dg = new DependencyGraph<>(ast);
 
         /* Assert that number of variables are correct */
-        Assert.assertEquals(5, dg.getFormulaNodes().size());
-        Assert.assertEquals(dg.getFormulaNodes().size(), dg.getNumVariables());
+        Assert.assertEquals(dg.getFormulaNodes().size(), 5);
+        Assert.assertEquals(dg.getNumVariables(), 5);
         Assert.assertTrue(checkVarNumbering(dg.getFormulaNodes()));
 
         /* Assert that blocks are created correctly*/
-        Assert.assertEquals(1, dg.getBlocks().size());
-        Assert.assertEquals(5, dg.getBlocks().get(0).getNodes().size());
+        Assert.assertEquals(dg.getBlocks().size(), 1);
+        Assert.assertEquals(dg.getBlocks().get(0).getNodes().size(), 5);
         Assert.assertTrue(isMonotonicallyDecreasing(dg.getBlocks().get(0).getNodes()));
 
     }

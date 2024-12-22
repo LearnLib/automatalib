@@ -68,16 +68,6 @@ public abstract class AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP
         return s2;
     }
 
-    protected T2 copyTransition(S2 src2, I2 input2, T1 trans1, S1 succ1) {
-        TP2 prop = tpMapping.apply(trans1);
-
-        S2 succ2 = stateMapping.get(succ1);
-
-        T2 trans2 = out.createTransition(succ2, prop);
-        out.addTransition(src2, input2, trans2);
-        return trans2;
-    }
-
     protected void copyTransitions(S2 src2, I2 input2, Iterator<? extends T1> transitions1It) {
         List<T2> transitions2 = new ArrayList<>();
 
