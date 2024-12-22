@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib;
+package net.automatalib.common.setting;
 
 import java.util.Properties;
+import java.util.ServiceLoader;
 
 import net.automatalib.common.util.setting.SettingsSource;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -26,7 +27,7 @@ public final class AutomataLibSettings {
     private final Properties properties;
 
     private AutomataLibSettings() {
-        properties = SettingsSource.readSettings(SettingsSource.class);
+        properties = SettingsSource.readSettings(ServiceLoader.load(AutomataLibSettingsSource.class));
     }
 
     public static AutomataLibSettings getInstance() {

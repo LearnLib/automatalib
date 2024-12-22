@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package net.automatalib.common.setting;
 
-/**
- * The main <a href="http://automatalib.net/">AutomataLib</a> package. All functionality provided with AutomataLib
- * resides in subpackages of this package.
- * <p>
- * This package contains classes for accessing global AutomataLib settings, as defined in, e.g., the {@code
- * automatalib.properties} file.
- *
- * @see net.automatalib.AutomataLibSettings
- */
-package net.automatalib;
+import net.automatalib.common.util.setting.LocalFileSource;
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(AutomataLibSettingsSource.class)
+public class AutomataLibLocalPropertiesSource extends LocalFileSource implements AutomataLibSettingsSource {
+
+    public AutomataLibLocalPropertiesSource() {
+        super("./automatalib.properties");
+    }
+}

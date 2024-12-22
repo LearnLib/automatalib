@@ -19,20 +19,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.AutomataLibSettingsTest;
 import org.testng.Assert;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 /**
  * Tests for static utility methods.
  */
 public class WordTest {
-
-    @BeforeSuite
-    public void setUp() {
-        AutomataLibSettingsTest.overrideEmptyWordProperty();
-    }
 
     @Test
     public void fromTest() {
@@ -147,8 +140,9 @@ public class WordTest {
         final Word<Character> empty = Word.epsilon();
         final Word<Character> abc = Word.fromString("abc");
 
-        // See configuration in AutomataLibSettingsTest & automatalib.properties
-        Assert.assertEquals(empty.toString(), "OVERRIDDEN");
-        Assert.assertEquals(abc.toString(), "delim_leftsymbol_delim_leftasymbol_delim_rightsymbol_sepsymbol_delim_leftbsymbol_delim_rightsymbol_sepsymbol_delim_leftcsymbol_delim_rightdelim_right");
+        // See configuration in automatalib.properties
+        Assert.assertEquals(empty.toString(), "test_empty");
+        Assert.assertEquals(abc.toString(),
+                            "test_dlefttest_sleftatest_srighttest_septest_sleftbtest_srighttest_septest_sleftctest_srighttest_dright");
     }
 }

@@ -26,8 +26,7 @@ public abstract class AbstractSystemPropertiesSource implements SettingsSource {
 
     @Override
     public int getPriority() {
-        // typically these are specified via command line, so they should override all
-        // other properties
+        // typically these are specified via command line, so they should override all other properties
         return Integer.MAX_VALUE;
     }
 }

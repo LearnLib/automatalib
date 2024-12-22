@@ -18,7 +18,7 @@ package net.automatalib.visualization;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.AutomataLibProperty;
+import net.automatalib.common.setting.AutomataLibProperty;
 import net.automatalib.graph.Graph;
 
 public interface VisualizationProvider {

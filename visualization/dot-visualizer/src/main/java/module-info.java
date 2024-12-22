@@ -36,6 +36,7 @@ open module net.automatalib.visualization.dot {
     requires java.desktop;
 
     requires net.automatalib.api;
+    requires net.automatalib.common.setting;
     requires net.automatalib.common.util;
     requires net.automatalib.serialization.dot;
     requires org.slf4j;

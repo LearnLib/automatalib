@@ -36,6 +36,7 @@ limitations under the License.
     </description>
 
     <modules>
+        <module>settings</module>
         <module>smartcollections</module>
         <module>util</module>
     </modules>

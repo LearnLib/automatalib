@@ -22,16 +22,42 @@ import java.util.ServiceLoader;
 
 import net.automatalib.common.util.collection.IteratorUtil;
 
+/**
+ * Utility interface to mark the source of a setting.
+ */
 public interface SettingsSource {
 
-    static <S extends SettingsSource> Properties readSettings(Class<S> clazz) {
+    /**
+     * Convenience method for parsing properties from a {@link SettingsSource}. Note that this method requires an
+     * instantiated {@link ServiceLoader} instead of just the settings class, to support polymorphic
+     * {@link SettingsSource}s in a JPMS environment. Otherwise, {@code this} module would have to declare a
+     * {@code uses} clause and only true {@link SettingsSource}s could be read.
+     *
+     * @param loader
+     *         the service loader
+     * @param <S>
+     *         concrete {@link SettingsSource} type
+     *
+     * @return the filled properties after all loaded {@link SettingsSource}s have been queried
+     */
+    static <S extends SettingsSource> Properties readSettings(ServiceLoader<S> loader) {
         Properties p = new Properties();
-        readSettings(clazz, p);
+        readSettings(loader, p);
         return p;
     }
 
-    static <S extends SettingsSource> void readSettings(Class<S> clazz, Properties p) {
-        ServiceLoader<S> loader = ServiceLoader.load(clazz);
+    /**
+     * Convenience method for {@link #readSettings(ServiceLoader)} that directly writes to the given {@link Properties}
+     * object.
+     *
+     * @param loader
+     *         the service loader
+     * @param p
+     *         the properties object to write to
+     * @param <S>
+     *         concrete {@link SettingsSource} type
+     */
+    static <S extends SettingsSource> void readSettings(ServiceLoader<S> loader, Properties p) {
         List<S> sources = IteratorUtil.list(loader.iterator());
         sources.sort(Comparator.comparingInt(SettingsSource::getPriority));
 
@@ -40,8 +66,20 @@ public interface SettingsSource {
         }
     }
 
+    /**
+     * Load the parsed settings into the given property object.
+     *
+     * @param props
+     *         the object to write the settings to
+     */
     void loadSettings(Properties props);
 
+    /**
+     * Returns the priority of this source. This is used to decide which source wins, if multiple sources write the same
+     * properties.
+     *
+     * @return the priority
+     */
     default int getPriority() {
         return 0;
     }

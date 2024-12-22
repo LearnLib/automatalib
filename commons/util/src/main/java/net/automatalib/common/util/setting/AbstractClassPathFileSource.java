@@ -56,11 +56,11 @@ public abstract class AbstractClassPathFileSource implements SettingsSource {
                 try (Reader r = IOUtil.asBufferedUTF8Reader(url.openStream())) {
                     properties.load(r);
                 } catch (IOException ex) {
-                    log.error("Could not read property file " + url + ".", ex);
+                    log.error("Could not read property file '{}'.", url, ex);
                 }
             }
         } catch (IOException ex) {
-            log.error("Could not enumerate " + fileName + " files,", ex);
+            log.error("Could not enumerate '{}' file.", fileName, ex);
         }
     }
 

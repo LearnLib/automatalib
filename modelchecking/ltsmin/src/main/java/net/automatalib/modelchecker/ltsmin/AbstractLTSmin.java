@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import net.automatalib.AutomataLibSettings;
+import net.automatalib.common.setting.AutomataLibSettings;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.process.ProcessUtil;

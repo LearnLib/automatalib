@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib;
-
-import java.io.File;
-import java.net.URL;
+package net.automatalib.common.setting;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
@@ -24,17 +21,9 @@ import org.testng.annotations.Test;
 
 public class AutomataLibSettingsTest {
 
-    public static void overrideEmptyWordProperty() {
-        final URL resource = AutomataLibSettingsTest.class.getResource("/automatalib.properties");
-        assert resource != null;
-        final File properties = new File(resource.getFile());
-        System.setProperty("automatalib.properties", properties.getAbsolutePath());
-        System.setProperty(AutomataLibProperty.WORD_EMPTY_REP.getPropertyKey(), "OVERRIDDEN");
-    }
-
     @BeforeSuite
     public void setUp() {
-        AutomataLibSettingsTest.overrideEmptyWordProperty();
+        System.setProperty(AutomataLibProperty.WORD_EMPTY_REP.getPropertyKey(), "OVERRIDDEN");
     }
 
     @Test
@@ -44,39 +33,39 @@ public class AutomataLibSettingsTest {
         for (AutomataLibProperty p : AutomataLibProperty.values()) {
             switch (p) {
                 case DOT_EXE_DIR:
-                    Assert.assertEquals("dot", settings.getProperty(AutomataLibProperty.DOT_EXE_DIR));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.DOT_EXE_DIR), "dot");
                     break;
                 case DOT_EXE_NAME:
-                    Assert.assertEquals("dot.exe", settings.getProperty(AutomataLibProperty.DOT_EXE_NAME));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.DOT_EXE_NAME), "dot.exe");
                     break;
                 case LTSMIN_PATH:
-                    Assert.assertEquals("ltsmin", settings.getProperty(AutomataLibProperty.LTSMIN_PATH));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.LTSMIN_PATH), "ltsmin");
                     break;
                 case LTSMIN_VERBOSE:
-                    Assert.assertEquals("false", settings.getProperty(AutomataLibProperty.LTSMIN_VERBOSE));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.LTSMIN_VERBOSE), "false");
                     break;
                 case VISUALIZATION_PROVIDER:
-                    Assert.assertEquals("provider", settings.getProperty(AutomataLibProperty.VISUALIZATION_PROVIDER));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.VISUALIZATION_PROVIDER), "provider");
                     break;
                 case WORD_DELIM_LEFT:
-                    Assert.assertEquals("delim_left", settings.getProperty(AutomataLibProperty.WORD_DELIM_LEFT));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.WORD_DELIM_LEFT), "delim_left");
                     break;
                 case WORD_DELIM_RIGHT:
-                    Assert.assertEquals("delim_right", settings.getProperty(AutomataLibProperty.WORD_DELIM_RIGHT));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.WORD_DELIM_RIGHT), "delim_right");
                     break;
                 case WORD_EMPTY_REP:
-                    Assert.assertEquals("OVERRIDDEN", settings.getProperty(AutomataLibProperty.WORD_EMPTY_REP));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.WORD_EMPTY_REP), "OVERRIDDEN");
                     break;
                 case WORD_SYMBOL_DELIM_LEFT:
-                    Assert.assertEquals("symbol_delim_left",
-                                        settings.getProperty(AutomataLibProperty.WORD_SYMBOL_DELIM_LEFT));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.WORD_SYMBOL_DELIM_LEFT),
+                                        "symbol_delim_left");
                     break;
                 case WORD_SYMBOL_DELIM_RIGHT:
-                    Assert.assertEquals("symbol_delim_right",
-                                        settings.getProperty(AutomataLibProperty.WORD_SYMBOL_DELIM_RIGHT));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.WORD_SYMBOL_DELIM_RIGHT),
+                                        "symbol_delim_right");
                     break;
                 case WORD_SYMBOL_SEPARATOR:
-                    Assert.assertEquals("symbol_sep", settings.getProperty(AutomataLibProperty.WORD_SYMBOL_SEPARATOR));
+                    Assert.assertEquals(settings.getProperty(AutomataLibProperty.WORD_SYMBOL_SEPARATOR), "symbol_sep");
                     break;
                 default:
                     throw new IllegalStateException("Unhandled property " + p);

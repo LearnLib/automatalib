@@ -14,39 +14,34 @@
  * limitations under the License.
  */
 
+import net.automatalib.common.setting.AutomataLibLocalPropertiesSource;
+import net.automatalib.common.setting.AutomataLibPropertiesSource;
+import net.automatalib.common.setting.AutomataLibSettingsSource;
+import net.automatalib.common.setting.AutomataLibSystemPropertiesSource;
+
 /**
- * This module contains the integration of the model checker <a href="https://ltsmin.utwente.nl/">LTSmin</a> as
- * described in the paper <a href="https://doi.org/10.1007/s11334-019-00342-6">Sound Black-Box Checking in the
- * LearnLib</a> by Jeroen Meijer and Jaco van de Pol.
- * <p>
- * Note that this implementation requires a local installation of the <a href="https://ltsmin.utwente.nl/">LTSmin
- * binaries</a> which are not explicitly included in this module due to packaging reasons.
+ * This module contains a collection of utility methods to parse AutomataLib specific settings.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>
  * &lt;dependency&gt;
  *   &lt;groupId&gt;net.automatalib&lt;/groupId&gt;
- *   &lt;artifactId&gt;automata-modelchecking-ltsmin&lt;/artifactId&gt;
+ *   &lt;artifactId&gt;automata-commons-settings&lt;/artifactId&gt;
  *   &lt;version&gt;${version}&lt;/version&gt;
  * &lt;/dependency&gt;
  * </pre>
  */
-open module net.automatalib.modelchecker.ltsmin {
+open module net.automatalib.common.setting {
 
-    requires net.automatalib.api;
-    requires net.automatalib.common.setting;
     requires net.automatalib.common.util;
-    requires net.automatalib.core;
-    requires net.automatalib.serialization.fsm;
-    requires net.automatalib.serialization.etf;
-    requires net.automatalib.util;
-    requires org.slf4j;
 
-    requires static de.learnlib.tooling.annotation;
     // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;
+    requires static org.kohsuke.metainf_services;
 
-    exports net.automatalib.modelchecker.ltsmin;
-    exports net.automatalib.modelchecker.ltsmin.ltl;
-    exports net.automatalib.modelchecker.ltsmin.monitor;
+    exports net.automatalib.common.setting;
+
+    uses AutomataLibSettingsSource;
+
+    provides AutomataLibSettingsSource with AutomataLibLocalPropertiesSource, AutomataLibPropertiesSource, AutomataLibSystemPropertiesSource;
 }

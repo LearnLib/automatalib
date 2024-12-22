@@ -28,8 +28,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import net.automatalib.AutomataLibProperty;
-import net.automatalib.AutomataLibSettings;
+import net.automatalib.common.setting.AutomataLibProperty;
+import net.automatalib.common.setting.AutomataLibSettings;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.process.ProcessUtil;

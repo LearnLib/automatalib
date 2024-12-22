@@ -42,19 +42,18 @@ public class LocalFileSource implements SettingsSource {
             return;
         }
 
-        Logger log = LoggerFactory.getLogger(getClass());
-
         try (Reader r = IOUtil.asBufferedUTF8Reader(file)) {
             properties.load(r);
         } catch (IOException ex) {
-            log.warn("Could not read properties file " + file.getAbsolutePath() + ".", ex);
+            final Logger log = LoggerFactory.getLogger(getClass());
+            log.warn("Could not read properties file '{}'.", file.getAbsolutePath(), ex);
         }
     }
 
     @Override
     public int getPriority() {
-        // This is directly under user control, so it should have the second-highest possible
-        // priority (to be overridden only by system properties)
+        // This is directly under user control, so it should have the second-highest possible priority
+        // (to be overridden only by system properties)
         return Integer.MAX_VALUE - 1;
     }
 

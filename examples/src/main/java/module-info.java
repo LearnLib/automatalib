@@ -20,6 +20,7 @@ open module net.automatalib.example {
 
     requires net.automatalib.api;
     requires net.automatalib.brics;
+    requires net.automatalib.common.setting;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
     requires net.automatalib.incremental;

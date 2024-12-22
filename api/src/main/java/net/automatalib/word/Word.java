@@ -32,9 +32,9 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import net.automatalib.AutomataLibProperty;
-import net.automatalib.AutomataLibSettings;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.setting.AutomataLibProperty;
+import net.automatalib.common.setting.AutomataLibSettings;
 import net.automatalib.common.smartcollection.AWUtil;
 import net.automatalib.common.smartcollection.ArrayWritable;
 import net.automatalib.common.smartcollection.IntSeq;

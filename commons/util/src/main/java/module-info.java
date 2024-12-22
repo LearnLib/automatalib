@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import net.automatalib.common.util.setting.SettingsSource;
-
 /**
  * This module contains several useful classes to ease everyday programming.
  * <p>
@@ -53,6 +51,4 @@ open module net.automatalib.common.util {
     exports net.automatalib.common.util.setting;
     exports net.automatalib.common.util.string;
     exports net.automatalib.common.util.system;
-
-    uses SettingsSource;
 }

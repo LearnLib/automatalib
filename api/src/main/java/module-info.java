@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import net.automatalib.AutomataLibLocalPropertiesSource;
-import net.automatalib.AutomataLibPropertiesSource;
-import net.automatalib.AutomataLibSystemPropertiesSource;
-import net.automatalib.common.util.setting.SettingsSource;
 import net.automatalib.visualization.VisualizationProvider;
 
 /**
@@ -36,15 +32,14 @@ import net.automatalib.visualization.VisualizationProvider;
  */
 open module net.automatalib.api {
 
+    requires net.automatalib.common.setting;
     requires net.automatalib.common.smartcollection;
     requires net.automatalib.common.util;
     requires org.slf4j;
 
     // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;
-    requires static org.kohsuke.metainf_services;
 
-    exports net.automatalib;
     exports net.automatalib.alphabet;
     exports net.automatalib.automaton;
     exports net.automatalib.automaton.abstraction;
@@ -77,6 +72,4 @@ open module net.automatalib.api {
     exports net.automatalib.word;
 
     uses VisualizationProvider;
-
-    provides SettingsSource with AutomataLibLocalPropertiesSource, AutomataLibSystemPropertiesSource, AutomataLibPropertiesSource;
 }

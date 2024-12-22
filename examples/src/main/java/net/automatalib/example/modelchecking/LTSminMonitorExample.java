@@ -17,10 +17,10 @@ package net.automatalib.example.modelchecking;
 
 import java.util.Objects;
 
-import net.automatalib.AutomataLibProperty;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.setting.AutomataLibProperty;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
 import net.automatalib.modelchecker.ltsmin.monitor.LTSminMonitorIO;

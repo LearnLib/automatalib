@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib;
+package net.automatalib.common.setting;
 
 /**
  * An enum of all the system properties currently used by AutomataLib.
