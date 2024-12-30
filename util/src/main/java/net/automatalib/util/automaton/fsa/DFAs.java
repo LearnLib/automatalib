@@ -50,9 +50,9 @@ public final class DFAs {
     }
 
     /**
-     * Most general way of combining two DFAs. The behavior is the same as of the above {@link #combine(DFA, DFA,
-     * Collection, MutableDFA, AcceptanceCombiner)}, but the result automaton is automatically created as a {@link
-     * CompactDFA}.
+     * Most general way of combining two DFAs via product construction. The behavior is the same as of the above
+     * {@link #combine(DFA, DFA, Collection, MutableDFA, AcceptanceCombiner)}, but the result automaton is automatically
+     * created as a {@link CompactDFA}.
      *
      * @param dfa1
      *         the first DFA
@@ -75,8 +75,9 @@ public final class DFAs {
     }
 
     /**
-     * Most general way of combining two DFAs. The {@link AcceptanceCombiner} specified via the {@code combiner}
-     * parameter specifies how acceptance values of the DFAs will be combined to an acceptance value in the result DFA.
+     * Most general way of combining two DFAs via product construction. The {@link AcceptanceCombiner} specified via the
+     * {@code combiner} parameter specifies how acceptance values of the DFAs will be combined to an acceptance value in
+     * the result DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -109,7 +110,7 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the conjunction ("and") of two DFA, and returns the result as a new DFA.
+     * Calculates the conjunction ("and") of two DFAs via product construction and returns the result as a new DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -127,7 +128,8 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the conjunction ("and") of two DFA, and stores the result in a given mutable DFA.
+     * Calculates the conjunction ("and") of two DFAs via product construction and stores the result in a given mutable
+     * DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -154,7 +156,7 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the disjunction ("or") of two DFA, and returns the result as a new DFA.
+     * Calculates the disjunction ("or") of two DFAs via product construction and returns the result as a new DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -172,7 +174,8 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the disjunction ("or") of two DFA, and stores the result in a given mutable DFA.
+     * Calculates the disjunction ("or") of two DFAs via product construction and stores the result in a given mutable
+     * DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -199,7 +202,7 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the exclusive-or ("xor") of two DFA, and returns the result as a new DFA.
+     * Calculates the exclusive-or ("xor") of two DFAs via product construction and returns the result as a new DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -217,7 +220,8 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the exclusive-or ("xor") of two DFA, and stores the result in a given mutable DFA.
+     * Calculates the exclusive-or ("xor") of two DFAs via product construction and stores the result in a given mutable
+     * DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -244,7 +248,8 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the equivalence ("&lt;=&gt;") of two DFA, and returns the result as a new DFA.
+     * Calculates the equivalence ("&lt;=&gt;") of two DFAs via product construction and returns the result as a new
+     * DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -262,7 +267,8 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the equivalence ("&lt;=&gt;") of two DFA, and stores the result in a given mutable DFA.
+     * Calculates the equivalence ("&lt;=&gt;") of two DFAs via product construction and stores the result in a given
+     * mutable DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -289,7 +295,7 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the implication ("=&gt;") of two DFA, and returns the result as a new DFA.
+     * Calculates the implication ("=&gt;") of two DFAs via product construction and returns the result as a new DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -307,7 +313,8 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the implication ("=&gt;") of two DFA, and stores the result in a given mutable DFA.
+     * Calculates the implication ("=&gt;") of two DFAs via product construction and stores the result in a given
+     * mutable DFA.
      *
      * @param dfa1
      *         the first DFA
@@ -405,7 +412,7 @@ public final class DFAs {
     }
 
     /**
-     * Calculates the complement (negation) of a DFA, and returns the result as a new DFA.
+     * Calculates the complement (negation) of a DFA and returns the result as a new DFA.
      * <p>
      * Note that unlike {@link MutableDFA#flipAcceptance()}, undefined transitions are treated as leading to a rejecting
      * sink state (and are thus turned into an accepting sink).

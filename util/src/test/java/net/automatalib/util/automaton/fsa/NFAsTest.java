@@ -22,6 +22,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.FiniteStateAcceptor;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.MutableNFA;
@@ -32,6 +33,7 @@ import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.automaton.fsa.impl.FastNFA;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.util.automaton.random.TabakovVardiRandomAutomata;
 import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -39,56 +41,20 @@ import org.testng.annotations.Test;
 
 public class NFAsTest {
 
-    private static final boolean[] VECTOR_1 = {true, true, false, false};
-    private static final boolean[] VECTOR_2 = {true, false, true, false};
-
-    // The precomputed results of applying the operations on VECTOR_1 and VECTOR_2
-    private static final boolean[] AND_RESULT = {true, false, false, false};
-    private static final boolean[] OR_RESULT = {true, true, true, false};
-    private static final boolean[] XOR_RESULT = {false, true, true, false};
-    private static final boolean[] EQUIV_RESULT = {true, false, false, true};
-    private static final boolean[] IMPL_RESULT = {true, false, true, true};
-
     private final Alphabet<Integer> testAlphabet;
     private final CompactNFA<Integer> testNfa1, testNfa2;
 
     public NFAsTest() {
-        this.testAlphabet = Alphabets.integers(0, 0);
-        this.testNfa1 = forVector(VECTOR_1);
-        this.testNfa2 = forVector(VECTOR_2);
-    }
+        final Random r = new Random(42);
 
-    private CompactNFA<Integer> forVector(boolean... boolVec) {
-        if (boolVec.length == 0) {
-            throw new IllegalArgumentException("Length of vector must be non-zero");
-        }
-
-        CompactNFA<Integer> result = new CompactNFA<>(testAlphabet, boolVec.length);
-
-        int first = result.addInitialState(boolVec[0]);
-        int prev = first;
-
-        for (int i = 1; i < boolVec.length; i++) {
-            int next = result.addState(boolVec[i]);
-            result.addTransition(prev, 0, next);
-            prev = next;
-        }
-
-        result.addTransition(prev, 0, first);
-
-        return result;
-    }
-
-    @Test
-    public void testCombine() {
-        NFA<?, Integer> expected = forVector(AND_RESULT);
-        NFA<?, Integer> actual = NFAs.combine(testNfa1, testNfa2, testAlphabet, AcceptanceCombiner.AND);
-        assertEquivalence(actual, expected, testAlphabet);
+        this.testAlphabet = Alphabets.integers(0, 1);
+        this.testNfa1 = TabakovVardiRandomAutomata.generateNFA(r, 10, 25, 5, testAlphabet);
+        this.testNfa2 = TabakovVardiRandomAutomata.generateNFA(r, 10, 25, 5, testAlphabet);
     }
 
     @Test
     public void testAnd() {
-        NFA<?, Integer> expected = forVector(AND_RESULT);
+        NFA<?, Integer> expected = dfaCombine(testNfa1, testNfa2, testAlphabet, AcceptanceCombiner.AND);
         NFA<?, Integer> actual = NFAs.and(testNfa1, testNfa2, testAlphabet);
 
         assertEquivalence(actual, expected, testAlphabet);
@@ -96,40 +62,20 @@ public class NFAsTest {
 
     @Test
     public void testOr() {
-        NFA<?, Integer> expected = forVector(OR_RESULT);
+        NFA<?, Integer> expected = dfaCombine(testNfa1, testNfa2, testAlphabet, AcceptanceCombiner.OR);
         NFA<?, Integer> actual = NFAs.or(testNfa1, testNfa2, testAlphabet);
 
-        assertEquivalence(actual, expected, testAlphabet);
-    }
-
-    @Test
-    public void testXor() {
-        NFA<?, Integer> expected = forVector(XOR_RESULT);
-        NFA<?, Integer> actual = NFAs.xor(testNfa1, testNfa2, testAlphabet);
-
-        assertEquivalence(actual, expected, testAlphabet);
-    }
-
-    @Test
-    public void testEquiv() {
-        NFA<?, Integer> expected = forVector(EQUIV_RESULT);
-        NFA<?, Integer> actual = NFAs.equiv(testNfa1, testNfa2, testAlphabet);
-
-        assertEquivalence(actual, expected, testAlphabet);
-    }
-
-    @Test
-    public void testImpl() {
-        NFA<?, Integer> expected = forVector(IMPL_RESULT);
-        NFA<?, Integer> actual = NFAs.impl(testNfa1, testNfa2, testAlphabet);
-
+        Assert.assertEquals(actual.size(), testNfa1.size() + testNfa2.size());
         assertEquivalence(actual, expected, testAlphabet);
     }
 
     @Test
     public void testReverse() {
-        CompactNFA<Integer> rNFA = NFAs.reverse(testNfa1, testAlphabet);
-        Assert.assertEquals(rNFA.size(), testNfa1.size());
+        final CompactDFA<Integer> nfa = DFAsTest.forVector(true, true, false, false);
+        final Alphabet<Integer> alphabet = nfa.getInputAlphabet();
+
+        CompactNFA<Integer> rNFA = NFAs.reverse(nfa, alphabet);
+        Assert.assertEquals(rNFA.size(), nfa.size());
 
         for (int i = 0; i < rNFA.size(); i++) {
             Assert.assertEquals(rNFA.isAccepting(i), i == 0);
@@ -140,7 +86,7 @@ public class NFAsTest {
         Assert.assertEquals(rNFA.getInitialStates(), Set.of(0, 1));
 
         // double-reverse == no reverse
-        assertEquivalence(testNfa1, NFAs.reverse(rNFA, testAlphabet), testAlphabet);
+        assertEquivalence(nfa, NFAs.reverse(rNFA, alphabet), alphabet);
     }
 
     @Test
@@ -247,10 +193,13 @@ public class NFAsTest {
         Assert.assertFalse(dfa.accepts(Word.fromSymbols(0, 1, 0, 1, 0)));
     }
 
+    private <I> DFA<?, I> dfaCombine(NFA<?, I> nfa1, NFA<?, I> nfa2, Alphabet<I> inputs, AcceptanceCombiner acc) {
+        return DFAs.combine(NFAs.determinize(nfa1, inputs), NFAs.determinize(nfa2, inputs), inputs, acc);
+    }
+
     private <I> void assertEquivalence(NFA<?, I> nfa1, NFA<?, I> nfa2, Alphabet<I> inputs) {
         Assert.assertTrue(Automata.testEquivalence(NFAs.determinize(nfa1, inputs),
                                                    NFAs.determinize(nfa2, inputs),
                                                    inputs));
-
     }
 }

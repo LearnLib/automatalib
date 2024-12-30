@@ -42,17 +42,17 @@ public class DFAsTest {
     private final CompactDFA<Integer> testDfa1, testDfa2;
 
     public DFAsTest() {
-        this.testAlphabet = Alphabets.integers(0, 0);
         this.testDfa1 = forVector(VECTOR_1);
         this.testDfa2 = forVector(VECTOR_2);
+        this.testAlphabet = testDfa1.getInputAlphabet();
     }
 
-    private CompactDFA<Integer> forVector(boolean... boolVec) {
+    static CompactDFA<Integer> forVector(boolean... boolVec) {
         if (boolVec.length == 0) {
             throw new IllegalArgumentException("Length of vector must be non-zero");
         }
 
-        CompactDFA<Integer> result = new CompactDFA<>(testAlphabet, boolVec.length);
+        CompactDFA<Integer> result = new CompactDFA<>(Alphabets.singleton(0), boolVec.length);
 
         int first = result.addInitialState(boolVec[0]);
         int prev = first;
