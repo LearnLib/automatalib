@@ -100,7 +100,7 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
         };
     }
 
-    private class MealyMachineView extends TransitionSystemView
+    private final class MealyMachineView extends TransitionSystemView
             implements MealyMachine<Node<O>, I, Edge<Node<O>, O>, O> {
 
         @Override

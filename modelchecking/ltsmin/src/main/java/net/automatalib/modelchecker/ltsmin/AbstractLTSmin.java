@@ -67,14 +67,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSmin.class);
 
-    /**
-     * @see #isKeepFiles()
-     */
     private final boolean keepFiles;
-
-    /**
-     * @see #getString2Input()
-     */
     private final Function<String, I> string2Input;
 
     /**

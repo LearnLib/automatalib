@@ -483,7 +483,7 @@ public final class BacktrackingSearch {
      * @param <O>
      *         output alphabet type
      */
-    private static class SearchState<S, I, O> {
+    private static final class SearchState<S, I, O> {
 
         private I symbol;
 

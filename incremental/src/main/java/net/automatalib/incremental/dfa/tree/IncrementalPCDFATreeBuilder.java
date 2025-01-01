@@ -328,7 +328,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
         }
     }
 
-    private class TransitionSystemView extends IncrementalDFATreeBuilder<I>.TransitionSystemView {
+    private final class TransitionSystemView extends IncrementalDFATreeBuilder<I>.TransitionSystemView {
 
         @Override
         public @Nullable Node getTransition(Node state, I input) {

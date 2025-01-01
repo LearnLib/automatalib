@@ -238,7 +238,7 @@ public class TraversalTest {
         }
     }
 
-    private static class InitialAbortVisitor<S, I, T, D> extends AbstractVisitor<S, I, T, D> {
+    private static final class InitialAbortVisitor<S, I, T, D> extends AbstractVisitor<S, I, T, D> {
 
         @Override
         public TSTraversalAction processInitial(S initialState, Holder<D> holder) {

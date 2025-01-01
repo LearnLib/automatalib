@@ -36,44 +36,13 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
 
     public static final String NO_LASSO = "Automaton is not lasso shaped";
 
-    /**
-     * @see #getWord()
-     */
     private final Word<I> word;
-
-    /**
-     * @see #getLoop()
-     */
     private final Word<I> loop;
-
-    /**
-     * @see #getPrefix()
-     */
     private final Word<I> prefix;
-
-    /**
-     * @see #getOutput()
-     */
     private final D output;
-
-    /**
-     * @see #getInputAlphabet()
-     */
     private final Alphabet<I> inputAlphabet;
-
-    /**
-     * @see #getUnfolds()
-     */
     private final int unfolds;
-
-    /**
-     * @see #getLoopBeginIndices()
-     */
     private final SortedSet<Integer> loopBeginIndices = new TreeSet<>();
-
-    /**
-     * @see #getAutomaton()
-     */
     private final DetOutputAutomaton<?, I, ?, D> automaton;
 
     /**

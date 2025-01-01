@@ -393,7 +393,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         }
     }
 
-    private class ReferenceIterator implements Iterator<ElementReference> {
+    private final class ReferenceIterator implements Iterator<ElementReference> {
 
         private int current;
 

@@ -46,7 +46,7 @@ public class Path<N, E> extends AbstractList<E> {
         return new NodeList();
     }
 
-    private class NodeList extends AbstractList<N> {
+    private final class NodeList extends AbstractList<N> {
 
         @Override
         public N get(int index) {

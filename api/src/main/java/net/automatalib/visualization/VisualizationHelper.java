@@ -158,7 +158,7 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    class MTSEdgeAttrs extends EdgeAttrs {
+    final class MTSEdgeAttrs extends EdgeAttrs {
 
         public static final String MODALITY = "modality";
 

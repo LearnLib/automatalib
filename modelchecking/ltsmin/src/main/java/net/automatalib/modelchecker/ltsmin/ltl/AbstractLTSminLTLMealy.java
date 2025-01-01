@@ -47,15 +47,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSminLTLMealy.class);
 
-    /**
-     * @see #getString2Output()
-     */
     private final Function<String, O> string2Output;
-
-    /**
-     * @see #getSkipOutputs()
-     * @see #setSkipOutputs(Collection)
-     */
     private Collection<? super O> skipOutputs;
 
     /**

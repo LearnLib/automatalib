@@ -642,7 +642,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
         }
     }
 
-    private class AutomatonView implements MooreMachine<State<O>, I, State<O>, O> {
+    private final class AutomatonView implements MooreMachine<State<O>, I, State<O>, O> {
 
         @Override
         public O getStateOutput(State<O> state) {

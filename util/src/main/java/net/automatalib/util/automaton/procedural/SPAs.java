@@ -277,7 +277,7 @@ public final class SPAs {
 
         final List<Word<I>> result = new ArrayList<>(inputs.size());
         final UniversalGraph<S, TransitionEdge<I, S>, ?, ?> tgv = dfa.transitionGraphView(inputs);
-        final APSPResult<S, TransitionEdge<I, S>> apsp = Graphs.findAPSP(tgv, (edge) -> 0F);
+        final APSPResult<S, TransitionEdge<I, S>> apsp = Graphs.findAPSP(tgv, edge -> 0F);
 
         final List<S> acceptingStates = new ArrayList<>(dfa.size());
         for (S s : dfa) {

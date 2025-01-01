@@ -48,7 +48,7 @@ public final class FunctionsUtil {
      */
     public static <D, R> Function<D, ? extends @Nullable R> safeDefault(@Nullable Function<D, R> func) {
         if (func == null) {
-            return (x) -> null;
+            return x -> null;
         }
         return func;
     }
@@ -68,7 +68,7 @@ public final class FunctionsUtil {
      */
     public static <R> IntFunction<? extends @Nullable R> safeDefault(@Nullable IntFunction<R> func) {
         if (func == null) {
-            return (i) -> null;
+            return i -> null;
         }
         return func;
     }
@@ -95,14 +95,14 @@ public final class FunctionsUtil {
 
     public static <T> Predicate<T> safeToTrue(@Nullable Predicate<T> func) {
         if (func == null) {
-            return (x) -> true;
+            return x -> true;
         }
         return func;
     }
 
     public static <T> Predicate<T> safeToFalse(@Nullable Predicate<T> func) {
         if (func == null) {
-            return (x) -> false;
+            return x -> false;
         }
         return func;
     }

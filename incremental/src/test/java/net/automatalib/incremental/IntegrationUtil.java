@@ -63,6 +63,8 @@ public final class IntegrationUtil {
      *
      * @param resourcePath
      *         the path to the resource which contains the trace information
+     *
+     * @return the parsed traces
      */
     public static ParsedTraces<Integer, Boolean> parseDFATraces(String resourcePath) throws IOException {
         try (InputStream res = IntegrationUtil.class.getResourceAsStream(resourcePath);
@@ -118,11 +120,14 @@ public final class IntegrationUtil {
      *
      * @param resourcePath
      *         the path to the resource which contains the trace information
+     *
+     * @return the parsed traces
      */
     public static ParsedTraces<Integer, Word<Integer>> parseMealyTraces(String resourcePath) throws IOException {
         try (InputStream res = IncrementalDFADAGBuilderTest.class.getResourceAsStream(resourcePath);
              InputStream buf = IOUtil.asBufferedInputStream(res);
-             InputStream is = IOUtil.asUncompressedInputStream(buf); DataInputStream in = new DataInputStream(is)) {
+             InputStream is = IOUtil.asUncompressedInputStream(buf);
+             DataInputStream in = new DataInputStream(is)) {
 
             final int numInputSyms = in.readShort();
             final int numOutputSyms = in.readShort();
@@ -154,14 +159,18 @@ public final class IntegrationUtil {
     }
 
     /**
-     * Validates that for each positively annotated traces, none of its prefixes is annotated negatively.
+     * Validates that for each positively annotated trace, none of its prefixes is annotated negatively.
+     *
+     * @param traces
+     *         the set of traces
+     *
+     * @return {@code true} if there are no conflicts, {@code false} otherwise
      */
     public static boolean isPrefixClosed(Collection<Pair<Word<Integer>, Boolean>> traces) {
         final Map<Boolean, List<Word<Integer>>> map = traces.stream()
                                                             .collect(Collectors.partitioningBy(Pair::getSecond,
                                                                                                Collectors.mapping(Pair::getFirst,
-                                                                                                                  Collectors
-                                                                                                                          .toList())));
+                                                                                                                  Collectors.toList())));
         final Set<Word<Integer>> pos = new HashSet<>(map.get(true));
         final Set<Word<Integer>> neg = new HashSet<>(map.get(false));
 

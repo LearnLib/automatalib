@@ -73,7 +73,7 @@ public class ReflexiveMapView<T> extends AbstractMap<T, T> {
         return (Set<@UnknownKeyFor T>) this.domain;
     }
 
-    private class EntrySet extends AbstractSet<Entry<@KeyFor("this") T, T>> {
+    private final class EntrySet extends AbstractSet<Entry<@KeyFor("this") T, T>> {
 
         @Override
         public Iterator<Entry<@KeyFor("this") T, T>> iterator() {
@@ -86,7 +86,7 @@ public class ReflexiveMapView<T> extends AbstractMap<T, T> {
         }
     }
 
-    private class Iter implements Iterator<Entry<@KeyFor("this") T, T>> {
+    private final class Iter implements Iterator<Entry<@KeyFor("this") T, T>> {
 
         final Iterator<@KeyFor("this") T> iter = domain.iterator();
 

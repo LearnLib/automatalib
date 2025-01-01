@@ -239,7 +239,7 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
         }
     }
 
-    private class TransitionSystemView implements MooreMachine<Node<O>, I, Node<O>, O> {
+    private final class TransitionSystemView implements MooreMachine<Node<O>, I, Node<O>, O> {
 
         @Override
         public @Nullable Node<O> getInitialState() {

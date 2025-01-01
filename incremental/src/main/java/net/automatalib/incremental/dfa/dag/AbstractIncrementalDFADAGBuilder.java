@@ -536,7 +536,7 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         }
     }
 
-    private class TransitionSystemView implements UniversalDTS<State, I, State, Acceptance, Void>,
+    private final class TransitionSystemView implements UniversalDTS<State, I, State, Acceptance, Void>,
                                                   UniversalAutomaton<State, I, State, Acceptance, Void> {
 
         @Override

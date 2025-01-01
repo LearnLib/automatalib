@@ -275,7 +275,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
     /**
      * The iterator for iterating over the element references.
      */
-    private class ReferenceIterator implements Iterator<ElementReference> {
+    private final class ReferenceIterator implements Iterator<ElementReference> {
 
         private int index;
 
@@ -301,7 +301,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
     /**
      * The iterator for iterating over the elements themselves.
      */
-    private class ElementIterator implements Iterator<E> {
+    private final class ElementIterator implements Iterator<E> {
 
         private int index;
 

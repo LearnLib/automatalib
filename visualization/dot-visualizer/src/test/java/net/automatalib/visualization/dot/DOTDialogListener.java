@@ -30,7 +30,7 @@ public class DOTDialogListener implements IInvokedMethodListener {
 
     @Override
     public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
-        if (!(DOT.checkUsable() && (JVMUtil.getCanonicalSpecVersion() == 11))) {
+        if (!(DOT.checkUsable() && JVMUtil.getCanonicalSpecVersion() == 11)) {
             testResult.setThrowable(new SkipException(
                     "Either DOT is not available or the headless AWT environment is not supported"));
             testResult.setStatus(ITestResult.SKIP);

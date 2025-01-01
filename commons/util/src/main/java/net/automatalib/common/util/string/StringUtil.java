@@ -237,7 +237,7 @@ public final class StringUtil {
      * <a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom">
      * Initialization-on-demand holder idiom</a>
      */
-    private static class LazyPatternHolder {
+    private static final class LazyPatternHolder {
 
         private static final Pattern INSTANCE = Pattern.compile("[a-zA-Z_]*\\w*");
     }

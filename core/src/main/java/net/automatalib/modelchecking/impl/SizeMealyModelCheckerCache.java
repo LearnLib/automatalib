@@ -21,7 +21,7 @@ import net.automatalib.modelchecking.ModelCheckerCache.MealyModelCheckerCache;
 import net.automatalib.modelchecking.impl.InternalModelCheckerDelegator.MealyModelCheckerDelegator;
 
 /**
- * @see SizeDFAModelCheckerCache
+ * Mealy version of {@link SizeDFAModelCheckerCache}.
  */
 public class SizeMealyModelCheckerCache<I, O, P, R> extends SizeModelCheckerCache<I, MealyMachine<?, I, ?, O>, P, R>
         implements MealyModelCheckerCache<I, O, P, R>,

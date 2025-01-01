@@ -23,7 +23,6 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.ltsmin.LTSminAlternating;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
-import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
 
 /**
  * A monitor model checker using LTSmin for Mealy machines using alternating edge semantics.
@@ -44,11 +43,6 @@ public class LTSminMonitorAlternating<I, O> extends AbstractLTSminMonitorMealy<I
         super(keepFiles, string2Input, string2Output, skipOutputs);
     }
 
-    /**
-     * @see FSM2MealyParserAlternating
-     *
-     * @return {@code true}, because there could be undefined outputs in FSMs.
-     */
     @Override
     public boolean requiresOriginalAutomaton() {
         return true;

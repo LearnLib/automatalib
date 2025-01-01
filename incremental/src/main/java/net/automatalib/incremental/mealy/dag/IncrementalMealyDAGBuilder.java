@@ -618,7 +618,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
         }
     }
 
-    private class AutomatonView implements MealyMachine<State<O>, I, Transition<O>, O> {
+    private final class AutomatonView implements MealyMachine<State<O>, I, Transition<O>, O> {
 
         @Override
         public State<O> getSuccessor(Transition<O> transition) {

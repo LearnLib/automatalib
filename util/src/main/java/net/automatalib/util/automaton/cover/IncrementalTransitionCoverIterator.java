@@ -123,6 +123,6 @@ class IncrementalTransitionCoverIterator<S, I> extends AbstractSimplifiedIterato
                                              (s, as) -> new Record<>(s,
                                                                      as,
                                                                      new HashSet<>(HashUtil.capacity(inputs.size()))),
-                                             (w) -> {});
+                                             w -> {});
     }
 }

@@ -49,8 +49,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @SuppressWarnings("nullness") // for now the nullness of SP/TP depends on the provided suppliers
 public class RandomICAutomatonGenerator<SP, TP> {
 
-    private Function<? super Random, ? extends @Nullable SP> spSupplier = (r) -> null;
-    private Function<? super Random, ? extends @Nullable TP> tpSupplier = (r) -> null;
+    private Function<? super Random, ? extends @Nullable SP> spSupplier = r -> null;
+    private Function<? super Random, ? extends @Nullable TP> tpSupplier = r -> null;
 
     /**
      * Creates a random IC automaton generator instance for generating DFAs. States in generated automata will be
@@ -122,7 +122,7 @@ public class RandomICAutomatonGenerator<SP, TP> {
             return withStateProperties(r -> null);
         }
         List<SP> spList = new ArrayList<>(possibleSps);
-        return withStateProperties((r) -> RandomUtil.choose(r, spList));
+        return withStateProperties(r -> RandomUtil.choose(r, spList));
     }
 
     /**
@@ -208,7 +208,7 @@ public class RandomICAutomatonGenerator<SP, TP> {
             return withTransitionProperties(r -> null);
         }
         List<TP> tpList = new ArrayList<>(possibleTps);
-        return withTransitionProperties((r) -> RandomUtil.choose(r, tpList));
+        return withTransitionProperties(r -> RandomUtil.choose(r, tpList));
     }
 
     /**

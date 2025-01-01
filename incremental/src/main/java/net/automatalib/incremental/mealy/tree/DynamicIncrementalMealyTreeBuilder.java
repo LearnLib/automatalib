@@ -98,7 +98,7 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractMealyTreeB
         return new GraphView();
     }
 
-    private class GraphView implements Graph<DynamicNode<I, O>, Entry<I, Edge<DynamicNode<I, O>, O>>> {
+    private final class GraphView implements Graph<DynamicNode<I, O>, Entry<I, Edge<DynamicNode<I, O>, O>>> {
 
         @Override
         public Collection<Entry<I, Edge<DynamicNode<I, O>, O>>> getOutgoingEdges(DynamicNode<I, O> node) {

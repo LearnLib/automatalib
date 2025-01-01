@@ -45,9 +45,6 @@ public class LTSminLTLAlternating<I, O> extends AbstractLTSminLTLMealy<I, O>
         super(keepFiles, string2Input, string2Output, minimumUnfolds, multiplier, skipOutputs);
     }
 
-    /**
-     * @return {@code false}, because only lassos should be read from FSMs.
-     */
     @Override
     public boolean requiresOriginalAutomaton() {
         return false;
