@@ -42,7 +42,7 @@ public enum AutomataLibProperty {
     LTSMIN_PATH("ltsmin.path"),
 
     /**
-     * {@code ltsmin.verbose}.
+     * {@code automatalib.ltsmin.verbose}.
      * <p>
      * Whether to make LTSmin's output more verbose.
      * <p>
