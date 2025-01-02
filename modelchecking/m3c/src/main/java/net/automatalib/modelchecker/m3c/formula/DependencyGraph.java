@@ -115,7 +115,6 @@ public class DependencyGraph<L, AP> {
             /* VariableNode has same variableNumber as the fixed point it references */
             String refVariable = ((VariableNode<L, AP>) node).getVariable();
             FormulaNode<L, AP> refNode = fixedPointVarMap.get(refVariable);
-            assert refNode != null : "Cannot reference unknown variable"; // validated by the parser
             node.setVarNumber(refNode.getVarNumber());
         } else {
             node.setVarNumber(varNumber);

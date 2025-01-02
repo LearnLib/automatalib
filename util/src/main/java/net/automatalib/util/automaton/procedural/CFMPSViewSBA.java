@@ -67,7 +67,7 @@ class CFMPSViewSBA<I> implements ContextFreeModalProcessSystem<I, Void> {
         return this.sba.getInitialProcedure();
     }
 
-    private static class MPGView<S, I>
+    private static final class MPGView<S, I>
             implements ProceduralModalProcessGraph<S, I, PMPGEdge<I, S>, Void, ProceduralModalEdgeProperty> {
 
         private static final Object INITIAL = new Object();

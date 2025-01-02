@@ -35,7 +35,7 @@ import javax.swing.ListSelectionModel;
 
 import net.automatalib.common.util.Pair;
 
-class DOTMultiDialog<I> extends JDialog {
+final class DOTMultiDialog<I> extends JDialog {
 
     DOTMultiDialog(List<Pair<String, I>> dots, boolean modal, ThrowableExtractor<I, String> extractor)
             throws IOException {

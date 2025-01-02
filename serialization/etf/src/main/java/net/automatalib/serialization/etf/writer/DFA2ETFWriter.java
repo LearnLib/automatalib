@@ -32,6 +32,10 @@ public final class DFA2ETFWriter<I> extends AbstractETFWriter<I, DFA<?, I>> {
 
     private static final DFA2ETFWriter<?> INSTANCE = new DFA2ETFWriter<>();
 
+    private DFA2ETFWriter() {
+        // prevent instantiation
+    }
+
     /**
      * Writes the type of the edge. A DFA edge contains one label, named 'letter', of type 'letter'.
      *

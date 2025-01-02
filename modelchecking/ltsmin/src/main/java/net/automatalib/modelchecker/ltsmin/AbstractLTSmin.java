@@ -88,7 +88,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
         this.string2Input = string2Input;
 
         if (!LTSminUtil.supports(getMinimumRequiredVersion())) {
-            throw new ModelCheckingException("LTSmin binary could not be detected in the correct version");
+            LOGGER.warn("LTSmin binary could not be detected in the correct version");
         }
     }
 

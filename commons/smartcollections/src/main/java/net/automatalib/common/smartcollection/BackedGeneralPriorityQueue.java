@@ -16,10 +16,10 @@
 package net.automatalib.common.smartcollection;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 import net.automatalib.common.util.collection.IteratorUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -64,22 +64,9 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         this.backingQueue = BinaryHeap.create(entries);
     }
 
-    public BackedGeneralPriorityQueue(Supplier<? extends SmartDynamicPriorityQueue<Entry<E, K>>> supplier) {
-        this.backingQueue = supplier.get();
-    }
-
-    /**
-     * Constructor. Explicitly initializes this queue with a given backing queue. Note that the provided queue must be
-     * empty and must not be used in any other way after being passed to the constructor.
-     *
-     * @param backingQueue
-     *         the backing queue.
-     */
-    public BackedGeneralPriorityQueue(SmartDynamicPriorityQueue<Entry<E, K>> backingQueue) {
-        if (!backingQueue.isEmpty()) {
-            throw new IllegalArgumentException("Backing priority queue must be empty upon initialization!");
-        }
-        this.backingQueue = backingQueue;
+    public BackedGeneralPriorityQueue(Collection<Entry<E, K>> backingQueue) {
+        this(backingQueue.size());
+        this.backingQueue.addAll(backingQueue);
     }
 
     @Override

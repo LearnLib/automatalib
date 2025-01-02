@@ -40,6 +40,10 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
 
     private static final Mealy2ETFWriterAlternating<?, ?> INSTANCE = new Mealy2ETFWriterAlternating<>();
 
+    private Mealy2ETFWriterAlternating() {
+        // prevent instantiation
+    }
+
     /**
      * With alternating edge semantics, there are only edges with one label. Both input and output of the Mealy
      * machine is generalized to a label named 'letter', of type 'letter'.

@@ -17,18 +17,16 @@ package net.automatalib.modelchecking.impl;
 
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
-import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 /**
  * An {@link ModelCheckerLasso} that can unfold loops of lassos.
  * <p>
- * Unfolding a lasso is done according to two conditions:
- * 1. the lasso has to be unfolded a minimum number of times ({@link #getMinimumUnfolds()}.
- * 2. the lasso has to be unfolded relative to the number of states in a hypothesis, multiplied by some double
- * ({@link #getMultiplier()}.
+ * Unfolding a lasso is done according to two conditions: 1. the lasso has to be unfolded a minimum number of times
+ * ({@link #getMinimumUnfolds()}. 2. the lasso has to be unfolded relative to the number of states in a hypothesis,
+ * multiplied by some double ({@link #getMultiplier()}.
  * <p>
- * Note that one can unfold a lasso a fixed number of times if the multiplier is set to {@code 0.0}.
- * Also note that a lasso needs to be unfolded at least once, and the multiplier can not be negative.
+ * Note that one can unfold a lasso a fixed number of times if the multiplier is set to {@code 0.0}. Also note that a
+ * lasso needs to be unfolded at least once, and the multiplier can not be negative.
  *
  * @param <I>
  *         the input type
@@ -68,8 +66,14 @@ public abstract class AbstractUnfoldingModelChecker<I, A, P, L extends Lasso<I, 
      *         when {@code minimumUnfolds < 1 || multiplier < 0.0}.
      */
     protected AbstractUnfoldingModelChecker(int minimumUnfolds, double multiplier) {
-        setMinimumUnfolds(minimumUnfolds);
-        setMultiplier(multiplier);
+        this(validateInputs(minimumUnfolds, multiplier), minimumUnfolds, multiplier);
+    }
+
+    // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    private AbstractUnfoldingModelChecker(boolean valid, int minimumUnfolds, double multiplier) {
+        this.minimumUnfolds = minimumUnfolds;
+        this.multiplier = multiplier;
     }
 
     @Override
@@ -79,25 +83,38 @@ public abstract class AbstractUnfoldingModelChecker<I, A, P, L extends Lasso<I, 
     }
 
     @Override
-    public void setMinimumUnfolds(@UnknownInitialization AbstractUnfoldingModelChecker<I, A, P, L> this,
-                                  int minimumUnfolds) {
-        if (minimumUnfolds < 1) {
-            throw new IllegalArgumentException("must unfold at least once");
-        }
-        this.minimumUnfolds = minimumUnfolds;
+    public void setMinimumUnfolds(int minimumUnfolds) {
+        this.minimumUnfolds = validateMinimumUnfolds(minimumUnfolds);
     }
 
     @Override
-    public void setMultiplier(@UnknownInitialization AbstractUnfoldingModelChecker<I, A, P, L> this,
-                              double multiplier) {
-        if (multiplier < 0.0) {
-            throw new IllegalArgumentException("multiplier must be >= 0.0");
-        }
-        this.multiplier = multiplier;
+    public void setMultiplier(double multiplier) {
+        this.multiplier = validateMultiplier(multiplier);
     }
 
     @Override
     public double getMultiplier() {
         return multiplier;
+    }
+
+    private static int validateMinimumUnfolds(int minimumUnfolds) {
+        if (minimumUnfolds < 1) {
+            throw new IllegalArgumentException("must unfold at least once");
+        }
+        return minimumUnfolds;
+    }
+
+    private static double validateMultiplier(double multiplier) {
+        if (multiplier < 0.0) {
+            throw new IllegalArgumentException("multiplier must be >= 0.0");
+        }
+
+        return multiplier;
+    }
+
+    private static boolean validateInputs(int minimumUnfolds, double multiplier) {
+        validateMinimumUnfolds(minimumUnfolds);
+        validateMultiplier(multiplier);
+        return true;
     }
 }

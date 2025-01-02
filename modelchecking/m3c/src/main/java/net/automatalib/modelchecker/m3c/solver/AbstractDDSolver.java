@@ -82,28 +82,24 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     private Map<L, T> mayTransformers;
 
     AbstractDDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
+        this(validateCFMPS(cfmps), cfmps);
+    }
+
+    // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    AbstractDDSolver(L mainProcess, ContextFreeModalProcessSystem<L, AP> cfmps) {
         final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs = cfmps.getPMPGs();
 
         this.workUnits = new HashMap<>(HashUtil.capacity(pmpgs.size()));
         for (Map.Entry<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> e : pmpgs.entrySet()) {
             final L label = e.getKey();
             final ProceduralModalProcessGraph<?, L, ?, AP, ?> pmpg = e.getValue();
-            checkPMPG(label, pmpg);
             workUnits.put(label, initializeWorkUnits(label, pmpg));
-        }
-
-        // TODO handle empty CFMPSs
-        final L mainProcess = cfmps.getMainProcess();
-        if (mainProcess == null || !workUnits.containsKey(mainProcess)) {
-            throw new IllegalArgumentException("The main process is undefined or has no corresponding MPG.");
         }
 
         this.mainProcess = mainProcess;
     }
 
-    private <N> void checkPMPG(@UnderInitialization AbstractDDSolver<T, L, AP> this,
-                               L label,
-                               ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg) {
+    private static <N, L, AP> void checkPMPG(L label, ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg) {
         final N initialNode = pmpg.getInitialNode();
         if (initialNode == null) {
             throw new IllegalArgumentException("PMPG '" + label + "' has no initial node");
@@ -127,9 +123,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         }
     }
 
-    private <N, E> boolean isGuarded(@UnderInitialization AbstractDDSolver<T, L, AP> this,
-                                     ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg,
-                                     N initialNode) {
+    private static <N, L, E, AP> boolean isGuarded(ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg, N initialNode) {
         for (E initialTransition : pmpg.getOutgoingEdges(initialNode)) {
             if (pmpg.getEdgeProperty(initialTransition).isProcess()) {
                 return false;
@@ -138,10 +132,22 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         return true;
     }
 
-    private <N, E> boolean isTerminating(@UnderInitialization AbstractDDSolver<T, L, AP> this,
-                                         ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg,
-                                         N finalNode) {
+    private static <N, L, E, AP> boolean isTerminating(ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg, N finalNode) {
         return pmpg.getOutgoingEdges(finalNode).isEmpty();
+    }
+
+    private static <L, AP> L validateCFMPS(ContextFreeModalProcessSystem<L, AP> cfmps) {
+        // TODO handle empty CFMPSs
+        final L mainProcess = cfmps.getMainProcess();
+        final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpGs = cfmps.getPMPGs();
+
+        if (mainProcess == null || !pmpGs.containsKey(mainProcess)) {
+            throw new IllegalArgumentException("The main process is undefined or has no corresponding MPG.");
+        }
+
+        pmpGs.forEach(AbstractDDSolver::checkPMPG);
+
+        return mainProcess;
     }
 
     private <N> WorkUnit<N, ?> initializeWorkUnits(@UnderInitialization AbstractDDSolver<T, L, AP> this,
