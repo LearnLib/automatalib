@@ -142,11 +142,11 @@ public final class BacktrackingSearch {
                     final O nextOutput = automaton.getTransitionOutput(trans);
 
                     final SplitTree<S, I, O> child;
-                    if (!successors.containsKey(nextOutput)) {
+                    if (successors.containsKey(nextOutput)) {
+                        child = successors.get(nextOutput);
+                    } else {
                         child = new SplitTree<>(new HashSet<>());
                         successors.put(nextOutput, child);
-                    } else {
-                        child = successors.get(nextOutput);
                     }
 
                     // invalid input
@@ -306,11 +306,11 @@ public final class BacktrackingSearch {
                 final O nextOutput = automaton.getTransitionOutput(trans);
 
                 final Set<S> child;
-                if (!successors.containsKey(nextOutput)) {
+                if (successors.containsKey(nextOutput)) {
+                    child = successors.get(nextOutput);
+                } else {
                     child = new HashSet<>();
                     successors.put(nextOutput, child);
-                } else {
-                    child = successors.get(nextOutput);
                 }
 
                 // invalid input
@@ -424,11 +424,11 @@ public final class BacktrackingSearch {
             final O nextOutput = automaton.getOutput(current, i);
 
             final Map<S, S> nextMapping;
-            if (!successors.containsKey(nextOutput)) {
+            if (successors.containsKey(nextOutput)) {
+                nextMapping = successors.get(nextOutput);
+            } else {
                 nextMapping = new HashMap<>();
                 successors.put(nextOutput, nextMapping);
-            } else {
-                nextMapping = successors.get(nextOutput);
             }
 
             // invalid input

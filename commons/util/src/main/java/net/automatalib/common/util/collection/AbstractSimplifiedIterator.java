@@ -45,10 +45,10 @@ public abstract class AbstractSimplifiedIterator<E> implements Iterator<E> {
 
     private boolean advance() {
         boolean ret = calculateNext();
-        if (!ret) {
-            state = State.FINISHED;
-        } else {
+        if (ret) {
             state = State.HAS_NEXT;
+        } else {
+            state = State.FINISHED;
         }
         return ret;
     }

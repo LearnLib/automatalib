@@ -90,12 +90,12 @@ final class DOTMultiDialog<I> extends JDialog {
 
         mainPanel.add(listBox, c);
 
-        if (!graphs.isEmpty()) {
-            listBox.setSelectedIndex(0);
-        } else {
+        if (graphs.isEmpty()) {
             cmp.setData(null);
             saveDotAction.setEnabled(false);
             savePngAction.setEnabled(false);
+        } else {
+            listBox.setSelectedIndex(0);
         }
 
         // configure this window

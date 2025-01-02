@@ -322,8 +322,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
             result.put(node, getSatisfiedSubformulas(unit, node));
         }
 
-        // we put a transformer for every node, so it's no longer null
-        return (MutableMapping<N, List<FormulaNode<L, AP>>>) result;
+        return result;
     }
 
     private <N> List<FormulaNode<L, AP>> getSatisfiedSubformulas(WorkUnit<N, ?> unit, N node) {
@@ -533,8 +532,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         for (N node : unit.pmpg.getNodes()) {
             result.put(node, serializer.serialize(unit.propTransformers.get(node)));
         }
-        // we put a transformer for every node, so it's no longer null
-        return (MutableMapping<N, List<String>>) result;
+        return result;
     }
 
     private void initialize(FormulaNode<L, AP> ast) {
@@ -568,7 +566,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
                 transformers.put(n, createInitTransformerNode(dependencyGraph));
             }
         }
-        return (MutableMapping<N, T>) transformers; // we put a transformer for every node, so it's no longer null
+        return transformers;
     }
 
     private boolean isSat() {

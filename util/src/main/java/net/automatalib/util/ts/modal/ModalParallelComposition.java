@@ -111,22 +111,22 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
         for (I symbol : mts0.getInputAlphabet()) {
             for (T0 transition : mts0.getTransitions(productState.getFirst(), symbol)) {
 
-                if (!mts1.getInputAlphabet().contains(symbol)) {
-                    newTransitions.add(new TransitionData<>(symbol,
-                                                            Pair.of(mts0.getSuccessor(transition),
-                                                                    productState.getSecond()),
-                                                            mts0.getTransitionProperty(transition).getModalType()));
-                } else {
+                if (mts1.getInputAlphabet().contains(symbol)) {
                     for (T1 partnerTransition : mts1.getTransitions(productState.getSecond(), symbol)) {
                         newTransitions.add(new TransitionData<>(symbol,
                                                                 Pair.of(mts0.getSuccessor(transition),
                                                                         mts1.getSuccessor(partnerTransition)),
                                                                 minimalCompatibleType(mts0.getTransitionProperty(
-                                                                        transition).getModalType(),
+                                                                                              transition).getModalType(),
                                                                                       mts1.getTransitionProperty(
-                                                                                              partnerTransition)
+                                                                                                  partnerTransition)
                                                                                           .getModalType())));
                     }
+                } else {
+                    newTransitions.add(new TransitionData<>(symbol,
+                                                            Pair.of(mts0.getSuccessor(transition),
+                                                                    productState.getSecond()),
+                                                            mts0.getTransitionProperty(transition).getModalType()));
                 }
             }
         }

@@ -129,10 +129,10 @@ final class SPAConverter {
             // minimize SPA
             final ATRSequences<CI> atr = SPAs.computeATRSequences(spa);
             final Set<CI> accessibleProcedures = atr.accessSequences.keySet();
-            final DefaultProceduralInputAlphabet<CI> minimizedAlphabet = new DefaultProceduralInputAlphabet<>(
-                    spaAlphabet.getInternalAlphabet(),
-                    Alphabets.fromCollection(accessibleProcedures),
-                    spaAlphabet.getReturnSymbol());
+            final ProceduralInputAlphabet<CI> minimizedAlphabet =
+                    new DefaultProceduralInputAlphabet<>(spaAlphabet.getInternalAlphabet(),
+                                                         Alphabets.fromCollection(accessibleProcedures),
+                                                         spaAlphabet.getReturnSymbol());
             final Alphabet<CI> minimizedProceduralInputAlphabet = minimizedAlphabet.getProceduralAlphabet();
 
             procedures.keySet().retainAll(accessibleProcedures);

@@ -115,7 +115,7 @@ public final class Mappings {
      * @return the composed mapping
      */
     public static <D, I, R> Mapping<D, R> compose(Mapping<D, ? extends I> first, Mapping<? super I, R> second) {
-        return new MappingComposition<D, I, R>(first, second);
+        return new MappingComposition<>(first, second);
     }
 
     /**

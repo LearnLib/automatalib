@@ -351,8 +351,7 @@ public final class SBAs {
             spaProcedures.put(e.getKey(), reduce(e.getValue(), alphabet, proceduralInputs));
         }
 
-        // explicit type specification is required by checker-framework
-        return new StackSPA<@Nullable Object, I>(alphabet, sba.getInitialProcedure(), spaProcedures);
+        return new StackSPA<>(alphabet, sba.getInitialProcedure(), spaProcedures);
     }
 
     private static <S, I> DFA<?, I> reduce(DFA<S, I> dfa,

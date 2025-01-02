@@ -134,6 +134,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
     }
 
     @Override
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull") // null differs from empty list semantically
     public @Nullable List<E> getShortestPath(N src, N tgt) {
         int srcId = ids.getNodeId(src), tgtId = ids.getNodeId(tgt);
 

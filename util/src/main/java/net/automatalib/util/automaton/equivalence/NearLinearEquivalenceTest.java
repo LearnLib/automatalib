@@ -34,6 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Implements Hopcroft and Karp's equivalence test, as described in <a href="https://doi.org/1813/5958">A linear
  * algorithm for testing equivalence of finite automata</a>.
  */
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
 public final class NearLinearEquivalenceTest {
 
     private NearLinearEquivalenceTest() {

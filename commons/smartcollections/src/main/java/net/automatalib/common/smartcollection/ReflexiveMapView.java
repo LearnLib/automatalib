@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 
 /**
  * An immutable, reflexive {@link Map} view for a given set of elements. This map is backed by the given set elements,
@@ -70,7 +69,7 @@ public class ReflexiveMapView<T> extends AbstractMap<T, T> {
 
     @Override
     public Set<T> values() {
-        return (Set<@UnknownKeyFor T>) this.domain;
+        return this.domain;
     }
 
     private final class EntrySet extends AbstractSet<Entry<@KeyFor("this") T, T>> {

@@ -142,10 +142,10 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
                     Transition peek = path.peek();
                     assert peek != null;
                     State prev = peek.state;
-                    if (prev != init) {
-                        updateSignature(prev, peek.transIdx, last);
-                    } else {
+                    if (prev == init) {
                         updateInitSignature(peek.transIdx, last);
+                    } else {
+                        updateSignature(prev, peek.transIdx, last);
                     }
                 }
             } else if (last != init) {
@@ -161,7 +161,9 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
             int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
             State suffixState = createSuffix(suffix.subWord(1), acc);
 
-            if (last != init) {
+            if (last == init) {
+                updateInitSignature(suffTransIdx, suffixState);
+            } else {
                 last = unhide(last, suffTransIdx, suffixState);
 
                 if (conf != null) {
@@ -176,8 +178,6 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
                         }
                     }
                 }
-            } else {
-                updateInitSignature(suffTransIdx, suffixState);
             }
         }
 

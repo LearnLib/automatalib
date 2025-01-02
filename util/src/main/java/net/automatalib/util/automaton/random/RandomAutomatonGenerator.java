@@ -31,7 +31,6 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
     protected final List<? extends I> inputs;
     protected final List<? extends SP> spList;
     protected final List<? extends TP> tpList;
-    @SuppressWarnings("PMD.LooseCoupling") // ArrayList#ensureCapacity is required
     protected final ArrayList<S> states;
     protected final A automaton;
 

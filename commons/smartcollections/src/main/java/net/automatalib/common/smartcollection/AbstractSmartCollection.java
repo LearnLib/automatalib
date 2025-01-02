@@ -16,6 +16,7 @@
 package net.automatalib.common.smartcollection;
 
 import java.util.AbstractCollection;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
@@ -61,9 +62,7 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
 
     @Override
     public <T extends E> void addAll(T[] array) {
-        for (T t : array) {
-            add(t);
-        }
+        addAll(Arrays.asList(array));
     }
 
     @Override

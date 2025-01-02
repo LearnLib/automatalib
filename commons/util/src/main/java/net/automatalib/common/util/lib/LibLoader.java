@@ -109,22 +109,16 @@ public final class LibLoader {
                 try {
                     loadShippedLibrary(clazz, name);
                 } catch (LoadLibraryException ex) {
-                    try {
-                        loadSystemLibrary(name);
-                    } catch (LoadLibraryException ex2) {
-                        throw ex;
-                    }
+                    LOG.info("Couldn't load shipped library", ex);
+                    loadSystemLibrary(name);
                 }
                 break;
             case PREFER_SYSTEM:
                 try {
                     loadSystemLibrary(name);
                 } catch (LoadLibraryException ex) {
-                    try {
-                        loadShippedLibrary(clazz, name);
-                    } catch (LoadLibraryException ex2) {
-                        throw ex;
-                    }
+                    LOG.info("Couldn't load system library", ex);
+                    loadShippedLibrary(clazz, name);
                 }
                 break;
             case SHIPPED_ONLY:

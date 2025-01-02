@@ -49,10 +49,6 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
         this(collection.toArray());
     }
 
-    public ArrayStorage(ArrayStorage<? extends T> arrayStorage) {
-        this(arrayStorage.storage.clone());
-    }
-
     private ArrayStorage(@Nullable Object[] storage) {
         this.storage = storage;
     }
@@ -73,6 +69,11 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
     @Override
     public int size() {
         return storage.length;
+    }
+
+    @Override
+    public Object[] toArray() {
+        return storage.clone();
     }
 
     @Override

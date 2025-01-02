@@ -83,6 +83,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      *
      * @see AbstractLTSmin
      */
+    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod") // it has no semantic impact
     protected AbstractLTSmin(boolean keepFiles, Function<String, I> string2Input) {
         this.keepFiles = keepFiles;
         this.string2Input = string2Input;
@@ -183,7 +184,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
                 if (!keepFiles && !ltlFile.delete()) {
                     logFileWarning(ltlFile);
                 }
-                throw ioe;
+                throw new ModelCheckingException(ioe);
             }
         } catch (IOException ioe) {
             throw new ModelCheckingException(ioe);

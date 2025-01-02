@@ -34,10 +34,7 @@ public abstract class AbstractTwoLevelIterator<L1, L2, O> implements Iterator<O>
 
     @Override
     public boolean hasNext() {
-        if (l2Iterator != null && l2Iterator.hasNext()) {
-            return true;
-        }
-        return advance();
+        return l2Iterator != null && l2Iterator.hasNext() || advance();
     }
 
     @EnsuresNonNullIf(expression = "l2Iterator", result = true)

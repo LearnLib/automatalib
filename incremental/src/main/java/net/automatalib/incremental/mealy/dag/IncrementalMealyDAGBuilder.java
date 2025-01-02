@@ -184,10 +184,10 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
                 Transition<O> peek = path.peek();
                 assert peek != null;
                 State<O> prev = peek.state;
-                if (prev != init) {
-                    updateSignature(prev, peek.transIdx, last);
-                } else {
+                if (prev == init) {
                     updateInitSignature(peek.transIdx, last);
+                } else {
+                    updateSignature(prev, peek.transIdx, last);
                 }
             }
         } else if (last != init) {
@@ -207,7 +207,9 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
 
         State<O> suffixState = createSuffix(suffix.subWord(1), suffixOut.subWord(1));
 
-        if (last != init) {
+        if (last == init) {
+            updateInitSignature(suffTransIdx, suffixState, suffTransOut);
+        } else {
             last = unhide(last, suffTransIdx, suffixState, suffTransOut);
 
             if (conf != null) {
@@ -222,8 +224,6 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
                     }
                 }
             }
-        } else {
-            updateInitSignature(suffTransIdx, suffixState, suffTransOut);
         }
 
         if (path.isEmpty()) {
@@ -415,8 +415,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
         State<O> other = register.get(sig);
         if (other != null) {
             if (state != other) {
-                for (int i = 0; i < sig.successors.array.length; i++) {
-                    State<O> succ = sig.successors.array[i];
+                for (State<O> succ : sig.successors.array) {
                     if (succ != null) {
                         succ.decreaseIncoming();
                     }
@@ -437,8 +436,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
 
         state = new State<>(sig);
         register.put(sig, state);
-        for (int i = 0; i < sig.successors.array.length; i++) {
-            State<O> succ = sig.successors.array[i];
+        for (State<O> succ : sig.successors.array) {
             if (succ != null) {
                 succ.increaseIncoming();
             }

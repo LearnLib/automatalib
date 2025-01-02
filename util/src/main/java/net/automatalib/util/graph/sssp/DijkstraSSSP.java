@@ -144,6 +144,7 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
     }
 
     @Override
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull") // null differs from empty list semantically
     public @Nullable List<E> getShortestPath(N target) {
         Record<N, E> rec = records.get(target);
         if (rec == null) {

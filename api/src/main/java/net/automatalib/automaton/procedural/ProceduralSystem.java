@@ -130,9 +130,8 @@ interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?,
     @Override
     default Graph<?, ?> graphView() {
         final ProceduralInputAlphabet<I> alphabet = this.getInputAlphabet();
-        // explicit type specification is required by checker-framework
-        return new ProceduralGraphView<@Nullable Object, I>(alphabet.getInternalAlphabet(),
-                                                            this.getProceduralInputs(alphabet),
-                                                            this.getProcedures());
+        return new ProceduralGraphView<>(alphabet.getInternalAlphabet(),
+                                         this.getProceduralInputs(alphabet),
+                                         this.getProcedures());
     }
 }

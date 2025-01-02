@@ -151,11 +151,11 @@ public final class GraphTraversal {
                 case ABORT_TRAVERSAL:
                     return complete;
                 case EXPLORE:
-                    if (nodeCount != limit) { // not equals will always be true for negative limit values
+                    if (nodeCount == limit) {
+                        complete = false;
+                    } else { // not equals will always be true for negative limit values
                         bfsQueue.add(new BFRecord<>(init, dataHolder.value));
                         nodeCount++;
-                    } else {
-                        complete = false;
                     }
                     break;
                 default:
@@ -192,11 +192,11 @@ public final class GraphTraversal {
                     case ABORT_TRAVERSAL:
                         return complete;
                     case EXPLORE:
-                        if (nodeCount != limit) { // not equals will always be true for negative limit values
+                        if (nodeCount == limit) {
+                            complete = false;
+                        } else { // not equals will always be true for negative limit values
                             bfsQueue.offer(new BFRecord<>(tgtNode, dataHolder.value));
                             nodeCount++;
-                        } else {
-                            complete = false;
                         }
                         break;
                     default:
@@ -360,11 +360,11 @@ public final class GraphTraversal {
                 case ABORT_TRAVERSAL:
                     return complete;
                 case EXPLORE:
-                    if (nodeCount != limit) {
+                    if (nodeCount == limit) {
+                        complete = false;
+                    } else {
                         dfsStack.push(new DFRecord<>(init, dataHolder.value));
                         nodeCount++;
-                    } else {
-                        complete = false;
                     }
                     break;
                 default:
@@ -408,13 +408,13 @@ public final class GraphTraversal {
                 case ABORT_TRAVERSAL:
                     return complete;
                 case EXPLORE:
-                    if (nodeCount != limit) {
+                    if (nodeCount == limit) {
+                        complete = false;
+                    } else {
                         D data = dataHolder.value;
                         current.setLastEdge(edge, tgt, data);
                         dfsStack.push(new DFRecord<>(tgt, data));
                         nodeCount++;
-                    } else {
-                        complete = false;
                     }
                     break;
                 default:

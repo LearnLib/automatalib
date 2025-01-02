@@ -259,8 +259,9 @@ public abstract class AbstractFSMParser<I> {
                 }
                 default: throw new AssertionError();
             }
-            // consume all tokens until EOL is reached
-            while (streamTokenizer.nextToken() != StreamTokenizer.TT_EOL) {}
+            while (streamTokenizer.nextToken() != StreamTokenizer.TT_EOL) {
+                // consume all tokens until EOL is reached
+            }
             partLineNumber++;
         }
         checkTransitions(streamTokenizer);

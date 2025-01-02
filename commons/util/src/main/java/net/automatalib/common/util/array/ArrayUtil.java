@@ -63,6 +63,7 @@ public final class ArrayUtil {
             return length;
         }
 
+        @SuppressWarnings("PMD.UselessParentheses") // parenthesis make things clearer
         int newCapacity = (length * 3) / 2 + 1;
 
         if (newCapacity < nextCapacityHint) {

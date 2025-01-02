@@ -79,10 +79,10 @@ public final class StringUtil {
     }
 
     public static void enquoteIfNecessary(String s, Appendable a, Pattern valid) throws IOException {
-        if (!valid.matcher(s).matches()) {
-            enquote(s, a);
-        } else {
+        if (valid.matcher(s).matches()) {
             a.append(s);
+        } else {
+            enquote(s, a);
         }
     }
 

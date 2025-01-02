@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Component that displays a {@link BufferedImage}.
  */
-class DOTImageComponent extends JComponent {
+final class DOTImageComponent extends JComponent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DOTImageComponent.class);
 
