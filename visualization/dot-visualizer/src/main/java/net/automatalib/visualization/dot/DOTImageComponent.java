@@ -36,7 +36,6 @@ import javax.swing.JViewport;
 import javax.swing.event.MouseInputAdapter;
 
 import net.automatalib.common.util.IOUtil;
-import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,7 +119,7 @@ final class DOTImageComponent extends JComponent {
      * @param img
      *         the image to be displayed
      */
-    void setImage(@UnknownInitialization(DOTImageComponent.class)DOTImageComponent this, @Nullable BufferedImage img) {
+    void setImage(@Nullable BufferedImage img) {
         this.img = img;
         Dimension dim;
         if (img != null) {

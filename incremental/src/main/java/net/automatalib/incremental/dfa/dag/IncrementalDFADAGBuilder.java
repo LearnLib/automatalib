@@ -155,7 +155,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
             // We then create a suffix path, i.e., a linear sequence of states corresponding to
             // the suffix (more precisely: the suffix minus the first symbol, since this is the
             // transition which is used for gluing the suffix path to the existing automaton).
-            @SuppressWarnings("assignment.type.incompatible") // TODO maybe properly enforce @KeyFor(this)?
+            @SuppressWarnings("assignment") // TODO maybe properly enforce @KeyFor(this)?
             Word<? extends I> suffix = word.subWord(prefixLen);
             I sym = suffix.firstSymbol();
             int suffTransIdx = inputAlphabet.getSymbolIndex(sym);

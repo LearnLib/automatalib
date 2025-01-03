@@ -25,6 +25,7 @@ import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.EdgeWeights;
 import net.automatalib.graph.concept.NodeIDs;
 import net.automatalib.util.graph.Graphs;
+import org.checkerframework.checker.initialization.qual.UnderInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -51,7 +52,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
         initialize(graph, ew);
     }
 
-    private void initialize(Graph<N, E> graph, EdgeWeights<E> ew) {
+    private void initialize(@UnderInitialization FloydWarshallAPSP<N, E> this, Graph<N, E> graph, EdgeWeights<E> ew) {
         for (int i = 0; i < size; i++) {
             N src = ids.getNode(i);
 

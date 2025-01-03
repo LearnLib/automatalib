@@ -131,12 +131,10 @@ public final class IterableUtil {
      *
      * @param iterable
      *         the iterable whose elements should be counted
-     * @param <T>
-     *         element type
      *
      * @return the number of elements of the iterable
      */
-    public static <T> int size(Iterable<T> iterable) {
+    public static int size(Iterable<?> iterable) {
         if (iterable instanceof Collection) {
             return ((Collection<?>) iterable).size();
         }

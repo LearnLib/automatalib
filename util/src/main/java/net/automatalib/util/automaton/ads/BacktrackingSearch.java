@@ -407,9 +407,9 @@ public final class BacktrackingSearch {
         return result;
     }
 
-    private static <S, I, O> ADSNode<S, I, O> constructADS(MealyMachine<S, I, ?, O> automaton,
-                                                           Map<S, S> currentToInitialMapping,
-                                                           SearchState<S, I, O> searchState) {
+    private static <S, I, T, O> ADSNode<S, I, O> constructADS(MealyMachine<S, I, T, O> automaton,
+                                                              Map<S, S> currentToInitialMapping,
+                                                              SearchState<S, I, O> searchState) {
 
         if (currentToInitialMapping.size() == 1) {
             return new ADSLeafNode<>(null, currentToInitialMapping.values().iterator().next());
@@ -420,8 +420,10 @@ public final class BacktrackingSearch {
 
         for (Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
             final S current = entry.getKey();
-            final S nextState = automaton.getSuccessor(current, i);
-            final O nextOutput = automaton.getOutput(current, i);
+            final T trans = automaton.getTransition(current, i);
+            assert trans != null;
+            final S nextState = automaton.getSuccessor(trans);
+            final O nextOutput = automaton.getTransitionOutput(trans);
 
             final Map<S, S> nextMapping;
             if (successors.containsKey(nextOutput)) {

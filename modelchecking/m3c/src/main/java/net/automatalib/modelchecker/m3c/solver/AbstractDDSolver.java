@@ -49,7 +49,6 @@ import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
-import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -69,7 +68,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         implements ModelChecker<L, ContextFreeModalProcessSystem<L, AP>, FormulaNode<L, AP>, WitnessTree<L, AP>> {
 
     // Attributes that are constant for a given CFMPS
-    private final @KeyFor("workUnits") L mainProcess;
+    private final L mainProcess;
 
     // Attributes that change for each formula
     private TransformerSerializer<T, L, AP> serializer;
@@ -86,7 +85,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
-    AbstractDDSolver(L mainProcess, ContextFreeModalProcessSystem<L, AP> cfmps) {
+    private AbstractDDSolver(L mainProcess, ContextFreeModalProcessSystem<L, AP> cfmps) {
         final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs = cfmps.getPMPGs();
 
         this.workUnits = new HashMap<>(HashUtil.capacity(pmpgs.size()));
@@ -569,6 +568,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         return transformers;
     }
 
+    @SuppressWarnings("argument") // we have checked that mainProcess belongs to workUnits in the constructor
     private boolean isSat() {
         return isSat(workUnits.get(mainProcess));
     }

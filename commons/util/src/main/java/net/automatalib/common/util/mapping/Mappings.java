@@ -137,7 +137,7 @@ public final class Mappings {
      *
      * @return the mapped collection
      */
-    public static <D, R> Collection<R> apply(Mapping<? super D, R> mapping, Collection<? extends D> coll) {
+    public static <D, R> Collection<R> apply(Mapping<? super D, ? extends R> mapping, Collection<D> coll) {
         return CollectionUtil.map(coll, mapping::get);
     }
 
@@ -175,7 +175,7 @@ public final class Mappings {
      *
      * @return the mapped iterable.
      */
-    public static <D, R> Iterable<R> apply(Mapping<? super D, R> mapping, Iterable<? extends D> it) {
+    public static <D, R> Iterable<R> apply(Mapping<? super D, ? extends R> mapping, Iterable<D> it) {
         return IterableUtil.map(it, mapping::get);
     }
 
@@ -211,7 +211,7 @@ public final class Mappings {
         return val;
     }
 
-    public static <D, R> @Nullable R nullGet(@Nullable Mapping<? super D, ? extends R> mapping, D key) {
+    public static <D, @Nullable R> R nullGet(@Nullable Mapping<? super D, ? extends R> mapping, D key) {
         return safeGet(mapping, key, null);
     }
 

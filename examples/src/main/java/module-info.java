@@ -31,7 +31,8 @@ open module net.automatalib.example {
     requires net.automatalib.visualization.dot;
     requires org.slf4j;
 
+    // provided dependency
     requires static automaton;
-    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    // annotations are 'provided'-scoped and need not to be loaded at runtime
     requires static org.checkerframework.checker.qual;
 }

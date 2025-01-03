@@ -25,8 +25,6 @@ import javax.swing.AbstractAction;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.checkerframework.checker.initialization.qual.UnderInitialization;
-
 final class DOTUtil {
 
     static final FileFilter DOT_FILTER = new FileNameExtensionFilter("GraphVIZ file (*.dot)", "dot");
@@ -39,7 +37,7 @@ final class DOTUtil {
 
     private DOTUtil() {}
 
-    static AbstractAction getCloseAction(@UnderInitialization(Window.class) Window w) {
+    static AbstractAction getCloseAction(Window w) {
         return new AbstractAction("Close") {
 
             @Override
@@ -49,7 +47,7 @@ final class DOTUtil {
         };
     }
 
-    static KeyAdapter closeOnEscapeAdapter(@UnderInitialization(Window.class) Window w) {
+    static KeyAdapter closeOnEscapeAdapter(Window w) {
         return new KeyAdapter() {
 
             @Override

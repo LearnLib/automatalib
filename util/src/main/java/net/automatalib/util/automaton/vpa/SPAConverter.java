@@ -47,6 +47,7 @@ import net.automatalib.util.automaton.procedural.ATRSequences;
 import net.automatalib.util.automaton.procedural.SPAs;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class SPAConverter {
 
@@ -290,12 +291,12 @@ final class SPAConverter {
 
     public static class Node<AI, CI> {
 
-        private final Word<AI> prefix;
-        private final Word<AI> suffix;
-        private final CI label;
+        private final @Nullable Word<AI> prefix;
+        private final @Nullable Word<AI> suffix;
+        private final @Nullable CI label;
 
-        private final Node<AI, CI> trueSucc;
-        private final Node<AI, CI> falseSucc;
+        private final @Nullable Node<AI, CI> trueSucc;
+        private final @Nullable Node<AI, CI> falseSucc;
 
         Node(CI label) {
             this(null, null, label, null, null);
@@ -305,7 +306,11 @@ final class SPAConverter {
             this(prefix, suffix, null, trueSucc, falseSucc);
         }
 
-        private Node(Word<AI> prefix, Word<AI> suffix, CI label, Node<AI, CI> trueSucc, Node<AI, CI> falseSucc) {
+        private Node(@Nullable Word<AI> prefix,
+                     @Nullable Word<AI> suffix,
+                     @Nullable CI label,
+                     @Nullable Node<AI, CI> trueSucc,
+                     @Nullable Node<AI, CI> falseSucc) {
             this.prefix = prefix;
             this.suffix = suffix;
             this.label = label;

@@ -67,7 +67,7 @@ public class MapMapping<D, @Nullable R> implements MutableMapping<D, R> {
         }
     }
 
-    public static <D, R> MapMapping<D, R> create(Map<D, R> map) {
+    public static <D, @Nullable R> MapMapping<D, R> create(Map<D, R> map) {
         return new MapMapping<>(map);
     }
 

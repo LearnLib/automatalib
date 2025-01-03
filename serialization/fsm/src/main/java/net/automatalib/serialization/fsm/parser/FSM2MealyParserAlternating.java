@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -130,7 +131,7 @@ public final class FSM2MealyParserAlternating<I, O, A extends MutableMealyMachin
             }
 
             // read the letter
-            final String letter = streamTokenizer.sval;
+            final String letter = Objects.requireNonNull(streamTokenizer.sval);
 
             // create a transition
             final boolean isNew =

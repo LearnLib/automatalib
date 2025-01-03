@@ -27,6 +27,7 @@ import net.automatalib.modelchecker.m3c.formula.modalmu.AbstractFixedPointFormul
 import net.automatalib.modelchecker.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelchecker.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelchecker.m3c.formula.modalmu.VariableNode;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A dependency graph is used to represent a hierarchical equational system.
@@ -36,7 +37,7 @@ import net.automatalib.modelchecker.m3c.formula.modalmu.VariableNode;
  * @param <AP>
  *         atomic proposition type
  */
-public class DependencyGraph<L, AP> {
+public final class DependencyGraph<L, AP> {
 
     /* All formulaNodes except FixedPoint- and VariableNode */
     private final List<FormulaNode<L, AP>> formulaNodes;
@@ -114,7 +115,8 @@ public class DependencyGraph<L, AP> {
         if (node instanceof VariableNode) {
             /* VariableNode has same variableNumber as the fixed point it references */
             String refVariable = ((VariableNode<L, AP>) node).getVariable();
-            FormulaNode<L, AP> refNode = fixedPointVarMap.get(refVariable);
+            @SuppressWarnings("nullness") // validated by the parser
+            @NonNull FormulaNode<L, AP> refNode = fixedPointVarMap.get(refVariable);
             node.setVarNumber(refNode.getVarNumber());
         } else {
             node.setVarNumber(varNumber);

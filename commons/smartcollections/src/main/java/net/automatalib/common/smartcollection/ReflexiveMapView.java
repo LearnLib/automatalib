@@ -51,7 +51,7 @@ public class ReflexiveMapView<T> extends AbstractMap<T, T> {
     }
 
     @Override
-    @SuppressWarnings("contracts.conditional.postcondition.not.satisfied") // condition is satisfied
+    @SuppressWarnings("contracts.conditional.postcondition") // condition is satisfied
     public boolean containsKey(@Nullable Object key) {
         return this.domain.contains(key);
     }

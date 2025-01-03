@@ -250,12 +250,10 @@ public final class IteratorUtil {
      *
      * @param iterator
      *         the iterator whose elements should be counted
-     * @param <T>
-     *         element type
      *
      * @return the number of elements returned by the iterator
      */
-    public static <T> int size(Iterator<T> iterator) {
+    public static int size(Iterator<?> iterator) {
         int size = 0;
         while (iterator.hasNext()) {
             size++;

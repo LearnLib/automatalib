@@ -52,7 +52,7 @@ public class CFMPSGraphView<N, L, E, AP> implements Graph<Pair<L, N>, Pair<L, E>
     @Override
     public Collection<Pair<L, E>> getOutgoingEdges(Pair<L, N> node) {
         final L process = node.getFirst();
-        @SuppressWarnings("assignment.type.incompatible") // we only use identifier for which pmpgs exist
+        @SuppressWarnings("assignment") // we only use identifier for which pmpgs exist
         final @NonNull ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg = pmpgs.get(process);
         final Collection<E> outgoingEdges = pmpg.getOutgoingEdges(node.getSecond());
 
@@ -68,7 +68,7 @@ public class CFMPSGraphView<N, L, E, AP> implements Graph<Pair<L, N>, Pair<L, E>
     @Override
     public Pair<L, N> getTarget(Pair<L, E> edge) {
         final L process = edge.getFirst();
-        @SuppressWarnings("assignment.type.incompatible") // we only use identifier for which pmpgs exist
+        @SuppressWarnings("assignment") // we only use identifier for which pmpgs exist
         final @NonNull ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg = pmpgs.get(process);
 
         return Pair.of(process, pmpg.getTarget(edge.getSecond()));

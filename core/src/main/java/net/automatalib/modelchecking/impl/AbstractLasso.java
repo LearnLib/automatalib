@@ -30,6 +30,7 @@ import net.automatalib.modelchecking.Lasso;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
@@ -85,7 +86,8 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
         final WordBuilder<I> wb = new WordBuilder<>();
 
         // start visiting the initial state
-        S current = automaton.getInitialState();
+        @SuppressWarnings("nullness") // we have checked non-nullness of the initial state
+        @NonNull S current = automaton.getInitialState();
 
         // index for the current state
         int i = 0;

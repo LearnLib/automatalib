@@ -225,12 +225,12 @@ public final class SPAs {
                         }
 
                         // we only query existing terminating sequences, therefore nullity is fine
-                        @SuppressWarnings("methodref.return.invalid")
+                        @SuppressWarnings("methodref.return")
                         final Mapping<I, Word<I>> tsMapping = terminatingSequences::get;
 
                         final WordBuilder<I> accessBuilder = new WordBuilder<>();
                         // we only invoke this method with finished procedures
-                        @SuppressWarnings("assignment.type.incompatible")
+                        @SuppressWarnings("assignment")
                         final @NonNull Word<I> as = accessSequences.get(procedure);
                         accessBuilder.append(as);
                         accessBuilder.append(alphabet.expand(trace.subWord(0, i), tsMapping));
@@ -240,7 +240,7 @@ public final class SPAs {
 
                         final WordBuilder<I> terminatingBuilder = new WordBuilder<>();
                         // we only invoke this method with finished procedures
-                        @SuppressWarnings("assignment.type.incompatible")
+                        @SuppressWarnings("assignment")
                         final @NonNull Word<I> rs = returnSequences.get(procedure);
                         terminatingBuilder.append(alphabet.getReturnSymbol());
                         terminatingBuilder.append(alphabet.expand(remainingTrace, tsMapping));

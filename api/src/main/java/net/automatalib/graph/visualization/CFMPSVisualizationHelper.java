@@ -62,7 +62,7 @@ public class CFMPSVisualizationHelper<N, L, E> extends DefaultVisualizationHelpe
     public boolean getNodeProperties(Pair<L, N> node, Map<String, String> properties) {
 
         final L process = node.getFirst();
-        @SuppressWarnings("assignment.type.incompatible") // we only use identifier for which procedures exist
+        @SuppressWarnings("assignment") // we only use identifier for which procedures exist
         final @NonNull PMPGVisualizationHelper<N, E, ?> visualizer = this.visualizers.get(process);
 
         return visualizer.getNodeProperties(node.getSecond(), properties);
@@ -72,7 +72,7 @@ public class CFMPSVisualizationHelper<N, L, E> extends DefaultVisualizationHelpe
     public boolean getEdgeProperties(Pair<L, N> src, Pair<L, E> edge, Pair<L, N> tgt, Map<String, String> properties) {
 
         final L process = edge.getFirst();
-        @SuppressWarnings("assignment.type.incompatible") // we only use identifier for which procedures exist
+        @SuppressWarnings("assignment") // we only use identifier for which procedures exist
         final @NonNull PMPGVisualizationHelper<N, E, ?> visualizer = this.visualizers.get(process);
 
         return visualizer.getEdgeProperties(src.getSecond(), edge.getSecond(), tgt.getSecond(), properties);

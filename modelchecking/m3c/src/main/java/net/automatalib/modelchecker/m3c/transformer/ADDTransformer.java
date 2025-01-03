@@ -88,8 +88,6 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
      * @param ddManager
      *         used to create the ADD
      */
-    // false-positive, see https://github.com/typetools/checker-framework/issues/2215
-    @SuppressWarnings("assignment.type.incompatible")
     public ADDTransformer(XDDManager<BooleanVector> ddManager) {
         this.xddManager = ddManager;
         this.add = null;
@@ -237,7 +235,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
      * @return {@code true} if the property transformer is the identity function, {@code false} otherwise
      */
     @EnsuresNonNullIf(result = false, expression = {"add", "getAdd()"})
-    @SuppressWarnings("contracts.conditional.postcondition.not.satisfied") // getAdd() is pure
+    @SuppressWarnings("contracts.conditional.postcondition") // getAdd() is pure
     public boolean isIdentity() {
         return this.add == null;
     }

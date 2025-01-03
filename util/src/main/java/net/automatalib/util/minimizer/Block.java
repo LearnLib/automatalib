@@ -57,8 +57,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
      * Constructor.
      */
     Block(int id) {
-        this.id = id;
-        this.states = new UnorderedCollection<>();
+        this(id, new UnorderedCollection<>());
     }
 
     /**
@@ -70,9 +69,6 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
     Block(int id, UnorderedCollection<State<S, L>> states) {
         this.id = id;
         this.states = states;
-        for (State<S, L> state : states) {
-            state.setBlock(this);
-        }
     }
 
     /**

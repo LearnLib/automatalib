@@ -37,6 +37,7 @@ import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.exception.FormatException;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * General-purpose DOT parser for {@link MutableAutomaton}s.
@@ -122,7 +123,7 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
                                                   MutableAutomaton<S, I, ?, SP, TP> automaton) {
         final List<Node> nodes = parser.getNodes();
         final Map<String, S> stateMap = new HashMap<>(HashUtil.capacity(nodes.size()));
-        final MutableMapping<S, String> mapping = automaton.createDynamicStateMapping();
+        final MutableMapping<S, @Nullable String> mapping = automaton.createDynamicStateMapping();
 
         for (Node node : nodes) {
             final S state;
