@@ -968,7 +968,7 @@ limitations under the License.
                                     <rules>
                                         <enforceBytecodeVersion>
                                             <maxJdkVersion>${maven.compiler.target}</maxJdkVersion>
-                                            <ignoredScopes>test,runtime</ignoredScopes>
+                                            <ignoredScopes>test</ignoredScopes>
                                         </enforceBytecodeVersion>
                                     </rules>
                                     <fail>true</fail>
