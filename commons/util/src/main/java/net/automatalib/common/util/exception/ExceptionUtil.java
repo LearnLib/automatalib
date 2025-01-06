@@ -15,6 +15,8 @@
  */
 package net.automatalib.common.util.exception;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Utility methods for {@link Exception}s.
  */
@@ -30,7 +32,7 @@ public final class ExceptionUtil {
      * @param throwable
      *         the throwable to analyse
      */
-    public static void throwIfUnchecked(Throwable throwable) {
+    public static void throwIfUnchecked(@Nullable Throwable throwable) {
         if (throwable instanceof RuntimeException) {
             throw (RuntimeException) throwable;
         }
