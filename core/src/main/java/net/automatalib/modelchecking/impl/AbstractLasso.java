@@ -223,11 +223,11 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
             throw new IllegalArgumentException(NO_LASSO);
         }
 
-        automaton:
+        states:
         for (S s : automaton) {
             for (I i : inputs) {
                 if (automaton.getSuccessor(s, i) != null) {
-                    continue automaton;
+                    continue states;
                 }
             }
             throw new IllegalArgumentException(NO_LASSO);

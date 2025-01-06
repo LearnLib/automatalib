@@ -25,8 +25,8 @@ import net.automatalib.modelchecking.ModelCheckerLasso;
  * ({@link #getMinimumUnfolds()}. 2. the lasso has to be unfolded relative to the number of states in a hypothesis,
  * multiplied by some double ({@link #getMultiplier()}.
  * <p>
- * Note that one can unfold a lasso a fixed number of times if the multiplier is set to {@code 0.0}. Also note that a
- * lasso needs to be unfolded at least once, and the multiplier can not be negative.
+ * Note that one can unfold a lasso a fixed number of times if the multiplier is set to {@code 0.0}.
+ * Also note that a lasso needs to be unfolded at least once, and the multiplier can not be negative.
  *
  * @param <I>
  *         the input type
