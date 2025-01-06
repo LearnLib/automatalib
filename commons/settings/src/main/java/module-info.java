@@ -35,7 +35,7 @@ open module net.automatalib.common.setting {
 
     requires net.automatalib.common.util;
 
-    // annotations are 'provided'-scoped and need not to be loaded at runtime
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
     requires static org.kohsuke.metainf_services;
 

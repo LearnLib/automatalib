@@ -33,6 +33,6 @@ open module net.automatalib.example {
 
     // provided dependency
     requires static automaton;
-    // annotations are 'provided'-scoped and need not to be loaded at runtime
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
 }

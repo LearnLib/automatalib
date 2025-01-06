@@ -34,7 +34,7 @@ open module net.automatalib.util {
     requires net.automatalib.common.smartcollection;
     requires net.automatalib.core;
 
-    // annotations are 'provided'-scoped and need not to be loaded at runtime
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
     requires static org.checkerframework.checker.qual;
 

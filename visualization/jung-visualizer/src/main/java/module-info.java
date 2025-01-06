@@ -45,7 +45,7 @@ open module net.automatalib.visualization.jung {
     requires net.automatalib.common.util;
     requires org.slf4j;
 
-    // annotations are 'provided'-scoped and need not to be loaded at runtime
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
     requires static org.kohsuke.metainf_services;
 
