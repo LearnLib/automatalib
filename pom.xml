@@ -30,7 +30,7 @@ limitations under the License.
         This is the parent artifact which does not have any source code. Please refer to the
         "modules" page for more detailed documentation on the single library artifacts.
     </description>
-    <url>http://learnlib.github.io/automatalib/maven-site/${project.version}</url>
+    <url>https://learnlib.github.io/automatalib/maven-site/${project.version}</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -243,11 +243,11 @@ limitations under the License.
         <testng.version>7.10.2</testng.version>
 
         <!-- Javadoc links -->
-        <addlib.apidocs>http://scce.gitlab.io/add-lib/${addlib.version}/apidocs/</addlib.apidocs>
-        <brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
-        <checkerframework.apidocs>http://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
-        <java8.apidocs>http://docs.oracle.com/javase/8/docs/api/</java8.apidocs>
-        <jung.apidocs>http://jung.sourceforge.net/doc/api/</jung.apidocs>
+        <addlib.apidocs>https://scce.gitlab.io/add-lib/${addlib.version}/apidocs/</addlib.apidocs>
+        <brics-automaton.apidocs>https://www.brics.dk/automaton/doc</brics-automaton.apidocs>
+        <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
+        <java8.apidocs>https://docs.oracle.com/javase/8/docs/api/</java8.apidocs>
+        <jung.apidocs>https://jung.sourceforge.net/doc/api/</jung.apidocs>
     </properties>
 
     <!--

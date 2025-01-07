@@ -66,8 +66,8 @@ For developing the code base of AutomataLib it is suggested to use one of the ma
 
 ## Documentation
 
-* **Maven Project Site:** [latest release](http://learnlib.github.io/automatalib/maven-site/latest/) | [older versions](http://learnlib.github.io/automatalib/maven-site/)
-* **API Documentation:** [latest release](http://learnlib.github.io/automatalib/maven-site/latest/apidocs/) | [older versions](http://learnlib.github.io/automatalib/maven-site/)
+* **Maven Project Site:** [latest release](https://learnlib.github.io/automatalib/maven-site/latest/) | [older versions](https://learnlib.github.io/automatalib/maven-site/)
+* **API Documentation:** [latest release](https://learnlib.github.io/automatalib/maven-site/latest/apidocs/) | [older versions](https://learnlib.github.io/automatalib/maven-site/)
 
 
 ## Questions?
@@ -81,15 +81,15 @@ If you have any questions regarding the usage of AutomataLib or if you want to d
 * [Malte Isberner][4] (2013 - 2015)
 
 [1]: http://www.apache.org/licenses/LICENSE-2.0
-[2]: http://www.cs.tu-dortmund.de
-[3]: http://www.learnlib.de
+[2]: https://cs.tu-dortmund.de
+[3]: https://learnlib.de
 [4]: https://github.com/misberner
 [5]: https://github.com/mtf90
 
-[maven-central]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib%22
-[maven-central-distr]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib.distribution%22
+[maven-central]: https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib%22
+[maven-central-distr]: https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib.distribution%22
 [intellij]: https://www.jetbrains.com/idea/
 [eclipse]: https://www.eclipse.org/
 [ltsmin]: https://ltsmin.utwente.nl/
-[m3c]: http://doi.org/10.1007/978-3-030-00244-2_15
+[m3c]: https://doi.org/10.1007/978-3-030-00244-2_15
 [addlib]: https://add-lib.scce.info/
