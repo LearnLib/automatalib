@@ -37,11 +37,11 @@ public abstract class AbstractRecursiveADSLeafNode<S, I, O, N extends RecursiveA
         implements RecursiveADSNode<S, I, O, N> {
 
     private @Nullable N parent;
-    private S hypothesisState;
+    private S state;
 
-    public AbstractRecursiveADSLeafNode(@Nullable N parent, S hypothesisState) {
+    public AbstractRecursiveADSLeafNode(@Nullable N parent, S state) {
         this.parent = parent;
-        this.hypothesisState = hypothesisState;
+        this.state = state;
     }
 
     @Override
@@ -76,17 +76,16 @@ public abstract class AbstractRecursiveADSLeafNode<S, I, O, N extends RecursiveA
 
     @Override
     public S getState() {
-        return this.hypothesisState;
+        return this.state;
     }
 
     @Override
     public void setState(S state) {
-        this.hypothesisState = state;
+        this.state = state;
     }
 
     @Override
     public String toString() {
-        final S state = this.getState();
-        return state == null ? "<null>" : state.toString();
+        return String.valueOf(this.state);
     }
 }
