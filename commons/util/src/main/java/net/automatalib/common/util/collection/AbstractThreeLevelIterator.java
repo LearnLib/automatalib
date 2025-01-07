@@ -47,13 +47,13 @@ public abstract class AbstractThreeLevelIterator<L1, L2, L3, O> implements Itera
         innerIterator.remove();
     }
 
-    private static class Outer<L1, L2> {
+    private static final class Outer<L1, L2> {
 
         private L1 l1Item;
         private L2 l2Item;
     }
 
-    private class OuterIterator extends AbstractTwoLevelIterator<L1, L2, Outer<L1, L2>> {
+    private final class OuterIterator extends AbstractTwoLevelIterator<L1, L2, Outer<L1, L2>> {
 
         private final Outer<L1, L2> value = new Outer<>();
 
@@ -74,7 +74,7 @@ public abstract class AbstractThreeLevelIterator<L1, L2, L3, O> implements Itera
         }
     }
 
-    private class InnerIterator extends AbstractTwoLevelIterator<Outer<L1, L2>, L3, O> {
+    private final class InnerIterator extends AbstractTwoLevelIterator<Outer<L1, L2>, L3, O> {
 
         InnerIterator(Iterator<Outer<L1, L2>> outerIterator) {
             super(outerIterator);

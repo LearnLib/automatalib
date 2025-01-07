@@ -96,7 +96,7 @@ public class PositiveIntSetTest {
         Assert.assertThrows(UnsupportedOperationException.class, () -> view.addAll(tmp));
         Assert.assertThrows(UnsupportedOperationException.class, view::clear);
         Assert.assertThrows(UnsupportedOperationException.class, () -> view.remove(1));
-        Assert.assertThrows(UnsupportedOperationException.class, () -> view.removeIf((x) -> true));
+        Assert.assertThrows(UnsupportedOperationException.class, () -> view.removeIf(x -> true));
         Assert.assertThrows(UnsupportedOperationException.class, () -> view.removeAll(tmp));
         Assert.assertThrows(UnsupportedOperationException.class, () -> view.retainAll(Collections.emptyList()));
     }

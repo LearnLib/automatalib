@@ -239,7 +239,7 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
         }
     }
 
-    private class TransitionSystemView implements MooreMachine<Node<O>, I, Node<O>, O> {
+    private final class TransitionSystemView implements MooreMachine<Node<O>, I, Node<O>, O> {
 
         @Override
         public @Nullable Node<O> getInitialState() {
@@ -271,7 +271,7 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
          * nodeIDs, which requires our states, which requires our nodeIDs, which requires ... infinite loop!
          */
         @Override
-        public <V> MutableMapping<Node<O>, V> createStaticStateMapping() {
+        public <@Nullable V> MutableMapping<Node<O>, V> createStaticStateMapping() {
             return new MapMapping<>();
         }
     }

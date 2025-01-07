@@ -55,7 +55,7 @@ public class SPATestsIteratorTest {
         final ProceduralInputAlphabet<Character> alphabet = this.spa.getInputAlphabet();
 
         final Alphabet<Character> extendedCalls = Alphabets.characters('A', 'D');
-        final DefaultProceduralInputAlphabet<Character> extendedAlphabet =
+        final ProceduralInputAlphabet<Character> extendedAlphabet =
                 new DefaultProceduralInputAlphabet<>(alphabet.getInternalAlphabet(),
                                                      extendedCalls,
                                                      alphabet.getReturnSymbol());

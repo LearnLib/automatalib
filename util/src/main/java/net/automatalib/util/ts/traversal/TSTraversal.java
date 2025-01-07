@@ -105,11 +105,11 @@ public final class TSTraversal {
                 case ABORT_TRAVERSAL:
                     return complete;
                 case EXPLORE:
-                    if (stateCount != limit) {
+                    if (stateCount == limit) {
+                        complete = false;
+                    } else {
                         bfsQueue.offer(new BFSRecord<>(initS, dataHolder.value));
                         stateCount++;
-                    } else {
-                        complete = false;
                     }
                     break;
                 default:
@@ -148,11 +148,11 @@ public final class TSTraversal {
                         case ABORT_TRAVERSAL:
                             return complete;
                         case EXPLORE:
-                            if (stateCount != limit) {
+                            if (stateCount == limit) {
+                                complete = false;
+                            } else {
                                 bfsQueue.offer(new BFSRecord<>(succ, dataHolder.value));
                                 stateCount++;
-                            } else {
-                                complete = false;
                             }
                             break;
                         default:
@@ -274,11 +274,11 @@ public final class TSTraversal {
                 case ABORT_TRAVERSAL:
                     return complete;
                 case EXPLORE:
-                    if (stateCount != limit) {
+                    if (stateCount == limit) {
+                        complete = false;
+                    } else {
                         dfsStack.push(new DFRecord<>(initS, inputs, dataHolder.value));
                         stateCount++;
-                    } else {
-                        complete = false;
                     }
                     break;
                 default:
@@ -334,13 +334,13 @@ public final class TSTraversal {
                     current.advance(ts);
                     break;
                 case EXPLORE:
-                    if (stateCount != limit) {
+                    if (stateCount == limit) {
+                        complete = false;
+                    } else {
                         D data = dataHolder.value;
                         current.setLastTransition(input, trans, succ, data);
                         dfsStack.push(new DFRecord<>(succ, inputs, data));
                         stateCount++;
-                    } else {
-                        complete = false;
                     }
                     break;
                 default:

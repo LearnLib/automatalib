@@ -28,6 +28,7 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
 public final class DeterministicEquivalenceTest {
 
     private static final int MAP_THRESHOLD = 10_000;

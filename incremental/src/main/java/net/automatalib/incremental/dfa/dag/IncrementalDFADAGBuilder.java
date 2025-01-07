@@ -142,10 +142,10 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
                     Transition peek = path.peek();
                     assert peek != null;
                     State prev = peek.state;
-                    if (prev != init) {
-                        updateSignature(prev, peek.transIdx, last);
-                    } else {
+                    if (prev == init) {
                         updateInitSignature(peek.transIdx, last);
+                    } else {
+                        updateSignature(prev, peek.transIdx, last);
                     }
                 }
             } else if (last != init) {
@@ -155,13 +155,15 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
             // We then create a suffix path, i.e., a linear sequence of states corresponding to
             // the suffix (more precisely: the suffix minus the first symbol, since this is the
             // transition which is used for gluing the suffix path to the existing automaton).
-            @SuppressWarnings("assignment.type.incompatible") // TODO maybe properly enforce @KeyFor(this)?
+            @SuppressWarnings("assignment") // TODO maybe properly enforce @KeyFor(this)?
             Word<? extends I> suffix = word.subWord(prefixLen);
             I sym = suffix.firstSymbol();
             int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
             State suffixState = createSuffix(suffix.subWord(1), acc);
 
-            if (last != init) {
+            if (last == init) {
+                updateInitSignature(suffTransIdx, suffixState);
+            } else {
                 last = unhide(last, suffTransIdx, suffixState);
 
                 if (conf != null) {
@@ -176,8 +178,6 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
                         }
                     }
                 }
-            } else {
-                updateInitSignature(suffTransIdx, suffixState);
             }
         }
 

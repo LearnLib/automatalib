@@ -36,7 +36,7 @@ public class DefaultVPAlphabet<I> extends AbstractVPAlphabet<I> implements VPAlp
     }
 
     // False positive, because our intended semantic is currently not supported by CF (https://github.com/typetools/checker-framework/issues/3760)
-    @SuppressWarnings({"method.invocation.invalid", "methodref.receiver.bound.invalid"})
+    @SuppressWarnings({"method.invocation", "methodref.receiver.bound"})
     public DefaultVPAlphabet(Alphabet<I> internalAlphabet, Alphabet<I> callAlphabet, Alphabet<I> returnAlphabet) {
         super(internalAlphabet, callAlphabet, returnAlphabet);
         this.globalSymbolCache = new Object[super.size()];

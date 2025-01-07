@@ -30,55 +30,25 @@ import net.automatalib.modelchecking.Lasso;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
 
     public static final String NO_LASSO = "Automaton is not lasso shaped";
 
-    /**
-     * @see #getWord()
-     */
     private final Word<I> word;
-
-    /**
-     * @see #getLoop()
-     */
     private final Word<I> loop;
-
-    /**
-     * @see #getPrefix()
-     */
     private final Word<I> prefix;
-
-    /**
-     * @see #getOutput()
-     */
     private final D output;
-
-    /**
-     * @see #getInputAlphabet()
-     */
     private final Alphabet<I> inputAlphabet;
-
-    /**
-     * @see #getUnfolds()
-     */
     private final int unfolds;
-
-    /**
-     * @see #getLoopBeginIndices()
-     */
     private final SortedSet<Integer> loopBeginIndices = new TreeSet<>();
-
-    /**
-     * @see #getAutomaton()
-     */
     private final DetOutputAutomaton<?, I, ?, D> automaton;
 
     /**
-     * Constructs a finite representation of a given automaton (that contains a lasso), by unrolling the loop {@code
-     * unfoldTimes}.
+     * Constructs a finite representation of a given automaton (that contains a lasso), by unrolling the loop
+     * {@code unfoldTimes}.
      *
      * @param automaton
      *         the automaton containing the lasso.
@@ -86,12 +56,21 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
      *         the input alphabet.
      * @param unfoldTimes
      *         the number of times the loop needs to be unrolled, must be {@code > 0}.
-     *
-     * @param <S> the state type
+     * @param <S>
+     *         the state type
      */
-    public <S> AbstractLasso(DetOutputAutomaton<S, I, ?, D> automaton, Collection<? extends I> inputs, int unfoldTimes) {
-        assert unfoldTimes > 0;
+    public <S> AbstractLasso(DetOutputAutomaton<S, I, ?, D> automaton,
+                             Collection<? extends I> inputs,
+                             int unfoldTimes) {
+        this(validateLassoShape(automaton, inputs, unfoldTimes), automaton, inputs, unfoldTimes);
+    }
 
+    // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    private <S> AbstractLasso(boolean valid,
+                              DetOutputAutomaton<S, I, ?, D> automaton,
+                              Collection<? extends I> inputs,
+                              int unfoldTimes) {
         // save the original automaton
         this.automaton = automaton;
 
@@ -107,8 +86,8 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
         final WordBuilder<I> wb = new WordBuilder<>();
 
         // start visiting the initial state
-        S current = automaton.getInitialState();
-        assert current != null : NO_LASSO;
+        @SuppressWarnings("nullness") // we have checked non-nullness of the initial state
+        @NonNull S current = automaton.getInitialState();
 
         // index for the current state
         int i = 0;
@@ -117,16 +96,17 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
             states.put(current, i++);
 
             // find the input that leads to the next state
-            final S c = current;
-            final I input = inputAlphabet.stream().filter(in -> automaton.getSuccessor(c, in) != null).
-                    findAny().orElseThrow(() -> new IllegalArgumentException(NO_LASSO));
+            for (I in : inputAlphabet) {
+                final S succ = automaton.getSuccessor(current, in);
+                if (succ != null) {
+                    // append the input to the finite representation
+                    wb.append(in);
 
-            // append the input to the finite representation
-            wb.append(input);
-
-            // continue with the next state.
-            current = automaton.getSuccessor(current, input);
-            assert current != null;
+                    // continue with the next state.
+                    current = succ;
+                    break;
+                }
+            }
         } while (!states.containsKey(current));
 
         // save the state index at which the loop begins
@@ -230,5 +210,29 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
     @Override
     public @Nullable Integer getTransition(Integer state, I input) {
         return getSuccessor(state, input);
+    }
+
+    private static <S, I, D> boolean validateLassoShape(DetOutputAutomaton<S, I, ?, D> automaton,
+                                                        Collection<? extends I> inputs,
+                                                        int unfoldTimes) {
+        if (unfoldTimes <= 0) {
+            throw new AssertionError();
+        }
+
+        if (automaton.getInitialState() == null) {
+            throw new IllegalArgumentException(NO_LASSO);
+        }
+
+        states:
+        for (S s : automaton) {
+            for (I i : inputs) {
+                if (automaton.getSuccessor(s, i) != null) {
+                    continue states;
+                }
+            }
+            throw new IllegalArgumentException(NO_LASSO);
+        }
+
+        return true;
     }
 }

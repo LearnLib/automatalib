@@ -27,7 +27,7 @@ public class IteratorUtilTest {
 
     @Test
     public void testBatch() {
-        final Iterator<Integer> iterator = Stream.iterate(0, (i) -> i+1).limit(50).iterator();
+        final Iterator<Integer> iterator = Stream.iterate(0, i -> i+1).limit(50).iterator();
         final Iterator<List<Integer>> batchIterator = IteratorUtil.batch(iterator, 20);
 
         Assert.assertTrue(batchIterator.hasNext());
@@ -39,7 +39,7 @@ public class IteratorUtilTest {
         Assert.assertFalse(batchIterator.hasNext());
         Assert.assertThrows(NoSuchElementException.class, batchIterator::next);
 
-        final Iterator<Integer> iterator2 = Stream.iterate(0, (i) -> i+1).limit(60).iterator();
+        final Iterator<Integer> iterator2 = Stream.iterate(0, i -> i+1).limit(60).iterator();
         final Iterator<List<Integer>> batchIterator2 = IteratorUtil.batch(iterator2, 20);
 
         Assert.assertTrue(batchIterator2.hasNext());

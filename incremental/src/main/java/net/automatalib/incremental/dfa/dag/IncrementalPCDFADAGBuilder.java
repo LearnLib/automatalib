@@ -50,7 +50,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         if (s == null) {
             return Acceptance.DONT_KNOW;
         }
-        return s != sink ? s.getAcceptance() : Acceptance.FALSE;
+        return s == sink ? Acceptance.FALSE : s.getAcceptance();
     }
 
     @Override
@@ -115,7 +115,16 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
             if (currAcc != Acceptance.DONT_KNOW) {
                 throw new ConflictException("Incompatible acceptances: " + currAcc + " vs " + acc);
             }
-            if (!accepting) {
+            if (accepting) {
+                if (conf != null || last.isConfluence()) {
+                    last = clone(last, Acceptance.TRUE);
+                } else if (last == init) {
+                    updateInitSignature(Acceptance.TRUE);
+                    return;
+                } else {
+                    last = updateSignature(last, acc);
+                }
+            } else {
                 // once we insert a rejected word, we need a sink
                 if (sink == null) {
                     sink = State.SINK;
@@ -128,15 +137,6 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                     return;
                 }
                 last = sink;
-            } else {
-                if (conf != null || last.isConfluence()) {
-                    last = clone(last, Acceptance.TRUE);
-                } else if (last == init) {
-                    updateInitSignature(Acceptance.TRUE);
-                    return;
-                } else {
-                    last = updateSignature(last, acc);
-                }
             }
         } else {
             if (conf != null) {
@@ -148,10 +148,10 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                     Transition peek = path.peek();
                     assert peek != null;
                     State prev = peek.state;
-                    if (prev != init) {
-                        updateSignature(prev, peek.transIdx, last);
-                    } else {
+                    if (prev == init) {
                         updateInitSignature(peek.transIdx, last);
+                    } else {
+                        updateSignature(prev, peek.transIdx, last);
                     }
                 }
             } else if (last != init) {
@@ -163,7 +163,13 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
             int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
             State suffixState = createSuffix(suffix.subWord(1), accepting);
 
-            if (last != init) {
+            if (last == init) {
+                if (accepting) {
+                    updateInitSignature(Acceptance.TRUE, suffTransIdx, suffixState);
+                } else {
+                    updateInitSignature(suffTransIdx, suffixState);
+                }
+            } else {
                 if (accepting) {
                     last = unhide(last, Acceptance.TRUE, suffTransIdx, suffixState);
                 } else {
@@ -181,12 +187,6 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                             break;
                         }
                     }
-                }
-            } else {
-                if (accepting) {
-                    updateInitSignature(Acceptance.TRUE, suffTransIdx, suffixState);
-                } else {
-                    updateInitSignature(suffTransIdx, suffixState);
                 }
             }
         }
@@ -289,16 +289,16 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
     private State createSuffix(Word<? extends I> suffix, boolean accepting) {
         State last;
         Acceptance intermediate;
-        if (!accepting) {
+        if (accepting) {
+            StateSignature sig = new StateSignature(alphabetSize, Acceptance.TRUE);
+            last = replaceOrRegister(sig);
+            intermediate = Acceptance.TRUE;
+        } else {
             if (sink == null) {
                 sink = State.SINK;
             }
             last = sink;
             intermediate = Acceptance.DONT_KNOW;
-        } else {
-            StateSignature sig = new StateSignature(alphabetSize, Acceptance.TRUE);
-            last = replaceOrRegister(sig);
-            intermediate = Acceptance.TRUE;
         }
 
         int len = suffix.length();

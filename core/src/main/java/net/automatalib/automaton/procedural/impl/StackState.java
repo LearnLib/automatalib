@@ -103,7 +103,7 @@ public final class StackState<S, I, P> {
     }
 
     // contract is satisfied by definition of constructors
-    @SuppressWarnings("contracts.conditional.postcondition.not.satisfied")
+    @SuppressWarnings("contracts.conditional.postcondition")
     @EnsuresNonNullIf(expression = {"this.prev", "this.procedure", "this.procedureState"}, result = false)
     private boolean isStatic() {
         return isInit() || isTerm() || isSink();

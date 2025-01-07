@@ -137,6 +137,19 @@ limitations under the License.
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <configuration>
+                        <rules>
+                            <enforceBytecodeVersion>
+                                <excludes>
+                                    <exclude>ch.qos.logback:*</exclude>
+                                </excludes>
+                            </enforceBytecodeVersion>
+                        </rules>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>

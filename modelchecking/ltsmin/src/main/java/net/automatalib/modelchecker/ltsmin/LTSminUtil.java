@@ -178,11 +178,11 @@ public final class LTSminUtil {
         try {
             final int exitValue = ProcessUtil.invokeProcess(commandLine, stringWriter::append);
 
-            if (exitValue != VERSION_EXIT) {
+            if (exitValue == VERSION_EXIT) {
+                return LTSminVersion.parse(stringWriter.toString());
+            } else {
                 LOGGER.debug("Command '{} --version' did not exit with {}", bin, VERSION_EXIT);
                 return null;
-            } else {
-                return LTSminVersion.parse(stringWriter.toString());
             }
         } catch (IOException | InterruptedException e) {
             LOGGER.debug(String.format("Could not execute command '%s'", bin), e);

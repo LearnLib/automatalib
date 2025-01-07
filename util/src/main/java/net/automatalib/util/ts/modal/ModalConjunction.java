@@ -35,7 +35,7 @@ import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.util.ts.traversal.TSTraversalAction;
 import net.automatalib.util.ts.traversal.TSTraversalVisitor;
 
-class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0, S1, I, T, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
+final class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0, S1, I, T, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
         implements WorksetMappingAlgorithm<Pair<S0, S1>, S, A> {
 
     private static final float LOAD_FACTOR = 0.5f;

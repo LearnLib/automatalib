@@ -251,7 +251,7 @@ public class DOTSerializationTest {
         void write(Writer w) throws IOException;
     }
 
-    private static class RedTransitionHelper<E> implements VisualizationHelper<Integer, E> {
+    private static final class RedTransitionHelper<E> implements VisualizationHelper<Integer, E> {
 
         @Override
         public boolean getNodeProperties(Integer node, Map<String, String> properties) {
@@ -268,7 +268,7 @@ public class DOTSerializationTest {
         }
     }
 
-    private static class PreambleHelper<N, E> extends DefaultDOTVisualizationHelper<N, E> {
+    private static final class PreambleHelper<N, E> extends DefaultDOTVisualizationHelper<N, E> {
 
         @Override
         public void writePreamble(Appendable a) throws IOException {
@@ -304,7 +304,7 @@ public class DOTSerializationTest {
         }
     }
 
-    private static class HTMLHelper<N, E> extends DefaultVisualizationHelper<N, E> {
+    private static final class HTMLHelper<N, E> extends DefaultVisualizationHelper<N, E> {
 
         @Override
         public boolean getNodeProperties(N node, Map<String, String> properties) {
@@ -321,7 +321,7 @@ public class DOTSerializationTest {
         }
     }
 
-    private static class GlobalHelper<N, E> implements VisualizationHelper<N, E> {
+    private static final class GlobalHelper<N, E> implements VisualizationHelper<N, E> {
 
         @Override
         public void getGlobalNodeProperties(Map<String, String> properties) {
@@ -346,7 +346,7 @@ public class DOTSerializationTest {
         }
     }
 
-    private static class NullHelper<N, E> implements VisualizationHelper<N, E> {
+    private static final class NullHelper<N, E> implements VisualizationHelper<N, E> {
 
         @Override
         public boolean getNodeProperties(N node, Map<String, String> properties) {

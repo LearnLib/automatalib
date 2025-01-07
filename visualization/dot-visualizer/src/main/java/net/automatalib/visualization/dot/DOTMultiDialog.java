@@ -35,7 +35,7 @@ import javax.swing.ListSelectionModel;
 
 import net.automatalib.common.util.Pair;
 
-class DOTMultiDialog<I> extends JDialog {
+final class DOTMultiDialog<I> extends JDialog {
 
     DOTMultiDialog(List<Pair<String, I>> dots, boolean modal, ThrowableExtractor<I, String> extractor)
             throws IOException {
@@ -90,12 +90,12 @@ class DOTMultiDialog<I> extends JDialog {
 
         mainPanel.add(listBox, c);
 
-        if (!graphs.isEmpty()) {
-            listBox.setSelectedIndex(0);
-        } else {
+        if (graphs.isEmpty()) {
             cmp.setData(null);
             saveDotAction.setEnabled(false);
             savePngAction.setEnabled(false);
+        } else {
+            listBox.setSelectedIndex(0);
         }
 
         // configure this window

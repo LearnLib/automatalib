@@ -30,7 +30,6 @@ import net.automatalib.automaton.procedural.impl.StackSPA;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,8 +87,7 @@ public final class PalindromeExample {
         subModels.put('F', sProcedure);
         subModels.put('G', tProcedure);
 
-        // explicit type variable declaration to make checker-framework happy
-        return new StackSPA<@Nullable Object, Character>(alphabet, 'F', subModels);
+        return new StackSPA<>(alphabet, 'F', subModels);
     }
 
     /**

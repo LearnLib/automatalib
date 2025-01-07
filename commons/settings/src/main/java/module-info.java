@@ -35,7 +35,7 @@ open module net.automatalib.common.setting {
 
     requires net.automatalib.common.util;
 
-    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
     requires static org.kohsuke.metainf_services;
 

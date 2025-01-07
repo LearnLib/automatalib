@@ -79,10 +79,10 @@ public final class StringUtil {
     }
 
     public static void enquoteIfNecessary(String s, Appendable a, Pattern valid) throws IOException {
-        if (!valid.matcher(s).matches()) {
-            enquote(s, a);
-        } else {
+        if (valid.matcher(s).matches()) {
             a.append(s);
+        } else {
+            enquote(s, a);
         }
     }
 
@@ -237,7 +237,7 @@ public final class StringUtil {
      * <a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom">
      * Initialization-on-demand holder idiom</a>
      */
-    private static class LazyPatternHolder {
+    private static final class LazyPatternHolder {
 
         private static final Pattern INSTANCE = Pattern.compile("[a-zA-Z_]*\\w*");
     }

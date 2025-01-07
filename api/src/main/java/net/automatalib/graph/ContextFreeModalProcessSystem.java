@@ -46,7 +46,6 @@ public interface ContextFreeModalProcessSystem<L, AP> extends FiniteRepresentati
 
     @Override
     default Graph<?, ?> graphView() {
-        // explicit type specification is required by checker-framework
-        return new CFMPSGraphView<@Nullable Object, L, @Nullable Object, AP>(getPMPGs());
+        return new CFMPSGraphView<>(getPMPGs());
     }
 }

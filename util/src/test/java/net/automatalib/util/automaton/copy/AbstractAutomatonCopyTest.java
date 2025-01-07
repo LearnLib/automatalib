@@ -170,6 +170,6 @@ public abstract class AbstractAutomatonCopyTest {
     }
 
     private static Predicate<Integer> statePredicateForRemoval(UniversalDeterministicAutomaton<Integer, ?, ?, ?, ?> automaton) {
-        return s -> s == null || (s.equals(automaton.getInitialState()) && s > SIZE / 2);
+        return s -> s == null || s.equals(automaton.getInitialState()) && s > SIZE / 2;
     }
 }

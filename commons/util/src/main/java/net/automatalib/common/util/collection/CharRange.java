@@ -52,10 +52,7 @@ public class CharRange extends AbstractList<Character> implements RandomAccess {
 
     @Override
     public int indexOf(@Nullable Object o) {
-        if (o == null || o.getClass() != Character.class) {
-            return -1;
-        }
-        return indexOf(((Character) o).charValue());
+        return o instanceof Character ? indexOf((char) o) : -1;
     }
 
     public int indexOf(char c) {

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -73,7 +74,7 @@ public final class FSM2MealyParserAlternating<I, O, A extends MutableMealyMachin
     private final Map<Integer, Collection<Pair<String, Integer>>> transitionsFSM;
 
     /**
-     * @see FSM2MealyParserAlternating
+     * See class description.
      */
     private final @Nullable Output<I, Word<O>> output;
 
@@ -130,11 +131,11 @@ public final class FSM2MealyParserAlternating<I, O, A extends MutableMealyMachin
             }
 
             // read the letter
-            final String letter = streamTokenizer.sval;
+            final String letter = Objects.requireNonNull(streamTokenizer.sval);
 
             // create a transition
             final boolean isNew =
-                    transitionsFSM.computeIfAbsent(from, (k) -> new ArrayList<>()).add(Pair.of(letter, to));
+                    transitionsFSM.computeIfAbsent(from, k -> new ArrayList<>()).add(Pair.of(letter, to));
 
             // test for non-determinism
             if (!isNew) {

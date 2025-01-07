@@ -49,7 +49,6 @@ import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
-import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -69,7 +68,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         implements ModelChecker<L, ContextFreeModalProcessSystem<L, AP>, FormulaNode<L, AP>, WitnessTree<L, AP>> {
 
     // Attributes that are constant for a given CFMPS
-    private final @KeyFor("workUnits") L mainProcess;
+    private final L mainProcess;
 
     // Attributes that change for each formula
     private TransformerSerializer<T, L, AP> serializer;
@@ -82,28 +81,24 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     private Map<L, T> mayTransformers;
 
     AbstractDDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
+        this(validateCFMPS(cfmps), cfmps);
+    }
+
+    // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    private AbstractDDSolver(L mainProcess, ContextFreeModalProcessSystem<L, AP> cfmps) {
         final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs = cfmps.getPMPGs();
 
         this.workUnits = new HashMap<>(HashUtil.capacity(pmpgs.size()));
         for (Map.Entry<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> e : pmpgs.entrySet()) {
             final L label = e.getKey();
             final ProceduralModalProcessGraph<?, L, ?, AP, ?> pmpg = e.getValue();
-            checkPMPG(label, pmpg);
             workUnits.put(label, initializeWorkUnits(label, pmpg));
-        }
-
-        // TODO handle empty CFMPSs
-        final L mainProcess = cfmps.getMainProcess();
-        if (mainProcess == null || !workUnits.containsKey(mainProcess)) {
-            throw new IllegalArgumentException("The main process is undefined or has no corresponding MPG.");
         }
 
         this.mainProcess = mainProcess;
     }
 
-    private <N> void checkPMPG(@UnderInitialization AbstractDDSolver<T, L, AP> this,
-                               L label,
-                               ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg) {
+    private static <N, L, AP> void checkPMPG(L label, ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg) {
         final N initialNode = pmpg.getInitialNode();
         if (initialNode == null) {
             throw new IllegalArgumentException("PMPG '" + label + "' has no initial node");
@@ -127,9 +122,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         }
     }
 
-    private <N, E> boolean isGuarded(@UnderInitialization AbstractDDSolver<T, L, AP> this,
-                                     ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg,
-                                     N initialNode) {
+    private static <N, L, E, AP> boolean isGuarded(ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg, N initialNode) {
         for (E initialTransition : pmpg.getOutgoingEdges(initialNode)) {
             if (pmpg.getEdgeProperty(initialTransition).isProcess()) {
                 return false;
@@ -138,10 +131,22 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         return true;
     }
 
-    private <N, E> boolean isTerminating(@UnderInitialization AbstractDDSolver<T, L, AP> this,
-                                         ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg,
-                                         N finalNode) {
+    private static <N, L, E, AP> boolean isTerminating(ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg, N finalNode) {
         return pmpg.getOutgoingEdges(finalNode).isEmpty();
+    }
+
+    private static <L, AP> L validateCFMPS(ContextFreeModalProcessSystem<L, AP> cfmps) {
+        // TODO handle empty CFMPSs
+        final L mainProcess = cfmps.getMainProcess();
+        final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpGs = cfmps.getPMPGs();
+
+        if (mainProcess == null || !pmpGs.containsKey(mainProcess)) {
+            throw new IllegalArgumentException("The main process is undefined or has no corresponding MPG.");
+        }
+
+        pmpGs.forEach(AbstractDDSolver::checkPMPG);
+
+        return mainProcess;
     }
 
     private <N> WorkUnit<N, ?> initializeWorkUnits(@UnderInitialization AbstractDDSolver<T, L, AP> this,
@@ -316,8 +321,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
             result.put(node, getSatisfiedSubformulas(unit, node));
         }
 
-        // we put a transformer for every node, so it's no longer null
-        return (MutableMapping<N, List<FormulaNode<L, AP>>>) result;
+        return result;
     }
 
     private <N> List<FormulaNode<L, AP>> getSatisfiedSubformulas(WorkUnit<N, ?> unit, N node) {
@@ -527,8 +531,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         for (N node : unit.pmpg.getNodes()) {
             result.put(node, serializer.serialize(unit.propTransformers.get(node)));
         }
-        // we put a transformer for every node, so it's no longer null
-        return (MutableMapping<N, List<String>>) result;
+        return result;
     }
 
     private void initialize(FormulaNode<L, AP> ast) {
@@ -562,9 +565,10 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
                 transformers.put(n, createInitTransformerNode(dependencyGraph));
             }
         }
-        return (MutableMapping<N, T>) transformers; // we put a transformer for every node, so it's no longer null
+        return transformers;
     }
 
+    @SuppressWarnings("argument") // we have checked that mainProcess belongs to workUnits in the constructor
     private boolean isSat() {
         return isSat(workUnits.get(mainProcess));
     }

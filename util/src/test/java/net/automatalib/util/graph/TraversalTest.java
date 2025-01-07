@@ -258,7 +258,7 @@ public class TraversalTest {
         }
     }
 
-    private static class InitialAbortVisitor<N, E, D> extends AbstractVisitor<N, E, D> {
+    private static final class InitialAbortVisitor<N, E, D> extends AbstractVisitor<N, E, D> {
 
         @Override
         public GraphTraversalAction processInitial(N initialNode, Holder<D> holder) {

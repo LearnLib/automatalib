@@ -92,21 +92,21 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
 
     @Override
     protected Iterator<Word<I>> l2Iterator(I callSymbol) {
-        @SuppressWarnings("assignment.type.incompatible") // we only iterate over existing procedures
+        @SuppressWarnings("assignment") // we only iterate over existing procedures
         final @NonNull M p = procedures.get(callSymbol);
         return proceduralTestWords(p);
     }
 
     @Override
     protected Word<I> combine(I callSymbol, Word<I> testSequence) {
-        @SuppressWarnings("assignment.type.incompatible") // we only iterate over accessible procedures
+        @SuppressWarnings("assignment") // we only iterate over accessible procedures
         final @NonNull Word<I> as = this.atSequences.accessSequences.get(callSymbol);
 
         if (testSequence.isEmpty()) {
             return as;
         }
 
-        @SuppressWarnings("methodref.return.invalid") // we only iterate over accessible procedures
+        @SuppressWarnings("methodref.return") // we only iterate over accessible procedures
         final Word<I> exp = this.alphabet.expand(testSequence.prefix(-1), this.atSequences.terminatingSequences::get);
 
         return Word.fromWords(as, exp, Word.fromLetter(testSequence.lastSymbol()));

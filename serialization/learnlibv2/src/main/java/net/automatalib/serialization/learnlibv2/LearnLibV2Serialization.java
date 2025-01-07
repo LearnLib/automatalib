@@ -33,10 +33,14 @@ import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.util.automaton.Automata;
 
-public class LearnLibV2Serialization<I>
+public final class LearnLibV2Serialization<I>
         implements InputModelSerializer<I, DFA<?, I>>, InputModelDeserializer<Integer, DFA<Integer, Integer>> {
 
     private static final LearnLibV2Serialization<?> INSTANCE = new LearnLibV2Serialization<>();
+
+    private LearnLibV2Serialization() {
+        // prevent instantiation
+    }
 
     @SuppressWarnings("unchecked")
     public static <I> LearnLibV2Serialization<I> getInstance() {

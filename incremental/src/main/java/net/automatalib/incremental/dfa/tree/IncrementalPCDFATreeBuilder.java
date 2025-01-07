@@ -64,8 +64,12 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
                                                boolean omitUndefined) {
 
         S automatonInit = target.getInitialState();
+        if (automatonInit == null) {
+            return omitUndefined ? null : Word.epsilon();
+        }
+
         Acceptance rootAcc = root.getAcceptance();
-        if (rootAcc.conflicts(automatonInit != null && target.isAccepting(automatonInit))) {
+        if (rootAcc.conflicts(target.isAccepting(automatonInit))) {
             return Word.epsilon();
         }
         if (rootAcc == Acceptance.FALSE) {
@@ -328,7 +332,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
         }
     }
 
-    private class TransitionSystemView extends IncrementalDFATreeBuilder<I>.TransitionSystemView {
+    private final class TransitionSystemView extends IncrementalDFATreeBuilder<I>.TransitionSystemView {
 
         @Override
         public @Nullable Node getTransition(Node state, I input) {

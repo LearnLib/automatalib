@@ -77,9 +77,9 @@ public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHel
         super.getNodeProperties(node, properties);
 
         final I identifier = node.getFirst();
-        @SuppressWarnings("assignment.type.incompatible") // we only use identifiers for which procedures exists
+        @SuppressWarnings("assignment") // we only use identifiers for which procedures exists
         final @NonNull UniversalDeterministicAutomaton<S, I, ?, ?, ?> subModel = subModels.get(identifier);
-        @SuppressWarnings("assignment.type.incompatible") // we only use identifiers for which procedures exists
+        @SuppressWarnings("assignment") // we only use identifiers for which procedures exists
         final @NonNull StateIDs<S> stateID = stateIDs.get(identifier);
 
         if (Boolean.TRUE.equals(subModel.getStateProperty(node.getSecond()))) {
@@ -103,7 +103,7 @@ public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHel
         final S state = src.getSecond();
         final I identifier = edge.getFirst();
         final I input = edge.getSecond();
-        @SuppressWarnings("assignment.type.incompatible") // we only use identifier for which procedures exists
+        @SuppressWarnings("assignment") // we only use identifier for which procedures exists
         final @NonNull UniversalDeterministicAutomaton<S, I, ?, ?, ?> subModel = subModels.get(identifier);
 
         final Object tp = subModel.getTransitionProperty(state, input);

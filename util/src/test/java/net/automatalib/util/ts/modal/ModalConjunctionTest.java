@@ -301,7 +301,7 @@ public class ModalConjunctionTest {
             final int src = states[rnd.nextInt(stateCount)];
             final int dest = states[rnd.nextInt(stateCount)];
             final I symbol = alphabet.getSymbol(rnd.nextInt(alphabet.size()));
-            final ModalType m = (rnd.nextBoolean() ? ModalType.MUST : ModalType.MAY);
+            final ModalType m = rnd.nextBoolean() ? ModalType.MUST : ModalType.MAY;
 
             res.addModalTransition(src, symbol, dest, m);
         }

@@ -32,9 +32,19 @@ public abstract class AbstractVPAlphabet<I> extends AbstractAlphabet<I> implemen
     private final Alphabet<I> returnAlphabet;
 
     public AbstractVPAlphabet(Alphabet<I> internalAlphabet, Alphabet<I> callAlphabet, Alphabet<I> returnAlphabet) {
-        validateDisjointness(internalAlphabet, SymbolType.INTERNAL, callAlphabet, returnAlphabet);
-        validateDisjointness(callAlphabet, SymbolType.CALL, returnAlphabet);
+        this(validateDisjointness(internalAlphabet, SymbolType.INTERNAL, callAlphabet, returnAlphabet) &&
+             validateDisjointness(callAlphabet, SymbolType.CALL, returnAlphabet),
+             internalAlphabet,
+             callAlphabet,
+             returnAlphabet);
+    }
 
+    // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    private AbstractVPAlphabet(boolean valid,
+                               Alphabet<I> internalAlphabet,
+                               Alphabet<I> callAlphabet,
+                               Alphabet<I> returnAlphabet) {
         this.internalAlphabet = internalAlphabet;
         this.callAlphabet = callAlphabet;
         this.returnAlphabet = returnAlphabet;
@@ -186,9 +196,9 @@ public abstract class AbstractVPAlphabet<I> extends AbstractAlphabet<I> implemen
     }
 
     @SafeVarargs
-    private static <I> void validateDisjointness(Collection<I> source,
-                                                 VPAlphabet.SymbolType type,
-                                                 Collection<I>... rest) {
+    private static <I> boolean validateDisjointness(Collection<I> source,
+                                                    VPAlphabet.SymbolType type,
+                                                    Collection<I>... rest) {
         final Set<I> sourceAsSet = new HashSet<>(source);
         final int initialSize = sourceAsSet.size();
 
@@ -200,5 +210,7 @@ public abstract class AbstractVPAlphabet<I> extends AbstractAlphabet<I> implemen
             throw new IllegalArgumentException(
                     "The set of " + type + " symbols is not disjoint with the sets of other symbols.");
         }
+
+        return true;
     }
 }

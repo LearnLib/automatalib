@@ -103,10 +103,10 @@ public final class CharacterizingSets {
             }
 
             Object sProp = automaton.getStateProperty(s);
-            if (!Objects.equals(sProp, prop)) {
-                multipleStateProps = true;
-            } else {
+            if (Objects.equals(sProp, prop)) {
                 currentBlock.add(s);
+            } else {
+                multipleStateProps = true;
             }
         }
 

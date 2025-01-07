@@ -66,19 +66,19 @@ public class SPATestsIterator<I> extends AbstractTwoLevelIterator<I, Word<I>, Wo
 
     @Override
     protected Iterator<Word<I>> l2Iterator(I callSymbol) {
-        @SuppressWarnings("assignment.type.incompatible") // we only iterate over existing procedures
+        @SuppressWarnings("assignment") // we only iterate over existing procedures
         final @NonNull DFA<?, I> dfa = spa.getProcedure(callSymbol);
         return this.conformanceTestProvider.apply(dfa, this.proceduralInputs);
     }
 
     @Override
     protected Word<I> combine(I callSymbol, Word<I> testSequence) {
-        @SuppressWarnings("assignment.type.incompatible") // we check minimality in the constructor
+        @SuppressWarnings("assignment") // we check minimality in the constructor
         final @NonNull Word<I> as = this.atrSequences.accessSequences.get(callSymbol);
         // we check minimality in the constructor
-        @SuppressWarnings({"assignment.type.incompatible", "methodref.return.invalid"})
+        @SuppressWarnings({"assignment", "methodref.return"})
         final Word<I> ts = this.alphabet.expand(testSequence, this.atrSequences.terminatingSequences::get);
-        @SuppressWarnings("assignment.type.incompatible") // we check minimality in the constructor
+        @SuppressWarnings("assignment") // we check minimality in the constructor
         final @NonNull Word<I> rs = this.atrSequences.returnSequences.get(callSymbol);
 
         return Word.fromWords(as, ts, rs);

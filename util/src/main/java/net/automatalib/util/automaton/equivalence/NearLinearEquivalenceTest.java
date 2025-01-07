@@ -34,6 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Implements Hopcroft and Karp's equivalence test, as described in <a href="https://doi.org/1813/5958">A linear
  * algorithm for testing equivalence of finite automata</a>.
  */
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
 public final class NearLinearEquivalenceTest {
 
     private NearLinearEquivalenceTest() {
@@ -160,7 +161,7 @@ public final class NearLinearEquivalenceTest {
 
         int position = current.depth + 1;
 
-        @SuppressWarnings("nullness") // we make sure to set each index to a value of type I
+        @SuppressWarnings("argument") // we make sure to set each index to a value of type I
         WordBuilder<I> wb = new WordBuilder<>(null, position);
         wb.setSymbol(--position, lastSym);
 
@@ -292,7 +293,7 @@ public final class NearLinearEquivalenceTest {
 
         int position = current.depth + 1;
 
-        @SuppressWarnings("nullness") // we make sure to set each index to a value of type I
+        @SuppressWarnings("argument") // we make sure to set each index to a value of type I
         WordBuilder<I> wb = new WordBuilder<>(null, position);
         wb.setSymbol(--position, lastSym);
 

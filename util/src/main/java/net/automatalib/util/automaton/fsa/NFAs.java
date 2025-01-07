@@ -485,8 +485,12 @@ public final class NFAs {
         Map<SI, SO> outStateMap = new HashMap<>();
         Deque<DeterminizeRecord<SI, SO>> stack = new ArrayDeque<>();
 
-        // Add union of initial states to DFA and to stack
         final SI init = powerset.getInitialState();
+
+        if (init == null) {
+            return;
+        }
+
         final boolean initAcc = powerset.isAccepting(init);
         final SO initOut = out.addInitialState(initAcc);
 
@@ -503,7 +507,7 @@ public final class NFAs {
             for (I sym : inputs) {
                 final SI succ = powerset.getSuccessor(inState, sym);
 
-                if (!partial || succ != null) {
+                if (succ != null) {
                     SO outSucc = outStateMap.get(succ);
                     if (outSucc == null) {
                         // add new state to DFA and to stack
@@ -512,6 +516,8 @@ public final class NFAs {
                         stack.push(new DeterminizeRecord<>(succ, outSucc));
                     }
                     out.setTransition(outState, sym, outSucc);
+                } else if (!partial) {
+                    throw new IllegalStateException("Cannot create a total DFA from a partial powerset view");
                 }
             }
         }

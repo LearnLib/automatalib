@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 
 /**
  * An immutable, reflexive {@link Map} view for a given set of elements. This map is backed by the given set elements,
@@ -52,7 +51,7 @@ public class ReflexiveMapView<T> extends AbstractMap<T, T> {
     }
 
     @Override
-    @SuppressWarnings("contracts.conditional.postcondition.not.satisfied") // condition is satisfied
+    @SuppressWarnings("contracts.conditional.postcondition") // condition is satisfied
     public boolean containsKey(@Nullable Object key) {
         return this.domain.contains(key);
     }
@@ -70,10 +69,10 @@ public class ReflexiveMapView<T> extends AbstractMap<T, T> {
 
     @Override
     public Set<T> values() {
-        return (Set<@UnknownKeyFor T>) this.domain;
+        return this.domain;
     }
 
-    private class EntrySet extends AbstractSet<Entry<@KeyFor("this") T, T>> {
+    private final class EntrySet extends AbstractSet<Entry<@KeyFor("this") T, T>> {
 
         @Override
         public Iterator<Entry<@KeyFor("this") T, T>> iterator() {
@@ -86,7 +85,7 @@ public class ReflexiveMapView<T> extends AbstractMap<T, T> {
         }
     }
 
-    private class Iter implements Iterator<Entry<@KeyFor("this") T, T>> {
+    private final class Iter implements Iterator<Entry<@KeyFor("this") T, T>> {
 
         final Iterator<@KeyFor("this") T> iter = domain.iterator();
 

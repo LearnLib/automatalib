@@ -465,7 +465,9 @@ public final class HopcroftInitializers {
         data[posDataLow + i] = pos;
     }
 
-    private static Block getOrCreateBlock(Map<@Nullable Object, Block> blockMap, Object classification, Hopcroft pt) {
+    private static Block getOrCreateBlock(Map<@Nullable Object, Block> blockMap,
+                                          @Nullable Object classification,
+                                          Hopcroft pt) {
         Block block = blockMap.get(classification);
         if (block == null) {
             block = pt.createBlock();

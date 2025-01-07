@@ -22,12 +22,6 @@ import java.util.Map;
 import net.automatalib.graph.UniversalIndefiniteGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @param <S>
- *         state class.
- * @param <L>
- *         transition
- */
 class HashMapInitialPartitioning<S, L> implements InitialPartitioning<S, L> {
 
     private final Map<@Nullable Object, Block<S, L>> initialBlockMap = new HashMap<>();

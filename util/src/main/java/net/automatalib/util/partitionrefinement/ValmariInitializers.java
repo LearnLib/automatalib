@@ -24,6 +24,7 @@ import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.NFA;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility methods for initializing {@link Valmari} objects from various automaton types.
@@ -99,7 +100,7 @@ public final class ValmariInitializers {
 
         final int[] blocks = new int[n];
         final StateIDs<S> stateIDs = automaton.stateIDs();
-        final Map<Object, Integer> signatures = new HashMap<>();
+        final Map<@Nullable Object, Integer> signatures = new HashMap<>();
 
         int m = 0;
         int cnt = 0;

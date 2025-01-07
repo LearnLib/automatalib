@@ -22,7 +22,7 @@ import net.automatalib.modelchecking.ModelCheckerLassoCache.DFAModelCheckerLasso
 import net.automatalib.modelchecking.impl.InternalModelCheckerDelegator.ModelCheckerLassoDelegator;
 
 /**
- * @see SizeDFAModelCheckerCache
+ * An extension of {@link SizeDFAModelCheckerCache} that additionally implements {@link DFAModelCheckerLassoCache}.
  */
 public class SizeDFAModelCheckerLassoCache<I, P> extends SizeModelCheckerCache<I, DFA<?, I>, P, DFALasso<I>> implements
                                                                                                              DFAModelCheckerLassoCache<I, P>,

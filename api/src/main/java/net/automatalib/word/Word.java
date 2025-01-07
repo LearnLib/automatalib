@@ -818,7 +818,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     /*
      * General word iterator
      */
-    private class Iterator implements java.util.Iterator<I> {
+    private final class Iterator implements java.util.Iterator<I> {
 
         private int index;
 
@@ -839,7 +839,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     /*
      * Representing a word as a list.
      */
-    private class AsList extends AbstractList<I> {
+    private final class AsList extends AbstractList<I> {
 
         @Override
         public I get(int index) {

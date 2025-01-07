@@ -49,17 +49,12 @@ limitations under the License.
     <Match>
         <Bug pattern="MS_EXPOSE_REP"/>
         <Or>
-            <!-- They are all stateless, immutable instances -->
-            <Class name="net.automatalib.serialization.aut.AUTSerializationProvider"/>
+            <!-- They are all stateless, immutable instances (false-positives) -->
             <Class name="net.automatalib.serialization.dot.DOTSerializationProvider"/>
             <Class name="net.automatalib.serialization.etf.writer.DFA2ETFWriter"/>
             <Class name="net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating"/>
             <Class name="net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO"/>
             <Class name="net.automatalib.serialization.learnlibv2.LearnLibV2Serialization"/>
-            <Class name="net.automatalib.serialization.saf.SAFSerializationDFA"/>
-            <Class name="net.automatalib.serialization.saf.SAFSerializationNFA"/>
-            <Class name="net.automatalib.serialization.taf.TAFSerializationDFA"/>
-            <Class name="net.automatalib.serialization.taf.TAFSerializationMealy"/>
         </Or>
     </Match>
     <Match>
@@ -76,12 +71,7 @@ limitations under the License.
         <Class name="net.automatalib.common.util.Holder"/>
     </Match>
     <Match>
-        <Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>
-        <!-- we want to cut cloning hierarchy here -->
-        <Class name="net.automatalib.common.util.array.ArrayStorage"/>
-    </Match>
-    <Match>
-        <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT,UC_USELESS_VOID_METHOD,MS_SHOULD_BE_FINAL,URF_UNREAD_FIELD,UCF_USELESS_CONTROL_FLOW"/>
+        <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT,UC_USELESS_VOID_METHOD,MS_SHOULD_BE_FINAL,URF_UNREAD_FIELD,UCF_USELESS_CONTROL_FLOW,PA_PUBLIC_PRIMITIVE_ATTRIBUTE,CT_CONSTRUCTOR_THROW"/>
         <!-- TODO: these modules/packages currently contains generated javaCC code that we cannot easily change -->
         <Or>
             <Class name="net.automatalib.serialization.dot.InternalDOTParser"/>
@@ -115,6 +105,15 @@ limitations under the License.
             <Class name="net.automatalib.modelchecker.m3c.formula.parser.SimpleCharStream"/>
             <Class name="net.automatalib.modelchecker.m3c.formula.parser.Token"/>
             <Class name="net.automatalib.modelchecker.m3c.formula.parser.TokenMgrError"/>
+        </Or>
+    </Match>
+    <Match>
+        <Bug pattern="PA_PUBLIC_PRIMITIVE_ATTRIBUTE"/>
+        <!-- intended to be directly accessed -->
+        <Or>
+            <Class name="net.automatalib.common.util.array.ResizingArrayStorage"/>
+            <Class name="net.automatalib.util.partitionrefinement.Hopcroft"/>
+            <Class name="net.automatalib.util.partitionrefinement.Block"/>
         </Or>
     </Match>
 </FindBugsFilter>

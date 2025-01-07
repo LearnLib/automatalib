@@ -69,7 +69,8 @@ public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
      * useful in combination with a {@link ForceEnqueuingHandler} that forcefully enqueues the scheduled task to this
      * (otherwise unbounded) queue.
      */
-    private static class ScalingLinkedBlockingQueue extends LinkedBlockingQueue<Runnable> {
+    @SuppressWarnings("PMD.NonSerializableClass") // not publicly exposed
+    private static final class ScalingLinkedBlockingQueue extends LinkedBlockingQueue<Runnable> {
 
         private ThreadPoolExecutor tpe;
 
@@ -79,11 +80,7 @@ public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
 
         @Override
         public boolean offer(Runnable r) {
-            if (tpe.getActiveCount() + size() < tpe.getMaximumPoolSize()) {
-                return false;
-            }
-
-            return super.offer(r);
+            return tpe.getActiveCount() + size() >= tpe.getMaximumPoolSize() && super.offer(r);
         }
     }
 
@@ -91,7 +88,7 @@ public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
      * A {@link RejectedExecutionHandler} that forces the enqueuing of rejected tasks to the queue of a
      * {@link ThreadPoolExecutor}. Mainly useful in combination with {@link ScalingLinkedBlockingQueue}.
      */
-    static class ForceEnqueuingHandler implements RejectedExecutionHandler {
+    private static final class ForceEnqueuingHandler implements RejectedExecutionHandler {
 
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {

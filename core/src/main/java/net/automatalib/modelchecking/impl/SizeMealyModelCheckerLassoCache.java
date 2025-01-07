@@ -22,7 +22,7 @@ import net.automatalib.modelchecking.ModelCheckerLassoCache.MealyModelCheckerLas
 import net.automatalib.modelchecking.impl.InternalModelCheckerDelegator.MealyModelCheckerLassoDelegator;
 
 /**
- * @see SizeDFAModelCheckerCache
+ * Mealy version of {@link SizeDFAModelCheckerLassoCache}.
  */
 public class SizeMealyModelCheckerLassoCache<I, O, P>
         extends SizeModelCheckerCache<I, MealyMachine<?, I, ?, O>, P, MealyLasso<I, O>> implements

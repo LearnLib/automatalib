@@ -33,8 +33,10 @@ public class StateSignaturesTest {
     private static final String SINK_OUTPUT = "sink";
 
     /**
-     * Builds binary tree (partial due to 4 input symbols), whose leaves end in a sink and add two unreachable states.
+     * Builds a binary tree (partial due to 4 input symbols), whose leaves end in a sink and add two unreachable states.
      * s3 and s5 are equivalent, s8, s9 equivalent and unreachable.
+     *
+     * @return the tree as an automaton
      */
     public static CompactMealy<Integer, String> getMealy() {
         final Alphabet<Integer> alphabet = Alphabets.integers(1, 4);

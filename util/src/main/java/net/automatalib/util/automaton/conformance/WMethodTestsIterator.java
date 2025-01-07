@@ -82,10 +82,10 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>,
 
         // Special case: List of characterizing suffixes may be empty,
         // but in this case we still need to iterate over the prefixes!
-        if (!characterizingSet.hasNext()) {
-            this.suffixes = Collections.singletonList(Word.epsilon());
-        } else {
+        if (characterizingSet.hasNext()) {
             this.suffixes = new ReusableIterator<>(characterizingSet);
+        } else {
+            this.suffixes = Collections.singletonList(Word.epsilon());
         }
     }
 

@@ -299,11 +299,11 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     }
 
     protected static @Nullable Integer toState(int id) {
-        return (id != INVALID_STATE) ? id : null;
+        return (id == INVALID_STATE) ? null : id;
     }
 
     protected static int toId(@Nullable Integer id) {
-        return (id != null) ? id : INVALID_STATE;
+        return (id == null) ? INVALID_STATE : id;
     }
 
     /**

@@ -35,6 +35,10 @@ public final class Mealy2ETFWriterIO<I, O> extends AbstractETFWriter<I, MealyMac
 
     private static final Mealy2ETFWriterIO<?, ?> INSTANCE = new Mealy2ETFWriterIO<>();
 
+    private Mealy2ETFWriterIO() {
+        // prevent instantiation
+    }
+
     /**
      * Write the edge type. An edge has two edge labels: input of type input, and output of type output.
      *

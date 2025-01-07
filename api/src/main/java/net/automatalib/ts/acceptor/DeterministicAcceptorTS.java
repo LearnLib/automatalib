@@ -58,8 +58,6 @@ public interface DeterministicAcceptorTS<S, I>
         Iterator<? extends S> stateIt = states.iterator();
         assert stateIt.hasNext();
 
-        // 'firstState' should be cached here
-        @SuppressWarnings("PMD.PrematureDeclaration")
         S firstState = stateIt.next();
         if (stateIt.hasNext()) {
             throw new IllegalArgumentException("Acceptance of state sets is undefined for DFAs");

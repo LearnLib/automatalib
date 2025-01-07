@@ -30,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <T>
  *         the type of stored elements
  */
-public final class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Cloneable {
+public final class ArrayStorage<T> extends AbstractList<T> implements RandomAccess {
 
     private final @Nullable Object[] storage;
 
@@ -46,7 +46,7 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
     }
 
     public ArrayStorage(Collection<? extends T> collection) {
-        storage = collection.toArray();
+        this(collection.toArray());
     }
 
     private ArrayStorage(@Nullable Object[] storage) {
@@ -71,10 +71,9 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
         return storage.length;
     }
 
-    @SuppressWarnings("PMD.ProperCloneImplementation") //we want to cut cloning hierarchy here
     @Override
-    public ArrayStorage<T> clone() {
-        return new ArrayStorage<>(storage.clone());
+    public Object[] toArray() {
+        return storage.clone();
     }
 
     @Override

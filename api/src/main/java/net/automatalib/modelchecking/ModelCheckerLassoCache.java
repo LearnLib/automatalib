@@ -21,7 +21,7 @@ import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 
 /**
- * @see ModelCheckerCache
+ * Combines the two concepts of {@link ModelCheckerCache}s and {@link ModelCheckerLasso}s.
  */
 public interface ModelCheckerLassoCache<I, A, P, R extends Lasso<I, ?>>
         extends ModelCheckerCache<I, A, P, R>, ModelCheckerLasso<I, A, P, R> {

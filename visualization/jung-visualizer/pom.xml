@@ -132,7 +132,7 @@ limitations under the License.
                         </configuration>
                     </execution>
                     <execution>
-                        <id>module-compile</id>
+                        <id>cf-compile</id>
                         <configuration>
                             <fork>true</fork>
                             <compilerArgument>--patch-module=jung.api=${net.sf.jung:jung-graph-impl:jar}</compilerArgument>

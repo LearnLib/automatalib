@@ -24,6 +24,7 @@ import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.Graph;
 import net.automatalib.util.graph.traversal.GraphTraversalAction;
 import net.automatalib.util.graph.traversal.GraphTraversalVisitor;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Depth-first traversal visitor realizing Tarjan's algorithm for finding all strongly-connected components (SCCs) in a
@@ -37,7 +38,7 @@ import net.automatalib.util.graph.traversal.GraphTraversalVisitor;
 public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, TarjanSCCRecord> {
 
     private static final int SCC_FINISHED = -1;
-    private final MutableMapping<N, TarjanSCCRecord> records;
+    private final MutableMapping<N, @Nullable TarjanSCCRecord> records;
 
     /**
      * The stack for currently investigated SCCs.

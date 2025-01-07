@@ -67,14 +67,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSmin.class);
 
-    /**
-     * @see #isKeepFiles()
-     */
     private final boolean keepFiles;
-
-    /**
-     * @see #getString2Input()
-     */
     private final Function<String, I> string2Input;
 
     /**
@@ -90,12 +83,13 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      *
      * @see AbstractLTSmin
      */
+    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod") // it has no semantic impact
     protected AbstractLTSmin(boolean keepFiles, Function<String, I> string2Input) {
         this.keepFiles = keepFiles;
         this.string2Input = string2Input;
 
         if (!LTSminUtil.supports(getMinimumRequiredVersion())) {
-            throw new ModelCheckingException("LTSmin binary could not be detected in the correct version");
+            LOGGER.warn("LTSmin binary could not be detected in the correct version");
         }
     }
 
@@ -190,7 +184,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
                 if (!keepFiles && !ltlFile.delete()) {
                     logFileWarning(ltlFile);
                 }
-                throw ioe;
+                throw new ModelCheckingException(ioe);
             }
         } catch (IOException ioe) {
             throw new ModelCheckingException(ioe);

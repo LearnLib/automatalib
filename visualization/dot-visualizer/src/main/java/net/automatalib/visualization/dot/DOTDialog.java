@@ -25,7 +25,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 
-class DOTDialog extends JDialog {
+final class DOTDialog extends JDialog {
 
     DOTDialog(String dot, boolean modal) throws IOException {
         super((Dialog) null, modal);

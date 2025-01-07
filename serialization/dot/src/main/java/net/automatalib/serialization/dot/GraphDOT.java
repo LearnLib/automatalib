@@ -413,7 +413,7 @@ public final class GraphDOT {
             String key = e.getKey();
             String value = e.getValue();
             a.append(e.getKey()).append("=");
-            if (key.equals(CommonAttrs.LABEL)) {
+            if (CommonAttrs.LABEL.equals(key)) {
                 // HTML labels have to be enclosed in <> instead of ""
                 final String upperCase = value.toUpperCase(Locale.ROOT);
                 if (upperCase.startsWith(HTML_START_TAG)) {

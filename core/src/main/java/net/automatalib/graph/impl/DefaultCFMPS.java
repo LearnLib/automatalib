@@ -22,7 +22,7 @@ import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class DefaultCFMPS<L, AP> implements ContextFreeModalProcessSystem<L, AP> {
+public final class DefaultCFMPS<L, AP> implements ContextFreeModalProcessSystem<L, AP> {
 
     private final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs;
     private final L mainProcess;

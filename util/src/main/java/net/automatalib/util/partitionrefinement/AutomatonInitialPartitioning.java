@@ -52,7 +52,7 @@ public enum AutomatonInitialPartitioning {
     BY_TRANSITION_PROPERTIES {
         @Override
         public IntFunction<?> initialClassifier(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> automaton) {
-            return (s) -> StateSignature.byTransitionProperties(automaton, s);
+            return s -> StateSignature.byTransitionProperties(automaton, s);
         }
     },
 
@@ -71,7 +71,7 @@ public enum AutomatonInitialPartitioning {
     BY_FULL_SIGNATURE {
         @Override
         public IntFunction<?> initialClassifier(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> automaton) {
-            return (s) -> StateSignature.byFullSignature(automaton, s);
+            return s -> StateSignature.byFullSignature(automaton, s);
         }
     };
 

@@ -67,7 +67,7 @@ abstract class AbstractGraphCopy<N1, E1, N2, E2, NP2, EP2, G1 extends Indefinite
         return freshTgt;
     }
 
-    @SuppressWarnings("contracts.postcondition.not.satisfied")
+    @SuppressWarnings("contracts.postcondition")
     @EnsuresKeyFor(value = "#1", map = "nodeMapping")
     protected N2 copyNode(N1 node) {
         NP2 prop = npMapping.get(node);

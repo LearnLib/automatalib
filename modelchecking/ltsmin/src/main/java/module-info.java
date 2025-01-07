@@ -42,8 +42,8 @@ open module net.automatalib.modelchecker.ltsmin {
     requires net.automatalib.util;
     requires org.slf4j;
 
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
-    // make non-static once https://github.com/typetools/checker-framework/issues/4559 is implemented
     requires static org.checkerframework.checker.qual;
 
     exports net.automatalib.modelchecker.ltsmin;

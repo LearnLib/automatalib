@@ -20,7 +20,7 @@ import java.util.RandomAccess;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public final class IntRange extends AbstractList<Integer> implements RandomAccess {
+public class IntRange extends AbstractList<Integer> implements RandomAccess {
 
     private final int start;
     private final int step;
@@ -55,11 +55,7 @@ public final class IntRange extends AbstractList<Integer> implements RandomAcces
 
     @Override
     public int indexOf(@Nullable Object o) {
-        if (o == null || o.getClass() != Integer.class) {
-            return -1;
-        }
-        int i = (Integer) o;
-        return indexOf(i);
+        return o instanceof Integer ? indexOf((int) o) : -1;
     }
 
     public int indexOf(int i) {

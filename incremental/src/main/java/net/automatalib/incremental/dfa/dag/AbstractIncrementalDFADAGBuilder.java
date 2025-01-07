@@ -129,7 +129,7 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
                 }
 
                 int idx = inputAlphabet.getSymbolIndex(sym);
-                State succ1 = state1 != sink ? state1.getSuccessor(idx) : sink;
+                State succ1 = state1 == sink ? sink : state1.getSuccessor(idx);
 
                 if (succ1 == null) {
                     continue;
@@ -319,8 +319,7 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         State other = register.get(sig);
         if (other != null) {
             if (state != other) {
-                for (int i = 0; i < sig.successors.array.length; i++) {
-                    State succ = sig.successors.array[i];
+                for (State succ : sig.successors.array) {
                     if (succ != null) {
                         succ.decreaseIncoming();
                     }
@@ -349,8 +348,7 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
 
         state = new State(sig);
         register.put(sig, state);
-        for (int i = 0; i < sig.successors.array.length; i++) {
-            State succ = sig.successors.array[i];
+        for (State succ : sig.successors.array) {
             if (succ != null) {
                 succ.increaseIncoming();
             }
@@ -536,8 +534,8 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         }
     }
 
-    private class TransitionSystemView implements UniversalDTS<State, I, State, Acceptance, Void>,
-                                                  UniversalAutomaton<State, I, State, Acceptance, Void> {
+    private final class TransitionSystemView implements UniversalDTS<State, I, State, Acceptance, Void>,
+                                                        UniversalAutomaton<State, I, State, Acceptance, Void> {
 
         @Override
         public State getSuccessor(State transition) {

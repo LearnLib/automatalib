@@ -61,7 +61,9 @@ class InternalAUTParser<I, A extends MutableAutomaton<Integer, I, Integer, ?, ?>
         try (BufferedReader br = new BufferedReader(IOUtil.asNonClosingUTF8Reader(is))) {
             // parsing
             parseHeader(br);
-            while (parseTransition(br)) {}
+            while (parseTransition(br)) {
+                // consume transitions
+            }
 
             // automaton construction
             final Map<String, I> inputMap = new HashMap<>(HashUtil.capacity(this.alphabetSymbols.size()));
@@ -231,7 +233,9 @@ class InternalAUTParser<I, A extends MutableAutomaton<Integer, I, Integer, ?, ?>
         int closingIndex = currentLineContent.length - 1;
 
         // find terminating "
-        while (currentLineContent[closingIndex--] != '"') {}
+        while (currentLineContent[closingIndex--] != '"') {
+            // consume characters
+        }
 
         // skip terminating " as well
         currentPos = closingIndex + 2;

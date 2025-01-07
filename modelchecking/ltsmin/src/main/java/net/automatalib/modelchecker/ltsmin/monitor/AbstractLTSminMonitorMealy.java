@@ -48,15 +48,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSminMonitorMealy.class);
 
-    /**
-     * @see #getString2Output()
-     */
     private final Function<String, O> string2Output;
-
-    /**
-     * @see #getSkipOutputs()
-     * @see #setSkipOutputs(Collection)
-     */
     private Collection<? super O> skipOutputs;
 
     /**

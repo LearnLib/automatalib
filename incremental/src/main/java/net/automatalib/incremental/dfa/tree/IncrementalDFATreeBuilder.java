@@ -265,7 +265,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
          * nodeIDs, which requires our states, which requires our nodeIDs, which requires ... infinite loop!
          */
         @Override
-        public <V> MutableMapping<Node, V> createStaticStateMapping() {
+        public <@Nullable V> MutableMapping<Node, V> createStaticStateMapping() {
             return new MapMapping<>();
         }
     }

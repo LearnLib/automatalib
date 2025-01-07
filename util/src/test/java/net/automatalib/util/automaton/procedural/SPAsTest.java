@@ -103,7 +103,7 @@ public class SPAsTest {
         final SimpleEntry<Character, Word<Character>> tTsEntry = new SimpleEntry<>('T', Word.fromString("c"));
         final SimpleEntry<Character, Word<Character>> tRsEntry = new SimpleEntry<>('T', Word.fromString("RR"));
 
-        final DefaultProceduralInputAlphabet<Character> halfAlphabet =
+        final ProceduralInputAlphabet<Character> halfAlphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
 
         // With no accepting states, there exist no a/t/r sequences.
@@ -171,7 +171,7 @@ public class SPAsTest {
     public void testPartialATRSequences() {
         final Random random = new Random(42);
         final SPA<?, Character> spa = RandomAutomata.randomSPA(random, alphabet, 10);
-        final DefaultProceduralInputAlphabet<Character> halfAlphabet =
+        final ProceduralInputAlphabet<Character> halfAlphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
 
         final ATRSequences<Character> atrSequences = SPAs.computeATRSequences(spa, halfAlphabet);
@@ -187,7 +187,7 @@ public class SPAsTest {
     @Test
     public void testEmptyPartialATRSequences() {
         final SPA<?, Character> spa = new EmptySPA<>(alphabet);
-        final DefaultProceduralInputAlphabet<Character> halfAlphabet =
+        final ProceduralInputAlphabet<Character> halfAlphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
 
         final ATRSequences<Character> atrSequences = SPAs.computeATRSequences(spa, halfAlphabet);

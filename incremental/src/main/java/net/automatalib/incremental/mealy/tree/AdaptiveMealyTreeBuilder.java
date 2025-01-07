@@ -49,13 +49,13 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTr
             if (edge == null) {
                 curr = insertNode(curr, sym, out);
             } else {
-                if (!Objects.equals(out, edge.getOutput())) {
+                if (Objects.equals(out, edge.getOutput())) {
+                    curr = edge.getTarget();
+                } else {
                     hasOverwritten = true;
                     removeQueries(edge.getTarget());
                     removeEdge(curr, sym);
                     curr = insertNode(curr, sym, out);
-                } else {
-                    curr = edge.getTarget();
                 }
             }
         }
