@@ -363,36 +363,6 @@ public final class Covers {
     }
 
     /**
-     * Computes an incremental structural cover for a given automaton, i.e. a cover that only contains the missing
-     * sequences for obtaining a complete structural cover.
-     *
-     * @param automaton
-     *         the automaton for which the cover should be computed
-     * @param inputs
-     *         the set of input symbols allowed in the cover sequences
-     * @param oldCover
-     *         the collection containing the already existing sequences of the structural cover
-     * @param newCover
-     *         the collection in which the missing sequences will be stored
-     * @param <I>
-     *         input symbol type
-     *
-     * @return {@code true} if new sequences have been added to the structural cover, {@code false} otherwise.
-     *
-     * @see #structuralCover(DeterministicAutomaton, Collection, Collection)
-     */
-    public static <I> boolean incrementalStructuralCover(DeterministicAutomaton<?, I, ?> automaton,
-                                                         Collection<? extends I> inputs,
-                                                         Collection<? extends Word<I>> oldCover,
-                                                         Collection<? super Word<I>> newCover) {
-        final int oldCoverSize = newCover.size();
-
-        incrementalCover(automaton, inputs, oldCover, Collections.emptySet(), newCover::add, newCover::add);
-
-        return oldCoverSize < newCover.size();
-    }
-
-    /**
      * Utility method that allows to compute an incremental state and transition cover simultaneously.
      *
      * @param automaton
@@ -446,41 +416,17 @@ public final class Covers {
 
         Queue<Record<S, I>> bfsQueue = new ArrayDeque<>();
 
-        // We enforce that the initial state *always* is covered by the empty word,
-        // regardless of whether other sequence in oldCover cover it
-        Record<S, I> initRec = new Record<>(init, Word.epsilon(), new HashSet<>(HashUtil.capacity(inputs.size())));
-        bfsQueue.add(initRec);
-        reach.put(init, initRec);
+        buildReachFromStateCover(reach,
+                                 bfsQueue,
+                                 automaton,
+                                 oldStateCover,
+                                 (s, as) -> new Record<>(s, as, new HashSet<>(HashUtil.capacity(inputs.size()))));
 
-        boolean hasEpsilon = buildReachFromStateCover(reach,
-                                                      bfsQueue,
-                                                      automaton,
-                                                      oldStateCover,
-                                                      (s, as) -> new Record<>(s,
-                                                                              as,
-                                                                              new HashSet<>(HashUtil.capacity(inputs.size()))));
-
-        // Add transition cover information from *state covers*
-        for (Word<I> oldStateAs : oldStateCover) {
-            if (oldStateAs.isEmpty()) {
-                continue;
-            }
-
-            Word<I> asPrefix = oldStateAs.prefix(oldStateAs.length() - 1);
-            S pred = automaton.getState(asPrefix);
-            assert pred != null;
-
-            Record<S, I> predRec = reach.get(pred);
-            if (predRec == null) {
-                throw new IllegalArgumentException(
-                        "State cover was not prefix-closed: prefix of " + oldStateAs + " not in set");
-            }
-            I lastSym = oldStateAs.lastSymbol();
-            predRec.coveredInputs.add(lastSym);
-        }
-
-        // Till now, we haven't augmented any set.
-        if (!hasEpsilon) {
+        if (reach.get(init) == null) {
+            // apparently the initial state was not yet covered
+            Record<S, I> rec = new Record<>(init, Word.epsilon(), new HashSet<>(HashUtil.capacity(inputs.size())));
+            reach.put(init, rec);
+            bfsQueue.add(rec);
             newStateCover.accept(Word.epsilon());
         }
 
@@ -495,23 +441,22 @@ public final class Covers {
         Record<S, I> curr;
         while ((curr = bfsQueue.poll()) != null) {
             for (I input : inputs) {
-                if (curr.coveredInputs.add(input)) {
-                    S succ = automaton.getSuccessor(curr.state, input);
+                S succ = automaton.getSuccessor(curr.state, input);
 
+                if (succ != null) {
+                    Record<S, I> succRec = reach.get(succ);
                     Word<I> newAs = curr.accessSequence.append(input);
 
-                    if (succ != null) {
-                        Record<S, I> succRec = reach.get(succ);
+                    if (succRec == null) {
+                        // new state!
+                        succRec = new Record<>(succ, newAs);
+                        bfsQueue.add(succRec);
+                        reach.put(succ, succRec);
 
-                        if (succRec == null) {
-                            // new state!
-                            succRec = new Record<>(succ, newAs, new HashSet<>(HashUtil.capacity(inputs.size())));
-                            bfsQueue.add(succRec);
-                            reach.put(succ, succRec);
-
-                            newStateCover.accept(newAs);
-                        }
-                        // new transition
+                        newStateCover.accept(newAs);
+                    }
+                    // new transition
+                    if (!curr.coveredInputs.contains(input)) {
                         newTransCover.accept(newAs);
                     }
                 }
@@ -552,37 +497,25 @@ public final class Covers {
                                                      Consumer<? super Word<I>> newStateCallback) {
 
         for (Word<I> oldTransAs : oldTransCover) {
-            // Check if this transition now leads to a new state
-            S state = automaton.getState(oldTransAs);
-            if (state != null) {
-                Record<S, I> rec = reach.get(state);
-                if (rec == null) {
-                    // if so, add it to the state cover and to the queue
-                    rec = recordBuilder.apply(state, oldTransAs);
-                    bfsQueue.add(rec);
-                    reach.put(state, rec);
-                    newStateCallback.accept(oldTransAs);
+
+            if (!oldTransAs.isEmpty()) { // ignore trivial covers
+                Word<I> predAs = oldTransAs.prefix(oldTransAs.length() - 1);
+                S pred = automaton.getState(predAs);
+
+                if (pred != null) { // ignore redundant covers
+                    Record<S, I> predRec = reach.get(pred);
+
+                    if (predRec == null) { // new state, use prefix as state cover sequence
+                        predRec = recordBuilder.apply(pred, predAs);
+                        bfsQueue.add(predRec);
+                        reach.put(pred, predRec);
+                        newStateCallback.accept(predAs);
+                    }
+
+                    I lastSym = oldTransAs.lastSymbol();
+                    predRec.coveredInputs.add(lastSym);
                 }
             }
-
-            // In any case, mark the transition as covered
-            Word<I> predAs = oldTransAs.prefix(oldTransAs.length() - 1);
-            S pred = automaton.getState(predAs);
-            if (pred == null) {
-                throw new IllegalArgumentException(
-                        "Invalid transition: prefix of transition " + oldTransAs + " not covered by state cover");
-            }
-            I lastSym = oldTransAs.lastSymbol();
-            Record<S, I> predRec = reach.get(pred);
-
-            if (predRec == null) {
-                predRec = recordBuilder.apply(state, oldTransAs);
-                bfsQueue.add(predRec);
-                reach.put(pred, predRec);
-                newStateCallback.accept(oldTransAs);
-            }
-
-            predRec.coveredInputs.add(lastSym);
         }
     }
 

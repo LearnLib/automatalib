@@ -50,7 +50,7 @@ class IncrementalStateCoverIterator<S, I> extends AbstractSimplifiedIterator<Wor
     private final Queue<Record<S, I>> bfsQueue;
 
     private Iterator<? extends I> inputIterator;
-    private Record<S, I> curr;
+    private @Nullable Record<S, I> curr;
 
     IncrementalStateCoverIterator(DeterministicAutomaton<S, I, ?> automaton,
                                   Collection<? extends I> inputs,

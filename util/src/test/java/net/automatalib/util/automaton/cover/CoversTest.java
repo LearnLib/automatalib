@@ -16,7 +16,9 @@
 package net.automatalib.util.automaton.cover;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -45,7 +47,6 @@ public class CoversTest {
 
     private final List<Word<Integer>> stateCover = new ArrayList<>();
     private final List<Word<Integer>> transCover = new ArrayList<>();
-    private final List<Word<Integer>> structuralCover = new ArrayList<>();
 
     private final List<Word<Integer>> newStates = new ArrayList<>();
     private final List<Word<Integer>> newTransitions = new ArrayList<>();
@@ -73,6 +74,7 @@ public class CoversTest {
 
         checkCovers();
         updateAndClearCovers();
+        Assert.assertEquals(newStructural, expectedNewStructuralCover);
 
         // second configuration
         int q1 = dfa.addState();
@@ -86,10 +88,8 @@ public class CoversTest {
         expectedNewTransCover.add(Word.fromSymbols(0, 0));
         expectedNewTransCover.add(Word.fromSymbols(0, 1));
         expectedNewTransCover.add(Word.fromSymbols(0, 2));
-        expectedNewStructuralCover.addAll(expectedNewTransCover);
 
         Covers.incrementalCover(dfa, alphabet, stateCover, transCover, newStates, newTransitions);
-        Covers.incrementalStructuralCover(dfa, alphabet, structuralCover, newStructural);
 
         checkCovers();
         updateAndClearCovers();
@@ -103,15 +103,13 @@ public class CoversTest {
         dfa.setTransition(q1, 2, q2);
         dfa.setTransition(q0, 2, q2);
 
-        expectedNewStateCover.add(Word.fromSymbols(0, 2));
+        expectedNewStateCover.add(Word.fromSymbols(2));
         expectedNewTransCover.add(Word.fromLetter(2));
-        expectedNewTransCover.add(Word.fromSymbols(0, 2, 0));
-        expectedNewTransCover.add(Word.fromSymbols(0, 2, 1));
-        expectedNewTransCover.add(Word.fromSymbols(0, 2, 2));
-        expectedNewStructuralCover.addAll(expectedNewTransCover);
+        expectedNewTransCover.add(Word.fromSymbols(2, 0));
+        expectedNewTransCover.add(Word.fromSymbols(2, 1));
+        expectedNewTransCover.add(Word.fromSymbols(2, 2));
 
         Covers.incrementalCover(dfa, alphabet, stateCover, transCover, newStates, newTransitions);
-        Covers.incrementalStructuralCover(dfa, alphabet, structuralCover, newStructural);
 
         checkCovers();
     }
@@ -119,21 +117,17 @@ public class CoversTest {
     private void checkCovers() {
         Assert.assertEquals(newStates, expectedNewStateCover);
         Assert.assertEquals(newTransitions, expectedNewTransCover);
-        Assert.assertEquals(newStructural, expectedNewStructuralCover);
     }
 
     private void updateAndClearCovers() {
         stateCover.addAll(newStates);
         transCover.addAll(newTransitions);
-        structuralCover.addAll(newStructural);
 
         newStates.clear();
         newTransitions.clear();
-        newStructural.clear();
 
         expectedNewStateCover.clear();
         expectedNewTransCover.clear();
-        expectedNewStructuralCover.clear();
     }
 
     @Test
@@ -167,6 +161,42 @@ public class CoversTest {
 
         testStateCover(dfa, alphabet, sCov);
         testTransitionCover(dfa, alphabet, tCov);
+    }
+
+    @Test
+    public void testIncrementalCoverWithUnreachableOldCovers() {
+        final CompactDFA<Integer> dfa = new CompactDFA<>(alphabet);
+        final int q0 = dfa.addInitialState();
+        final int q1 = dfa.addState();
+        dfa.setTransition(q0, 0, q1);
+
+        final Collection<Word<Integer>> oldStateCover = Arrays.asList(Word.epsilon(), Word.fromLetter(1));
+        final Collection<Word<Integer>> oldTransCover = Collections.singleton(Word.fromSymbols(0, 0));
+        final List<Word<Integer>> newStateCover = new ArrayList<>();
+        final List<Word<Integer>> newTransCover = new ArrayList<>();
+
+        Covers.incrementalCover(dfa, alphabet, oldStateCover, oldTransCover, newStateCover, newTransCover);
+
+        Assert.assertEquals(newStateCover, Collections.singleton(Word.fromLetter(0)));
+        Assert.assertEquals(newTransCover, Collections.singleton(Word.fromLetter(0)));
+    }
+
+    @Test
+    public void testIncrementalIteratorWithUnreachableOldCovers() {
+        final CompactDFA<Integer> dfa = new CompactDFA<>(alphabet);
+        final int q0 = dfa.addInitialState();
+        final int q1 = dfa.addState();
+        dfa.setTransition(q0, 0, q1);
+
+        final Collection<Word<Integer>> oldStateCover = Arrays.asList(Word.epsilon(), Word.fromLetter(1));
+        final Collection<Word<Integer>> oldTransCover = Collections.singleton(Word.fromSymbols(0, 0));
+        final List<Word<Integer>> newStateCover =
+                IteratorUtil.list(Covers.incrementalStateCoverIterator(dfa, alphabet, oldStateCover));
+        final List<Word<Integer>> newTransCover =
+                IteratorUtil.list(Covers.incrementalTransitionCoverIterator(dfa, alphabet, oldTransCover));
+
+        Assert.assertEquals(newStateCover, Collections.singleton(Word.fromLetter(0)));
+        Assert.assertEquals(newTransCover, Collections.singleton(Word.fromLetter(0)));
     }
 
     private static <S, I> void testStateCover(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,

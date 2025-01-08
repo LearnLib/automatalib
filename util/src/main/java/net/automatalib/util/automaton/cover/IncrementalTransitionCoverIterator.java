@@ -83,20 +83,19 @@ class IncrementalTransitionCoverIterator<S, I> extends AbstractSimplifiedIterato
         while (curr != null) {
             while (inputIterator.hasNext()) {
                 final I in = inputIterator.next();
+                final S succ = automaton.getSuccessor(curr.state, in);
 
-                if (curr.coveredInputs.add(in)) {
-                    final S succ = automaton.getSuccessor(curr.state, in);
+                if (succ != null) {
+                    final Word<I> succAs = curr.accessSequence.append(in);
 
-                    if (succ != null) {
-                        final Word<I> succAs = curr.accessSequence.append(in);
+                    if (reach.get(succ) == null) {
+                        final Record<S, I> succRec =
+                                new Record<>(succ, succAs, new HashSet<>(HashUtil.capacity(inputs.size())));
+                        reach.put(succ, succRec);
+                        bfsQueue.add(succRec);
+                    }
 
-                        if (reach.get(succ) == null) {
-                            final Record<S, I> succRec =
-                                    new Record<>(succ, succAs, new HashSet<>(HashUtil.capacity(inputs.size())));
-                            reach.put(succ, succRec);
-                            bfsQueue.add(succRec);
-                        }
-
+                    if (curr.coveredInputs.add(in)) {
                         super.nextValue = succAs;
                         return true;
                     }
