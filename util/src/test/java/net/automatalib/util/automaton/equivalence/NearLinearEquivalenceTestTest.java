@@ -178,6 +178,20 @@ public class NearLinearEquivalenceTestTest {
         testForEmptySepWord(empty, uninit, inputSet);
     }
 
+    /**
+     * Test equivalence of very large automata which have previously resulted in integer overflows. See <a
+     * href="https://github.com/LearnLib/automatalib/issues/84">Issue 84</a> for details. While the issue hasn't been
+     * reported for {@link NearLinearEquivalenceTest}, the class should handle large automata as well.
+     */
+    @Test
+    public void testIssue84() {
+        final Word<Integer> sepWord = NearLinearEquivalenceTest.findSeparatingWord(TestUtil.LARGE_AUTOMATON_A,
+                                                                                   TestUtil.LARGE_AUTOMATON_B,
+                                                                                   TestUtil.ALPHABET);
+        Assert.assertNotNull(sepWord);
+        Assert.assertEquals(sepWord.length(), TestUtil.LARGE_AUTOMATON_A.size() - 1);
+    }
+
     private static <I> void testForEmptySepWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> a1,
                                                 UniversalDeterministicAutomaton<?, I, ?, ?, ?> a2,
                                                 Collection<I> inputs) {

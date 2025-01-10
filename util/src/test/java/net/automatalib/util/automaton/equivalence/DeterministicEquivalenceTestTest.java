@@ -109,6 +109,19 @@ public class DeterministicEquivalenceTestTest {
         testForEmptySepWord(uninit, empty, alphabet);
     }
 
+    /**
+     * Test equivalence of very large automata which have previously resulted in integer overflows. See <a
+     * href="https://github.com/LearnLib/automatalib/issues/84">Issue 84</a> for details.
+     */
+    @Test
+    public void testIssue84() {
+        final Word<Integer> sepWord = DeterministicEquivalenceTest.findSeparatingWord(TestUtil.LARGE_AUTOMATON_A,
+                                                                                      TestUtil.LARGE_AUTOMATON_B,
+                                                                                      TestUtil.ALPHABET);
+        Assert.assertNotNull(sepWord);
+        Assert.assertEquals(sepWord.length(), TestUtil.LARGE_AUTOMATON_A.size() - 1);
+    }
+
     private static <I> void testForEmptySepWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> a1,
                                                 UniversalDeterministicAutomaton<?, I, ?, ?, ?> a2,
                                                 Collection<? extends I> inputs) {
@@ -123,18 +136,6 @@ public class DeterministicEquivalenceTestTest {
         final Word<I> sepWord2 = DeterministicEquivalenceTest.findSeparatingWord(a2, a1, inputs);
         Assert.assertEquals(sepWord2, Word.epsilon());
         Assert.assertNotEquals(a1.getState(sepWord2), a2.getState(sepWord2));
-
-        // Large version
-        Assert.assertNull(DeterministicEquivalenceTest.findSeparatingWordLarge(a1, a1, inputs));
-        Assert.assertNull(DeterministicEquivalenceTest.findSeparatingWordLarge(a2, a2, inputs));
-
-        final Word<I> sepWord3 = DeterministicEquivalenceTest.findSeparatingWordLarge(a1, a2, inputs);
-        Assert.assertEquals(sepWord3, Word.epsilon());
-        Assert.assertNotEquals(a1.getState(sepWord3), a2.getState(sepWord3));
-
-        final Word<I> sepWord4 = DeterministicEquivalenceTest.findSeparatingWordLarge(a2, a1, inputs);
-        Assert.assertEquals(sepWord4, Word.epsilon());
-        Assert.assertNotEquals(a1.getState(sepWord4), a2.getState(sepWord4));
     }
 
     private <I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, ?>> void testEquivalenceInternal(M a1,
