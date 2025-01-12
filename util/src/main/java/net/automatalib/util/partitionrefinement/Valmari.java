@@ -106,12 +106,14 @@ public class Valmari {
     }
 
     public void computeCoarsestStablePartition() {
-        if (n > 0 && m > 0) {
+        if (n > 0) {
             initializeBlocks();
-            initializeClusters();
-            initializeInTransitions();
 
-            mainLoop();
+            if (m > 0) {
+                initializeClusters();
+                initializeInTransitions();
+                mainLoop();
+            }
         }
     }
 
@@ -124,6 +126,7 @@ public class Valmari {
 
         ArrayUtil.heapsort(blocks.elems, blocks.sidx);
 
+        blocks.sets = 0;
         int set1 = blocks.sidx[blocks.elems[0]];
         for (int l = 0; l < n; l++) {
             blocks.loc[blocks.elems[l]] = l;
@@ -143,6 +146,7 @@ public class Valmari {
     void initializeClusters() {
 
         int prevTail = -1, prevLabel = -1, prevLabel2 = label[0];
+        clusters.sets = 0;
 
         for (int t = 0; t < m; t++) {
             clusters.elems[t] = t;
@@ -283,7 +287,8 @@ public class Valmari {
     public static class RefinablePartition {
 
         /**
-         * Tells the number of sets. This value is 0-indexed, so there exist {@code sets + 1} partition classes.
+         * Tells the number of sets. This value is 0-indexed, so there exist {@code sets + 1} partition classes. -1
+         * indicates an empty partition.
          */
         public int sets;
         /**
@@ -324,7 +329,7 @@ public class Valmari {
         }
 
         RefinablePartition(int size, int[] sidx) {
-            this.sets = 0;
+            this.sets = -1;
             this.elems = new int[size];
             this.first = new int[size];
             this.mid = new int[size];

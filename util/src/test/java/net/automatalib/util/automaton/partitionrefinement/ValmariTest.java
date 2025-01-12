@@ -32,6 +32,7 @@ import net.automatalib.util.partitionrefinement.ValmariExtractors;
 import net.automatalib.util.partitionrefinement.ValmariInitializers;
 import net.automatalib.util.ts.TS;
 import net.automatalib.util.ts.TS.TransRef;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -187,5 +188,61 @@ public class ValmariTest {
         min = ValmariExtractors.toNFA(valmari, nfa, alphabet);
 
         Assert.assertEquals(min.size(), 2);
+    }
+
+    @Test
+    public void testEmpty() {
+
+        final Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
+        final CompactNFA<Integer> nfa = new CompactNFA<>(alphabet);
+
+        Valmari valmari = ValmariInitializers.initializeNFA(nfa, alphabet);
+        valmari.computeCoarsestStablePartition();
+
+        CompactNFA<Integer> min = ValmariExtractors.toNFA(valmari, nfa, alphabet);
+
+        Assert.assertEquals(min.size(), 0);
+        Assert.assertEquals(min.getInitialStates().size(), 0);
+        Assert.assertEquals(min.getStates(Word.epsilon()).size(), 0);
+        Assert.assertEquals(min.getStates(Word.fromLetter(0)).size(), 0);
+        Assert.assertEquals(min.getStates(Word.fromLetter(1)).size(), 0);
+
+
+        CompactNFA<Integer> minNoPrune = ValmariExtractors.toNFA(valmari, nfa, alphabet, false);
+
+        Assert.assertEquals(minNoPrune.size(), 0);
+        Assert.assertEquals(minNoPrune.getInitialStates().size(), 0);
+        Assert.assertEquals(minNoPrune.getStates(Word.epsilon()).size(), 0);
+        Assert.assertEquals(minNoPrune.getStates(Word.fromLetter(0)).size(), 0);
+        Assert.assertEquals(minNoPrune.getStates(Word.fromLetter(1)).size(), 0);
+    }
+
+    @Test
+    public void testStateOnly() {
+
+        final Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
+        final CompactNFA<Integer> nfa = new CompactNFA<>(alphabet);
+
+        nfa.addInitialState(true);
+
+        Valmari valmari = ValmariInitializers.initializeNFA(nfa, alphabet);
+        valmari.computeCoarsestStablePartition();
+
+        CompactNFA<Integer> min = ValmariExtractors.toNFA(valmari, nfa, alphabet);
+
+        Assert.assertEquals(min.size(), 1);
+        Assert.assertEquals(min.getInitialStates().size(), 1);
+        Assert.assertEquals(min.getStates(Word.epsilon()).size(), 1);
+        Assert.assertEquals(min.getStates(Word.fromLetter(0)).size(), 0);
+        Assert.assertEquals(min.getStates(Word.fromLetter(1)).size(), 0);
+
+
+        CompactNFA<Integer> minNoPrune = ValmariExtractors.toNFA(valmari, nfa, alphabet, false);
+
+        Assert.assertEquals(minNoPrune.size(), 1);
+        Assert.assertEquals(minNoPrune.getInitialStates().size(), 1);
+        Assert.assertEquals(minNoPrune.getStates(Word.epsilon()).size(), 1);
+        Assert.assertEquals(minNoPrune.getStates(Word.fromLetter(0)).size(), 0);
+        Assert.assertEquals(minNoPrune.getStates(Word.fromLetter(1)).size(), 0);
     }
 }
