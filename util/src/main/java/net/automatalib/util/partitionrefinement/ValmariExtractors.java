@@ -255,7 +255,7 @@ public final class ValmariExtractors {
             final int origId = valmari.blocks.elems[valmari.blocks.first[i]];
             final S1 s = stateIDs.getState(origId);
 
-            if (initialStates.contains(s)) {
+            if (blockContainsInitialState(valmari, i, stateIDs, initialStates)) {
                 stateArray[i] = result.addInitialState(original.getStateProperty(s));
             } else {
                 stateArray[i] = result.addState(original.getStateProperty(s));
@@ -277,6 +277,17 @@ public final class ValmariExtractors {
         }
 
         return result;
+    }
+
+    private static <S> boolean blockContainsInitialState(Valmari valmari, int blockId, StateIDs<S> stateIDs, Set<S> initialStates) {
+        for (int i = valmari.blocks.first[blockId]; i < valmari.blocks.end[blockId]; i++) {
+            final S s = stateIDs.getState(valmari.blocks.elems[i]);
+            if (initialStates.contains(s)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

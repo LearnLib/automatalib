@@ -51,10 +51,13 @@ public class ValmariTest {
                 valmari.computeCoarsestStablePartition();
                 final CompactDFA<Integer> tgt2 =
                         ValmariExtractors.toUniversal(valmari, src, alphabet, new CompactDFA.Creator<>());
+                final CompactDFA<Integer> tgt3 =
+                        ValmariExtractors.toUniversal(valmari, src, alphabet, new CompactDFA.Creator<>(), false);
 
                 final String debug = "size: " + size + ", seed; " + seed;
                 Assert.assertEquals(tgt2.size(), tgt1.size(), debug);
                 Assert.assertTrue(Automata.testEquivalence(tgt1, tgt2, alphabet), debug);
+                Assert.assertTrue(Automata.testEquivalence(tgt1, tgt3, alphabet), debug);
             }
         }
     }
@@ -72,12 +75,47 @@ public class ValmariTest {
                 final Valmari valmari = ValmariInitializers.initializeNFA(src, alphabet);
                 valmari.computeCoarsestStablePartition();
                 final CompactNFA<Integer> val = ValmariExtractors.toNFA(valmari, src, alphabet);
+                final String debug = "size: " + size + ", seed; " + seed;
 
                 final CompactDFA<Integer> srcDFA = NFAs.determinize(src, true, false);
                 final CompactDFA<Integer> valDFA = NFAs.determinize(val, true, false);
 
-                final String debug = "size: " + size + ", seed; " + seed;
                 Assert.assertTrue(Automata.testEquivalence(srcDFA, valDFA, alphabet), debug);
+
+                final CompactDFA<Integer> srcDFAmin = NFAs.determinize(src);
+                final CompactDFA<Integer> valDFAmin = NFAs.determinize(val);
+
+                Assert.assertEquals(srcDFAmin.size(), valDFAmin.size(), debug);
+                Assert.assertTrue(Automata.testEquivalence(srcDFAmin, valDFAmin, alphabet), debug);
+            }
+        }
+    }
+
+    @Test
+    void testNFABisimulationNoPrune() {
+
+        final Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
+
+        for (int size = 5; size < 20; size++) {
+            for (int seed = 0; seed < 500; seed++) {
+                final CompactNFA<Integer> src =
+                        TabakovVardiRandomAutomata.generateNFA(new Random(seed), size, 1.25f, 0.5f, alphabet);
+
+                final Valmari valmari = ValmariInitializers.initializeNFA(src, alphabet);
+                valmari.computeCoarsestStablePartition();
+                final CompactNFA<Integer> val = ValmariExtractors.toNFA(valmari, src, alphabet, false);
+                final String debug = "size: " + size + ", seed; " + seed;
+
+                final CompactDFA<Integer> srcDFA = NFAs.determinize(src, true, false);
+                final CompactDFA<Integer> valDFA = NFAs.determinize(val, true, false);
+
+                Assert.assertTrue(Automata.testEquivalence(srcDFA, valDFA, alphabet), debug);
+
+                final CompactDFA<Integer> srcDFAmin = NFAs.determinize(src);
+                final CompactDFA<Integer> valDFAmin = NFAs.determinize(val);
+
+                Assert.assertEquals(srcDFAmin.size(), valDFAmin.size(), debug);
+                Assert.assertTrue(Automata.testEquivalence(srcDFAmin, valDFAmin, alphabet), debug);
             }
         }
     }
