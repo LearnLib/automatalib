@@ -19,13 +19,17 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ads.ADSNode;
+import net.automatalib.graph.ads.RecursiveADSNode;
 import net.automatalib.graph.ads.impl.ADSSymbolNode;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class, that offers some operations revolving around adaptive distinguishing sequences.
@@ -34,36 +38,52 @@ public final class ADSUtil {
 
     private ADSUtil() {}
 
-    public static <S, I, O> int computeLength(ADSNode<S, I, O> node) {
+    public static int computeLength(ADSNode<?, ?, ?> node) {
         if (node.isLeaf()) {
             return 0;
         }
 
-        return 1 + node.getChildren().values().stream().mapToInt(ADSUtil::computeLength).max().orElse(0);
+        int max = 0;
+        for (ADSNode<?, ?, ?> n : node.getChildren().values()) {
+            max = Math.max(max, computeLength(n));
+        }
+
+        return 1 + max;
     }
 
-    public static <S, I, O> int countSymbolNodes(ADSNode<S, I, O> node) {
+    public static int countSymbolNodes(ADSNode<?, ?, ?> node) {
         if (node.isLeaf()) {
             return 0;
         }
 
-        return 1 + node.getChildren().values().stream().mapToInt(ADSUtil::countSymbolNodes).sum();
+        int result = 1;
+        for (ADSNode<?, ?, ?> n : node.getChildren().values()) {
+            result += countSymbolNodes(n);
+        }
+        return result;
     }
 
     public static <S, I, T, O> Pair<ADSNode<S, I, O>, ADSNode<S, I, O>> buildFromTrace(MealyMachine<S, I, T, O> automaton,
                                                                                        Word<I> trace,
                                                                                        S state) {
+        return buildFromTrace(automaton, trace, state, ADSSymbolNode::new);
+    }
+
+    public static <S, I, T, O, N extends RecursiveADSNode<S, I, O, N>> Pair<N, N> buildFromTrace(MealyMachine<S, I, T, O> automaton,
+                                                                                                 Word<I> trace,
+                                                                                                 S state,
+                                                                                                 BiFunction<@Nullable N, I, N> creator) {
         final Iterator<I> sequenceIter = trace.iterator();
         final I input = sequenceIter.next();
-        final ADSNode<S, I, O> head = new ADSSymbolNode<>(null, input);
+        final N head = creator.apply(null, input);
 
-        ADSNode<S, I, O> tempADS = head;
+        N tempADS = head;
         I tempInput = input;
         S tempState = state;
 
         while (sequenceIter.hasNext()) {
             final I nextInput = sequenceIter.next();
-            final ADSNode<S, I, O> nextNode = new ADSSymbolNode<>(tempADS, nextInput);
+            final N nextNode = creator.apply(tempADS, nextInput);
 
             final T trans = automaton.getTransition(tempState, tempInput);
             assert trans != null;
@@ -96,14 +116,18 @@ public final class ADSUtil {
     }
 
     public static <S, I, O> Pair<Word<I>, Word<O>> buildTraceForNode(ADSNode<S, I, O> node) {
+        return buildTraceForNode(node, n -> true);
+    }
 
-        ADSNode<S, I, O> parentIter = node.getParent();
-        ADSNode<S, I, O> nodeIter = node;
+    public static <S, I, O, N extends RecursiveADSNode<S, I, O, N>> Pair<Word<I>, Word<O>> buildTraceForNode(N node,
+                                                                                                             Predicate<N> predicate) {
+        N parentIter = node.getParent();
+        N nodeIter = node;
 
         final WordBuilder<I> inputBuilder = new WordBuilder<>();
         final WordBuilder<O> outputBuilder = new WordBuilder<>();
 
-        while (parentIter != null) {
+        while (parentIter != null && predicate.test(parentIter)) {
             inputBuilder.append(parentIter.getSymbol());
             outputBuilder.append(getOutputForSuccessor(parentIter, nodeIter));
 
@@ -114,13 +138,13 @@ public final class ADSUtil {
         return Pair.of(inputBuilder.reverse().toWord(), outputBuilder.reverse().toWord());
     }
 
-    public static <S, I, O> O getOutputForSuccessor(ADSNode<S, I, O> node, ADSNode<S, I, O> successor) {
+    public static <O, N extends RecursiveADSNode<?, ?, O, N>> O getOutputForSuccessor(N node, N successor) {
 
         if (!node.equals(successor.getParent())) {
             throw new IllegalArgumentException("No parent relationship");
         }
 
-        for (Map.Entry<O, ADSNode<S, I, O>> entry : node.getChildren().entrySet()) {
+        for (Map.Entry<O, N> entry : node.getChildren().entrySet()) {
             if (entry.getValue().equals(successor)) {
                 return entry.getKey();
             }

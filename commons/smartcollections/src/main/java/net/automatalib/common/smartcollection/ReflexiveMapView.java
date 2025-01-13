@@ -36,7 +36,7 @@ public class ReflexiveMapView<T> extends AbstractMap<T, T> {
 
     private final Set<@KeyFor("this") T> domain;
 
-    public ReflexiveMapView(Set<@KeyFor("this") T> domain) {
+    public ReflexiveMapView(Set<T> domain) {
         this.domain = Collections.unmodifiableSet(domain);
     }
 

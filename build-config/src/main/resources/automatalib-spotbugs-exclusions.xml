@@ -19,7 +19,11 @@ limitations under the License.
     <Match>
         <!-- TODO: SpotBugs seem to incorrectly infer type annotations, https://github.com/spotbugs/spotbugs/issues/643
                    We have CheckerFramework for this anyway -->
-        <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>
+        <Bug pattern="NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"/>
+        <And>
+            <Class name="net.automatalib.util.automaton.ads.ADSUtil"/>
+            <Method name="buildFromTrace"/>
+        </And>
     </Match>
     <Match>
         <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"/>
