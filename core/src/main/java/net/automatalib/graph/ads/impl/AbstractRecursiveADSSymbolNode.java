@@ -79,8 +79,8 @@ public abstract class AbstractRecursiveADSSymbolNode<S, I, O, N extends Recursiv
     }
 
     @Override
-    public @Nullable S getState() {
-        return null;
+    public S getState() {
+        throw new UnsupportedOperationException("Cannot get hypothesis state from a symbol node");
     }
 
     @Override

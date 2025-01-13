@@ -24,16 +24,16 @@ import java.util.Map;
 import java.util.Queue;
 
 import net.automatalib.graph.Graph;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.visualization.VisualizationHelper;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * An interface representing a node in an adaptive distinguishing sequence (which essentially forms a decision tree).
  * <p>
- * For convenience, this interface extends the {@link Graph} interface so that an ADS may be passed easily to e.g.
- * GraphDOT methods.
+ * For convenience, this interface extends the {@link Graph} interface so that an ADS may be passed easily to the
+ * {@link Visualization} factory.
  * <p>
  * This is a utility interface with a recursive generic type parameter to allow for better inheritance with this
  * recursive data structure. Algorithms may use more simplified sub-interfaces such as {@link ADSNode}.
@@ -52,14 +52,15 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
     /**
      * Returns the input symbol associated with this ADS node.
      *
-     * @return {@code null} if {@code this} is a leaf node (see {@link #isLeaf()}), the associated input symbol
-     * otherwise.
+     * @return the associated input symbol
+     *
+     * @throws UnsupportedOperationException
+     *         if trying to get an input symbol from a leaf node (see {@link #isLeaf()}).
      */
-    @Pure
-    @Nullable I getSymbol();
+    I getSymbol();
 
     /**
-     * See {@link #getSymbol()}.
+     * Sets the input symbol associated with this ADS node.
      *
      * @param symbol
      *         the input symbol to be associated with this ADS node.
@@ -70,19 +71,23 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
     void setSymbol(I symbol);
 
     /**
-     * Returns the parent node of {@code this} node.
+     * Returns the parent node of this node.
      *
-     * @return The parent node of {@code this} ADS node. May be {@code null}, if {@code this} is the root node of an
-     * ADS.
+     * @return The parent node of this ADS node. May be {@code null}, if this node is the root node of an ADS.
      */
-    @Pure
     @Nullable N getParent();
 
+    /**
+     * Sets the parent node of this node.
+     *
+     * @param parent
+     *         the parent node to set
+     */
     void setParent(N parent);
 
     /**
-     * A utility method to collect all nodes of a subtree specified by the given root node. May be used for the {@link
-     * Graph#getNodes()} implementation where a concrete type for {@link N} is needed.
+     * A utility method to collect all nodes of a subtree specified by the given root node. May be used for the
+     * {@link Graph#getNodes()} implementation where a concrete type for {@link N} is needed.
      *
      * @param root
      *         the node for which all subtree nodes should be collected
@@ -98,7 +103,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
         // level-order iteration of the tree nodes
         while (!queue.isEmpty()) {
             @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            @NonNull final N node = queue.poll();
+            final @NonNull N node = queue.poll();
             result.add(node);
             queue.addAll(node.getChildren().values());
         }
@@ -107,10 +112,9 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
     }
 
     /**
-     * Returns a mapping to the child nodes of {@code this} ADS node.
+     * Returns a mapping to the child nodes of this ADS node.
      *
-     * @return A mapping from hypothesis outputs to child ADS nodes. May be empty/unmodifiable (for leaf nodes), but
-     * never {@code null}.
+     * @return A mapping from hypothesis outputs to child ADS nodes. May be empty/unmodifiable for leaf nodes.
      */
     Map<O, N> getChildren();
 
@@ -158,28 +162,31 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
     }
 
     /**
-     * A utility method indicating whether {@code this} node represents a leaf of an ADS (and therefore referencing a
-     * hypothesis state) or an inner node (and therefore referencing an input symbol).
+     * A utility method indicating whether this node represents a leaf of an ADS (and therefore referencing an automaton
+     * state) or an inner node (and therefore referencing an input symbol).
      *
-     * @return {@code true} if {@code this} is a leaf of an ADS, {@code false} otherwise.
+     * @return {@code true} if this node is a leaf of an ADS, {@code false} otherwise.
      */
     boolean isLeaf();
 
     /**
      * Returns the automaton state associated with this ADS node.
      *
-     * @return {@code null} if {@code this} is an inner node (see {@link #isLeaf()}), the associated state otherwise.
-     */
-    @Nullable S getState();
-
-    /**
-     * See {@link #getState()}.
-     *
-     * @param state
-     *         the hypothesis state to be associated with this ADS node.
+     * @return the associated state
      *
      * @throws UnsupportedOperationException
-     *         if trying to set a hypothesis state on an inner node (see {@link #isLeaf()}).
+     *         if trying to get a state from a symbol node (see {@link #isLeaf()}).
+     */
+    S getState();
+
+    /**
+     * Sets the automaton state associated with this ADS node.
+     *
+     * @param state
+     *         the state to be associated with this ADS node.
+     *
+     * @throws UnsupportedOperationException
+     *         if trying to set a state on a symbol node (see {@link #isLeaf()}).
      */
     void setState(S state);
 }

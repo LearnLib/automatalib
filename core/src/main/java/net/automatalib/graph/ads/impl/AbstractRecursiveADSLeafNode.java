@@ -45,13 +45,13 @@ public abstract class AbstractRecursiveADSLeafNode<S, I, O, N extends RecursiveA
     }
 
     @Override
-    public @Nullable I getSymbol() {
-        return null;
+    public I getSymbol() {
+        throw new UnsupportedOperationException("Cannot get a symbol from a leaf node");
     }
 
     @Override
     public void setSymbol(I symbol) {
-        throw new UnsupportedOperationException("Cannot set symbol state on a leaf node");
+        throw new UnsupportedOperationException("Cannot set a symbol on a leaf node");
     }
 
     @Override
