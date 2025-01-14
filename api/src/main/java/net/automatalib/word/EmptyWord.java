@@ -27,15 +27,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The empty word.
- * <p>
- * This class has no type parameter, as there are no non-{@code null} instances of the symbol class involved. Hence,
- * Java's generic mechanism allows to maintain only a single instance of this class.
  *
  * @see Collections#emptyList()
  */
-final class EmptyWord extends Word<Object> {
+final class EmptyWord<I> extends Word<I> {
 
-    public static final EmptyWord INSTANCE = new EmptyWord();
+    public static final EmptyWord<?> INSTANCE = new EmptyWord<>();
 
     @Override
     public int length() {
@@ -43,12 +40,12 @@ final class EmptyWord extends Word<Object> {
     }
 
     @Override
-    public Spliterator<Object> spliterator() {
+    public Spliterator<I> spliterator() {
         return Spliterators.emptySpliterator();
     }
 
     @Override
-    public Word<Object> subWordInternal(int fromIndex, int toIndex) {
+    public Word<I> subWordInternal(int fromIndex, int toIndex) {
         return this;
     }
 
@@ -56,32 +53,32 @@ final class EmptyWord extends Word<Object> {
     public void writeToArray(int offset, @Nullable Object[] array, int tgtOffset, int length) {}
 
     @Override
-    public Object getSymbol(int index) {
+    public I getSymbol(int index) {
         throw new IndexOutOfBoundsException(Integer.toString(index));
     }
 
     @Override
-    public List<Object> asList() {
+    public List<I> asList() {
         return Collections.emptyList();
     }
 
     @Override
-    public Word<Object> canonicalNext(Alphabet<Object> sigma) {
+    public Word<I> canonicalNext(Alphabet<I> sigma) {
         return new LetterWord<>(sigma.getSymbol(0));
     }
 
     @Override
-    public Object lastSymbol() {
+    public I lastSymbol() {
         throw new NoSuchElementException();
     }
 
     @Override
-    public Word<Object> append(Object symbol) {
+    public Word<I> append(I symbol) {
         return new LetterWord<>(symbol);
     }
 
     @Override
-    public Word<Object> prepend(Object symbol) {
+    public Word<I> prepend(I symbol) {
         return append(symbol);
     }
 
@@ -91,7 +88,7 @@ final class EmptyWord extends Word<Object> {
     }
 
     @Override
-    public Word<Object> longestCommonPrefix(Word<?> other) {
+    public Word<I> longestCommonPrefix(Word<?> other) {
         return this;
     }
 
@@ -101,23 +98,23 @@ final class EmptyWord extends Word<Object> {
     }
 
     @Override
-    public Word<Object> longestCommonSuffix(Word<?> other) {
+    public Word<I> longestCommonSuffix(Word<?> other) {
         return this;
     }
 
     @Override
-    public Word<Object> flatten() {
+    public Word<I> flatten() {
         return this;
     }
 
     @Override
-    public Word<Object> trimmed() {
+    public Word<I> trimmed() {
         return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Word<T> transform(Function<? super Object, ? extends T> transformer) {
+    public <T> Word<T> transform(Function<? super I, ? extends T> transformer) {
         return (Word<T>) this;
     }
 }
