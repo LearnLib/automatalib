@@ -39,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Removed
 
+* The `BlockAutomaton` has been removed from Béal-Crochemore's minimization algorithm. The class never was a full automaton (in the AutomataLib sense) and could not become one without access to the original automaton at which point the necessary transformations are the same as already implemented in the `Automata` class. 
 * The method `Covers#incrementalStructuralCover` has been removed because it is not possible to correctly compute the set without a distinction between state cover and transition cover elements. Users may use `Covers#incrementalCover` instead.
 * The method `DeterministicEquivalenceTest#findSeparatingWordLarge` has been removed. The normal `findSeparatingWord` method now correctly adapts to various sizes.
 * The methods `xor`, `impl`, `equiv`, and `combine` of `NFAs` have been removed since the product automaton constructions do not correspond to the respective language operations.

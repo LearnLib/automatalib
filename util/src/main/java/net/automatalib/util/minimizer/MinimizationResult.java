@@ -32,9 +32,6 @@ import net.automatalib.common.util.mapping.Mapping;
  * <p>
  * The blocks in the result partition are guaranteed to have contiguous IDs (see {@link Block#getId()}), starting at 0.
  * This allows an efficient construction of the resulting automaton.
- * <p>
- * A more convenient way to obtain a representation of the resulting, minimized automaton is using a {@link
- * BlockAutomaton}.
  *
  * @param <S>
  *         state type
@@ -119,14 +116,5 @@ public final class MinimizationResult<S, L> {
     public Block<S, L> getBlockForState(S origState) {
         State<S, L> state = stateStorage.get(origState);
         return state.getBlock();
-    }
-
-    /**
-     * Creates a {@link BlockAutomaton} using this results structure.
-     *
-     * @return the block automaton.
-     */
-    public BlockAutomaton<S, L> asBlockAutomaton() {
-        return new BlockAutomaton<>(this);
     }
 }

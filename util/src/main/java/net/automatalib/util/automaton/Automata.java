@@ -25,6 +25,7 @@ import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.UniversalGraph;
@@ -34,7 +35,6 @@ import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.minimizer.Block;
-import net.automatalib.util.minimizer.BlockMap;
 import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.util.ts.TS;
@@ -97,7 +97,7 @@ public final class Automata {
 
         S init = automaton.getInitialState();
         Block<S, TransitionEdge.Property<I, TP>> initBlock = init == null ? null : mr.getBlockForState(init);
-        BlockMap<SO> bm = new BlockMap<>(mr);
+        ArrayStorage<SO> storage = new ArrayStorage<>(mr.getNumBlocks());
 
         for (Block<S, TransitionEdge.Property<I, TP>> block : mr.getBlocks()) {
             S rep = mr.getRepresentative(block);
@@ -108,19 +108,19 @@ public final class Automata {
             } else {
                 state = output.addState(repProp);
             }
-            bm.put(block, state);
+            storage.set(block.getId(), state);
         }
 
         for (Block<S, TransitionEdge.Property<I, TP>> block : mr.getBlocks()) {
             S rep = mr.getRepresentative(block);
-            SO state = bm.get(block);
+            SO state = storage.get(block.getId());
             for (I input : inputs) {
                 T trans = automaton.getTransition(rep, input);
                 if (trans != null) {
                     TP prop = automaton.getTransitionProperty(trans);
                     S oldSucc = automaton.getSuccessor(trans);
                     Block<S, TransitionEdge.Property<I, TP>> succBlock = mr.getBlockForState(oldSucc);
-                    SO newSucc = bm.get(succBlock);
+                    SO newSucc = storage.get(succBlock.getId());
                     output.addTransition(state, input, newSucc, prop);
                 }
             }
@@ -195,8 +195,7 @@ public final class Automata {
         automaton.clear();
 
         // Add states from records
-        @Nullable
-        Object[] states = new Object[records.length];
+        @Nullable Object[] states = new Object[records.length];
         for (int i = 0; i < records.length; i++) {
             ResultStateRecord<SP, TP> rec = records[i];
             SP prop = rec.property;
