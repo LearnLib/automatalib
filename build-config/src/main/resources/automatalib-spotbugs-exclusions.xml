@@ -115,7 +115,6 @@ limitations under the License.
         <Bug pattern="PA_PUBLIC_PRIMITIVE_ATTRIBUTE"/>
         <!-- intended to be directly accessed -->
         <Or>
-            <Class name="net.automatalib.common.util.array.ResizingArrayStorage"/>
             <Class name="net.automatalib.util.partitionrefinement.Hopcroft"/>
             <Class name="net.automatalib.util.partitionrefinement.Block"/>
         </Or>

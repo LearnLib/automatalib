@@ -18,7 +18,7 @@ package net.automatalib.graph.impl;
 import java.util.Collections;
 import java.util.Set;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
 import net.automatalib.graph.base.AbstractCompactGraph;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
@@ -31,13 +31,13 @@ public class CompactPMPG<L, AP>
         extends AbstractCompactGraph<CompactPMPGEdge<L, MutableProceduralModalEdgeProperty>, Set<AP>, MutableProceduralModalEdgeProperty>
         implements MutableProceduralModalProcessGraph<Integer, L, CompactPMPGEdge<L, MutableProceduralModalEdgeProperty>, AP, MutableProceduralModalEdgeProperty> {
 
-    private final ResizingArrayStorage<@Nullable Set<AP>> nodeProperties;
+    private final ArrayStorage<@Nullable Set<AP>> nodeProperties;
     private final L defaultLabel;
     private int initialNode;
     private int finalNode;
 
     public CompactPMPG(L defaultLabel) {
-        this.nodeProperties = new ResizingArrayStorage<>(Set.class);
+        this.nodeProperties = new ArrayStorage<>();
         this.defaultLabel = defaultLabel;
         this.initialNode = -1;
         this.finalNode = -1;
@@ -84,7 +84,7 @@ public class CompactPMPG<L, AP>
     @Override
     public void setNodeProperty(int node, @Nullable Set<AP> property) {
         nodeProperties.ensureCapacity(node + 1);
-        nodeProperties.array[node] = property;
+        nodeProperties.set(node, property);
     }
 
     @Override
@@ -104,11 +104,11 @@ public class CompactPMPG<L, AP>
 
     @Override
     public Set<AP> getNodeProperty(int node) {
-        if (node > nodeProperties.array.length) {
+        if (node > nodeProperties.size()) {
             return Collections.emptySet();
         }
 
-        final Set<AP> props = nodeProperties.array[node];
+        final Set<AP> props = nodeProperties.get(node);
         return props == null ? Collections.emptySet() : props;
     }
 }

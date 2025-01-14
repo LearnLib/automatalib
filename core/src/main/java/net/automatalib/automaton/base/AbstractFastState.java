@@ -15,16 +15,16 @@
  */
 package net.automatalib.automaton.base;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.nid.AbstractMutableNumericID;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFastState<T> extends AbstractMutableNumericID {
 
-    private final ResizingArrayStorage<@Nullable T> transitions;
+    private final ArrayStorage<@Nullable T> transitions;
 
     public AbstractFastState(int initialNumOfInputs) {
-        this.transitions = new ResizingArrayStorage<>(Object.class, initialNumOfInputs);
+        this.transitions = new ArrayStorage<>(initialNumOfInputs);
     }
 
     public final boolean ensureInputCapacity(int capacity) {
@@ -32,13 +32,13 @@ public abstract class AbstractFastState<T> extends AbstractMutableNumericID {
     }
 
     public final void setTransitionObject(int inputIdx, @Nullable T transition) {
-        transitions.array[inputIdx] = transition;
+        transitions.set(inputIdx, transition);
     }
 
     public final void clearTransitionObjects() {
-        for (int i = 0; i < transitions.array.length; i++) {
+        for (int i = 0; i < transitions.size(); i++) {
             clearTransitionObject(getTransitionObject(i));
-            transitions.array[i] = null;
+            transitions.set(i, null);
         }
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractFastState<T> extends AbstractMutableNumericID {
     }
 
     public final @Nullable T getTransitionObject(int inputIdx) {
-        return transitions.array[inputIdx];
+        return transitions.get(inputIdx);
     }
 
     @Override

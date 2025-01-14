@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.graph.BidirectionalGraph;
 import net.automatalib.graph.MutableUniversalBidirectionalGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -30,15 +30,15 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
         implements MutableUniversalBidirectionalGraph<Integer, CompactBidiEdge<EP>, NP, EP>,
                    BidirectionalGraph.IntAbstraction<CompactBidiEdge<EP>> {
 
-    private final ResizingArrayStorage<List<CompactBidiEdge<EP>>> inEdges;
+    private final ArrayStorage<List<CompactBidiEdge<EP>>> inEdges;
 
     public AbstractCompactBidiGraph() {
-        this.inEdges = new ResizingArrayStorage<>(List.class);
+        this.inEdges = new ArrayStorage<>();
     }
 
     public AbstractCompactBidiGraph(int initialCapacity) {
         super(initialCapacity);
-        this.inEdges = new ResizingArrayStorage<>(List.class, initialCapacity);
+        this.inEdges = new ArrayStorage<>(initialCapacity);
     }
 
     @Override
@@ -48,14 +48,14 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
 
     @Override
     public Collection<CompactBidiEdge<EP>> getIncomingEdges(int node) {
-        return Collections.unmodifiableCollection(this.inEdges.array[node]);
+        return Collections.unmodifiableCollection(this.inEdges.get(node));
     }
 
     @Override
     public int addIntNode(@Nullable NP property) {
         int node = super.addIntNode(property);
         inEdges.ensureCapacity(node + 1);
-        inEdges.array[node] = new ArrayList<>();
+        inEdges.set(node, new ArrayList<>());
         return node;
     }
 
@@ -72,7 +72,7 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
     @Override
     public CompactBidiEdge<EP> connect(int source, int target, @Nullable EP property) {
         CompactBidiEdge<EP> edge = super.connect(source, target, property);
-        List<CompactBidiEdge<EP>> inEdges = this.inEdges.array[target];
+        List<CompactBidiEdge<EP>> inEdges = this.inEdges.get(target);
         inEdges.add(edge);
         return edge;
     }

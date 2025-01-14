@@ -19,26 +19,26 @@ import java.util.AbstractList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DynamicList<T extends MutableNumericID> extends AbstractList<T> {
 
-    private final ResizingArrayStorage<T> storage;
+    private final ArrayStorage<T> storage;
     private int size;
 
     public DynamicList() {
         this.size = 0;
-        this.storage = new ResizingArrayStorage<>(MutableNumericID.class);
+        this.storage = new ArrayStorage<>();
     }
 
     public DynamicList(List<? extends T> initial) {
         this.size = initial.size();
-        this.storage = new ResizingArrayStorage<>(MutableNumericID.class, size);
+        this.storage = new ArrayStorage<>(size);
 
         int idx = 0;
         for (T t : initial) {
-            storage.array[idx] = t;
+            storage.set(idx, t);
             t.setId(idx);
             idx++;
         }
@@ -71,16 +71,16 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> {
             return false;
         }
 
-        T last = storage.array[--size];
+        T last = storage.get(--size);
 
         if (idx != size) {
-            storage.array[idx] = last;
+            storage.set(idx, last);
             last.setId(idx);
             if (tracker != null) {
                 tracker.notifyListeners(last, idx, size);
             }
         }
-        storage.array[size] = null;
+        storage.set(size, null);
         myElem.setId(-1);
 
         return true;
@@ -90,16 +90,16 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> {
     public T remove(int index, IDChangeNotifier<T> tracker) {
         T elem = get(index);
 
-        T last = storage.array[--size];
+        T last = storage.get(--size);
 
         if (index != size) {
-            storage.array[index] = last;
+            storage.set(index, last);
             last.setId(index);
             if (tracker != null) {
                 tracker.notifyListeners(last, index, size);
             }
         }
-        storage.array[size] = null;
+        storage.set(size, null);
         elem.setId(-1);
 
         return elem;
@@ -109,13 +109,13 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> {
         if (index < 0 || index >= size) {
             return null;
         }
-        return storage.array[index];
+        return storage.get(index);
     }
 
     @Override
     public boolean add(T elem) {
         storage.ensureCapacity(size + 1);
-        storage.array[size] = elem;
+        storage.set(size, elem);
         elem.setId(size);
         size++;
         return true;
@@ -126,14 +126,14 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
-        return storage.array[index];
+        return storage.get(index);
     }
 
     @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
     @Override
     public void clear() {
         for (int i = 0; i < size; i++) {
-            storage.array[i] = null;
+            storage.set(i, null);
         }
         size = 0;
     }
@@ -172,10 +172,10 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> {
         if (b < 0 || b >= size) {
             throw new IndexOutOfBoundsException("Invalid index " + b);
         }
-        T tmp = storage.array[a];
-        storage.array[a] = storage.array[b];
-        storage.array[b] = tmp;
-        storage.array[a].setId(a);
-        storage.array[b].setId(b);
+        T tmp = storage.get(a);
+        storage.set(a, storage.get(b));
+        storage.set(b, tmp);
+        storage.get(a).setId(a);
+        storage.get(b).setId(b);
     }
 }

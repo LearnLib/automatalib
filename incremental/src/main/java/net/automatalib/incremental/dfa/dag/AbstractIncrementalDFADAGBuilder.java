@@ -212,20 +212,20 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
 
     void updateInitSignature(int idx, State succ) {
         StateSignature sig = init.getSignature();
-        State oldSucc = sig.successors.array[idx];
+        State oldSucc = sig.successors.get(idx);
         if (oldSucc == succ) {
             return;
         }
         if (oldSucc != null) {
             oldSucc.decreaseIncoming();
         }
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         succ.increaseIncoming();
     }
 
     void updateInitSignature(Acceptance acc, int idx, State succ) {
         StateSignature sig = init.getSignature();
-        State oldSucc = sig.successors.array[idx];
+        State oldSucc = sig.successors.get(idx);
         Acceptance oldAcc = sig.acceptance;
         if (oldSucc == succ && oldAcc == acc) {
             return;
@@ -233,7 +233,7 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         if (oldSucc != null) {
             oldSucc.decreaseIncoming();
         }
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         succ.increaseIncoming();
         sig.acceptance = acc;
     }
@@ -276,15 +276,15 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         assert state != init;
 
         StateSignature sig = state.getSignature();
-        if (sig.successors.array[idx] == succ) {
+        if (sig.successors.get(idx) == succ) {
             return state;
         }
         register.remove(sig);
-        if (sig.successors.array[idx] != null) {
-            sig.successors.array[idx].decreaseIncoming();
+        if (sig.successors.get(idx) != null) {
+            sig.successors.get(idx).decreaseIncoming();
         }
 
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         succ.increaseIncoming();
         sig.updateHashCode();
         return replaceOrRegister(state);
@@ -294,11 +294,11 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         assert state != init;
 
         StateSignature sig = state.getSignature();
-        if (sig.successors.array[idx] == succ && sig.acceptance == acc) {
+        if (sig.successors.get(idx) == succ && sig.acceptance == acc) {
             return state;
         }
         register.remove(sig);
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         sig.acceptance = acc;
         succ.increaseIncoming();
         sig.updateHashCode();
@@ -319,7 +319,7 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         State other = register.get(sig);
         if (other != null) {
             if (state != other) {
-                for (State succ : sig.successors.array) {
+                for (State succ : sig.successors) {
                     if (succ != null) {
                         succ.decreaseIncoming();
                     }
@@ -348,7 +348,7 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
 
         state = new State(sig);
         register.put(sig, state);
-        for (State succ : sig.successors.array) {
+        for (State succ : sig.successors) {
             if (succ != null) {
                 succ.increaseIncoming();
             }
@@ -360,8 +360,7 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         assert other != init;
 
         StateSignature sig = other.getSignature().duplicate();
-        for (int i = 0; i < alphabetSize; i++) {
-            State succ = sig.successors.array[i];
+        for (State succ : sig.successors) {
             if (succ != null) {
                 succ.increaseIncoming();
             }
@@ -381,11 +380,11 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
 
         StateSignature sig = state.getSignature();
         sig.acceptance = acc;
-        State prevSucc = sig.successors.array[idx];
+        State prevSucc = sig.successors.get(idx);
         if (prevSucc != null) {
             prevSucc.decreaseIncoming();
         }
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         if (succ != null) {
             succ.increaseIncoming();
         }
@@ -398,11 +397,11 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         assert state != init;
 
         StateSignature sig = state.getSignature();
-        State prevSucc = sig.successors.array[idx];
+        State prevSucc = sig.successors.get(idx);
         if (prevSucc != null) {
             prevSucc.decreaseIncoming();
         }
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         if (succ != null) {
             succ.increaseIncoming();
         }
@@ -450,11 +449,11 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         assert other != init;
 
         StateSignature sig = other.getSignature();
-        if (sig.successors.array[idx] == succ) {
+        if (sig.successors.get(idx) == succ) {
             return other;
         }
         sig = sig.duplicate();
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         sig.updateHashCode();
         return replaceOrRegister(sig);
     }
@@ -463,11 +462,11 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         assert other != init;
 
         StateSignature sig = other.getSignature();
-        if (sig.successors.array[idx] == succ && sig.acceptance == acc) {
+        if (sig.successors.get(idx) == succ && sig.acceptance == acc) {
             return other;
         }
         sig = sig.duplicate();
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         sig.acceptance = acc;
         return replaceOrRegister(sig);
     }

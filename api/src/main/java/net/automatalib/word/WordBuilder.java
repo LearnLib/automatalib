@@ -19,8 +19,8 @@ import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.array.ArrayUtil;
-import net.automatalib.common.util.array.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -51,7 +51,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
      * Constructor. Initializes the builder with a default capacity.
      */
     public WordBuilder() {
-        this.array = new Object[ResizingArrayStorage.DEFAULT_INITIAL_CAPACITY];
+        this.array = new Object[ArrayStorage.DEFAULT_INITIAL_CAPACITY];
     }
 
     /**

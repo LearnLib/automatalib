@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.moore.tree;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -27,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 final class Node<O> {
 
     private final O output;
-    private @Nullable ResizingArrayStorage<Node<O>> children;
+    private @Nullable ArrayStorage<Node<O>> children;
 
     /**
      * Constructor. Constructs a new node with no children and the specified acceptance value.
@@ -60,7 +60,7 @@ final class Node<O> {
         if (children == null) {
             return null;
         }
-        return children.array[idx];
+        return children.get(idx);
     }
 
     /**
@@ -75,14 +75,11 @@ final class Node<O> {
      */
     void setChild(int idx, int alphabetSize, Node<O> child) {
         if (children == null) {
-            children = new ResizingArrayStorage<>(Node.class, alphabetSize);
+            children = new ArrayStorage<>(alphabetSize);
         }
-        children.array[idx] = child;
+        children.set(idx, child);
     }
 
-    /**
-     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
-     */
     void ensureInputCapacity(int capacity) {
         if (this.children != null) {
             this.children.ensureCapacity(capacity);

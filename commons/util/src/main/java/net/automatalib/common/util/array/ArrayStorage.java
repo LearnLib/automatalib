@@ -18,45 +18,122 @@ package net.automatalib.common.util.array;
 import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 import java.util.RandomAccess;
-import java.util.function.Supplier;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A thin wrapper around a simple {@code Object[]} array. Mainly used (and useful) for heavily generic and array-based
- * data storage. Extends/Implements some convenient classes/interfaces.
+ * A type-safe wrapper around a simple {@code Object[]} array. This class is mainly useful when in need for heavily
+ * generic index-based data storage. While it is compatible with {@link List}s, it does not support
+ * {@link List#add(Object) dynamic growth} but {@link #ensureCapacity(int) explicit memory allocation}. As a result,
+ * elements can be {@link #set(int, Object) set} at non-contiguous positions.
  *
  * @param <T>
  *         the type of stored elements
  */
 public final class ArrayStorage<T> extends AbstractList<T> implements RandomAccess {
 
-    private final @Nullable Object[] storage;
+    /**
+     * The default initial capacity of the array storage.
+     */
+    public static final int DEFAULT_INITIAL_CAPACITY = 10;
 
+    private int size;
+    private T[] storage;
+
+    /**
+     * Constructor. Creates an array storage with a default initial capacity of
+     * {@link ArrayStorage#DEFAULT_INITIAL_CAPACITY}.
+     */
+    public ArrayStorage() {
+        this(DEFAULT_INITIAL_CAPACITY);
+    }
+
+    /**
+     * Constructor. Creates an array with the specified initial capacity.
+     *
+     * @param size
+     *         the initial capacity.
+     */
     public ArrayStorage(int size) {
-        this.storage = new Object[size];
+        this(new @Nullable Object[size]);
     }
 
-    public ArrayStorage(int size, Supplier<T> supplier) {
-        this.storage = new Object[size];
-        for (int i = 0; i < size; i++) {
-            storage[i] = supplier.get();
-        }
-    }
-
+    /**
+     * Constructor. (Shallowly) copies the elements from the given collections into the array storage.
+     *
+     * @param collection
+     *         the other storage whose data should be (shallowly) cloned
+     */
     public ArrayStorage(Collection<? extends T> collection) {
         this(collection.toArray());
     }
 
+    @SuppressWarnings("unchecked")
     private ArrayStorage(@Nullable Object[] storage) {
-        this.storage = storage;
+        this.size = storage.length;
+        this.storage = (T[]) storage;
+    }
+
+    /**
+     * Ensures that the storage container can store at least the given amount of elements. Note that the implementation
+     * may allocate more memory (to speed up subsequent increments) but elements can only ever be accessed until the
+     * requested position.
+     *
+     * @param minCapacity
+     *         the minimum capacity required
+     *
+     * @return {@code true} if the internal storage was re-allocated, {@code false} otherwise
+     */
+    public boolean ensureCapacity(int minCapacity) {
+        size = Math.max(size, minCapacity);
+
+        if (minCapacity <= storage.length) {
+            return false;
+        }
+
+        final int newCapacity = ArrayUtil.computeNewCapacity(storage.length, minCapacity, 0);
+
+        storage = Arrays.copyOf(storage, newCapacity);
+        return true;
+    }
+
+    /**
+     * Sets all the elements in the array to the specified value.
+     *
+     * @param value
+     *         the value.
+     */
+    public void setAll(T value) {
+        Arrays.fill(storage, 0, size, value);
+    }
+
+    /**
+     * Swaps the contents with the given storage.
+     *
+     * @param that
+     *         the container to swap contents with
+     */
+    public void swap(ArrayStorage<T> that) {
+        final T[] tmpStorage = this.storage;
+        final int tmpSize = this.size;
+
+        this.storage = that.storage;
+        this.size = that.size;
+
+        that.storage = tmpStorage;
+        that.size = tmpSize;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
-        return (T) storage[index];
+        if (index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return storage[index];
     }
 
     @Override
@@ -68,12 +145,18 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
 
     @Override
     public int size() {
-        return storage.length;
+        return size;
     }
 
     @Override
+    @SuppressWarnings("return")
     public Object[] toArray() {
-        return storage.clone();
+        return Arrays.copyOf(storage, size);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return ArrayUtil.iterator(storage, 0, size);
     }
 
     @Override
@@ -86,11 +169,29 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
         }
 
         final ArrayStorage<?> that = (ArrayStorage<?>) o;
-        return Arrays.equals(storage, that.storage);
+
+        if (this.size != that.size) {
+            return false;
+        }
+
+        for (int i = 0; i < this.size; i++) {
+            if (!Objects.equals(this.storage[i], that.storage[i])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(storage);
+        final int prime = 31;
+        int result = 1;
+
+        for (int i = 0; i < this.size; i++) {
+            result = prime * result + Objects.hashCode(this.storage[i]);
+        }
+
+        return result;
     }
 }

@@ -64,7 +64,7 @@ public final class ArrayUtil {
         }
 
         @SuppressWarnings("PMD.UselessParentheses") // parenthesis make things clearer
-        int newCapacity = (length * 3) / 2 + 1;
+        int newCapacity = (length / 2) * 3 + 1;
 
         if (newCapacity < nextCapacityHint) {
             newCapacity = nextCapacityHint;
@@ -89,6 +89,24 @@ public final class ArrayUtil {
      */
     public static <E> Iterator<E> iterator(E[] array) {
         return new ArrayIterator<>(array);
+    }
+
+    /**
+     * Returns an immutable iterator that iterates over the contents of the given array in the specified range.
+     *
+     * @param array
+     *         the array over whose contents should be iterated
+     * @param start
+     *         the index (inclusive) of the first elements to return
+     * @param end
+     *         the index (exclusive) of the last element to return
+     * @param <E>
+     *         element type
+     *
+     * @return an iterator for the contents of the array in the specified range
+     */
+    public static <E> Iterator<E> iterator(E[] array, int start, int end) {
+        return new ArrayIterator<>(array, start, end);
     }
 
     /**

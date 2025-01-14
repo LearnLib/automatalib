@@ -274,7 +274,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
         StateSignature<O> sig = other.getSignature().duplicate();
 
         for (int i = 0; i < alphabetSize; i++) {
-            State<O> succ = sig.successors.array[i];
+            State<O> succ = sig.successors.get(i);
             if (succ != null) {
                 succ.increaseIncoming();
             }
@@ -297,15 +297,16 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
      */
     private State<O> updateSignature(State<O> state, int idx, State<O> succ) {
         StateSignature<O> sig = state.getSignature();
-        if (sig.successors.array[idx] == succ) {
+        State<O> oldSucc = sig.successors.get(idx);
+        if (oldSucc == succ) {
             return state;
         }
 
         register.remove(sig);
-        if (sig.successors.array[idx] != null) {
-            sig.successors.array[idx].decreaseIncoming();
+        if (oldSucc != null) {
+            oldSucc.decreaseIncoming();
         }
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         succ.increaseIncoming();
         sig.updateHashCode();
         return replaceOrRegister(state);
@@ -322,14 +323,14 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
      */
     private void updateInitSignature(int idx, State<O> succ) {
         StateSignature<O> sig = init.getSignature();
-        State<O> oldSucc = sig.successors.array[idx];
+        State<O> oldSucc = sig.successors.get(idx);
         if (oldSucc == succ) {
             return;
         }
         if (oldSucc != null) {
             oldSucc.decreaseIncoming();
         }
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         succ.increaseIncoming();
     }
 
@@ -345,15 +346,15 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
      */
     private void updateInitSignature(int idx, State<O> succ, O out) {
         StateSignature<O> sig = init.getSignature();
-        State<O> oldSucc = sig.successors.array[idx];
-        if (oldSucc == succ && Objects.equals(out, sig.outputs.array[idx])) {
+        State<O> oldSucc = sig.successors.get(idx);
+        if (oldSucc == succ && Objects.equals(out, sig.outputs.get(idx))) {
             return;
         }
         if (oldSucc != null) {
             oldSucc.decreaseIncoming();
         }
-        sig.successors.array[idx] = succ;
-        sig.outputs.array[idx] = out;
+        sig.successors.set(idx, succ);
+        sig.outputs.set(idx, out);
         succ.increaseIncoming();
     }
 
@@ -375,8 +376,8 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
             I sym = suffix.getSymbol(i);
             O outsym = suffixOut.getSymbol(i);
             int idx = inputAlphabet.getSymbolIndex(sym);
-            sig.successors.array[idx] = last;
-            sig.outputs.array[idx] = outsym;
+            sig.successors.set(idx, last);
+            sig.outputs.set(idx, outsym);
             sig.updateHashCode();
             last = replaceOrRegister(sig);
         }
@@ -386,26 +387,26 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
 
     private State<O> unhide(State<O> state, int idx, State<O> succ, O out) {
         StateSignature<O> sig = state.getSignature();
-        State<O> prevSucc = sig.successors.array[idx];
+        State<O> prevSucc = sig.successors.get(idx);
         if (prevSucc != null) {
             prevSucc.decreaseIncoming();
         }
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         if (succ != null) {
             succ.increaseIncoming();
         }
-        sig.outputs.array[idx] = out;
+        sig.outputs.set(idx, out);
         sig.updateHashCode();
         return replaceOrRegister(state);
     }
 
     private State<O> clone(State<O> other, int idx, State<O> succ) {
         StateSignature<O> sig = other.getSignature();
-        if (sig.successors.array[idx] == succ) {
+        if (sig.successors.get(idx) == succ) {
             return other;
         }
         sig = sig.duplicate();
-        sig.successors.array[idx] = succ;
+        sig.successors.set(idx, succ);
         sig.updateHashCode();
         return replaceOrRegister(sig);
     }
@@ -415,7 +416,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
         State<O> other = register.get(sig);
         if (other != null) {
             if (state != other) {
-                for (State<O> succ : sig.successors.array) {
+                for (State<O> succ : sig.successors) {
                     if (succ != null) {
                         succ.decreaseIncoming();
                     }
@@ -436,7 +437,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
 
         state = new State<>(sig);
         register.put(sig, state);
-        for (State<O> succ : sig.successors.array) {
+        for (State<O> succ : sig.successors) {
             if (succ != null) {
                 succ.increaseIncoming();
             }

@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -38,7 +38,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     private static final int DEFAULT_INITIAL_CAPACITY = 10;
     private final Comparator<? super E> comparator;
     // Entry storage.
-    private final ResizingArrayStorage<Reference<E>> entries;
+    private final ArrayStorage<Reference<E>> entries;
     // Number of entries in the queue.
     private int size;
 
@@ -46,7 +46,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         this(Math.max(initCapacity, initValues.size()), comparator);
         int i = 0;
         for (E e : initValues) {
-            entries.array[i++] = new Reference<>(0, e);
+            entries.set(i++, new Reference<>(0, e));
         }
         size = initValues.size();
         for (int j = size / 2; j >= 0; j--) {
@@ -55,7 +55,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     protected BinaryHeap(int initialCapacity, Comparator<? super E> comparator) {
-        this.entries = new ResizingArrayStorage<>(Reference.class, initialCapacity);
+        this.entries = new ArrayStorage<>(initialCapacity);
         this.comparator = comparator;
     }
 
@@ -63,16 +63,16 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
      * Move an element downwards inside the heap, until all of its children have a key greater or equal to its own.
      */
     private void downHeap(@UnknownInitialization(BinaryHeap.class) BinaryHeap<E> this, int idx) {
-        Reference<E> e = entries.array[idx];
+        Reference<E> e = entries.get(idx);
 
         int iter = idx;
         while (hasChildren(iter)) {
             int cidx = leftChild(iter);
-            Reference<E> c = entries.array[cidx];
+            Reference<E> c = entries.get(cidx);
 
             if (hasRightChild(iter)) {
                 int rcidx = rightChild(iter);
-                Reference<E> rc = entries.array[rcidx];
+                Reference<E> rc = entries.get(rcidx);
                 if (compare(rc, c) < 0) {
                     cidx = rcidx;
                     c = rc;
@@ -83,8 +83,8 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
                 break;
             }
 
-            entries.array[cidx] = e;
-            entries.array[iter] = c;
+            entries.set(cidx, e);
+            entries.set(iter, c);
             c.index = iter;
             iter = cidx;
         }
@@ -187,7 +187,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         ensureCapacity(size + 1);
 
         Reference<E> entry = new Reference<>(size, elem);
-        entries.array[size] = entry;
+        entries.set(size, entry);
         upHeap(size++);
 
         return entry;
@@ -213,14 +213,13 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     private void forceToTop(int idx) {
-        Reference<E> e = entries.array[idx];
+        Reference<E> e = entries.get(idx);
 
         int iter = idx;
         while (hasParent(iter)) {
             int pidx = parent(iter);
-            Reference<E> p = entries.array[pidx];
-            entries.array[pidx] = e;
-            entries.array[iter] = p;
+            Reference<E> p = entries.set(pidx, e);
+            entries.set(iter, p);
             p.index = iter;
             iter = parent(iter);
         }
@@ -258,15 +257,15 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
      * Move an element upwards inside the heap, until it has a parent with a key less or equal to its own.
      */
     private void upHeap(int idx) {
-        Reference<E> e = entries.array[idx];
+        Reference<E> e = entries.get(idx);
 
         int iter = idx;
         while (hasParent(iter)) {
             int pidx = parent(iter);
-            Reference<E> p = entries.array[pidx];
+            Reference<E> p = entries.get(pidx);
             if (compare(e, p) < 0) {
-                entries.array[pidx] = e;
-                entries.array[iter] = p;
+                entries.set(pidx, e);
+                entries.set(iter, p);
                 p.index = iter;
                 iter = parent(iter);
             } else {
@@ -298,7 +297,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
 
     @Override
     public void hintNextCapacity(int nextCapacityHint) {
-        entries.hintNextCapacity(nextCapacityHint);
+        entries.ensureCapacity(nextCapacityHint);
     }
 
     @Override
@@ -337,7 +336,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         if (size <= 0) {
             throw new NoSuchElementException();
         }
-        return entries.array[0].element;
+        return entries.get(0).element;
     }
 
     @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
@@ -346,9 +345,9 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         if (size <= 0) {
             throw new NoSuchElementException();
         }
-        E min = entries.array[0].element;
-        entries.array[0] = entries.array[--size];
-        entries.array[size] = null;
+        E min = entries.get(0).element;
+        entries.set(0, entries.get(--size));
+        entries.set(size, null);
 
         if (size > 0) {
             downHeap(0);
@@ -407,7 +406,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
             if (current >= size) {
                 throw new NoSuchElementException();
             }
-            return entries.array[current++];
+            return entries.get(current++);
         }
 
         @Override

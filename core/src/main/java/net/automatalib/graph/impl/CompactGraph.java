@@ -15,33 +15,33 @@
  */
 package net.automatalib.graph.impl;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.graph.base.AbstractCompactGraph;
 import net.automatalib.graph.base.CompactEdge;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactGraph<@Nullable NP, @Nullable EP> extends AbstractCompactGraph<CompactEdge<EP>, NP, EP> {
 
-    private final ResizingArrayStorage<NP> nodeProperties;
+    private final ArrayStorage<NP> nodeProperties;
 
     public CompactGraph() {
-        this.nodeProperties = new ResizingArrayStorage<>(Object.class);
+        this.nodeProperties = new ArrayStorage<>();
     }
 
     public CompactGraph(int initialCapacity) {
         super(initialCapacity);
-        this.nodeProperties = new ResizingArrayStorage<>(Object.class, initialCapacity);
+        this.nodeProperties = new ArrayStorage<>(initialCapacity);
     }
 
     @Override
     public void setNodeProperty(int node, @Nullable NP property) {
         nodeProperties.ensureCapacity(node + 1);
-        nodeProperties.array[node] = property;
+        nodeProperties.set(node, property);
     }
 
     @Override
     public NP getNodeProperty(int node) {
-        return node < nodeProperties.array.length ? nodeProperties.array[node] : null;
+        return nodeProperties.get(node);
     }
 
     @Override

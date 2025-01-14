@@ -15,56 +15,56 @@
  */
 package net.automatalib.common.util.mapping;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.nid.IDChangeListener;
 import net.automatalib.common.util.nid.NumericID;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class ArrayMapping<K extends NumericID, @Nullable V> implements MutableMapping<K, V>, IDChangeListener<K> {
 
-    private final ResizingArrayStorage<V> storage;
+    private final ArrayStorage<V> storage;
 
     public ArrayMapping() {
-        storage = new ResizingArrayStorage<>(Object.class);
+        storage = new ArrayStorage<>();
     }
 
     public ArrayMapping(int initialSize) {
-        storage = new ResizingArrayStorage<>(Object.class, initialSize);
+        storage = new ArrayStorage<>(initialSize);
     }
 
     @Override
     public V get(K elem) {
         int id = elem.getId();
-        if (id < 0 || id >= storage.array.length) {
+        if (id < 0 || id >= storage.size()) {
             return null;
         }
-        return storage.array[id];
+        return storage.get(id);
     }
 
     @Override
     public V put(K key, V value) {
         int id = key.getId();
         storage.ensureCapacity(id + 1);
-        V old = storage.array[id];
-        storage.array[id] = value;
+        V old = storage.get(id);
+        storage.set(id, value);
         return old;
     }
 
     @Override
     public void idChanged(K obj, int newId, int oldId) {
         if (newId == -1) {
-            if (oldId < storage.array.length) {
-                storage.array[oldId] = null;
+            if (oldId < storage.size()) {
+                storage.set(oldId, null);
             }
             return;
         }
         V oldVal = null;
-        if (oldId < storage.array.length) {
-            oldVal = storage.array[oldId];
-            storage.array[oldId] = oldVal;
+        if (oldId < storage.size()) {
+            oldVal = storage.get(oldId);
+            storage.set(oldId, oldVal);
         }
         storage.ensureCapacity(newId + 1);
-        storage.array[newId] = oldVal;
+        storage.set(newId, oldVal);
     }
 
 }

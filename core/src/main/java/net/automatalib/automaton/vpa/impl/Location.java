@@ -15,10 +15,6 @@
  */
 package net.automatalib.automaton.vpa.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -28,15 +24,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class Location {
 
-    private final ArrayStorage<Location> intSuccessors;
-    private final ArrayStorage<@Nullable List<@Nullable Location>> returnSuccessors;
+    private final Location[] intSuccessors;
+    private final ArrayStorage<ArrayStorage<Location>> returnSuccessors;
     private final int index;
     private boolean accepting;
 
     public Location(VPAlphabet<?> alphabet, int index, boolean accepting) {
         this.index = index;
         this.accepting = accepting;
-        this.intSuccessors = new ArrayStorage<>(alphabet.getNumInternals());
+        this.intSuccessors = new Location[alphabet.getNumInternals()];
         this.returnSuccessors = new ArrayStorage<>(alphabet.getNumReturns());
     }
 
@@ -53,7 +49,7 @@ public class Location {
     }
 
     public @Nullable Location getReturnSuccessor(int retSymId, int stackSym) {
-        final @Nullable List<@Nullable Location> succList = returnSuccessors.get(retSymId);
+        final ArrayStorage<Location> succList = returnSuccessors.get(retSymId);
         if (succList != null && stackSym < succList.size()) {
             return succList.get(stackSym);
         }
@@ -61,24 +57,21 @@ public class Location {
     }
 
     public void setReturnSuccessor(int retSymId, int stackSym, Location succ) {
-        @Nullable List<@Nullable Location> succList = returnSuccessors.get(retSymId);
+        ArrayStorage<Location> succList = returnSuccessors.get(retSymId);
         if (succList == null) {
-            succList = new ArrayList<>(stackSym + 1);
+            succList = new ArrayStorage<>(stackSym + 1);
             returnSuccessors.set(retSymId, succList);
         }
-        final int numSuccs = succList.size();
-        if (numSuccs <= stackSym) {
-            succList.addAll(Collections.nCopies(stackSym + 1 - numSuccs, null));
-        }
+        succList.ensureCapacity(stackSym + 1);
         succList.set(stackSym, succ);
     }
 
     public Location getInternalSuccessor(int intSymId) {
-        return intSuccessors.get(intSymId);
+        return intSuccessors[intSymId];
     }
 
     public void setInternalSuccessor(int intSymId, Location succ) {
-        intSuccessors.set(intSymId, succ);
+        intSuccessors[intSymId] = succ;
     }
 
 }

@@ -15,9 +15,9 @@
  */
 package net.automatalib.incremental.dfa.dag;
 
-import java.util.Arrays;
+import java.util.Objects;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -27,18 +27,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 final class StateSignature {
 
-    final ResizingArrayStorage<State> successors;
+    final ArrayStorage<State> successors;
     Acceptance acceptance;
     private int hashCode;
 
     StateSignature(int numSuccs, Acceptance acceptance) {
-        this.successors = new ResizingArrayStorage<>(State.class, numSuccs);
+        this.successors = new ArrayStorage<>(numSuccs);
         this.acceptance = acceptance;
         updateHashCode();
     }
 
     StateSignature(StateSignature other) {
-        this.successors = new ResizingArrayStorage<>(other.successors);
+        this.successors = new ArrayStorage<>(other.successors);
         this.acceptance = other.acceptance;
         updateHashCode();
     }
@@ -47,7 +47,7 @@ final class StateSignature {
         final int prime = 31;
         int result = 1;
         result = prime * result + acceptance.hashCode();
-        result = prime * result + Arrays.hashCode(successors.array);
+        result = prime * result + successors.hashCode();
         hashCode = result;
     }
 
@@ -72,7 +72,7 @@ final class StateSignature {
         final StateSignature other = (StateSignature) obj;
 
         return hashCode == other.hashCode && acceptance == other.acceptance &&
-               Arrays.equals(successors.array, other.successors.array);
+               Objects.equals(successors, other.successors);
     }
 
 }

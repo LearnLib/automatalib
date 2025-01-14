@@ -22,7 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `Alphabets#toGrowingAlphabetOrThrowException` method has been moved to `Alphabet#asGrowingAlphabetOrThrowException` so that one does not require an `automata-core` dependency for a simple cast.
 * The `AutomatonBuilderImpl#withStateProperty` method has had its parameter order flipped.
 * The `AWUtil` class has been moved from `net.automatalib.common.util.array` to `net.automatalib.common.smartcollection` (in the `automata-commons-smartcollections` artifact).
-* The `{Resizing,}ArrayStorage` and `ArrayUtil` classes have been moved from `net.automatalib.common.smartcollection` to `net.automatalib.common.util.array` (in the `automata-commons-util` artifact).
+* The `ArrayStorage` and `ArrayUtil` classes have been moved from `net.automatalib.common.smartcollection` to `net.automatalib.common.util.array` (in the `automata-commons-util` artifact).
 * `CollectionsUtil#allTuples` has been moved to `IterableUtil#allTuples`.
 * `CollectionsUtil#cartesianProduct` has been moved to `IterableUtil#cartesianProduct`.
 * `CollectionsUtil` has been renamed to `CollectionUtil`.
@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `PaigeTarjanMinimization` class (including all supporting classes such as `PaigeTarjanInitializers`) has been removed because, despite its name, the class never implemented Paige-Tarjan's algorithm for solving the *relational* coarsest partition problem but the functional one instead. Most of the previous functionality has been migrated to the (now correctly named) `HopcroftMinimizer` class.
 * The serializers have been overhauled to allow for better integration of custom automaton types (especially when parsing). Some of the changes introduce new factory methods which may require some refactoring but the previous functionality is still available. As a part of this streamlining, many parsers no longer automatically un-compress or buffer the input streams to reduce overhead. The need for this can be determined best where the streams are created (in user-land).
 * The `RecursiveADSNode#{get,set}HypothesisState` methods have been renamed to `RecursiveADSNode#{get,set}State`. Furthermore, `getState()` and `getSymbol()` no longer return null but throw an UnsupportedOperationException in case of an illegal access.
+* The `ResizingArrayStorage` class has been merged with `ArrayStorage`.
 * The `Visualization` factory has been moved from the `automata-core` artifact to the `automata-api` artifact. Furthermore, the previous `DummyVP` has been replaced with a `NoopVP` that does not show a swing window anymore when no proper VisualizationProvider is configured but instead logs an error message. This allows us to drop the `java.desktop` (module) dependency for headless setups and only require it in actual visualizers (DOT, JUNG, etc.).
 * AutomataLib's settings have been carved out in a separate `automata-commons-settings` module.
 * The `net:automatalib.tooling:automata-build-tools` module has been renamed to `net.automatalib:automata-build-config`.

@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 /**
@@ -35,7 +35,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
 
     private static final int DEFAULT_INITIAL_CAPACITY = 10;
     // The collection's storage
-    private final ResizingArrayStorage<Reference<E>> storage;
+    private final ArrayStorage<Reference<E>> storage;
     private int size;
 
     /**
@@ -53,7 +53,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
      */
     public UnorderedCollection(int initialCapacity) {
         final int capacity = initialCapacity <= 0 ? DEFAULT_INITIAL_CAPACITY : initialCapacity;
-        this.storage = new ResizingArrayStorage<>(Reference.class, capacity);
+        this.storage = new ArrayStorage<>(capacity);
     }
 
     /**
@@ -80,7 +80,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
 
     @Override
     public void hintNextCapacity(int nextCapacityHint) {
-        storage.hintNextCapacity(nextCapacityHint);
+        storage.ensureCapacity(nextCapacityHint);
     }
 
     @Override
@@ -106,7 +106,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
         ensureCapacity(size + 1);
         int insertPos = size++;
         Reference<E> ref = new Reference<>(elem, insertPos);
-        storage.array[insertPos] = ref;
+        storage.set(insertPos, ref);
         return ref;
     }
 
@@ -121,12 +121,12 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
     @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
     private void remove(int index) {
         int lastIndex = --size;
-        Reference<E> removed = storage.array[index];
-        Reference<E> lastElem = storage.array[lastIndex];
-        storage.array[index] = lastElem;
+        Reference<E> removed = storage.get(index);
+        Reference<E> lastElem = storage.get(lastIndex);
+        storage.set(index, lastElem);
         lastElem.index = index;
         removed.index = -1;
-        storage.array[lastIndex] = null;
+        storage.set(lastIndex, null);
     }
 
     @Override
@@ -137,7 +137,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
     @Override
     public void replace(ElementReference ref, E newElement) {
         int idx = extractValidIndex(ref);
-        storage.array[idx].element = newElement;
+        storage.get(idx).element = newElement;
     }
 
     /**
@@ -159,7 +159,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
         if (size == 0) {
             throw new NoSuchElementException();
         }
-        return storage.array[0].element;
+        return storage.get(0).element;
     }
 
     @Override
@@ -167,7 +167,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
         if (size == 0) {
             throw new NoSuchElementException();
         }
-        return storage.array[0];
+        return storage.get(0);
     }
 
     @Override
@@ -179,7 +179,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
     public <T extends E> void addAll(T[] array) {
         ensureCapacity(size + array.length);
         for (T t : array) {
-            storage.array[size] = new Reference<>(t, size);
+            storage.set(size, new Reference<>(t, size));
             size++;
         }
     }
@@ -193,7 +193,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
 
         ensureCapacity(size + coll.size());
         for (E elem : coll) {
-            storage.array[size] = new Reference<>(elem, size);
+            storage.set(size, new Reference<>(elem, size));
             size++;
         }
 
@@ -230,8 +230,8 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
     @Override
     public void clear() {
         for (int i = 0; i < size; i++) {
-            storage.array[i].index = -1;
-            storage.array[i] = null;
+            storage.get(i).index = -1;
+            storage.set(i, null);
         }
         size = 0;
     }
@@ -289,7 +289,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
             if (index >= size) {
                 throw new NoSuchElementException();
             }
-            return storage.array[index++];
+            return storage.get(index++);
         }
 
         @Override
@@ -315,7 +315,7 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
             if (index >= size) {
                 throw new NoSuchElementException();
             }
-            return storage.array[index++].element;
+            return storage.get(index++).element;
         }
 
         @Override

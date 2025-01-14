@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -26,31 +26,28 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 final class Node<O> {
 
-    private final ResizingArrayStorage<@Nullable Edge<Node<O>, O>> outEdges;
+    private final ArrayStorage<@Nullable Edge<Node<O>, O>> outEdges;
 
     Node(int alphabetSize) {
-        this.outEdges = new ResizingArrayStorage<>(Edge.class, alphabetSize);
+        this.outEdges = new ArrayStorage<>(alphabetSize);
     }
 
     @Nullable Edge<Node<O>, O> getEdge(int idx) {
-        return outEdges.array[idx];
+        return outEdges.get(idx);
     }
 
     void setEdge(int idx, @Nullable Edge<Node<O>, O> edge) {
-        outEdges.array[idx] = edge;
+        outEdges.set(idx, edge);
     }
 
     @Nullable Node<O> getSuccessor(int idx) {
-        Edge<Node<O>, O> edge = outEdges.array[idx];
+        Edge<Node<O>, O> edge = outEdges.get(idx);
         if (edge != null) {
             return edge.getTarget();
         }
         return null;
     }
 
-    /**
-     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
-     */
     void ensureInputCapacity(int capacity) {
         this.outEdges.ensureCapacity(capacity);
     }

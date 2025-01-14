@@ -264,7 +264,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         }
         sig.acceptance = Acceptance.FALSE;
         for (int i = 0; i < alphabetSize; i++) {
-            State succ = sig.successors.array[i];
+            State succ = sig.successors.get(i);
             if (succ != null) {
                 if (succ.isConfluence()) {
                     succ.decreaseIncoming();
@@ -306,7 +306,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
             StateSignature sig = new StateSignature(alphabetSize, intermediate);
             I sym = suffix.getSymbol(i);
             int idx = inputAlphabet.getSymbolIndex(sym);
-            sig.successors.array[idx] = last;
+            sig.successors.set(idx, last);
             last = replaceOrRegister(sig);
         }
 

@@ -16,25 +16,25 @@
 package net.automatalib.automaton.helper;
 
 import net.automatalib.automaton.concept.StateIDs;
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.mapping.MutableMapping;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class StateIDGrowingMapping<S, @Nullable V> implements MutableMapping<S, V> {
 
     private final StateIDs<S> stateIds;
-    private final ResizingArrayStorage<V> storage;
+    private final ArrayStorage<V> storage;
 
     public StateIDGrowingMapping(StateIDs<S> stateIds, int size) {
         this.stateIds = stateIds;
-        this.storage = new ResizingArrayStorage<>(Object.class, size);
+        this.storage = new ArrayStorage<>(size);
     }
 
     @Override
     public V get(S elem) {
         int id = stateIds.getStateId(elem);
-        if (id >= 0 && id < storage.array.length) {
-            return storage.array[id];
+        if (id >= 0 && id < storage.size()) {
+            return storage.get(id);
         }
         return null;
     }
@@ -42,11 +42,11 @@ public class StateIDGrowingMapping<S, @Nullable V> implements MutableMapping<S, 
     @Override
     public V put(S key, V value) {
         int id = stateIds.getStateId(key);
-        if (id >= storage.array.length) {
+        if (id >= storage.size()) {
             storage.ensureCapacity(id + 1);
         }
-        V old = storage.array[id];
-        storage.array[id] = value;
+        V old = storage.get(id);
+        storage.set(id, value);
         return old;
     }
 

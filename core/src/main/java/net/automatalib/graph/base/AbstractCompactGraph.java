@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.MutableGraph.IntAbstraction;
@@ -30,15 +30,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
         implements MutableGraph<Integer, E, NP, EP>, IntAbstraction<E, NP, EP>, NodeIDs<Integer> {
 
-    private final ResizingArrayStorage<List<E>> edges;
+    private final ArrayStorage<List<E>> edges;
     private int size;
 
     public AbstractCompactGraph() {
-        this.edges = new ResizingArrayStorage<>(List.class);
+        this.edges = new ArrayStorage<>();
     }
 
     public AbstractCompactGraph(int initialCapacity) {
-        this.edges = new ResizingArrayStorage<>(List.class, initialCapacity);
+        this.edges = new ArrayStorage<>(initialCapacity);
     }
 
     @Override
@@ -63,7 +63,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
 
     @Override
     public Collection<E> getOutgoingEdges(int node) {
-        return Collections.unmodifiableCollection(edges.array[node]);
+        return Collections.unmodifiableCollection(edges.get(node));
     }
 
     @Override
@@ -85,7 +85,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     public int addIntNode(@Nullable NP property) {
         int n = size++;
         edges.ensureCapacity(n + 1);
-        edges.array[n] = new ArrayList<>();
+        edges.set(n, new ArrayList<>());
         setNodeProperty(n, property);
         return n;
     }
@@ -103,7 +103,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     @Override
     public E connect(int source, int target, @Nullable EP property) {
         E edge = createEdge(source, target, property);
-        List<E> edges = this.edges.array[source];
+        List<E> edges = this.edges.get(source);
         edges.add(edge);
         return edge;
     }

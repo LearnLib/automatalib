@@ -19,8 +19,7 @@ import java.util.AbstractQueue;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import net.automatalib.common.util.array.ArrayUtil;
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -41,7 +40,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 class StrictPriorityQueue<E> extends AbstractQueue<E> {
 
-    private final ResizingArrayStorage<E> storage = new ResizingArrayStorage<>(Object.class);
+    private final ArrayStorage<E> storage = new ArrayStorage<>();
     private final Comparator<? super E> comparator;
     private final MergeOperation<E> mergeOp;
     private int size;
@@ -62,7 +61,7 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
     @Override
     public boolean offer(E e) {
         storage.ensureCapacity(size + 1);
-        storage.array[size++] = e;
+        storage.set(size++, e);
         if (!upHeap()) {
             size--;
             return false;
@@ -79,16 +78,16 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
     @SuppressWarnings("PMD.AvoidArrayLoops") // we move non-contiguous elements that can't be batched
     private boolean upHeap() {
         int currIdx = size - 1;
-        E elem = storage.array[currIdx];
+        E elem = storage.get(currIdx);
 
         int steps = 0;
 
         while (currIdx > 0) {
             int parentIdx = currIdx / 2;
-            E parent = storage.array[parentIdx];
+            E parent = storage.get(parentIdx);
             int cmp = comparator.compare(elem, parent);
             if (cmp == 0) {
-                storage.array[parentIdx] = mergeOp.merge(parent, elem);
+                storage.set(parentIdx, mergeOp.merge(parent, elem));
                 return false;
             } else if (cmp > 0) {
                 break;
@@ -101,10 +100,10 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
         currIdx = size - 1;
         for (int i = 0; i < steps; i++) {
             int parentIdx = currIdx / 2;
-            storage.array[currIdx] = storage.array[parentIdx];
+            storage.set(currIdx, storage.get(parentIdx));
             currIdx = parentIdx;
         }
-        storage.array[currIdx] = elem;
+        storage.set(currIdx, elem);
 
         return true;
     }
@@ -115,13 +114,13 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
         if (size == 0) {
             return null;
         }
-        E result = storage.array[0];
+        E result = storage.get(0);
         size--;
         if (size > 0) {
-            storage.array[0] = storage.array[size];
+            storage.set(0, storage.get(size));
             downHeap();
         }
-        storage.array[size] = null;
+        storage.set(size, null);
 
         return result;
     }
@@ -130,16 +129,16 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
      * Sifts the topmost element down into the heap until the heap condition is restored.
      */
     private void downHeap() {
-        E elem = storage.array[0];
+        E elem = storage.get(0);
         int currIdx = 0;
 
         while (2 * currIdx + 1 < size) {
             int childIdx = 2 * currIdx + 1;
-            E child = storage.array[childIdx];
+            E child = storage.get(childIdx);
             int rightChildIdx = childIdx + 1;
 
             if (rightChildIdx < size) {
-                E rightChild = storage.array[rightChildIdx];
+                E rightChild = storage.get(rightChildIdx);
                 if (comparator.compare(child, rightChild) > 0) {
                     child = rightChild;
                     childIdx = rightChildIdx;
@@ -147,8 +146,8 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
             }
 
             if (comparator.compare(elem, child) > 0) {
-                storage.array[currIdx] = child;
-                storage.array[childIdx] = elem;
+                storage.set(currIdx, child);
+                storage.set(childIdx, elem);
                 currIdx = childIdx;
             } else {
                 return;
@@ -161,12 +160,12 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
         if (size == 0) {
             return null;
         }
-        return storage.array[0];
+        return storage.get(0);
     }
 
     @Override
     public Iterator<E> iterator() {
-        return ArrayUtil.iterator(storage.array);
+        return storage.iterator();
     }
 
     @Override

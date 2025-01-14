@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.dfa.tree;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -25,7 +25,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 final class Node {
 
     private Acceptance acceptance;
-    private @Nullable ResizingArrayStorage<Node> children;
+    private @Nullable ArrayStorage<Node> children;
 
     /**
      * Constructor. Constructs a new node with no children and an acceptance value of {@link Acceptance#DONT_KNOW}
@@ -75,7 +75,7 @@ final class Node {
         if (children == null) {
             return null;
         }
-        return children.array[idx];
+        return children.get(idx);
     }
 
     /**
@@ -90,9 +90,9 @@ final class Node {
      */
     void setChild(int idx, int alphabetSize, Node child) {
         if (children == null) {
-            children = new ResizingArrayStorage<>(Node.class, alphabetSize);
+            children = new ArrayStorage<>(alphabetSize);
         }
-        children.array[idx] = child;
+        children.set(idx, child);
     }
 
     void makeSink() {
@@ -100,9 +100,6 @@ final class Node {
         acceptance = Acceptance.FALSE;
     }
 
-    /**
-     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
-     */
     void ensureInputCapacity(int capacity) {
         if (this.children != null) {
             this.children.ensureCapacity(capacity);

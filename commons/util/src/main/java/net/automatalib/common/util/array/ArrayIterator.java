@@ -21,16 +21,22 @@ import java.util.NoSuchElementException;
 class ArrayIterator<T> implements Iterator<T> {
 
     private final T[] delegate;
+    private final int end;
     private int idx;
 
     ArrayIterator(T[] delegate) {
+        this(delegate, 0, delegate.length);
+    }
+
+    ArrayIterator(T[] delegate, int start, int end) {
         this.delegate = delegate;
-        this.idx = 0;
+        this.idx = start;
+        this.end = Math.min(delegate.length, end);
     }
 
     @Override
     public boolean hasNext() {
-        return idx < delegate.length;
+        return idx < end;
     }
 
     @Override

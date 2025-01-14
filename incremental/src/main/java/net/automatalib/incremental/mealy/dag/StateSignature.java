@@ -15,9 +15,7 @@
  */
 package net.automatalib.incremental.mealy.dag;
 
-import java.util.Arrays;
-
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -28,19 +26,19 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 final class StateSignature<O> {
 
-    final ResizingArrayStorage<State<O>> successors;
-    final ResizingArrayStorage<O> outputs;
+    final ArrayStorage<State<O>> successors;
+    final ArrayStorage<O> outputs;
     private int hashCode;
 
     StateSignature(int numSuccs) {
-        this.successors = new ResizingArrayStorage<>(State.class, numSuccs);
-        this.outputs = new ResizingArrayStorage<>(Object.class, numSuccs);
+        this.successors = new ArrayStorage<>(numSuccs);
+        this.outputs = new ArrayStorage<>(numSuccs);
         updateHashCode();
     }
 
     StateSignature(StateSignature<O> other) {
-        this.successors = new ResizingArrayStorage<>(other.successors);
-        this.outputs = new ResizingArrayStorage<>(other.outputs);
+        this.successors = new ArrayStorage<>(other.successors);
+        this.outputs = new ArrayStorage<>(other.outputs);
         updateHashCode();
     }
 
@@ -51,8 +49,8 @@ final class StateSignature<O> {
     void updateHashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Arrays.hashCode(outputs.array);
-        result = prime * result + Arrays.hashCode(successors.array);
+        result = prime * result + outputs.hashCode();
+        result = prime * result + successors.hashCode();
         hashCode = result;
     }
 
@@ -72,8 +70,7 @@ final class StateSignature<O> {
 
         final StateSignature<?> other = (StateSignature<?>) obj;
 
-        return hashCode == other.hashCode && Arrays.equals(outputs.array, other.outputs.array) &&
-               Arrays.equals(successors.array, other.successors.array);
+        return hashCode == other.hashCode && outputs.equals(other.outputs) && successors.equals(other.successors);
     }
 
 }

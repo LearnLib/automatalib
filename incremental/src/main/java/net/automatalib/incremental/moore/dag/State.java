@@ -15,8 +15,6 @@
  */
 package net.automatalib.incremental.moore.dag;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
-
 /**
  * A state in the DAG internally used by {@link IncrementalMooreDAGBuilder}.
  *
@@ -45,7 +43,7 @@ final class State<O> {
     }
 
     State<O> getSuccessor(int idx) {
-        return signature.successors.array[idx];
+        return signature.successors.get(idx);
     }
 
     O getOutput() {
@@ -56,9 +54,6 @@ final class State<O> {
         return signature;
     }
 
-    /**
-     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
-     */
     void ensureInputCapacity(int capacity) {
         signature.successors.ensureCapacity(capacity);
     }

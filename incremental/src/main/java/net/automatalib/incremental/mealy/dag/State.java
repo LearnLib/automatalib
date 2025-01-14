@@ -15,8 +15,6 @@
  */
 package net.automatalib.incremental.mealy.dag;
 
-import net.automatalib.common.util.array.ResizingArrayStorage;
-
 /**
  * A state in the DAG internally used by {@link IncrementalMealyDAGBuilder}.
  *
@@ -45,20 +43,17 @@ final class State<O> {
     }
 
     State<O> getSuccessor(int idx) {
-        return signature.successors.array[idx];
+        return signature.successors.get(idx);
     }
 
     O getOutput(int idx) {
-        return signature.outputs.array[idx];
+        return signature.outputs.get(idx);
     }
 
     StateSignature<O> getSignature() {
         return signature;
     }
 
-    /**
-     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
-     */
     void ensureInputCapacity(int capacity) {
         signature.successors.ensureCapacity(capacity);
         signature.outputs.ensureCapacity(capacity);

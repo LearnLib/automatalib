@@ -18,7 +18,7 @@ package net.automatalib.automaton.vpa.impl;
 import java.util.Objects;
 
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 
 /**
  * Default implementation for n-SEVPAs.
@@ -29,7 +29,7 @@ import net.automatalib.common.util.array.ResizingArrayStorage;
 public class DefaultNSEVPA<I> extends AbstractDefaultSEVPA<I> {
 
     private final Location[] moduleEntries;
-    private final ResizingArrayStorage<I> moduleMapping;
+    private final ArrayStorage<I> moduleMapping;
 
     public DefaultNSEVPA(VPAlphabet<I> alphabet) {
         this(alphabet, DEFAULT_SIZE);
@@ -38,7 +38,7 @@ public class DefaultNSEVPA<I> extends AbstractDefaultSEVPA<I> {
     public DefaultNSEVPA(VPAlphabet<I> alphabet, int capacityHint) {
         super(alphabet, capacityHint);
         this.moduleEntries = new Location[alphabet.getNumCalls()];
-        this.moduleMapping = new ResizingArrayStorage<>(Object.class);
+        this.moduleMapping = new ArrayStorage<>();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class DefaultNSEVPA<I> extends AbstractDefaultSEVPA<I> {
 
     public Location addLocation(I module, boolean accepting) {
         final Location result = this.addLocation(accepting);
-        this.moduleMapping.array[result.getIndex()] = module;
+        this.moduleMapping.set(result.getIndex(), module);
         return result;
     }
 
@@ -62,8 +62,8 @@ public class DefaultNSEVPA<I> extends AbstractDefaultSEVPA<I> {
 
     @Override
     public void setInternalSuccessor(Location loc, I intSym, Location succ) {
-        final I srcModule = this.moduleMapping.array[loc.getIndex()];
-        final I tgtModule = this.moduleMapping.array[succ.getIndex()];
+        final I srcModule = this.moduleMapping.get(loc.getIndex());
+        final I tgtModule = this.moduleMapping.get(succ.getIndex());
         if (!Objects.equals(srcModule, tgtModule)) {
             throw new IllegalArgumentException("Cannot set internal success across different modules");
         }
@@ -73,8 +73,8 @@ public class DefaultNSEVPA<I> extends AbstractDefaultSEVPA<I> {
     @Override
     public void setReturnSuccessor(Location loc, I retSym, int stackSym, Location succ) {
         final Location callLoc = super.getStackLoc(stackSym);
-        final I srcModule = this.moduleMapping.array[callLoc.getIndex()];
-        final I tgtModule = this.moduleMapping.array[succ.getIndex()];
+        final I srcModule = this.moduleMapping.get(callLoc.getIndex());
+        final I tgtModule = this.moduleMapping.get(succ.getIndex());
         if (!Objects.equals(srcModule, tgtModule)) {
             throw new IllegalArgumentException("Must return to the module that was called");
         }
