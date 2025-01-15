@@ -26,8 +26,8 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.automaton.fsa.impl.FastDFAState;
 import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.automaton.util.TestUtil;
 import net.automatalib.word.Word;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class SBATest {
@@ -96,40 +96,40 @@ public class SBATest {
         final SBA<?, Character> sba = new StackSBA<>(ALPHABET, 'S', SUB_MODELS);
 
         final Word<Character> i1 = Word.fromString("SaSTcRRaR");
-        Assert.assertTrue(sba.accepts(i1));
+        TestUtil.checkOutput(sba, i1, true);
 
         final Word<Character> i2 = Word.fromString("SaSbRaR");
-        Assert.assertTrue(sba.accepts(i2));
+        TestUtil.checkOutput(sba, i2, true);
 
         final Word<Character> i3 = Word.fromString("SaSbaRcRabc");
-        Assert.assertFalse(sba.accepts(i3));
+        TestUtil.checkOutput(sba, i3, false);
 
         final Word<Character> i4 = Word.fromString("SaUcR");
-        Assert.assertFalse(sba.accepts(i4));
+        TestUtil.checkOutput(sba, i4, false);
 
         final Word<Character> i5 = Word.fromString("TcR");
-        Assert.assertFalse(sba.accepts(i5));
+        TestUtil.checkOutput(sba, i5, false);
 
         final Word<Character> i6 = Word.fromString("Sd");
-        Assert.assertFalse(sba.accepts(i6));
+        TestUtil.checkOutput(sba, i6, false);
 
         final Word<Character> i7 = Word.fromString("aca");
-        Assert.assertFalse(sba.accepts(i7));
+        TestUtil.checkOutput(sba, i7, false);
 
         final Word<Character> i8 = Word.fromString("SacTcR");
-        Assert.assertFalse(sba.accepts(i8));
+        TestUtil.checkOutput(sba, i8, false);
 
         final Word<Character> i9 = Word.fromString("R");
-        Assert.assertFalse(sba.accepts(i9));
+        TestUtil.checkOutput(sba, i9, false);
 
         final Word<Character> i10 = Word.fromString("STTc");
-        Assert.assertFalse(sba.accepts(i10));
+        TestUtil.checkOutput(sba, i10, false);
 
         final Word<Character> i11 = Word.fromString("SaSRR");
-        Assert.assertFalse(sba.accepts(i11));
+        TestUtil.checkOutput(sba, i11, false);
 
         final Word<Character> i12 = Word.epsilon();
-        Assert.assertTrue(sba.accepts(i12));
+        TestUtil.checkOutput(sba, i12, true);
     }
 
     @Test
@@ -137,39 +137,39 @@ public class SBATest {
         final SBA<?, Character> sba = new EmptySBA<>(ALPHABET);
 
         final Word<Character> i1 = Word.fromString("SaSTcRRaR");
-        Assert.assertFalse(sba.accepts(i1));
+        TestUtil.checkOutput(sba, i1, false);
 
         final Word<Character> i2 = Word.fromString("SaSbRaR");
-        Assert.assertFalse(sba.accepts(i2));
+        TestUtil.checkOutput(sba, i2, false);
 
         final Word<Character> i3 = Word.fromString("SaSbaRcRabc");
-        Assert.assertFalse(sba.accepts(i3));
+        TestUtil.checkOutput(sba, i3, false);
 
         final Word<Character> i4 = Word.fromString("SaUcR");
-        Assert.assertFalse(sba.accepts(i4));
+        TestUtil.checkOutput(sba, i4, false);
 
         final Word<Character> i5 = Word.fromString("TcR");
-        Assert.assertFalse(sba.accepts(i5));
+        TestUtil.checkOutput(sba, i5, false);
 
         final Word<Character> i6 = Word.fromString("Sd");
-        Assert.assertFalse(sba.accepts(i6));
+        TestUtil.checkOutput(sba, i6, false);
 
         final Word<Character> i7 = Word.fromString("aca");
-        Assert.assertFalse(sba.accepts(i7));
+        TestUtil.checkOutput(sba, i7, false);
 
         final Word<Character> i8 = Word.fromString("SacTcR");
-        Assert.assertFalse(sba.accepts(i8));
+        TestUtil.checkOutput(sba, i8, false);
 
         final Word<Character> i9 = Word.fromString("R");
-        Assert.assertFalse(sba.accepts(i9));
+        TestUtil.checkOutput(sba, i9, false);
 
         final Word<Character> i10 = Word.fromString("STTc");
-        Assert.assertFalse(sba.accepts(i10));
+        TestUtil.checkOutput(sba, i10, false);
 
         final Word<Character> i11 = Word.fromString("SaSRR");
-        Assert.assertFalse(sba.accepts(i11));
+        TestUtil.checkOutput(sba, i11, false);
 
         final Word<Character> i12 = Word.epsilon();
-        Assert.assertFalse(sba.accepts(i12));
+        TestUtil.checkOutput(sba, i12, false);
     }
 }

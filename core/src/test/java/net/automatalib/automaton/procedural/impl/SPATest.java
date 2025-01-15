@@ -26,6 +26,7 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.automaton.fsa.impl.FastDFAState;
 import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.automaton.util.TestUtil;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -40,8 +41,8 @@ public class SPATest {
         final Alphabet<Character> smallCallAlphabet = Alphabets.characters('S', 'T');
         final Alphabet<Character> bigCallAlphabet = Alphabets.characters('S', 'U');
 
-        final ProceduralInputAlphabet<Character>
-                smallAlphabet = new DefaultProceduralInputAlphabet<>(internalAlphabet, smallCallAlphabet, 'R');
+        final ProceduralInputAlphabet<Character> smallAlphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, smallCallAlphabet, 'R');
 
         ALPHABET = new DefaultProceduralInputAlphabet<>(internalAlphabet, bigCallAlphabet, 'R');
         SUB_MODELS = Map.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
@@ -58,24 +59,24 @@ public class SPATest {
         Assert.assertEquals(spa.size(), SUB_MODELS.values().stream().mapToInt(DFA::size).sum());
 
         // Well-matched palindromes
-        Assert.assertTrue(spa.computeOutput(Word.fromString("SR")));
-        Assert.assertTrue(spa.computeOutput(Word.fromString("SaR")));
-        Assert.assertTrue(spa.computeOutput(Word.fromString("SaSRaR")));
-        Assert.assertTrue(spa.computeOutput(Word.fromString("SbSTcRRbR")));
+        TestUtil.checkOutput(spa, Word.fromString("SR"), true);
+        TestUtil.checkOutput(spa, Word.fromString("SaR"), true);
+        TestUtil.checkOutput(spa, Word.fromString("SaSRaR"), true);
+        TestUtil.checkOutput(spa, Word.fromString("SbSTcRRbR"), true);
 
         // Well-matched but invalid words
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SaaR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SaTaRaR")));
-        Assert.assertFalse(spa.computeOutput(Word.epsilon()));
+        TestUtil.checkOutput(spa, Word.fromString("SaaR"), false);
+        TestUtil.checkOutput(spa, Word.fromString("SaTaRaR"), false);
+        TestUtil.checkOutput(spa, Word.epsilon(), false);
 
         // Ill-matched/non-rooted words
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SSS")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("RS")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("aba")));
+        TestUtil.checkOutput(spa, Word.fromString("SSS"), false);
+        TestUtil.checkOutput(spa, Word.fromString("RS"), false);
+        TestUtil.checkOutput(spa, Word.fromString("aba"), false);
 
         // Un-specified symbols
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SdR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SaUcRaR")));
+        TestUtil.checkOutput(spa, Word.fromString("SdR"), false);
+        TestUtil.checkOutput(spa, Word.fromString("SaUcRaR"), false);
     }
 
     @Test
@@ -88,24 +89,24 @@ public class SPATest {
         Assert.assertTrue(spa.getProcedures().isEmpty());
 
         // Well-matched palindromes
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SaR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SaSRaR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SbSTcRRbR")));
+        TestUtil.checkOutput(spa, Word.fromString("SR"), false);
+        TestUtil.checkOutput(spa, Word.fromString("SaR"), false);
+        TestUtil.checkOutput(spa, Word.fromString("SaSRaR"), false);
+        TestUtil.checkOutput(spa, Word.fromString("SbSTcRRbR"), false);
 
         // Well-matched but invalid words
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SaaR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SaTaRaR")));
-        Assert.assertFalse(spa.computeOutput(Word.epsilon()));
+        TestUtil.checkOutput(spa, Word.fromString("SaaR"), false);
+        TestUtil.checkOutput(spa, Word.fromString("SaTaRaR"), false);
+        TestUtil.checkOutput(spa, Word.epsilon(), false);
 
         // Ill-matched/non-rooted words
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SSS")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("RS")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("aba")));
+        TestUtil.checkOutput(spa, Word.fromString("SSS"), false);
+        TestUtil.checkOutput(spa, Word.fromString("RS"), false);
+        TestUtil.checkOutput(spa, Word.fromString("aba"), false);
 
         // Un-specified symbols
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SdR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromString("SaUcRaR")));
+        TestUtil.checkOutput(spa, Word.fromString("SdR"), false);
+        TestUtil.checkOutput(spa, Word.fromString("SaUcRaR"), false);
     }
 
     private static DFA<?, Character> buildSProcedure(ProceduralInputAlphabet<Character> alphabet) {

@@ -31,7 +31,8 @@ public interface DFA<S, I> extends UniversalDeterministicAutomaton<S, I, S, Bool
 
     @Override
     default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        return NFA.super.computeSuffixOutput(prefix, suffix);
+        S tgt = getState(prefix);
+        return tgt != null && computeStateOutput(tgt, suffix);
     }
 
     @Override
@@ -43,12 +44,6 @@ public interface DFA<S, I> extends UniversalDeterministicAutomaton<S, I, S, Bool
     @Override
     default Boolean computeOutput(Iterable<? extends I> input) {
         return accepts(input);
-    }
-
-    @Override
-    default boolean accepts(Iterable<? extends I> input) {
-        S tgt = getState(input);
-        return tgt != null && isAccepting(tgt);
     }
 
     @Override

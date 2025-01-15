@@ -20,13 +20,16 @@ import java.util.function.Function;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.FastAlphabet;
 import net.automatalib.alphabet.impl.Symbol;
+import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.FiniteStateAcceptor;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.FastNFA;
 import net.automatalib.automaton.fsa.impl.FastNFAState;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.MutableMooreMachine;
 import net.automatalib.automaton.transducer.impl.FastMealy;
+import net.automatalib.ts.acceptor.AcceptorTS;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 
@@ -104,13 +107,23 @@ public final class TestUtil {
     }
 
     public static <S, I> void checkOutput(DFA<S, I> dfa, Word<I> word, Boolean expected) {
-        Assert.assertEquals(dfa.computeOutput(word), expected);
+        checkOutput((FiniteStateAcceptor<?, I>) dfa, word, expected);
         Assert.assertEquals(dfa.computeStateOutput(dfa.getInitialState(), word), expected);
-        Assert.assertEquals(dfa.computeSuffixOutput(word.prefix(word.length()), word.suffix(word.length())), expected);
     }
 
-    public static <S, I> void checkOutput(NFA<S, I> dfa, Word<I> word, Boolean expected) {
+    public static <I> void checkOutput(NFA<?, I> nfa, Word<I> word, Boolean expected) {
+        checkOutput((FiniteStateAcceptor<?, I>) nfa, word, expected);
+        checkOutput(nfa.powersetView(), word, expected);
+    }
+
+    public static <I, A extends SuffixOutput<I, Boolean> & AcceptorTS<?, I>> void checkOutput(A dfa, Word<I> word, Boolean expected) {
+        Assert.assertEquals(dfa.accepts(word), expected);
         Assert.assertEquals(dfa.computeOutput(word), expected);
-        Assert.assertEquals(dfa.computeSuffixOutput(word.prefix(word.length()), word.suffix(word.length())), expected);
+        Assert.assertEquals(dfa.computeSuffixOutput(Word.epsilon(), word), expected);
+        Assert.assertEquals(dfa.computeSuffixOutput(word, Word.epsilon()), expected);
+
+        final int n = word.length();
+        final int mid = n / 2;
+        Assert.assertEquals(dfa.computeSuffixOutput(word.prefix(mid), word.suffix(n-mid)), expected);
     }
 }

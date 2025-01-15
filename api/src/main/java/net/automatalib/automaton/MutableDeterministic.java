@@ -66,7 +66,7 @@ public interface MutableDeterministic<S, I, T, SP, TP>
         int num = transitions.size();
         if (num > 1) {
             throw new IllegalArgumentException(
-                    "Deterministic automaton can not " + "have multiple transitions for the same input symbol.");
+                    "Deterministic automaton can not have multiple transitions for the same input symbol.");
         }
 
         T trans = num > 0 ? transitions.iterator().next() : null;

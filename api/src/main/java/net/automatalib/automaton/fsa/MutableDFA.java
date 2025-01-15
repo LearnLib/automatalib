@@ -16,7 +16,14 @@
 package net.automatalib.automaton.fsa;
 
 import net.automatalib.automaton.MutableDeterministic;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface MutableDFA<S, I> extends DFA<S, I>, MutableDeterministic<S, I, S, Boolean, Void>, MutableFSA<S, I> {
+
+    @Override
+    // Overridden for performance reasons (to prevent creating redundant transition objects)
+    default void setTransition(S state, I input, @Nullable S transition, Void property) {
+        setTransition(state, input, transition);
+    }
 
 }

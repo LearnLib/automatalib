@@ -22,7 +22,6 @@ import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
-import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
@@ -65,16 +64,6 @@ public interface SEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>,
     L getModuleEntry(I callSym);
 
     @Nullable L getReturnSuccessor(L loc, I retSym, int stackSym);
-
-    @Override
-    default Boolean computeOutput(Iterable<? extends I> input) {
-        return accepts(input);
-    }
-
-    @Override
-    default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        return this.accepts(IterableUtil.concat(prefix, suffix));
-    }
 
     @Override
     default boolean isAccepting(State<L> state) {

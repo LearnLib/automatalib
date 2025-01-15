@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.automatalib.automaton.concept.SuffixOutput;
-import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.UniversalDTS;
@@ -41,7 +40,12 @@ public interface DeterministicAcceptorTS<S, I>
 
     @Override
     default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        return computeOutput(IterableUtil.concat(prefix, suffix));
+        S tgt = getState(prefix);
+        if (tgt != null) {
+            S succ = getSuccessor(tgt, suffix);
+            return succ != null && isAccepting(succ);
+        }
+        return false;
     }
 
     @Override

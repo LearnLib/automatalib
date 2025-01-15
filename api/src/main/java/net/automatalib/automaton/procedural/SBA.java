@@ -55,9 +55,4 @@ public interface SBA<S, I>
         return result;
     }
 
-    @Override
-    default Boolean computeOutput(Iterable<? extends I> input) {
-        return this.accepts(input);
-    }
-
 }
