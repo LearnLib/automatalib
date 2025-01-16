@@ -26,7 +26,6 @@ import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An iterator for the transition cover of an automaton. Words are computed lazily (i.e., only when request by
@@ -48,7 +47,7 @@ class IncrementalTransitionCoverIterator<S, I> extends AbstractSimplifiedIterato
     private final Collection<? extends I> inputs;
     private final Collection<? extends Word<I>> oldCover;
 
-    private final MutableMapping<S, @Nullable Record<S, I>> reach;
+    private final MutableMapping<S, Record<S, I>> reach;
     private final Queue<Record<S, I>> bfsQueue;
 
     private Iterator<? extends I> inputIterator;

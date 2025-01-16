@@ -19,7 +19,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.automatalib.automaton.concept.FiniteRepresentation;
+import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.concept.NodeIDs;
+import net.automatalib.graph.helper.NodeIDGrowingMapping;
+import net.automatalib.graph.helper.NodeIDStaticMapping;
 import net.automatalib.graph.helper.SimpleNodeIDs;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
@@ -43,15 +46,6 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, FiniteRepresen
         return new SimpleNodeIDs<>(this);
     }
 
-    /**
-     * Returns the {@link VisualizationHelper} that contains information for displaying this graph.
-     *
-     * @return the visualization helper
-     */
-    default VisualizationHelper<N, ?> getVisualizationHelper() {
-        return new DefaultVisualizationHelper<>();
-    }
-
     @Override
     default Iterator<N> iterator() {
         return getNodes().iterator();
@@ -65,6 +59,25 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, FiniteRepresen
     @Override
     default int size() {
         return getNodes().size();
+    }
+
+    @Override
+    default <V> MutableMapping<N, V> createStaticNodeMapping() {
+        return new NodeIDStaticMapping<>(nodeIDs(), size());
+    }
+
+    @Override
+    default <V> MutableMapping<N, V> createDynamicNodeMapping() {
+        return new NodeIDGrowingMapping<>(nodeIDs(), size());
+    }
+
+    /**
+     * Returns the {@link VisualizationHelper} that contains information for displaying this graph.
+     *
+     * @return the visualization helper
+     */
+    default VisualizationHelper<N, ?> getVisualizationHelper() {
+        return new DefaultVisualizationHelper<>();
     }
 
     /**

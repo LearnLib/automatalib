@@ -40,7 +40,8 @@ public interface Mapping<D, R> extends Function<D, R> {
     }
 
     /**
-     * Get the range object {@code elem} maps to.
+     * Get the range object {@code elem} maps to. Implementations may decide how to deal with unmapped values (default
+     * values, exceptions, etc.)
      *
      * @param elem
      *         object from the domain.

@@ -25,5 +25,15 @@ package net.automatalib.common.util.mapping;
  */
 public interface MutableMapping<D, R> extends Mapping<D, R> {
 
+    /**
+     * Update the mapping by overriding the value which the given key should map to.
+     *
+     * @param key
+     *         the key
+     * @param value
+     *         the new value to be associated with the key
+     *
+     * @return the old value mapped by {@code key}
+     */
     R put(D key, R value);
 }

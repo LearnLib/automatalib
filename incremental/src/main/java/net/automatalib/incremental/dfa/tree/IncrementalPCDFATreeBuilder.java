@@ -83,7 +83,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
         Deque<Record<@Nullable S, I>> dfsStack = new ArrayDeque<>();
         dfsStack.push(init);
 
-        @Nullable MutableMapping<S, @Nullable Boolean> deadStates = null;
+        MutableMapping<S, Boolean> deadStates = null;
 
         while (!dfsStack.isEmpty()) {
             @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
@@ -263,7 +263,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
     private static <S, I> @Nullable Word<I> findLive(DFA<S, I> dfa,
                                                      S state,
                                                      Collection<? extends I> inputs,
-                                                     MutableMapping<S, @Nullable Boolean> deadStates) {
+                                                     MutableMapping<S, Boolean> deadStates) {
         if (dfa.isAccepting(state)) {
             return Word.epsilon();
         }

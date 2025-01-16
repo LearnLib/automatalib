@@ -50,4 +50,3 @@ public interface StateIDs<S> {
      */
     S getState(int id);
 }
-

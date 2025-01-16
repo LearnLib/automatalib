@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import net.automatalib.graph.MutableGraph;
-import net.automatalib.graph.ShrinkableGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -38,7 +37,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <N>
  *         node type
  */
-public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void>, ShrinkableGraph<N, N> {
+public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void> {
 
     private final Map<N, Collection<N>> structureMap;
     private final Supplier<? extends Collection<N>> adjCollSupplier;
@@ -114,11 +113,6 @@ public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void>,
     }
 
     @Override
-    public Iterator<N> iterator() {
-        return getNodes().iterator();
-    }
-
-    @Override
     public N getNodeProperty(N node) {
         return node;
     }
@@ -151,21 +145,5 @@ public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void>,
 
     @Override
     public void setEdgeProperty(N edge, Void property) {}
-
-    @Override
-    public void removeNode(N node, @Nullable N replacement) {
-        structureMap.remove(node);
-        structureMap.values().forEach(a -> {
-            if (a.remove(node) && replacement != null) {
-                a.add(replacement);
-            }
-        });
-    }
-
-    @SuppressWarnings("nullness") // the passed structureMap decides whether we support nulls
-    @Override
-    public void removeEdge(N node, N edge) {
-        structureMap.get(node).remove(edge);
-    }
 
 }

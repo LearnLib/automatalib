@@ -18,7 +18,9 @@ package net.automatalib.automaton.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.ShrinkableAutomaton;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.util.TestUtil;
 import net.automatalib.common.util.mapping.MutableMapping;
 import org.testng.Assert;
@@ -27,16 +29,21 @@ import org.testng.annotations.Test;
 public class DynamicStateMappingTest {
 
     @Test
-    public void testDeterministic() {
-        testAutomaton(TestUtil.constructMealy());
+    public void testShrinkableNonDeterministic() {
+        testShrinkableAutomaton(TestUtil.constructNFA());
     }
 
     @Test
-    public void testNonDeterministic() {
-        testAutomaton(TestUtil.constructNFA());
+    public void testShrinkableDeterministic() {
+        testShrinkableAutomaton(TestUtil.constructMealy());
     }
 
-    private static <S, I, T, SP, TP> void testAutomaton(ShrinkableAutomaton<S, I, T, SP, TP> automaton) {
+    @Test
+    public void testDeterministic() {
+        testAutomaton(TestUtil.constructMealy(CompactMealy::new));
+    }
+
+    private static <S> void testShrinkableAutomaton(ShrinkableAutomaton<S, ?, ?, ?, ?> automaton) {
 
         final List<S> states = new ArrayList<>(automaton.getStates());
 
@@ -52,24 +59,51 @@ public class DynamicStateMappingTest {
 
         automaton.removeState(s0);
 
-        Assert.assertNull(mapping.get(s0));
+        Assert.assertThrows(RuntimeException.class, () -> mapping.get(s0));
         Assert.assertEquals(mapping.get(s1).intValue(), 1);
         Assert.assertEquals(mapping.get(s2).intValue(), 2);
 
         automaton.removeState(s1, s2);
 
-        Assert.assertNull(mapping.get(s0));
-        Assert.assertNull(mapping.get(s1));
+        Assert.assertThrows(RuntimeException.class, () -> mapping.get(s0));
+        Assert.assertThrows(RuntimeException.class, () -> mapping.get(s1));
         Assert.assertEquals(mapping.get(s2).intValue(), 2);
 
         automaton.removeState(s2);
 
-        Assert.assertNull(mapping.get(s0));
-        Assert.assertNull(mapping.get(s1));
-        Assert.assertNull(mapping.get(s2));
+        Assert.assertThrows(RuntimeException.class, () -> mapping.get(s0));
+        Assert.assertThrows(RuntimeException.class, () -> mapping.get(s1));
+        Assert.assertThrows(RuntimeException.class, () -> mapping.get(s2));
 
         final S s3 = automaton.addState();
         mapping.put(s3, 3);
         Assert.assertEquals(mapping.get(s3).intValue(), 3);
+    }
+
+    private static <S> void testAutomaton(MutableDeterministic<S, ?, ?, ?, ?> automaton) {
+
+        final List<S> states = new ArrayList<>(automaton.getStates());
+
+        final S s0 = states.get(0);
+        final S s1 = states.get(1);
+        final S s2 = states.get(2);
+
+        final MutableMapping<S, Integer> mapping = automaton.createDynamicStateMapping();
+
+        mapping.put(s0, 0);
+        mapping.put(s1, 1);
+        mapping.put(s2, 2);
+
+        Assert.assertEquals(mapping.get(s0).intValue(), 0);
+        Assert.assertEquals(mapping.get(s1).intValue(), 1);
+        Assert.assertEquals(mapping.get(s2).intValue(), 2);
+
+        final S s3 = automaton.addState();
+        final S s4 = automaton.addState();
+        mapping.put(s3, 3);
+        mapping.put(s4, 4);
+
+        Assert.assertEquals(mapping.get(s3).intValue(), 3);
+        Assert.assertEquals(mapping.get(s4).intValue(), 4);
     }
 }

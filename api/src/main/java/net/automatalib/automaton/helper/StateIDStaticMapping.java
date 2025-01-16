@@ -36,8 +36,9 @@ public class StateIDStaticMapping<S, V> implements MutableMapping<S, V> {
 
     @Override
     public V put(S key, V value) {
-        V old = storage[stateIds.getStateId(key)];
-        storage[stateIds.getStateId(key)] = value;
+        int id = stateIds.getStateId(key);
+        V old = storage[id];
+        storage[id] = value;
         return old;
     }
 

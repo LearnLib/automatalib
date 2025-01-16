@@ -17,20 +17,16 @@ package net.automatalib.common.util.mapping;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import org.checkerframework.checker.nullness.qual.KeyFor;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Class that wraps a {@link Mapping} around a {@link java.util.Map}.
+ * Class that wraps a {@link Mapping} around a {@link Map}.
  *
  * @param <D>
  *         domain type.
  * @param <R>
  *         range type.
  */
-public class MapMapping<D, @Nullable R> implements MutableMapping<D, R> {
+public class MapMapping<D, R> implements MutableMapping<D, R> {
 
     private final Map<D, R> map;
 
@@ -45,7 +41,7 @@ public class MapMapping<D, @Nullable R> implements MutableMapping<D, R> {
      * Constructor.
      *
      * @param map
-     *         the underlying {@link java.util.Map} object.
+     *         the underlying {@link Map} object.
      */
     public MapMapping(Map<D, R> map) {
         this(map, false);
@@ -55,7 +51,7 @@ public class MapMapping<D, @Nullable R> implements MutableMapping<D, R> {
      * Constructor.
      *
      * @param map
-     *         the underlying {@link java.util.Map} object.
+     *         the underlying {@link Map} object.
      * @param copy
      *         whether the given map should be copied or stored by reference.
      */
@@ -67,31 +63,13 @@ public class MapMapping<D, @Nullable R> implements MutableMapping<D, R> {
         }
     }
 
-    public static <D, @Nullable R> MapMapping<D, R> create(Map<D, R> map) {
-        return new MapMapping<>(map);
-    }
-
     @Override
     public R get(D elem) {
         return map.get(elem);
     }
 
-    /**
-     * Delegates to the underlying {@link java.util.Map}.
-     *
-     * @see java.util.Map#put(Object, Object)
-     */
     @Override
     public R put(D key, R value) {
         return map.put(key, value);
-    }
-
-    /**
-     * Returns the {@link Map#entrySet()} of the underlying map.
-     *
-     * @return the {@link Map#entrySet()} of the underlying map
-     */
-    public Set<Map.Entry<@KeyFor("this.map") D, R>> entrySet() {
-        return map.entrySet();
     }
 }

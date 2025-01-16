@@ -25,7 +25,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 abstract class AbstractGraphCopy<N1, E1, N2, E2, NP2, EP2, G1 extends IndefiniteGraph<N1, E1>> {
 
-    protected final MutableMapping<N1, @Nullable N2> nodeMapping;
+    protected final MutableMapping<N1, N2> nodeMapping;
     protected final G1 inGraph;
     protected final MutableGraph<N2, E2, NP2, EP2> outGraph;
 

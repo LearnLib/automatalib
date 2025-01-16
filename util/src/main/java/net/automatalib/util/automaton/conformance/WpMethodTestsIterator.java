@@ -151,7 +151,7 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
         private final UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton;
         private final Collection<? extends I> inputs;
 
-        private final MutableMapping<S, @Nullable List<Word<I>>> localSuffixSets;
+        private final MutableMapping<S, List<Word<I>>> localSuffixSets;
         private final Iterable<List<I>> middleParts;
 
         SecondPhaseIterator(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,

@@ -57,7 +57,6 @@ import net.automatalib.visualization.VisualizationHelper.CommonStyles;
 import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationProvider;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +126,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 
         DirectedGraph<NodeVisualization, EdgeVisualization> jungGraph = new DirectedSparseMultigraph<>();
 
-        MutableMapping<N, @Nullable NodeVisualization> mapping = graph.createStaticNodeMapping();
+        MutableMapping<N, NodeVisualization> mapping = graph.createStaticNodeMapping();
 
         NodeIDs<N> nodeIds = graph.nodeIDs();
 

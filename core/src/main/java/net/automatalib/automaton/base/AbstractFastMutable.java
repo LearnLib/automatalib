@@ -88,8 +88,8 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
     }
 
     @Override
-    public <@Nullable V> MutableMapping<S, V> createDynamicStateMapping() {
-        final ArrayMapping<S, @Nullable V> mapping = new ArrayMapping<>(size());
+    public <V> MutableMapping<S, V> createDynamicStateMapping() {
+        final ArrayMapping<S, V> mapping = new ArrayMapping<>(size());
         tracker.addListener(mapping, true);
         return mapping;
     }

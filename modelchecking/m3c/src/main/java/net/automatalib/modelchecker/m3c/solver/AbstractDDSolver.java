@@ -49,6 +49,7 @@ import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
+import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -68,7 +69,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         implements ModelChecker<L, ContextFreeModalProcessSystem<L, AP>, FormulaNode<L, AP>, WitnessTree<L, AP>> {
 
     // Attributes that are constant for a given CFMPS
-    private final L mainProcess;
+    private final @KeyFor("workUnits") L mainProcess;
 
     // Attributes that change for each formula
     private TransformerSerializer<T, L, AP> serializer;
@@ -85,6 +86,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    @SuppressWarnings("assignment") // validateCFPS verifies that mainProcess is a key in cfmps.getPMPGs()
     private AbstractDDSolver(L mainProcess, ContextFreeModalProcessSystem<L, AP> cfmps) {
         final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs = cfmps.getPMPGs();
 
@@ -96,6 +98,20 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         }
 
         this.mainProcess = mainProcess;
+    }
+
+    private static <L, AP> L validateCFMPS(ContextFreeModalProcessSystem<L, AP> cfmps) {
+        // TODO handle empty CFMPSs
+        final L mainProcess = cfmps.getMainProcess();
+        final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpGs = cfmps.getPMPGs();
+
+        if (mainProcess == null || !pmpGs.containsKey(mainProcess)) {
+            throw new IllegalArgumentException("The main process is undefined or has no corresponding MPG.");
+        }
+
+        pmpGs.forEach(AbstractDDSolver::checkPMPG);
+
+        return mainProcess;
     }
 
     private static <N, L, AP> void checkPMPG(L label, ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg) {
@@ -135,29 +151,15 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         return pmpg.getOutgoingEdges(finalNode).isEmpty();
     }
 
-    private static <L, AP> L validateCFMPS(ContextFreeModalProcessSystem<L, AP> cfmps) {
-        // TODO handle empty CFMPSs
-        final L mainProcess = cfmps.getMainProcess();
-        final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpGs = cfmps.getPMPGs();
-
-        if (mainProcess == null || !pmpGs.containsKey(mainProcess)) {
-            throw new IllegalArgumentException("The main process is undefined or has no corresponding MPG.");
-        }
-
-        pmpGs.forEach(AbstractDDSolver::checkPMPG);
-
-        return mainProcess;
-    }
-
     private <N> WorkUnit<N, ?> initializeWorkUnits(@UnderInitialization AbstractDDSolver<T, L, AP> this,
                                                    L label,
                                                    ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg) {
         return new WorkUnit<>(label, pmpg, initPredecessorsMapping(pmpg));
     }
 
-    private static <N, L, E, AP> Mapping<N, @Nullable Set<N>> initPredecessorsMapping(ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg) {
+    private static <N, L, E, AP> Mapping<N, Set<N>> initPredecessorsMapping(ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg) {
 
-        final MutableMapping<N, @Nullable Set<N>> nodeToPredecessors = pmpg.createStaticNodeMapping();
+        final MutableMapping<N, Set<N>> nodeToPredecessors = pmpg.createStaticNodeMapping();
 
         for (N sourceNode : pmpg.getNodes()) {
             for (E outgoingEdge : pmpg.getOutgoingEdges(sourceNode)) {
@@ -316,7 +318,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     private <N> Mapping<N, List<FormulaNode<L, AP>>> computeSatisfiedSubformulas(WorkUnit<N, ?> unit) {
-        final MutableMapping<N, @Nullable List<FormulaNode<L, AP>>> result = unit.pmpg.createStaticNodeMapping();
+        final MutableMapping<N, List<FormulaNode<L, AP>>> result = unit.pmpg.createStaticNodeMapping();
         for (N node : unit.pmpg.getNodes()) {
             result.put(node, getSatisfiedSubformulas(unit, node));
         }
@@ -527,7 +529,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     private <N> Mapping<N, List<String>> serializePropertyTransformers(WorkUnit<N, ?> unit) {
-        final MutableMapping<N, @Nullable List<String>> result = unit.pmpg.createStaticNodeMapping();
+        final MutableMapping<N, List<String>> result = unit.pmpg.createStaticNodeMapping();
         for (N node : unit.pmpg.getNodes()) {
             result.put(node, serializer.serialize(unit.propTransformers.get(node)));
         }
@@ -555,7 +557,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     private <N> MutableMapping<N, T> initTransformers(ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg) {
-        final MutableMapping<N, @Nullable T> transformers = pmpg.createStaticNodeMapping();
+        final MutableMapping<N, T> transformers = pmpg.createStaticNodeMapping();
         final N finalNode = pmpg.getFinalNode();
 
         for (N n : pmpg) {
@@ -607,11 +609,11 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
 
         final L label;
         final ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg;
-        private final Mapping<N, @Nullable Set<N>> predecessors;
+        private final Mapping<N, Set<N>> predecessors;
         MutableMapping<N, T> propTransformers;
         private Set<N> workSet; // Keeps track of which node's property transformers have to be updated.
 
-        WorkUnit(L label, ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg, Mapping<N, @Nullable Set<N>> predecessors) {
+        WorkUnit(L label, ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg, Mapping<N, Set<N>> predecessors) {
             this.label = label;
             this.pmpg = pmpg;
             this.predecessors = predecessors;

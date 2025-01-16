@@ -131,7 +131,7 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
     @Override
     public T get(int index) {
         if (index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds for length " + size);
         }
         return storage[index];
     }

@@ -23,11 +23,10 @@ import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.traversal.VisitedState;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class DepthFirstIterator<S, I, T> extends AbstractSimplifiedIterator<S> {
 
-    private final MutableMapping<S, @Nullable VisitedState> visited;
+    private final MutableMapping<S, VisitedState> visited;
     private final Deque<SimpleDFRecord<S, I, T>> dfsStack = new ArrayDeque<>();
     private final TransitionSystem<S, I, T> ts;
     private final Collection<? extends I> inputs;

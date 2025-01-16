@@ -18,9 +18,8 @@ package net.automatalib.common.util.mapping;
 import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.nid.IDChangeListener;
 import net.automatalib.common.util.nid.NumericID;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
-public final class ArrayMapping<K extends NumericID, @Nullable V> implements MutableMapping<K, V>, IDChangeListener<K> {
+public final class ArrayMapping<K extends NumericID, V> implements MutableMapping<K, V>, IDChangeListener<K> {
 
     private final ArrayStorage<V> storage;
 
@@ -34,23 +33,18 @@ public final class ArrayMapping<K extends NumericID, @Nullable V> implements Mut
 
     @Override
     public V get(K elem) {
-        int id = elem.getId();
-        if (id < 0 || id >= storage.size()) {
-            return null;
-        }
-        return storage.get(id);
+        return storage.get(elem.getId());
     }
 
     @Override
     public V put(K key, V value) {
         int id = key.getId();
         storage.ensureCapacity(id + 1);
-        V old = storage.get(id);
-        storage.set(id, value);
-        return old;
+        return storage.set(id, value);
     }
 
     @Override
+    @SuppressWarnings("argument")
     public void idChanged(K obj, int newId, int oldId) {
         if (newId == -1) {
             if (oldId < storage.size()) {

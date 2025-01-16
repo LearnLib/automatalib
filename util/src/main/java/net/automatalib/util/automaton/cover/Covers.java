@@ -28,7 +28,6 @@ import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Covers {
 
@@ -181,7 +180,7 @@ public final class Covers {
             return;
         }
 
-        MutableMapping<S, @Nullable Word<I>> reach = automaton.createStaticStateMapping();
+        MutableMapping<S, Word<I>> reach = automaton.createStaticStateMapping();
         reach.put(init, Word.epsilon());
 
         Queue<S> bfsQueue = new ArrayDeque<>();
@@ -244,7 +243,7 @@ public final class Covers {
             return false;
         }
 
-        MutableMapping<S, @Nullable Record<S, I>> reach = automaton.createStaticStateMapping();
+        MutableMapping<S, Record<S, I>> reach = automaton.createStaticStateMapping();
 
         boolean augmented = false;
 
@@ -412,7 +411,7 @@ public final class Covers {
             return;
         }
 
-        MutableMapping<S, @Nullable Record<S, I>> reach = automaton.createStaticStateMapping();
+        MutableMapping<S, Record<S, I>> reach = automaton.createStaticStateMapping();
 
         Queue<Record<S, I>> bfsQueue = new ArrayDeque<>();
 
@@ -464,7 +463,7 @@ public final class Covers {
         }
     }
 
-    static <S, I> boolean buildReachFromStateCover(MutableMapping<S, @Nullable Record<S, I>> reach,
+    static <S, I> boolean buildReachFromStateCover(MutableMapping<S, Record<S, I>> reach,
                                                    Queue<Record<S, I>> bfsQueue,
                                                    DeterministicAutomaton<S, I, ?> automaton,
                                                    Collection<? extends Word<I>> oldStateCover,
@@ -489,7 +488,7 @@ public final class Covers {
         return hasEpsilon;
     }
 
-    static <S, I> void buildReachFromTransitionCover(MutableMapping<S, @Nullable Record<S, I>> reach,
+    static <S, I> void buildReachFromTransitionCover(MutableMapping<S, Record<S, I>> reach,
                                                      Queue<Record<S, I>> bfsQueue,
                                                      DeterministicAutomaton<S, I, ?> automaton,
                                                      Collection<? extends Word<I>> oldTransCover,

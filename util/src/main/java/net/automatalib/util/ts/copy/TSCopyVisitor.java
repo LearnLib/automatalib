@@ -30,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class TSCopyVisitor<S1, I1, T1, S2, I2, SP2, TP2> implements TSTraversalVisitor<S1, I1, T1, S2> {
 
-    private final MutableMapping<S1, @Nullable S2> stateMapping;
+    private final MutableMapping<S1, S2> stateMapping;
     private final MutableAutomaton<S2, I2, ?, ? super SP2, @Nullable ? super TP2> out;
 
     private final Function<? super I1, ? extends I2> inputMapping;
@@ -58,7 +58,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, SP2, TP2> implements TSTraversalV
 
     @Override
     public TSTraversalAction processInitial(S1 initialState, Holder<S2> holder) {
-        @Nullable S2 s2 = stateMapping.get(initialState);
+        S2 s2 = stateMapping.get(initialState);
         if (s2 != null) {
             out.setInitial(s2, true);
             return TSTraversalAction.IGNORE;
@@ -88,7 +88,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, SP2, TP2> implements TSTraversalV
 
         boolean ignore = false;
 
-        @Nullable S2 succ2 = stateMapping.get(tgtState);
+        S2 succ2 = stateMapping.get(tgtState);
         if (succ2 == null) {
             if (!stateFilter.test(tgtState)) {
                 return TSTraversalAction.IGNORE;
@@ -109,7 +109,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, SP2, TP2> implements TSTraversalV
         return ignore ? TSTraversalAction.IGNORE : TSTraversalAction.EXPLORE;
     }
 
-    public Mapping<S1, @Nullable S2> getStateMapping() {
+    public Mapping<S1, S2> getStateMapping() {
         return stateMapping;
     }
 }

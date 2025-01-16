@@ -43,7 +43,7 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
     private final Graph<N, E> graph;
     private final N init;
     private final EdgeWeights<E> edgeWeights;
-    private final MutableMapping<N, @Nullable Record<N, E>> records;
+    private final MutableMapping<N, Record<N, E>> records;
 
     /**
      * Constructor.

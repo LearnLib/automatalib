@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.helper;
+package net.automatalib.graph.helper;
 
-import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.graph.concept.NodeIDs;
 
-public class StateIDGrowingMapping<S, V> implements MutableMapping<S, V> {
+public class NodeIDGrowingMapping<S, V> implements MutableMapping<S, V> {
 
-    private final StateIDs<S> stateIds;
+    private final NodeIDs<S> nodeIDs;
     private final ArrayStorage<V> storage;
 
-    public StateIDGrowingMapping(StateIDs<S> stateIds, int size) {
-        this.stateIds = stateIds;
+    public NodeIDGrowingMapping(NodeIDs<S> nodeIDs, int size) {
+        this.nodeIDs = nodeIDs;
         this.storage = new ArrayStorage<>(size);
     }
 
     @Override
     public V get(S elem) {
-        int id = stateIds.getStateId(elem);
+        int id = nodeIDs.getNodeId(elem);
         return storage.get(id);
     }
 
     @Override
     public V put(S key, V value) {
-        int id = stateIds.getStateId(key);
+        int id = nodeIDs.getNodeId(key);
         storage.ensureCapacity(id + 1);
         return storage.set(id, value);
     }

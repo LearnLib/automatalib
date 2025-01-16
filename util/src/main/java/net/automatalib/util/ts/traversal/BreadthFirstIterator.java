@@ -24,12 +24,11 @@ import java.util.Queue;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.ts.simple.SimpleTS;
 import net.automatalib.util.traversal.VisitedState;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class BreadthFirstIterator<S, I> implements Iterator<S> {
 
     private final Queue<S> bfsQueue = new ArrayDeque<>();
-    private final MutableMapping<S, @Nullable VisitedState> seen;
+    private final MutableMapping<S, VisitedState> seen;
     private final SimpleTS<S, I> ts;
     private final Collection<? extends I> inputs;
 

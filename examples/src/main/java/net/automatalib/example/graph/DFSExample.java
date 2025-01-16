@@ -30,7 +30,6 @@ import net.automatalib.util.graph.traversal.GraphTraversalVisitor;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper.EdgeStyles;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A small example of a {@link GraphTraversal graph traversal} that uses a custom {@link GraphTraversalVisitor} to
@@ -84,7 +83,7 @@ public final class DFSExample {
 
     static class MyDFSVisitor<N, E> implements GraphTraversalVisitor<N, E, DFSData> {
 
-        private final MutableMapping<N, @Nullable DFSData> records;
+        private final MutableMapping<N, DFSData> records;
         private final Map<E, EdgeType> edgeTypes;
         private int dfsNum;
 
@@ -132,7 +131,7 @@ public final class DFSExample {
             return GraphTraversalAction.IGNORE;
         }
 
-        Mapping<N, @Nullable DFSData> getRecords() {
+        Mapping<N, DFSData> getRecords() {
             return records;
         }
 
@@ -154,14 +153,14 @@ public final class DFSExample {
 
     static class DFSResultDOTHelper<N, E> implements VisualizationHelper<N, E> {
 
-        private final Mapping<N, @Nullable DFSData> records;
+        private final Mapping<N, DFSData> records;
         private final Map<E, EdgeType> edgeTypes;
 
         DFSResultDOTHelper(MyDFSVisitor<N, E> vis) {
             this(vis.getRecords(), vis.getEdgeTypes());
         }
 
-        DFSResultDOTHelper(Mapping<N, @Nullable DFSData> records, Map<E, EdgeType> edgeTypes) {
+        DFSResultDOTHelper(Mapping<N, DFSData> records, Map<E, EdgeType> edgeTypes) {
             this.records = records;
             this.edgeTypes = edgeTypes;
         }

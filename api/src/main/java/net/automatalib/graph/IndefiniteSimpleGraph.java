@@ -21,7 +21,6 @@ import java.util.Objects;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simplified interface for indefinite graphs, exposing only adjacency information, but no further information about
@@ -65,7 +64,7 @@ public interface IndefiniteSimpleGraph<N> extends Iterable<N> {
      *
      * @return the mutable mapping
      */
-    default <@Nullable V> MutableMapping<N, V> createStaticNodeMapping() {
+    default <V> MutableMapping<N, V> createStaticNodeMapping() {
         return new MapMapping<>();
     }
 
@@ -78,7 +77,7 @@ public interface IndefiniteSimpleGraph<N> extends Iterable<N> {
      *
      * @return the mutable mapping
      */
-    default <@Nullable V> MutableMapping<N, V> createDynamicNodeMapping() {
+    default <V> MutableMapping<N, V> createDynamicNodeMapping() {
         return new MapMapping<>();
     }
 

@@ -22,6 +22,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import net.automatalib.common.util.collection.IteratorUtil;
+import net.automatalib.common.util.mapping.MapMapping;
+import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
@@ -113,6 +115,15 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractMealyTreeB
         @Override
         public Collection<DynamicNode<I, O>> getNodes() {
             return IteratorUtil.list(GraphTraversal.breadthFirstIterator(this, Collections.singleton(root)));
+        }
+
+        /*
+         * We need to override the default Graph mapping, because its NodeIDStaticMapping class requires our
+         * nodeIDs, which requires our states, which requires our nodeIDs, which requires ... infinite loop!
+         */
+        @Override
+        public <V> MutableMapping<DynamicNode<I, O>, V> createStaticNodeMapping() {
+            return new MapMapping<>();
         }
 
         @Override

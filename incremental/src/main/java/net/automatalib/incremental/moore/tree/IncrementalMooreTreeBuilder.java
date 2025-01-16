@@ -271,7 +271,7 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
          * nodeIDs, which requires our states, which requires our nodeIDs, which requires ... infinite loop!
          */
         @Override
-        public <@Nullable V> MutableMapping<Node<O>, V> createStaticStateMapping() {
+        public <V> MutableMapping<Node<O>, V> createStaticStateMapping() {
             return new MapMapping<>();
         }
     }

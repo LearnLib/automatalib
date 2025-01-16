@@ -23,11 +23,10 @@ import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.IndefiniteGraph;
 import net.automatalib.util.traversal.VisitedState;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class DepthFirstIterator<N, E> extends AbstractSimplifiedIterator<N> {
 
-    private final MutableMapping<N, @Nullable VisitedState> visited;
+    private final MutableMapping<N, VisitedState> visited;
     private final Deque<SimpleDFRecord<N, E>> dfsStack = new ArrayDeque<>();
     private final IndefiniteGraph<N, E> graph;
 

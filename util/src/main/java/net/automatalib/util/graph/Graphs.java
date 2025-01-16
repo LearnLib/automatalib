@@ -31,7 +31,6 @@ import net.automatalib.util.graph.scc.SCCs;
 import net.automatalib.util.graph.scc.TarjanSCCVisitor;
 import net.automatalib.util.graph.sssp.DijkstraSSSP;
 import net.automatalib.util.graph.sssp.SSSPResult;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Graphs {
 
@@ -43,13 +42,13 @@ public final class Graphs {
 
     private Graphs() {}
 
-    public static <N, E> Mapping<N, @Nullable Collection<E>> incomingEdges(Graph<N, E> graph) {
+    public static <N, E> Mapping<N, Collection<E>> incomingEdges(Graph<N, E> graph) {
         if (graph instanceof BidirectionalGraph) {
             final BidirectionalGraph<N, E> bdGraph = (BidirectionalGraph<N, E>) graph;
             return bdGraph::getIncomingEdges;
         }
 
-        MutableMapping<N, @Nullable Collection<E>> inEdgesMapping = graph.createStaticNodeMapping();
+        MutableMapping<N, Collection<E>> inEdgesMapping = graph.createStaticNodeMapping();
 
         for (N node : graph) {
             Collection<E> outEdges = graph.getOutgoingEdges(node);

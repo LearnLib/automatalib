@@ -35,7 +35,6 @@ import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.graph.Graphs;
 import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -209,7 +208,7 @@ public class CoversTest {
             Assert.assertTrue(states.remove(automaton.getState(w)));
         }
 
-        final Mapping<S, ? extends @Nullable Collection<?>> mapping =
+        final Mapping<S, ? extends Collection<?>> mapping =
                 Graphs.incomingEdges(automaton.transitionGraphView(alphabet));
 
         for (S s : states) {

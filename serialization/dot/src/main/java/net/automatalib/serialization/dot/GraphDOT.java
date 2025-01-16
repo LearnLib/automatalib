@@ -37,7 +37,6 @@ import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper.CommonAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Methods for rendering a {@link Graph} or {@link Automaton} in the GraphVIZ DOT format.
@@ -325,7 +324,7 @@ public final class GraphDOT {
         dotHelper.writePreamble(a);
         a.append(System.lineSeparator());
 
-        MutableMapping<N, @Nullable String> nodeNames = graph.createStaticNodeMapping();
+        MutableMapping<N, String> nodeNames = graph.createStaticNodeMapping();
         Set<String> initialNodes = new HashSet<>();
 
         int i = 0;
