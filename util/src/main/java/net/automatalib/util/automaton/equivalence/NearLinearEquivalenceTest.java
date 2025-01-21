@@ -410,7 +410,7 @@ public final class NearLinearEquivalenceTest {
 
         int position = current.depth + 1;
 
-        @SuppressWarnings("nullness") // we make sure to set each index to a value of type I
+        @SuppressWarnings("argument") // we make sure to set each index to a value of type I
         WordBuilder<I> wb = new WordBuilder<>(null, position);
         wb.setSymbol(--position, inputs.getSymbol(lastSym));
 

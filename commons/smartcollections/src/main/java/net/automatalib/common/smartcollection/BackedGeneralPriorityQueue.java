@@ -100,7 +100,6 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         backingQueue.deepClear();
     }
 
-    @SuppressWarnings("nullness") // function is only called on elements of the iterator for which we know non-nullness
     @Override
     public Iterator<E> iterator() {
         return IteratorUtil.map(backingQueue.iterator(), e -> e.element);
