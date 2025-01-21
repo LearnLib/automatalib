@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.impl;
+package net.automatalib.automaton.abstraction.impl;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -24,10 +24,11 @@ import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.impl.MutableAutomatonTest;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.annotations.Test;
 
-public class IntAbstractionTest extends MutableAutomatonTest {
+public class MutableStateIntAbstractionTest extends MutableAutomatonTest {
 
     // disable tests for non-deterministic automata
     @Test(enabled = false)
@@ -51,16 +52,17 @@ public class IntAbstractionTest extends MutableAutomatonTest {
 
     @Override
     protected <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> M createInitialAutomaton(AutomatonCreator<M, I> creator,
-                                                                                                      Alphabet<I> alphabet) {
+                                                                                                      Alphabet<I> alphabet,
+                                                                                                      int size) {
 
-        final M automaton = creator.createAutomaton(alphabet, SIZE);
+        final M automaton = creator.createAutomaton(alphabet, size);
 
         if (automaton instanceof MutableDeterministic) {
 
             @SuppressWarnings("unchecked")
             final M result = (M) new MockUp<>((MutableDeterministic<S, I, T, SP, TP>) automaton, alphabet);
 
-            for (int i = 0; i < SIZE; i++) {
+            for (int i = 0; i < size; i++) {
                 result.addState();
             }
 
@@ -73,33 +75,72 @@ public class IntAbstractionTest extends MutableAutomatonTest {
     private static class MockUp<S, I, T, SP, TP> implements MutableDeterministic<S, I, T, SP, TP> {
 
         final MutableDeterministic<S, I, T, SP, TP> delegate;
-        final FullIntAbstraction<T, SP, TP> abstraction;
+        final MutableDeterministic.StateIntAbstraction<I, T, SP, TP> abstraction;
         final StateIDs<S> stateIDs;
         final Alphabet<I> alphabet;
 
         MockUp(MutableDeterministic<S, I, T, SP, TP> delegate, Alphabet<I> alphabet) {
             this.delegate = delegate;
-            this.abstraction = delegate.fullIntAbstraction(alphabet);
+            this.abstraction = delegate.stateIntAbstraction();
             this.stateIDs = delegate.stateIDs();
             this.alphabet = alphabet;
         }
 
         @Override
+        public Collection<S> getStates() {
+            return IntStream.range(0, abstraction.size()).mapToObj(stateIDs::getState).collect(Collectors.toList());
+        }
+
+        @Override
+        public T getTransition(S state, I input) {
+            return abstraction.getTransition(stateIDs.getStateId(state), input);
+        }
+
+        @Override
+        public SP getStateProperty(S state) {
+            return abstraction.getStateProperty(stateIDs.getStateId(state));
+        }
+
+        @Override
+        public TP getTransitionProperty(T transition) {
+            return abstraction.getTransitionProperty(transition);
+        }
+
+        @Override
+        public TP getTransitionProperty(S state, I input) {
+            return abstraction.getTransitionProperty(stateIDs.getStateId(state), input);
+        }
+
+        @Override
+        public S getSuccessor(T transition) {
+            return stateIDs.getState(abstraction.getIntSuccessor(transition));
+        }
+
+        @Override
+        public @Nullable S getSuccessor(S state, I input) {
+            int succ = abstraction.getSuccessor(stateIDs.getStateId(state), input);
+            return succ == StateIntAbstraction.INVALID_STATE ? null : stateIDs.getState(succ);
+        }
+
+        @Override
+        public @Nullable S getInitialState() {
+            final int intInitial = abstraction.getIntInitialState();
+            return intInitial == StateIntAbstraction.INVALID_STATE ? null : stateIDs.getState(intInitial);
+        }
+
+        @Override
         public void setInitialState(@Nullable S state) {
-            abstraction.setInitialState(state == null ? FullIntAbstraction.INVALID_STATE : stateIDs.getStateId(state));
+            abstraction.setInitialState(state == null ? StateIntAbstraction.INVALID_STATE : stateIDs.getStateId(state));
         }
 
         @Override
         public void setTransition(S state, @Nullable I input, @Nullable T transition) {
-            abstraction.setTransition(stateIDs.getStateId(state), alphabet.getSymbolIndex(input), transition);
+            abstraction.setTransition(stateIDs.getStateId(state), input, transition);
         }
 
         @Override
         public void setTransition(S state, @Nullable I input, @Nullable S successor, @Nullable TP property) {
-            abstraction.setTransition(stateIDs.getStateId(state),
-                                      alphabet.getSymbolIndex(input),
-                                      stateIDs.getStateId(successor),
-                                      property);
+            abstraction.setTransition(stateIDs.getStateId(state), input, stateIDs.getStateId(successor), property);
         }
 
         @Override
@@ -139,7 +180,7 @@ public class IntAbstractionTest extends MutableAutomatonTest {
 
         @Override
         public void removeAllTransitions(S state) {
-            for (int i = 0; i < alphabet.size(); i++) {
+            for (I i : alphabet) {
                 abstraction.setTransition(stateIDs.getStateId(state), i, null);
             }
         }
@@ -147,37 +188,6 @@ public class IntAbstractionTest extends MutableAutomatonTest {
         @Override
         public T createTransition(S successor, @Nullable TP properties) {
             return abstraction.createTransition(stateIDs.getStateId(successor), properties);
-        }
-
-        @Override
-        public Collection<S> getStates() {
-            return IntStream.range(0, abstraction.size()).mapToObj(stateIDs::getState).collect(Collectors.toList());
-        }
-
-        @Override
-        public T getTransition(S state, @Nullable I input) {
-            return abstraction.getTransition(stateIDs.getStateId(state), alphabet.getSymbolIndex(input));
-        }
-
-        @Override
-        public SP getStateProperty(S state) {
-            return abstraction.getStateProperty(stateIDs.getStateId(state));
-        }
-
-        @Override
-        public TP getTransitionProperty(T transition) {
-            return abstraction.getTransitionProperty(transition);
-        }
-
-        @Override
-        public S getSuccessor(T transition) {
-            return stateIDs.getState(abstraction.getIntSuccessor(transition));
-        }
-
-        @Override
-        public @Nullable S getInitialState() {
-            final int intInitial = abstraction.getIntInitialState();
-            return intInitial == FullIntAbstraction.INVALID_STATE ? null : stateIDs.getState(intInitial);
         }
     }
 }

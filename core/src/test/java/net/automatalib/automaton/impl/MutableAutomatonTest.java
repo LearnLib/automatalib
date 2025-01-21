@@ -127,7 +127,7 @@ public class MutableAutomatonTest {
                                                                                                  Alphabet<I> alphabet,
                                                                                                  List<SP> stateProps,
                                                                                                  List<? extends TP> transProps) {
-        final M automaton = createInitialAutomaton(creator, alphabet);
+        final M automaton = createInitialAutomaton(creator, alphabet, SIZE);
 
         checkEmptyProperties(automaton, alphabet);
         fillRandomly(automaton, alphabet, stateProps, transProps);
@@ -140,11 +140,12 @@ public class MutableAutomatonTest {
     }
 
     protected <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> M createInitialAutomaton(AutomatonCreator<M, I> creator,
-                                                                                                      Alphabet<I> alphabet) {
+                                                                                                      Alphabet<I> alphabet,
+                                                                                                      int size) {
 
-        final M automaton = creator.createAutomaton(alphabet, SIZE);
+        final M automaton = creator.createAutomaton(alphabet, size);
 
-        for (int i = 0; i < SIZE; i++) {
+        for (int i = 0; i < size; i++) {
             automaton.addState();
         }
 
