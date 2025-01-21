@@ -126,6 +126,12 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
     }
 
     @Override
+    // Overridden for performance reasons (to prevent autoboxing of default implementation)
+    public int getSuccessor(int state, I input) {
+        return getSuccessor(state, getSymbolIndex(input));
+    }
+
+    @Override
     public void clear() {
         this.initial = AbstractCompact.INVALID_STATE;
         super.clear();
