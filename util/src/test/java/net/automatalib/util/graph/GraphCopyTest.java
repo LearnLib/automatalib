@@ -27,10 +27,11 @@ import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.automaton.fsa.impl.FastDFAState;
 import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.UniversalGraph;
-import net.automatalib.graph.impl.CompactGraph;
+import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.graph.copy.GraphCopy;
 import net.automatalib.util.traversal.TraversalOrder;
@@ -62,14 +63,14 @@ public class GraphCopyTest {
 
     @Test
     public void testPlainCopy() {
-        final CompactGraph<Boolean, TransitionEdge.Property<Character, Void>> target = new CompactGraph<>();
+        final CompactUniversalGraph<Boolean, Property<Character, Void>> target = new CompactUniversalGraph<>();
         final Mapping<FastDFAState, Integer> mapping = GraphCopy.copyPlain(sourceAsGraph, target);
         checkEquality(sourceAsGraph, target, mapping);
     }
 
     @Test
     public void testTraversalCopy() {
-        final CompactGraph<Boolean, TransitionEdge.Property<Character, Void>> target = new CompactGraph<>();
+        final CompactUniversalGraph<Boolean, Property<Character, Void>> target = new CompactUniversalGraph<>();
         final Mapping<FastDFAState, Integer> mapping = GraphCopy.copyTraversal(source.transitionGraphView(),
                                                                                target,
                                                                                TraversalOrder.BREADTH_FIRST,

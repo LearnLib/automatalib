@@ -29,6 +29,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.impl.CompactSimpleAutomaton;
 import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.common.util.io.UnclosableOutputStream;
@@ -127,7 +128,7 @@ public class AUTSerializationTest {
 
     @Test
     public void errorTest() throws IOException {
-        final InputModelDeserializer<String, SimpleAutomaton<Integer, String>> parser = AUTParsers.parser();
+        final InputModelDeserializer<String, CompactSimpleAutomaton<String>> parser = AUTParsers.parser();
 
         try (InputStream e1 = AUTSerializationTest.class.getResourceAsStream("/error1.aut");
              InputStream e2 = AUTSerializationTest.class.getResourceAsStream("/error2.aut");

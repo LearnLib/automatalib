@@ -31,6 +31,7 @@ import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
 import net.automatalib.graph.impl.CompactPMPG;
 import net.automatalib.graph.impl.DefaultCFMPS;
+import net.automatalib.modelchecker.m3c.util.Examples;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
@@ -124,7 +125,7 @@ final class ExternalSystemDeserializer {
         idToNode.put(id, node);
     }
 
-    private static <N, E> void addEdge(MutableProceduralModalProcessGraph<N, String, E, ?, ? extends MutableProceduralModalEdgeProperty> pmpg,
+    private static <N, E> void addEdge(MutableProceduralModalProcessGraph<N, String, E, ?, MutableProceduralModalEdgeProperty> pmpg,
                                        Element transition,
                                        Map<String, N> idToNode) {
         final String sourceId = getFirstElementByTagName(transition, "sourceId").getTextContent();
@@ -134,7 +135,7 @@ final class ExternalSystemDeserializer {
         final boolean isMust = getBooleanAttributeByTagName(transition, "isMust");
         final boolean isProcedural = getBooleanAttributeByTagName(transition, "isProcedural");
 
-        final E edge = pmpg.connect(idToNode.get(sourceId), idToNode.get(targetId));
+        final E edge = pmpg.connect(idToNode.get(sourceId), idToNode.get(targetId), Examples.freshEdgeProperty());
         pmpg.getEdgeProperty(edge).setProceduralType(isProcedural ? ProceduralType.PROCESS : ProceduralType.INTERNAL);
         pmpg.getEdgeProperty(edge).setModalType(isMust ? ModalType.MUST : ModalType.MAY);
         pmpg.setEdgeLabel(edge, label);

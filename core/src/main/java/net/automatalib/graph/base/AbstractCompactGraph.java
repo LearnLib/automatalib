@@ -27,7 +27,7 @@ import net.automatalib.graph.MutableGraph.IntAbstraction;
 import net.automatalib.graph.concept.NodeIDs;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
+public abstract class AbstractCompactGraph<E extends SimpleEdge, NP, EP>
         implements MutableGraph<Integer, E, NP, EP>, IntAbstraction<E, NP, EP>, NodeIDs<Integer> {
 
     private final ArrayStorage<List<E>> edges;
@@ -86,34 +86,31 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
         int n = size++;
         edges.ensureCapacity(n + 1);
         edges.set(n, new ArrayList<>());
-        setNodeProperty(n, property);
+        if (property != null) {
+            setNodeProperty(n, property);
+        }
         return n;
     }
 
     @Override
-    public void setNodeProperty(Integer node, @Nullable NP property) {
+    public void setNodeProperty(Integer node, NP property) {
         setNodeProperty(node.intValue(), property);
     }
 
     @Override
-    public E connect(Integer source, Integer target, @Nullable EP property) {
+    public E connect(Integer source, Integer target, EP property) {
         return connect(source.intValue(), target.intValue(), property);
     }
 
     @Override
-    public E connect(int source, int target, @Nullable EP property) {
+    public E connect(int source, int target, EP property) {
         E edge = createEdge(source, target, property);
         List<E> edges = this.edges.get(source);
         edges.add(edge);
         return edge;
     }
 
-    protected abstract E createEdge(int source, int target, @Nullable EP property);
-
-    @Override
-    public void setEdgeProperty(E edge, EP property) {
-        edge.setProperty(property);
-    }
+    protected abstract E createEdge(int source, int target, EP property);
 
     @Override
     public int getNodeId(Integer node) {
@@ -131,11 +128,6 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     @Override
     public NP getNodeProperty(Integer node) {
         return getNodeProperty(node.intValue());
-    }
-
-    @Override
-    public EP getEdgeProperty(E edge) {
-        return edge.getProperty();
     }
 
 }

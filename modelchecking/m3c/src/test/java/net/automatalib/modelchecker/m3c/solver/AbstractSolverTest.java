@@ -33,6 +33,7 @@ import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.solver.M3CSolver.TypedM3CSolver;
 import net.automatalib.modelchecker.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelchecker.m3c.util.Examples;
+import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -150,18 +151,19 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
         getSolver(new DefaultCFMPS<>("P", Collections.singletonMap("P", pmpg)));
     }
 
-    private static <N, E, AP, M extends MutableProceduralModalProcessGraph<N, String, E, AP, ?>> M getUnguardedPMPG(M pmpg) {
+    private static <N, E, AP, M extends MutableProceduralModalProcessGraph<N, String, E, AP, MutableProceduralModalEdgeProperty>> M getUnguardedPMPG(
+            M pmpg) {
         final N start = pmpg.addNode();
         final N end = pmpg.addNode();
 
         pmpg.setInitialNode(start);
         pmpg.setFinalNode(end);
 
-        final E e1 = pmpg.connect(start, end);
+        final E e1 = pmpg.connect(start, end, Examples.freshEdgeProperty());
         pmpg.getEdgeProperty(e1).setMust();
         pmpg.setEdgeLabel(e1, "a");
 
-        final E e2 = pmpg.connect(start, end);
+        final E e2 = pmpg.connect(start, end, Examples.freshEdgeProperty());
         pmpg.getEdgeProperty(e2).setMust();
         pmpg.getEdgeProperty(e2).setProcess();
         pmpg.setEdgeLabel(e2, "P");

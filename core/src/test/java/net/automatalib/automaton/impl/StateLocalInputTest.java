@@ -89,6 +89,11 @@ public class StateLocalInputTest {
         this.testAutomaton(new CompactSST<>(ALPHABET));
     }
 
+    @Test
+    public void testCompactSimpleAutomaton() {
+        this.testAutomaton(new CompactSimpleAutomaton<>(ALPHABET));
+    }
+
     private <M extends MutableAutomaton<S, Integer, T, SP, TP> & StateLocalInput<S, Integer>, S, T, SP, TP> void testAutomaton(
             final M automaton) {
 

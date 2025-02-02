@@ -65,11 +65,6 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
     }
 
     @Override
-    public SP getStateProperty(Integer state) {
-        return getStateProperty(state.intValue());
-    }
-
-    @Override
     public int getIntInitialState() {
         return initial;
     }
@@ -102,11 +97,6 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
     @Override
     public void setTransition(int state, I input, int successor, TP property) {
         setTransition(state, getSymbolIndex(input), successor, property);
-    }
-
-    @Override
-    public void setStateProperty(Integer state, SP property) {
-        setStateProperty(state.intValue(), property);
     }
 
     @Override

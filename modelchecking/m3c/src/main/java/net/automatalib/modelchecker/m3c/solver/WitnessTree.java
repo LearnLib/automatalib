@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.graph.Graph;
-import net.automatalib.graph.impl.CompactGraph;
+import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
@@ -34,8 +34,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
  * @param <AP>
  *         atomic proposition type
  */
-@SuppressWarnings("type.argument") // we only add non-null properties
-public class WitnessTree<L, AP> extends CompactGraph<WitnessTreeState<?, L, ?, AP>, String> {
+public class WitnessTree<L, AP> extends CompactUniversalGraph<WitnessTreeState<?, L, ?, AP>, String> {
 
     private @MonotonicNonNull Word<L> result;
 

@@ -64,8 +64,8 @@ public class TraversalTest {
         final Integer last1 = addTreeTrace(tree, init, '1', '2', '3', '4', '5');
         final Integer last2 = addTreeTrace(tree, init, 'a', 'b', 'c', 'd', 'e');
 
-        tree.connect(last1, init);
-        tree.connect(last2, init);
+        tree.connect(last1, init, (Character) '0');
+        tree.connect(last2, init, (Character) '-');
 
         this.circular = new CompactSimpleGraph<>();
         Integer s0 = circular.addNode();

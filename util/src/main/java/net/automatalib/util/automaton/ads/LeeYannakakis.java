@@ -33,7 +33,7 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ads.ADSNode;
 import net.automatalib.graph.ads.impl.ADSLeafNode;
 import net.automatalib.graph.base.CompactEdge;
-import net.automatalib.graph.impl.CompactSimpleGraph;
+import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.util.graph.Path;
 import net.automatalib.util.graph.ShortestPaths;
 import net.automatalib.util.graph.traversal.GraphTraversal;
@@ -306,7 +306,7 @@ public final class LeeYannakakis {
         final Set<SplitTree<S, I, O>> pendingCs = new HashSet<>();
         final Map<Integer, Validity> partitionToClassificationMap = new HashMap<>();
 
-        final CompactSimpleGraph<I> implicationGraph = new CompactSimpleGraph<>(nodeToPartitionMap.size());
+        final CompactUniversalGraph<Void, I> implicationGraph = new CompactUniversalGraph<>(nodeToPartitionMap.size());
 
         for (int i = 0; i < nodeToPartitionMap.size(); i++) {
             implicationGraph.addIntNode();

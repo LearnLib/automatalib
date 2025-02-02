@@ -16,6 +16,7 @@
 package net.automatalib.graph.impl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -37,24 +38,60 @@ public class IntAbstractionTest {
     private static final List<Character> EPS = CollectionUtil.charRange('0', '9');
 
     @Test
-    public void testCompactGraphs() {
+    public void testCompactUniversalGraphs() {
 
-        final CompactGraph<Character, Character> graph = new CompactGraph<>();
-        final CompactGraph<Character, Character> abstraction = new CompactGraph<>();
+        final CompactUniversalGraph<Character, Character> graph = new CompactUniversalGraph<>();
+        final CompactUniversalGraph<Character, Character> abstraction = new CompactUniversalGraph<>();
 
         fillGraphs(new Random(42), graph, abstraction, SIZE, NPS, EPS);
         checkGraphs(graph, abstraction);
     }
 
     @Test
-    public void testCompactBidiGraphs() {
+    public void testCompactSimpleGraphs() {
 
-        final CompactBidiGraph<Character, Character> graph = new CompactBidiGraph<>();
-        final CompactBidiGraph<Character, Character> abstraction = new CompactBidiGraph<>();
+        final CompactSimpleGraph<Character> graph = new CompactSimpleGraph<>();
+        final CompactSimpleGraph<Character> abstraction = new CompactSimpleGraph<>();
+
+        fillGraphs(new Random(42), graph, abstraction, SIZE, Collections.singletonList(null), EPS);
+        checkGraphs(graph, abstraction);
+    }
+
+    @Test
+    public void testCompactUniversalBidiGraphs() {
+
+        final CompactUniversalBidiGraph<Character, Character> graph = new CompactUniversalBidiGraph<>();
+        final CompactUniversalBidiGraph<Character, Character> abstraction = new CompactUniversalBidiGraph<>();
 
         fillGraphs(new Random(42), graph, abstraction, SIZE, NPS, EPS);
         checkGraphs(graph, abstraction);
         checkIncomingNodes(graph, abstraction);
+    }
+
+    @Test
+    public void testCompactSimpleBidiGraphs() {
+
+        final CompactSimpleBidiGraph<Character> graph = new CompactSimpleBidiGraph<>();
+        final CompactSimpleBidiGraph<Character> abstraction = new CompactSimpleBidiGraph<>();
+
+        fillGraphs(new Random(42), graph, abstraction, SIZE, Collections.singletonList(null), EPS);
+        checkGraphs(graph, abstraction);
+        checkIncomingNodes(graph, abstraction);
+    }
+
+    @Test
+    public void testCompactGraphs() {
+
+        final CompactGraph graph = new CompactGraph();
+        final CompactGraph abstraction = new CompactGraph();
+
+        fillGraphs(new Random(42),
+                   graph,
+                   abstraction,
+                   SIZE,
+                   Collections.singletonList(null),
+                   Collections.singletonList(null));
+        checkGraphs(graph, abstraction);
     }
 
     private <N, E1, E2, NP, EP> void fillGraphs(Random random,
@@ -77,15 +114,16 @@ public class IntAbstractionTest {
                 if (random.nextBoolean()) { // connect
                     final EP ep = RandomUtil.choose(random, edgeProperties);
 
-                    if (random.nextBoolean()) { // direct EP
-                        final E1 ge = graph.connect(nodeIDs.getNode(i), nodeIDs.getNode(j));
-                        graph.setEdgeProperty(ge, ep);
+                    final E1 ge = graph.connect(nodeIDs.getNode(i), nodeIDs.getNode(j), ep);
+                    final E2 ae = abstraction.connect(i, j, ep);
 
-                        final E2 ae = abstraction.connect(i, j);
-                        abstraction.setEdgeProperty(ae, ep);
-                    } else {
-                        graph.connect(nodeIDs.getNode(i), nodeIDs.getNode(j), ep);
-                        abstraction.connect(i, j, ep);
+                    Assert.assertEquals(graph.getEdgeProperty(ge), ep);
+                    Assert.assertEquals(abstraction.getEdgeProperty(ae), ep);
+
+                    if (random.nextBoolean()) { // override
+                        final EP ep2 = RandomUtil.choose(random, edgeProperties);
+                        graph.setEdgeProperty(ge, ep2);
+                        abstraction.setEdgeProperty(ae, ep2);
                     }
                 }
             }

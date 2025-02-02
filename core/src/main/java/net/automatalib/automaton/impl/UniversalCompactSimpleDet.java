@@ -30,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <SP>
  *         state property type
  */
-public class UniversalCompactSimpleDet<I, @Nullable SP> extends AbstractCompactSimpleDeterministic<I, SP> {
+public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeterministic<I, SP> {
 
     private @Nullable Object[] stateProperties;
 
@@ -59,7 +59,7 @@ public class UniversalCompactSimpleDet<I, @Nullable SP> extends AbstractCompactS
     }
 
     @Override
-    public void setStateProperty(int stateId, @Nullable SP property) {
+    public void setStateProperty(int stateId, SP property) {
         stateProperties[stateId] = property;
     }
 

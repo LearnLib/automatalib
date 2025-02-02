@@ -34,7 +34,7 @@ import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelDeserializer;
 
-class InternalAUTParser<I, A extends MutableAutomaton<Integer, I, Integer, ?, ?>>
+class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
         implements InputModelDeserializer<I, A> {
 
     private final Function<String, I> inputTransformer;
@@ -84,7 +84,7 @@ class InternalAUTParser<I, A extends MutableAutomaton<Integer, I, Integer, ?, ?>
                     final String input = targets.getKey();
                     final Set<Integer> tgts = targets.getValue();
                     for (Integer tgt : tgts) {
-                        result.addTransition(src, inputMap.get(input), tgt);
+                        result.addTransition(src, inputMap.get(input), tgt, null);
                     }
                 }
             }

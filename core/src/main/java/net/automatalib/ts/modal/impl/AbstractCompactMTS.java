@@ -67,9 +67,6 @@ public abstract class AbstractCompactMTS<I, T, TP extends MutableModalEdgeProper
     }
 
     @Override
-    public void setStateProperty(Integer state, Void property) {}
-
-    @Override
     public void setStateProperty(int state, Void property) {}
 
     @Override
@@ -95,7 +92,7 @@ public abstract class AbstractCompactMTS<I, T, TP extends MutableModalEdgeProper
     }
 
     @Override
-    public Void getStateProperty(Integer state) {
+    public Void getStateProperty(int state) {
         return null;
     }
 

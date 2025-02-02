@@ -100,6 +100,11 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
     }
 
     @Override
+    public Boolean getStateProperty(int state) {
+        return isAccepting(state);
+    }
+
+    @Override
     public AcceptorPowersetViewTS<BitSet, I, Integer> powersetView() {
         return new CompactAcceptorPowersetDTS();
     }

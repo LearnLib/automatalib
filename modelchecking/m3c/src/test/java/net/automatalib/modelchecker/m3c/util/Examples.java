@@ -30,6 +30,10 @@ import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
 import net.automatalib.graph.impl.CompactPMPG;
 import net.automatalib.graph.impl.DefaultCFMPS;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
+import net.automatalib.ts.modal.transition.impl.ProceduralModalEdgePropertyImpl;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.procedural.SBAs;
@@ -86,8 +90,9 @@ public final class Examples {
         return SBAs.toCFMPS(sba);
     }
 
-    private static <N, E, AP, M extends MutableProceduralModalProcessGraph<N, String, E, AP, ?>> M buildPMPG(M pmpg,
-                                                                                                             Set<AP> finalNodeAPs) {
+    private static <N, E, AP, M extends MutableProceduralModalProcessGraph<N, String, E, AP, MutableProceduralModalEdgeProperty>> M buildPMPG(
+            M pmpg,
+            Set<AP> finalNodeAPs) {
 
         final N start = pmpg.addNode();
         final N end = pmpg.addNode();
@@ -99,10 +104,10 @@ public final class Examples {
         pmpg.setAtomicPropositions(s2, finalNodeAPs);
         pmpg.setAtomicPropositions(end, finalNodeAPs);
 
-        final E e1 = pmpg.connect(start, s1);
-        final E e2 = pmpg.connect(start, end);
-        final E e3 = pmpg.connect(s1, s2);
-        final E e4 = pmpg.connect(s2, end);
+        final E e1 = pmpg.connect(start, s1, freshEdgeProperty());
+        final E e2 = pmpg.connect(start, end, freshEdgeProperty());
+        final E e3 = pmpg.connect(s1, s2, freshEdgeProperty());
+        final E e4 = pmpg.connect(s2, end, freshEdgeProperty());
 
         pmpg.getEdgeProperty(e1).setMust();
         pmpg.setEdgeLabel(e1, "a");
@@ -118,6 +123,10 @@ public final class Examples {
         pmpg.setEdgeLabel(e4, "b");
 
         return pmpg;
+    }
+
+    public static MutableProceduralModalEdgeProperty freshEdgeProperty() {
+        return new ProceduralModalEdgePropertyImpl(ProceduralType.INTERNAL, ModalType.MUST);
     }
 
 }

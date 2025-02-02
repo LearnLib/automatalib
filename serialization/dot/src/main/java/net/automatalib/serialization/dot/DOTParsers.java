@@ -39,7 +39,7 @@ import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.common.util.Pair;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.MutableGraph;
-import net.automatalib.graph.impl.CompactGraph;
+import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
@@ -565,17 +565,17 @@ public final class DOTParsers {
      * Invokes {@link #graph(Function, Function)} with {@link #DEFAULT_NODE_PARSER} as {@code nodeParser} and {@link
      * #DEFAULT_EDGE_PARSER} as {@code edgeParser}.
      *
-     * @return a DOT {@link ModelDeserializer} for {@link CompactGraph}s.
+     * @return a DOT {@link ModelDeserializer} for {@link CompactUniversalGraph}s.
      */
-    public static ModelDeserializer<CompactGraph<@Nullable String, @Nullable String>> graph() {
+    public static ModelDeserializer<CompactUniversalGraph<@Nullable String, @Nullable String>> graph() {
         return graph(DEFAULT_NODE_PARSER, DEFAULT_EDGE_PARSER);
     }
 
     /**
      * Parser for (directed) {@link Graph}s with custom node and edge attributes.
      * <p>
-     * Invokes {@link #graph(Supplier, Function, Function)} with {@link CompactGraph#CompactGraph()} as {@code
-     * creator}.
+     * Invokes {@link #graph(Supplier, Function, Function)} with {@link CompactUniversalGraph#CompactUniversalGraph()}
+     * as {@code creator}.
      *
      * @param nodeParser
      *         a node parser that extracts from a property map of a node the node property
@@ -586,11 +586,11 @@ public final class DOTParsers {
      * @param <EP>
      *         the edge property type
      *
-     * @return a DOT {@link ModelDeserializer} for {@link CompactGraph}s.
+     * @return a DOT {@link ModelDeserializer} for {@link CompactUniversalGraph}s.
      */
-    public static <NP, EP> ModelDeserializer<CompactGraph<NP, EP>> graph(Function<Map<String, String>, NP> nodeParser,
-                                                                         Function<Map<String, String>, EP> edgeParser) {
-        return graph(CompactGraph::new, nodeParser, edgeParser);
+    public static <NP, EP> ModelDeserializer<CompactUniversalGraph<NP, EP>> graph(Function<Map<String, String>, NP> nodeParser,
+                                                                                  Function<Map<String, String>, EP> edgeParser) {
+        return graph(CompactUniversalGraph::new, nodeParser, edgeParser);
     }
 
     /**

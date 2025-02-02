@@ -25,18 +25,18 @@ import net.automatalib.graph.BidirectionalGraph;
 import net.automatalib.graph.MutableUniversalBidirectionalGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
-        extends AbstractCompactGraph<CompactBidiEdge<EP>, NP, EP>
+public abstract class AbstractCompactUniversalBidiGraph<NP, EP>
+        extends AbstractCompactUniversalGraph<CompactBidiEdge<EP>, NP, EP>
         implements MutableUniversalBidirectionalGraph<Integer, CompactBidiEdge<EP>, NP, EP>,
                    BidirectionalGraph.IntAbstraction<CompactBidiEdge<EP>> {
 
     private final ArrayStorage<List<CompactBidiEdge<EP>>> inEdges;
 
-    public AbstractCompactBidiGraph() {
+    public AbstractCompactUniversalBidiGraph() {
         this.inEdges = new ArrayStorage<>();
     }
 
-    public AbstractCompactBidiGraph(int initialCapacity) {
+    public AbstractCompactUniversalBidiGraph(int initialCapacity) {
         super(initialCapacity);
         this.inEdges = new ArrayStorage<>(initialCapacity);
     }
@@ -70,7 +70,7 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
     }
 
     @Override
-    public CompactBidiEdge<EP> connect(int source, int target, @Nullable EP property) {
+    public CompactBidiEdge<EP> connect(int source, int target, EP property) {
         CompactBidiEdge<EP> edge = super.connect(source, target, property);
         List<CompactBidiEdge<EP>> inEdges = this.inEdges.get(target);
         inEdges.add(edge);
@@ -78,7 +78,7 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
     }
 
     @Override
-    protected CompactBidiEdge<EP> createEdge(int source, int target, @Nullable EP property) {
+    protected CompactBidiEdge<EP> createEdge(int source, int target, EP property) {
         return new CompactBidiEdge<>(source, target, property);
     }
 

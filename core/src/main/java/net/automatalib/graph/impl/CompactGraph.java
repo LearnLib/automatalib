@@ -15,38 +15,48 @@
  */
 package net.automatalib.graph.impl;
 
-import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.graph.base.AbstractCompactGraph;
-import net.automatalib.graph.base.CompactEdge;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import net.automatalib.graph.base.SimpleEdge;
 
-public class CompactGraph<@Nullable NP, @Nullable EP> extends AbstractCompactGraph<CompactEdge<EP>, NP, EP> {
-
-    private final ArrayStorage<NP> nodeProperties;
+/**
+ * A compact graph representation that only stores adjacency information.
+ */
+public class CompactGraph extends AbstractCompactGraph<SimpleEdge, Void, Void> {
 
     public CompactGraph() {
-        this.nodeProperties = new ArrayStorage<>();
+        // default constructor
     }
 
     public CompactGraph(int initialCapacity) {
         super(initialCapacity);
-        this.nodeProperties = new ArrayStorage<>(initialCapacity);
     }
 
     @Override
-    public void setNodeProperty(int node, @Nullable NP property) {
-        nodeProperties.ensureCapacity(node + 1);
-        nodeProperties.set(node, property);
+    protected SimpleEdge createEdge(int source, int target, Void property) {
+        return new SimpleEdge(target);
     }
 
     @Override
-    public NP getNodeProperty(int node) {
-        return nodeProperties.get(node);
+    public Void getNodeProperty(int node) {
+        return null;
     }
 
     @Override
-    protected CompactEdge<EP> createEdge(int source, int target, @Nullable EP property) {
-        return new CompactEdge<>(target, property);
+    public void setNodeProperty(int node, Void property) {}
+
+    @Override
+    public void setEdgeProperty(SimpleEdge edge, Void property) {}
+
+    @Override
+    public Void getEdgeProperty(SimpleEdge edge) {
+        return null;
     }
 
+    public SimpleEdge connect(Integer source, Integer target) {
+        return super.connect(source, target, null);
+    }
+
+    public SimpleEdge connect(int source, int target) {
+        return super.connect(source, target, null);
+    }
 }

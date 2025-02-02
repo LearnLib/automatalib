@@ -16,24 +16,31 @@
 package net.automatalib.graph.impl;
 
 import net.automatalib.common.util.array.ArrayStorage;
-import net.automatalib.graph.base.AbstractCompactBidiGraph;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import net.automatalib.graph.base.AbstractCompactUniversalBidiGraph;
 
-public class CompactBidiGraph<@Nullable NP, @Nullable EP> extends AbstractCompactBidiGraph<NP, EP> {
+/**
+ * A compact bi-directional graph representation that supports arbitrary node properties and edge properties.
+ *
+ * @param <NP>
+ *         node property type
+ * @param <EP>
+ *         edge property type
+ */
+public class CompactUniversalBidiGraph<NP, EP> extends AbstractCompactUniversalBidiGraph<NP, EP> {
 
     private final ArrayStorage<NP> nodeProperties;
 
-    public CompactBidiGraph() {
+    public CompactUniversalBidiGraph() {
         this.nodeProperties = new ArrayStorage<>();
     }
 
-    public CompactBidiGraph(int initialCapacity) {
+    public CompactUniversalBidiGraph(int initialCapacity) {
         super(initialCapacity);
         this.nodeProperties = new ArrayStorage<>(initialCapacity);
     }
 
     @Override
-    public void setNodeProperty(int node, @Nullable NP property) {
+    public void setNodeProperty(int node, NP property) {
         nodeProperties.ensureCapacity(node + 1);
         nodeProperties.set(node, property);
     }

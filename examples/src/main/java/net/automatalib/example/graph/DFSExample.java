@@ -22,8 +22,8 @@ import net.automatalib.common.util.Holder;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.IndefiniteGraph;
-import net.automatalib.graph.base.CompactEdge;
-import net.automatalib.graph.impl.CompactSimpleGraph;
+import net.automatalib.graph.base.SimpleEdge;
+import net.automatalib.graph.impl.CompactGraph;
 import net.automatalib.util.graph.traversal.GraphTraversal;
 import net.automatalib.util.graph.traversal.GraphTraversalAction;
 import net.automatalib.util.graph.traversal.GraphTraversalVisitor;
@@ -42,7 +42,7 @@ public final class DFSExample {
     }
 
     public static void main(String[] args) {
-        CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
+        CompactGraph graph = new CompactGraph();
 
         int n0 = graph.addIntNode(), n1 = graph.addIntNode(), n2 = graph.addIntNode(), n3 = graph.addIntNode(), n4 =
                 graph.addIntNode();
@@ -57,9 +57,9 @@ public final class DFSExample {
         graph.connect(n0, n4);
         graph.connect(n4, n3);
 
-        MyDFSVisitor<Integer, CompactEdge<Void>> vis = new MyDFSVisitor<>(graph);
+        MyDFSVisitor<Integer, SimpleEdge> vis = new MyDFSVisitor<>(graph);
         GraphTraversal.depthFirst(graph, n0, vis);
-        DFSResultDOTHelper<Integer, CompactEdge<Void>> helper = new DFSResultDOTHelper<>(vis);
+        DFSResultDOTHelper<Integer, SimpleEdge> helper = new DFSResultDOTHelper<>(vis);
 
         Visualization.visualize(graph, helper);
     }

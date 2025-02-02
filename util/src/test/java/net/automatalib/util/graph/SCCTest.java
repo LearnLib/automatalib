@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import net.automatalib.graph.impl.CompactSimpleGraph;
+import net.automatalib.graph.impl.CompactGraph;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -30,8 +30,7 @@ public class SCCTest {
     public void testExample1() {
 
         Integer n0, n1, n2, n3;
-        CompactSimpleGraph<Void> graph;
-        graph = new CompactSimpleGraph<>();
+        CompactGraph graph = new CompactGraph();
 
         n0 = graph.addNode();
         n1 = graph.addNode();
@@ -54,7 +53,7 @@ public class SCCTest {
 
     @Test
     public void testExample2() {
-        CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
+        CompactGraph graph = new CompactGraph();
         Integer n0, n1, n2, n3, n4;
 
         n0 = graph.addNode();
@@ -83,7 +82,7 @@ public class SCCTest {
      */
     @Test
     public void testExample3() {
-        CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
+        CompactGraph graph = new CompactGraph();
         Integer a, b, c, d, e, f, g, h;
         a = graph.addNode();
         b = graph.addNode();
@@ -122,7 +121,7 @@ public class SCCTest {
      */
     @Test
     public void testExample4() {
-        CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
+        CompactGraph graph = new CompactGraph();
         Integer a, b, c, d, e, f, g, h, i, j, k, l;
         a = graph.addNode();
         b = graph.addNode();
@@ -168,7 +167,7 @@ public class SCCTest {
 
     @Test
     public void testExample5() {
-        CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
+        CompactGraph graph = new CompactGraph();
         Integer n0, n1, n2, n3, n4, n5, n6, n7, n8, n9;
 
         n0 = graph.addNode();
@@ -219,14 +218,13 @@ public class SCCTest {
     }
 
     /*
-     * The following example is taken from Trajans original paper
-     * about his SCC-algorithm.
+     * The following example is taken from Tarjan's original paper about his SCC-algorithm.
      * TARJAN, Robert. Depth-first search and linear graph algorithms.
      * SIAM journal on computing, 1972, 1. Jg., Nr. 2, S. 146-160.
      */
     @Test
     public void testTarjansSCCPaperExample() {
-        CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
+        CompactGraph graph = new CompactGraph();
         Integer n1, n2, n3, n4, n5, n6, n7, n8;
 
         n1 = graph.addNode();
@@ -259,7 +257,7 @@ public class SCCTest {
         Assert.assertEquals(computedSCCs, expectedSCCs);
     }
 
-    private Set<Set<Integer>> computeSCCs(CompactSimpleGraph<Void> graph) {
+    private Set<Set<Integer>> computeSCCs(CompactGraph graph) {
         return Graphs.collectSCCs(graph).stream().map(HashSet::new).collect(Collectors.toSet());
     }
 }

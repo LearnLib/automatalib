@@ -16,31 +16,18 @@
 package net.automatalib.graph.base;
 
 /**
- * An edge in an {@link AbstractCompactUniversalGraph}.
- *
- * @param <EP>
- *         edge property class.
+ * An edge in an {@link AbstractCompactGraph}.
  */
-public class CompactEdge<EP> extends SimpleEdge {
+public class SimpleEdge {
 
-    private EP property;
+    private final int target;
 
-    public CompactEdge(int target, EP property) {
-        super(target);
-        this.property = property;
+    public SimpleEdge(int target) {
+        this.target = target;
     }
 
-    public EP getProperty() {
-        return property;
-    }
-
-    void setProperty(EP property) {
-        this.property = property;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(property);
+    public int getTarget() {
+        return target;
     }
 
 }

@@ -33,10 +33,11 @@ import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.Mappings;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.concept.NodeIDs;
-import net.automatalib.graph.impl.CompactBidiGraph;
 import net.automatalib.graph.impl.CompactGraph;
 import net.automatalib.graph.impl.CompactSimpleBidiGraph;
 import net.automatalib.graph.impl.CompactSimpleGraph;
+import net.automatalib.graph.impl.CompactUniversalBidiGraph;
+import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.graph.impl.SimpleMapGraph;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.graph.copy.GraphCopy;
@@ -51,8 +52,9 @@ public class GraphsTest {
         final Alphabet<Integer> alphabet = Alphabets.integers(1, 3);
         final DFA<?, Integer> dfa = RandomAutomata.randomDFA(new Random(42), 10, alphabet);
 
-        checkIncomingEdges(dfa, alphabet, new CompactGraph<>(dfa.size()));
-        checkIncomingEdges(dfa, alphabet, new CompactBidiGraph<>(dfa.size()));
+        checkIncomingEdges(dfa, alphabet, new CompactGraph(dfa.size()));
+        checkIncomingEdges(dfa, alphabet, new CompactUniversalGraph<>(dfa.size()));
+        checkIncomingEdges(dfa, alphabet, new CompactUniversalBidiGraph<>(dfa.size()));
         checkIncomingEdges(dfa, alphabet, new CompactSimpleGraph<>(dfa.size()));
         checkIncomingEdges(dfa, alphabet, new CompactSimpleBidiGraph<>(dfa.size()));
         checkIncomingEdges(dfa, alphabet, new SimpleMapGraph<>());
@@ -63,8 +65,9 @@ public class GraphsTest {
         final List<Integer> nums = Arrays.asList(1, 2, 3, 4);
         final List<Void> nulls = Collections.nCopies(4, null);
 
-        checkNodeIDs(new CompactGraph<>(), nums);
-        checkNodeIDs(new CompactBidiGraph<>(), nums);
+        checkNodeIDs(new CompactGraph(), nulls);
+        checkNodeIDs(new CompactUniversalGraph<>(), nums);
+        checkNodeIDs(new CompactUniversalBidiGraph<>(), nums);
         checkNodeIDs(new CompactSimpleGraph<>(), nulls);
         checkNodeIDs(new CompactSimpleBidiGraph<>(), nulls);
         checkNodeIDs(new SimpleMapGraph<>(), nums);

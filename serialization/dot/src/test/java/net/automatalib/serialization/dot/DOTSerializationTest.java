@@ -42,7 +42,7 @@ import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.graph.base.CompactEdge;
-import net.automatalib.graph.impl.CompactGraph;
+import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.graph.impl.DefaultCFMPS;
 import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -187,7 +187,7 @@ public class DOTSerializationTest {
     @Test
     public void testVisualizationHelper() throws IOException {
 
-        final CompactGraph<String, String> graph = DOTSerializationUtil.GRAPH;
+        final CompactUniversalGraph<String, String> graph = DOTSerializationUtil.GRAPH;
 
         ThrowingWriter writer = w -> GraphDOT.write(graph,
                                                     w,
@@ -201,7 +201,7 @@ public class DOTSerializationTest {
     @Test
     public void testHTMLVisualizationHelper() throws IOException {
 
-        final CompactGraph<String, String> graph = DOTSerializationUtil.GRAPH;
+        final CompactUniversalGraph<String, String> graph = DOTSerializationUtil.GRAPH;
 
         ThrowingWriter writer = w -> GraphDOT.write(graph, w, new HTMLHelper<>());
         checkDOTOutput(writer, DOTSerializationUtil.GRAPH_HTML_RESOURCE);
@@ -210,7 +210,7 @@ public class DOTSerializationTest {
     @Test
     public void testGlobalVisualizationHelper() throws IOException {
 
-        final CompactGraph<String, String> graph = DOTSerializationUtil.GRAPH;
+        final CompactUniversalGraph<String, String> graph = DOTSerializationUtil.GRAPH;
 
         ThrowingWriter writer = w -> GraphDOT.write(graph, w, new GlobalHelper<>());
         checkDOTOutput(writer, DOTSerializationUtil.GRAPH_GLOBAL_RESOURCE);
@@ -219,7 +219,7 @@ public class DOTSerializationTest {
     @Test
     public void testNullVisualizationHelper() throws IOException {
 
-        final CompactGraph<String, String> graph = DOTSerializationUtil.GRAPH;
+        final CompactUniversalGraph<String, String> graph = DOTSerializationUtil.GRAPH;
 
         ThrowingWriter writer = w -> GraphDOT.write(graph, w, new NullHelper<>());
         checkDOTOutput(writer, DOTSerializationUtil.EMPTY_RESOURCE);

@@ -43,9 +43,9 @@ import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.automaton.transducer.impl.CompactSST;
 import net.automatalib.automaton.transducer.impl.FastMealy;
 import net.automatalib.automaton.transducer.impl.FastMealyState;
-import net.automatalib.graph.impl.CompactGraph;
 import net.automatalib.graph.impl.CompactPMPG;
 import net.automatalib.graph.impl.CompactPMPGEdge;
+import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.graph.impl.DefaultCFMPS;
 import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
@@ -87,7 +87,7 @@ final class DOTSerializationUtil {
     static final CompactMealy<String, String> MEALY;
     static final CompactMoore<String, String> MOORE;
     static final CompactSST<Character, Character> SST;
-    static final CompactGraph<String, String> GRAPH;
+    static final CompactUniversalGraph<String, String> GRAPH;
     static final CompactMTS<String> MTS;
     static final DefaultCFMPS<Character, Character> CFMPS;
     static final SPA<?, Character> SPA;
@@ -206,8 +206,8 @@ final class DOTSerializationUtil {
         return result;
     }
 
-    private static CompactGraph<String, String> buildGraph() {
-        final CompactGraph<String, String> result = new CompactGraph<>();
+    private static CompactUniversalGraph<String, String> buildGraph() {
+        final CompactUniversalGraph<String, String> result = new CompactUniversalGraph<>();
         result.addIntNode();
 
         for (int i = 2; i < 2 << 3; i++) {

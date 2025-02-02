@@ -15,31 +15,40 @@
  */
 package net.automatalib.graph.impl;
 
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.graph.base.AbstractCompactUniversalGraph;
 import net.automatalib.graph.base.CompactEdge;
 
 /**
- * A compact graph representation that supports arbitrary edge properties.
+ * A compact graph representation that supports arbitrary node properties and edge properties.
  *
+ * @param <NP>
+ *         node property type
  * @param <EP>
  *         edge property type
  */
-public class CompactSimpleGraph<EP> extends AbstractCompactUniversalGraph<CompactEdge<EP>, Void, EP> {
+public class CompactUniversalGraph<NP, EP> extends AbstractCompactUniversalGraph<CompactEdge<EP>, NP, EP> {
 
-    public CompactSimpleGraph() {
-        // default constructor
+    private final ArrayStorage<NP> nodeProperties;
+
+    public CompactUniversalGraph() {
+        this.nodeProperties = new ArrayStorage<>();
     }
 
-    public CompactSimpleGraph(int initialCapacity) {
+    public CompactUniversalGraph(int initialCapacity) {
         super(initialCapacity);
+        this.nodeProperties = new ArrayStorage<>(initialCapacity);
     }
 
     @Override
-    public void setNodeProperty(int node, Void property) {}
+    public void setNodeProperty(int node, NP property) {
+        nodeProperties.ensureCapacity(node + 1);
+        nodeProperties.set(node, property);
+    }
 
     @Override
-    public Void getNodeProperty(int node) {
-        return null;
+    public NP getNodeProperty(int node) {
+        return nodeProperties.get(node);
     }
 
     @Override

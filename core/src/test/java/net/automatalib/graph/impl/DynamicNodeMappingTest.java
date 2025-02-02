@@ -27,7 +27,7 @@ public class DynamicNodeMappingTest {
 
     @Test
     public void testGraph() {
-        CompactGraph<Void, Void> graph = new CompactGraph<>();
+        CompactGraph graph = new CompactGraph(5);
         graph.addNode();
         graph.addNode();
         graph.addNode();

@@ -15,32 +15,30 @@
  */
 package net.automatalib.graph.base;
 
-/**
- * An edge in an {@link AbstractCompactUniversalGraph}.
- *
- * @param <EP>
- *         edge property class.
- */
-public class CompactEdge<EP> extends SimpleEdge {
+import net.automatalib.graph.MutableGraph;
+import net.automatalib.graph.MutableGraph.IntAbstraction;
+import net.automatalib.graph.concept.NodeIDs;
 
-    private EP property;
+public abstract class AbstractCompactUniversalGraph<E extends CompactEdge<EP>, NP, EP>
+        extends AbstractCompactGraph<E, NP, EP>
+        implements MutableGraph<Integer, E, NP, EP>, IntAbstraction<E, NP, EP>, NodeIDs<Integer> {
 
-    public CompactEdge(int target, EP property) {
-        super(target);
-        this.property = property;
+    public AbstractCompactUniversalGraph() {
+        // default constructor
     }
 
-    public EP getProperty() {
-        return property;
-    }
-
-    void setProperty(EP property) {
-        this.property = property;
+    public AbstractCompactUniversalGraph(int initialCapacity) {
+        super(initialCapacity);
     }
 
     @Override
-    public String toString() {
-        return String.valueOf(property);
+    public void setEdgeProperty(E edge, EP property) {
+        edge.setProperty(property);
+    }
+
+    @Override
+    public EP getEdgeProperty(E edge) {
+        return edge.getProperty();
     }
 
 }

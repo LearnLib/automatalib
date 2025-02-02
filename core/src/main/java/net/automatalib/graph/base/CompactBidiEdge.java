@@ -15,6 +15,12 @@
  */
 package net.automatalib.graph.base;
 
+/**
+ * An edge in an {@link AbstractCompactUniversalBidiGraph}.
+ *
+ * @param <EP>
+ *         edge property class.
+ */
 public class CompactBidiEdge<EP> extends CompactEdge<EP> {
 
     private final int source;
