@@ -22,4 +22,9 @@ import net.automatalib.automaton.concept.MutableTransitionOutput;
 public interface MutableProbabilisticMealy<S, I, T, O> extends ProbabilisticMealyMachine<S, I, T, O>,
                                                                MutableTransitionOutput<T, O>,
                                                                MutableProbabilistic<T>,
-                                                               MutableAutomaton<S, I, T, Void, ProbabilisticOutput<O>> {}
+                                                               MutableAutomaton<S, I, T, Void, ProbabilisticOutput<O>> {
+
+    @Override
+    default void setStateProperty(S state, Void property) {}
+
+}
