@@ -25,13 +25,13 @@ import org.testng.annotations.Test;
 public class LetterWordTest extends AbstractNonemptyWordTest {
 
     @Override
-    protected List<Word<Object>> realPrefixes() {
+    protected List<Word<?>> realPrefixes() {
         return realSuffixes();
     }
 
     @Override
-    protected List<Word<Object>> realSuffixes() {
-        return Arrays.asList(new EmptyWord(),
+    protected List<Word<?>> realSuffixes() {
+        return Arrays.asList(new EmptyWord<>(),
                              new SharedWord<>(new Object[0]),
                              new SharedWord<>(Collections.emptyList()));
     }
@@ -42,18 +42,18 @@ public class LetterWordTest extends AbstractNonemptyWordTest {
     }
 
     @Override
-    protected List<Word<Object>> equalWords() {
+    protected List<Word<?>> equalWords() {
         return Arrays.asList(new LetterWord<>(5),
                              new SharedWord<>(new Object[] {5}),
                              new SharedWord<>(Collections.<Object>singletonList(5)));
     }
 
     @Override
-    protected List<Word<Object>> unequalWords() {
+    protected List<Word<?>> unequalWords() {
         return Arrays.asList(new LetterWord<>(6),
                              new LetterWord<>(null),
                              new SharedWord<>(new Object[] {4, 2}),
-                             new EmptyWord());
+                             new EmptyWord<>());
     }
 
 }

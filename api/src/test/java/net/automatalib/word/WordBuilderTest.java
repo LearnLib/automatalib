@@ -24,7 +24,7 @@ public class WordBuilderTest {
 
     @Test
     public void constructorTest() {
-        WordBuilder<Character> wb;
+        WordBuilder<?> wb;
 
         wb = new WordBuilder<>();
         Assert.assertEquals(wb.size(), 0);
@@ -52,7 +52,7 @@ public class WordBuilderTest {
         Assert.assertEquals(wb.size(), 5);
         Assert.assertEquals(wb.toWord(), aaaaa);
 
-        final Word<Character> abc = Word.fromString("abc");
+        final Word<?> abc = Word.fromString("abc");
 
         wb = new WordBuilder<>(abc);
         Assert.assertEquals(wb.size(), 3);

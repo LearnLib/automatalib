@@ -28,9 +28,9 @@ import org.testng.annotations.Test;
 public abstract class AbstractWordTest {
 
     protected Word<Object> testWord;
-    protected List<Word<Object>> equalWords;
-    protected List<Word<Object>> unequalWords;
-    protected List<Word<Object>> all;
+    protected List<Word<?>> equalWords;
+    protected List<Word<?>> unequalWords;
+    protected List<Word<?>> all;
 
     @BeforeClass
     public void setup() {
@@ -45,9 +45,9 @@ public abstract class AbstractWordTest {
 
     protected abstract Word<Object> testWord();
 
-    protected abstract List<Word<Object>> equalWords();
+    protected abstract List<Word<?>> equalWords();
 
-    protected abstract List<Word<Object>> unequalWords();
+    protected abstract List<Word<?>> unequalWords();
 
     @Test
     public void testAppend() {
@@ -116,8 +116,8 @@ public abstract class AbstractWordTest {
         Assert.assertEquals(testWord.length(), unchanged.length());
         Assert.assertEquals(testWord, unchanged);
 
-        for (Word<Object> other : all) {
-            Word<Object> concated = testWord.concat(other, testWord);
+        for (Word<?> other : all) {
+            Word<?> concated = testWord.concat(other, testWord);
             Assert.assertEquals(2 * testWord.length() + other.length(), concated.length());
             Assert.assertEquals(testWord, concated.subWord(0, testWord.length()));
             Assert.assertEquals(other, concated.subWord(testWord.length(), testWord.length() + other.length()));
@@ -165,7 +165,7 @@ public abstract class AbstractWordTest {
     public void testIsPrefixOf() {
         Assert.assertTrue(testWord.isPrefixOf(testWord));
 
-        for (Word<Object> eq : equalWords) {
+        for (Word<?> eq : equalWords) {
             Assert.assertTrue(testWord.isPrefixOf(eq));
         }
     }
@@ -174,7 +174,7 @@ public abstract class AbstractWordTest {
     public void testIsSuffixOf() {
         Assert.assertTrue(testWord.isSuffixOf(testWord));
 
-        for (Word<Object> eq : equalWords) {
+        for (Word<?> eq : equalWords) {
             Assert.assertTrue(testWord.isSuffixOf(eq));
         }
     }
@@ -194,12 +194,12 @@ public abstract class AbstractWordTest {
         Assert.assertTrue(testWord.equals(testWord));
         Assert.assertFalse(testWord.equals(null));
 
-        for (Word<Object> eq : equalWords) {
+        for (Word<?> eq : equalWords) {
             Assert.assertTrue(testWord.equals(eq));
             Assert.assertTrue(eq.equals(testWord));
         }
 
-        for (Word<Object> neq : unequalWords) {
+        for (Word<?> neq : unequalWords) {
             Assert.assertFalse(testWord.equals(neq));
             Assert.assertFalse(neq.equals(testWord));
         }

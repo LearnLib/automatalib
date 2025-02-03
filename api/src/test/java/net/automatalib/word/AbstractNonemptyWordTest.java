@@ -23,8 +23,8 @@ import org.testng.annotations.Test;
 
 public abstract class AbstractNonemptyWordTest extends AbstractWordTest {
 
-    protected List<Word<Object>> realPrefixes;
-    protected List<Word<Object>> realSuffixes;
+    protected List<Word<?>> realPrefixes;
+    protected List<Word<?>> realSuffixes;
 
     @BeforeClass
     @Override
@@ -34,9 +34,9 @@ public abstract class AbstractNonemptyWordTest extends AbstractWordTest {
         this.realSuffixes = realSuffixes();
     }
 
-    protected abstract List<Word<Object>> realPrefixes();
+    protected abstract List<Word<?>> realPrefixes();
 
-    protected abstract List<Word<Object>> realSuffixes();
+    protected abstract List<Word<?>> realSuffixes();
 
     @Override
     @Test
@@ -49,8 +49,8 @@ public abstract class AbstractNonemptyWordTest extends AbstractWordTest {
     public void testLongestCommonPrefix() {
         super.testLongestCommonPrefix();
 
-        for (Word<Object> rp : realPrefixes) {
-            Word<Object> lcp = testWord.longestCommonPrefix(rp);
+        for (Word<?> rp : realPrefixes) {
+            Word<?> lcp = testWord.longestCommonPrefix(rp);
             Assert.assertEquals(rp, lcp);
         }
     }
@@ -60,8 +60,8 @@ public abstract class AbstractNonemptyWordTest extends AbstractWordTest {
     public void testLongestCommonSuffix() {
         super.testLongestCommonSuffix();
 
-        for (Word<Object> rs : realSuffixes) {
-            Word<Object> lcs = testWord.longestCommonSuffix(rs);
+        for (Word<?> rs : realSuffixes) {
+            Word<?> lcs = testWord.longestCommonSuffix(rs);
             Assert.assertEquals(rs, lcs);
         }
     }
