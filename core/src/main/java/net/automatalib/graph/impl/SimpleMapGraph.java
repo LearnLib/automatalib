@@ -96,7 +96,6 @@ public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void> 
         return getOutgoingEdgesIterator(node);
     }
 
-    @SuppressWarnings("nullness") // the passed structureMap decides whether we support nulls
     @Override
     public Collection<N> getOutgoingEdges(N node) {
         return Collections.unmodifiableCollection(structureMap.getOrDefault(node, Collections.emptySet()));
@@ -128,7 +127,7 @@ public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void> 
         return property;
     }
 
-    @SuppressWarnings("nullness") // the passed structureMap decides whether we support nulls
+    @SuppressWarnings("nullness") // connecting non-added nodes is a data-flow problem
     @Override
     public N connect(N source, N target, Void property) {
         structureMap.get(source).add(target);

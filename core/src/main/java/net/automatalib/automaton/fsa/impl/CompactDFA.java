@@ -21,8 +21,6 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.base.AbstractCompactSimpleDeterministic;
 import net.automatalib.automaton.fsa.MutableDFA;
-import net.automatalib.common.util.WrapperUtil;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactDFA<I> extends AbstractCompactSimpleDeterministic<I, Boolean> implements MutableDFA<Integer, I> {
 
@@ -89,8 +87,8 @@ public class CompactDFA<I> extends AbstractCompactSimpleDeterministic<I, Boolean
     }
 
     @Override
-    public void setStateProperty(int stateId, @Nullable Boolean property) {
-        setAccepting(stateId, WrapperUtil.booleanValue(property));
+    public void setStateProperty(int stateId, Boolean property) {
+        setAccepting(stateId, property.booleanValue());
     }
 
     @Override

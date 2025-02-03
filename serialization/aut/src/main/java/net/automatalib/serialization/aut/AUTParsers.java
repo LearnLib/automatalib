@@ -68,12 +68,14 @@ public final class AUTParsers {
      *         the creator to construct the concrete automaton instance
      * @param <I>
      *         input symbol type
+     * @param <T>
+     *         transition type
      * @param <A>
      *         (concrete) automaton type
      *
      * @return a {@link InputModelDeserializer} that reads an automaton description
      */
-    public static <I, A extends MutableAutomaton<Integer, I, Integer, ?, ?>> InputModelDeserializer<I, A> parser(
+    public static <I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>> InputModelDeserializer<I, A> parser(
             Function<String, I> inputTransformer,
             AutomatonCreator<A, I> creator) {
         return new InternalAUTParser<>(inputTransformer, creator);

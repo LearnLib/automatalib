@@ -87,7 +87,7 @@ public class UniversalCompactDet<I, SP, TP> extends AbstractCompactDeterministic
     }
 
     @Override
-    public void setStateProperty(int state, @Nullable SP property) {
+    public void setStateProperty(int state, SP property) {
         this.stateProperties[state] = property;
     }
 
