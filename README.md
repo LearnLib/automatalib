@@ -21,8 +21,8 @@ Furthermore, a plethora of graph-/automata-based algorithms is implemented, cove
 
 * graph theory (traversal, shortest paths, strongly-connected components)
 * automata theory (equivalence, minimization)
-* model-based testing (adaptive distinguishing sequences, W(p)Method, characterizing sets, state/transition covers)
-* model verification (LTL checking (via [LTSMin][ltsmin]), CTL & µ-calculus checking (via [M3C][m3c] & [ADDlib][addlib]))
+* model-based testing (adaptive distinguishing sequences, (partial) W-method, characterizing sets, state/transition covers)
+* model verification (LTL checking (via [LTSmin][ltsmin]), CTL & µ-calculus checking (via [M3C][m3c] & [ADDlib][addlib]))
 
 While we strive to deliver code at a high quality, please note that there exist parts of the library that still need thorough testing.
 Contributions -- whether it is in the form of new features, better documentation or tests -- are welcome.
