@@ -4,7 +4,7 @@
 [![Coverage](https://coveralls.io/repos/github/LearnLib/automatalib/badge.svg?branch=develop)](https://coveralls.io/github/LearnLib/automatalib?branch=develop)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.automatalib/automata-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.automatalib/automata-parent)
 
-AutomataLib is a free, open source ([Apache License, v2.0][1]) Java library for modeling automata, graphs, and transition systems.
+AutomataLib is a free, open-source ([Apache License, v2.0][1]) Java library for modeling automata, graphs, and transition systems.
 
 
 ## About
