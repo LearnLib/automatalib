@@ -15,9 +15,12 @@
  */
 
 /**
- * This module contains deserializers for LTSmin's Finite State Machine (FSM) format. For further information about the
- * FSM format, see <a
- * href="https://www.win.tue.nl/vis1/home/apretori/data/fsm.html">https://www.win.tue.nl/vis1/home/apretori/data/fsm.html</a>.
+ * This module contains deserializers for the Finite State Machine (FSM) format as used by LTSmin. For further
+ * information about the FSM format, see the <a
+ * href="https://mcrl2.org/web/user_manual/tools/lts.html#language-fsm-lts">mcrl2 documentation</a>.
+ * <p>
+ * Note that this format differs from the identically named FSM format of <a
+ * href="https://github.com/katef/libfsm">libfsm</a>.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>
