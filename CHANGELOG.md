@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.12.0...HEAD)
 
+### Fixed
+
+* Updated dead links to the FSM format (see #87).
+* Fixed a bug in the index computation of `DeterministicEquivalenceTest` (see #88).
+
 
 ## [0.12.0] - 2025-02-04
 
