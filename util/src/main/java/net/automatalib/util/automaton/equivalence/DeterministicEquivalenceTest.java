@@ -168,7 +168,7 @@ public final class DeterministicEquivalenceTest {
         }
     }
 
-    private static final class Pred<I> {
+    static final class Pred<I> {
 
         public final @Nullable Pred<I> prev;
         public final @Nullable I symbol;
@@ -184,14 +184,14 @@ public final class DeterministicEquivalenceTest {
         }
     }
 
-    private interface Registry<I> {
+    interface Registry<I> {
 
         @Nullable Pred<I> getPred(int id1, int id2);
 
         void putPred(int id1, int id2, Pred<I> pred);
     }
 
-    private static class ArrayRegistry<I> implements Registry<I> {
+    static class ArrayRegistry<I> implements Registry<I> {
 
         final Pred<I>[] preds;
         final int size1;
@@ -204,20 +204,20 @@ public final class DeterministicEquivalenceTest {
 
         @Override
         public @Nullable Pred<I> getPred(int id1, int id2) {
-            return preds[computeIndex(id1, id2, size1)];
+            return preds[computeIndex(id1, id2)];
         }
 
         @Override
         public void putPred(int id1, int id2, Pred<I> pred) {
-            preds[computeIndex(id1, id2, size1)] = pred;
+            preds[computeIndex(id1, id2)] = pred;
         }
 
-        private int computeIndex(int id1, int id2, int size1) {
-            return id1 * size1 + id2;
+        private int computeIndex(int id1, int id2) {
+            return id2 * size1 + id1;
         }
     }
 
-    private static class MapRegistry<I> implements Registry<I> {
+    static class MapRegistry<I> implements Registry<I> {
 
         final Map<Long, Pred<I>> preds;
         final int size1;
@@ -229,16 +229,16 @@ public final class DeterministicEquivalenceTest {
 
         @Override
         public @Nullable Pred<I> getPred(int id1, int id2) {
-            return preds.get(computeIndex(id1, id2, size1));
+            return preds.get(computeIndex(id1, id2));
         }
 
         @Override
         public void putPred(int id1, int id2, Pred<I> pred) {
-            preds.put(computeIndex(id1, id2, size1), pred);
+            preds.put(computeIndex(id1, id2), pred);
         }
 
-        private long computeIndex(long id1, long id2, long size1) {
-            return id1 * size1 + id2;
+        private long computeIndex(long id1, long id2) {
+            return id2 * size1 + id1;
         }
     }
 }

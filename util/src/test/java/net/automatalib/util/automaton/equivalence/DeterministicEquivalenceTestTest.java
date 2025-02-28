@@ -26,6 +26,11 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.common.util.function.BiIntFunction;
+import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest.ArrayRegistry;
+import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest.MapRegistry;
+import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest.Pred;
+import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest.Registry;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -120,6 +125,37 @@ public class DeterministicEquivalenceTestTest {
                                                                                       TestUtil.ALPHABET);
         Assert.assertNotNull(sepWord);
         Assert.assertEquals(sepWord.length(), TestUtil.LARGE_AUTOMATON_A.size() - 1);
+    }
+
+    /**
+     * Follow-up issue to {@link #testIssue84()} that checks correct index computation.
+     */
+    @Test
+    public void testIssue84Index() {
+        testIndexComputation(ArrayRegistry::new);
+        testIndexComputation((int size1, int size2) -> new MapRegistry<>(size1));
+    }
+
+    private static <I> void testIndexComputation(BiIntFunction<Registry<Integer>> constructor) {
+        final int size1 = 3;
+        final int size2 = 5;
+        final Registry<Integer> registry = constructor.apply(size1, size2);
+
+        int cntr = 0;
+        for (int i = 0; i < size1; i++) {
+            for (int j = 0; j < size2; j++) {
+                registry.putPred(i, j, new Pred<>(null, cntr++));
+            }
+        }
+
+        cntr = 0;
+        for (int i = 0; i < size1; i++) {
+            for (int j = 0; j < size2; j++) {
+                final Pred<Integer> pred = registry.getPred(i, j);
+                Assert.assertNotNull(pred);
+                Assert.assertEquals(pred.symbol, cntr++);
+            }
+        }
     }
 
     private static <I> void testForEmptySepWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> a1,
