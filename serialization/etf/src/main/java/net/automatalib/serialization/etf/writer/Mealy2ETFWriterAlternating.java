@@ -81,10 +81,13 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
     private <S, T> void writeETFInternal(PrintWriter pw, MealyMachine<S, I, T, O> mealy, Alphabet<I> inputs) {
 
         final StateIDs<S> oldStateIDs = mealy.stateIDs();
+        final S init = mealy.getInitialState();
 
         // write the initial state, using the bi-map
         pw.println("begin init");
-        pw.printf("%d%n", oldStateIDs.getStateId(mealy.getInitialState()));
+        if (init != null) {
+            pw.printf("%d%n", oldStateIDs.getStateId(init));
+        }
         pw.println("end init");
 
         // create a (insertion stable) map for transitions containing output

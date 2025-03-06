@@ -33,8 +33,9 @@ import net.automatalib.common.util.IOUtil;
 import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelDeserializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
+class InternalAUTParser<I, T, @Nullable TP, A extends MutableAutomaton<Integer, I, T, ?, TP>>
         implements InputModelDeserializer<I, A> {
 
     private final Function<String, I> inputTransformer;
@@ -44,7 +45,6 @@ class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
 
     private int initialState;
     private int numStates;
-    private char[] currentLineContent;
     private int currentLine;
     private int currentPos;
 
@@ -95,7 +95,6 @@ class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
             // cleanup
             initialState = 0;
             numStates = 0;
-            currentLineContent = null;
             currentLine = 0;
             currentPos = 0;
             alphabetSymbols.clear();
@@ -110,21 +109,21 @@ class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
             throw new FormatException(buildErrorMessage("Missing description"));
         }
 
-        currentLineContent = line.toCharArray();
+        char[] currentLineContent = line.toCharArray();
         currentPos = 0;
 
-        shiftToNextNonWhitespace();
-        verifyDesAndShift();
-        verifyLBracketAndShift();
-        initialState = parseNumberAndShift();
-        verifyCommaAndShift();
-        parseNumberAndShift(); // ignore number of transitions
-        verifyCommaAndShift();
-        numStates = parseNumberAndShift(); // store number of states
+        shiftToNextNonWhitespace(currentLineContent);
+        verifyDesAndShift(currentLineContent);
+        verifyLBracketAndShift(currentLineContent);
+        initialState = parseNumberAndShift(currentLineContent);
+        verifyCommaAndShift(currentLineContent);
+        parseNumberAndShift(currentLineContent); // ignore number of transitions
+        verifyCommaAndShift(currentLineContent);
+        numStates = parseNumberAndShift(currentLineContent); // store number of states
         if (numStates < 1) {
             throw new FormatException("Number of states must be >= 1");
         }
-        verifyRBracketAndShift();
+        verifyRBracketAndShift(currentLineContent);
     }
 
     private boolean parseTransition(BufferedReader reader) throws IOException, FormatException {
@@ -134,7 +133,7 @@ class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
             return false;
         }
 
-        currentLineContent = line.toCharArray();
+        char[] currentLineContent = line.toCharArray();
         currentLine++;
         currentPos = 0;
 
@@ -142,14 +141,14 @@ class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
         final String label;
         final int dest;
 
-        shiftToNextNonWhitespace();
-        verifyLBracketAndShift();
-        start = parseNumberAndShift();
-        verifyCommaAndShift();
-        label = parseLabelAndShift();
-        verifyCommaAndShift();
-        dest = parseNumberAndShift();
-        verifyRBracketAndShift();
+        shiftToNextNonWhitespace(currentLineContent);
+        verifyLBracketAndShift(currentLineContent);
+        start = parseNumberAndShift(currentLineContent);
+        verifyCommaAndShift(currentLineContent);
+        label = parseLabelAndShift(currentLineContent);
+        verifyCommaAndShift(currentLineContent);
+        dest = parseNumberAndShift(currentLineContent);
+        verifyRBracketAndShift(currentLineContent);
 
         alphabetSymbols.add(label);
         transitionMap.computeIfAbsent(start, k -> new HashMap<>())
@@ -159,7 +158,7 @@ class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
         return true;
     }
 
-    private void verifyDesAndShift() throws FormatException {
+    private void verifyDesAndShift(char[] currentLineContent) throws FormatException {
 
         if (currentLineContent[currentPos] != 'd' || currentLineContent[currentPos + 1] != 'e' ||
             currentLineContent[currentPos + 2] != 's') {
@@ -167,38 +166,38 @@ class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
         }
 
         currentPos += 3;
-        shiftToNextNonWhitespace();
+        shiftToNextNonWhitespace(currentLineContent);
     }
 
-    private void verifyLBracketAndShift() throws FormatException {
-        verifySymbolAndShift('(');
+    private void verifyLBracketAndShift(char[] currentLineContent) throws FormatException {
+        verifySymbolAndShift(currentLineContent, '(');
     }
 
-    private void verifyRBracketAndShift() throws FormatException {
-        verifySymbolAndShift(')');
+    private void verifyRBracketAndShift(char[] currentLineContent) throws FormatException {
+        verifySymbolAndShift(currentLineContent, ')');
     }
 
-    private void verifyCommaAndShift() throws FormatException {
-        verifySymbolAndShift(',');
+    private void verifyCommaAndShift(char[] currentLineContent) throws FormatException {
+        verifySymbolAndShift(currentLineContent, ',');
     }
 
-    private void verifySymbolAndShift(char symbol) throws FormatException {
+    private void verifySymbolAndShift(char[] currentLineContent, char symbol) throws FormatException {
 
         if (currentLineContent[currentPos] != symbol) {
             throw new FormatException(buildErrorMessage("Expected: " + symbol));
         }
 
         currentPos++;
-        shiftToNextNonWhitespace();
+        shiftToNextNonWhitespace(currentLineContent);
     }
 
-    private void shiftToNextNonWhitespace() {
+    private void shiftToNextNonWhitespace(char[] currentLineContent) {
         while (currentPos < currentLineContent.length && Character.isWhitespace(currentLineContent[currentPos])) {
             currentPos++;
         }
     }
 
-    private int parseNumberAndShift() throws FormatException {
+    private int parseNumberAndShift(char[] currentLineContent) throws FormatException {
 
         final StringBuilder sb = new StringBuilder();
 
@@ -215,20 +214,20 @@ class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
         }
 
         // forward pointer
-        shiftToNextNonWhitespace();
+        shiftToNextNonWhitespace(currentLineContent);
         return Integer.parseInt(sb.toString());
     }
 
-    private String parseLabelAndShift() throws FormatException {
+    private String parseLabelAndShift(char[] currentLineContent) throws FormatException {
 
         if (currentLineContent[currentPos] == '"') {
-            return parseQuotedLabelAndShift();
+            return parseQuotedLabelAndShift(currentLineContent);
         } else {
-            return parseNormalLabelAndShift();
+            return parseNormalLabelAndShift(currentLineContent);
         }
     }
 
-    private String parseQuotedLabelAndShift() {
+    private String parseQuotedLabelAndShift(char[] currentLineContent) {
         int openingIndex = currentPos;
         int closingIndex = currentLineContent.length - 1;
 
@@ -239,36 +238,36 @@ class InternalAUTParser<I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>>
 
         // skip terminating " as well
         currentPos = closingIndex + 2;
-        shiftToNextNonWhitespace();
+        shiftToNextNonWhitespace(currentLineContent);
 
         return new String(currentLineContent, openingIndex + 1, closingIndex - openingIndex);
     }
 
-    private String parseNormalLabelAndShift() throws FormatException {
+    private String parseNormalLabelAndShift(char[] currentLineContent) throws FormatException {
 
         final char firstChar = currentLineContent[currentPos];
 
         if (currentLineContent[currentPos] == '*') {
             currentPos++;
-            shiftToNextNonWhitespace();
+            shiftToNextNonWhitespace(currentLineContent);
             return "*";
         } else if (Character.isLetter(firstChar)) {
             int startIdx = currentPos;
 
-            while (isValidIdentifier()) {
+            while (isValidIdentifier(currentLineContent)) {
                 currentPos++;
             }
 
             int endIdx = currentPos;
 
-            shiftToNextNonWhitespace();
+            shiftToNextNonWhitespace(currentLineContent);
             return new String(currentLineContent, startIdx, endIdx - startIdx);
         } else {
             throw new FormatException(buildErrorMessage("Invalid unquoted label"));
         }
     }
 
-    private boolean isValidIdentifier() {
+    private boolean isValidIdentifier(char[] currentLineContent) {
         final char currentChar = currentLineContent[currentPos];
         return Character.isLetterOrDigit(currentChar) || currentChar == '_';
     }

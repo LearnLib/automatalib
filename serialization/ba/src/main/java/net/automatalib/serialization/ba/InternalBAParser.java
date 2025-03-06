@@ -36,6 +36,7 @@ import net.automatalib.common.util.IOUtil;
 import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelDeserializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 class InternalBAParser<S, I, A extends MutableFSA<S, I>> implements InputModelDeserializer<I, A> {
 
@@ -83,17 +84,17 @@ class InternalBAParser<S, I, A extends MutableFSA<S, I>> implements InputModelDe
                 }
 
                 final String label = matcher.group(1);
-                if (ILLEGAL_PATTERN.matcher(label).find()) {
+                if (label == null || ILLEGAL_PATTERN.matcher(label).find()) {
                     throw new FormatException("Invalid identifier: " + label);
                 }
 
                 final String src = matcher.group(2);
-                if (ILLEGAL_PATTERN.matcher(src).find()) {
+                if (src == null || ILLEGAL_PATTERN.matcher(src).find()) {
                     throw new FormatException("Invalid identifier: " + src);
                 }
 
                 final String tgt = matcher.group(3);
-                if (ILLEGAL_PATTERN.matcher(tgt).find()) {
+                if (tgt == null || ILLEGAL_PATTERN.matcher(tgt).find()) {
                     throw new FormatException("Invalid identifier: " + tgt);
                 }
 
@@ -130,7 +131,7 @@ class InternalBAParser<S, I, A extends MutableFSA<S, I>> implements InputModelDe
                                                     Map<String, Map<String, Set<String>>> transitions,
                                                     Set<String> states,
                                                     Set<String> finalStates,
-                                                    String initialState) {
+                                                    @Nullable String initialState) {
 
         // alphabet
         final Map<String, I> inputMapping = new HashMap<>(HashUtil.capacity(symbols.size()));

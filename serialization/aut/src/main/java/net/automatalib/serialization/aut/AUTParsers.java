@@ -22,6 +22,7 @@ import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.impl.CompactSimpleAutomaton;
 import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.serialization.InputModelDeserializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Facade for AUT parsing. For further information about the AUT format, see <a
@@ -70,12 +71,14 @@ public final class AUTParsers {
      *         input symbol type
      * @param <T>
      *         transition type
+     * @param <TP>
+     *         (nullable) transition property type
      * @param <A>
      *         (concrete) automaton type
      *
      * @return a {@link InputModelDeserializer} that reads an automaton description
      */
-    public static <I, T, A extends MutableAutomaton<Integer, I, T, ?, ?>> InputModelDeserializer<I, A> parser(
+    public static <I, T, @Nullable TP, A extends MutableAutomaton<Integer, I, T, ?, TP>> InputModelDeserializer<I, A> parser(
             Function<String, I> inputTransformer,
             AutomatonCreator<A, I> creator) {
         return new InternalAUTParser<>(inputTransformer, creator);

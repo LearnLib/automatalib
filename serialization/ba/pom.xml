@@ -46,6 +46,12 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
 
+        <!-- external -->
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+        </dependency>
+
         <!-- test -->
         <dependency>
             <groupId>net.automatalib</groupId>
