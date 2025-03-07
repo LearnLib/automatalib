@@ -247,7 +247,7 @@ limitations under the License.
         <brics-automaton.apidocs>https://www.brics.dk/automaton/doc</brics-automaton.apidocs>
         <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
         <java8.apidocs>https://docs.oracle.com/javase/8/docs/api/</java8.apidocs>
-        <jung.apidocs>https://jung.sourceforge.net/doc/api/</jung.apidocs>
+        <jung.apidocs>https://jrtom.github.io/jung/javadoc/</jung.apidocs>
     </properties>
 
     <!--
