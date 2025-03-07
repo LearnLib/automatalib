@@ -88,6 +88,7 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
 
         for (int i = 0; i < Math.pow(2, numSubformulas); i++) {
             String errMsg = "Failure in system: " + i;
+            checkATransformer(aPT, errMsg);
             String binaryString = String.format("%05d", Integer.parseInt(Integer.toBinaryString(i)));
             boolean[] input = new boolean[numSubformulas];
             input[0] = binaryString.charAt(0) == '1';
@@ -117,6 +118,20 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
             Assert.assertFalse(bResult[0], errMsg);
             Assert.assertFalse(bResult[3], errMsg);
         }
+    }
+
+    private static void checkATransformer(ADDTransformer<String, String> aPT, String errMsg) {
+        XDD<BooleanVector> dd = aPT.getAdd();
+        Assert.assertNotNull(dd, errMsg);
+        Assert.assertEquals(dd.readIndex(), 0, errMsg);
+        XDD<BooleanVector> ddT = dd.t();
+        XDD<BooleanVector> ddE = dd.e();
+        Assert.assertTrue(ddT.isConstant(), errMsg);
+        Assert.assertTrue(ddE.isConstant(), errMsg);
+        boolean[] expectedTrueBranch = {false, false, false, false, true};
+        boolean[] expectedFalseBranch = {false, false, false, false, false};
+        Assert.assertEquals(ddT.v().data(), expectedTrueBranch, errMsg);
+        Assert.assertEquals(ddE.v().data(), expectedFalseBranch, errMsg);
     }
 
 }
