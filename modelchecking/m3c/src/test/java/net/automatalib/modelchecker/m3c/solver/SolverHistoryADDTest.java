@@ -18,6 +18,7 @@ package net.automatalib.modelchecker.m3c.solver;
 import java.util.BitSet;
 import java.util.Map;
 
+import info.scce.addlib.codegenerator.DotGenerator;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.XDDManager;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
@@ -122,16 +123,20 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
 
     private static void checkATransformer(ADDTransformer<String, String> aPT, String errMsg) {
         XDD<BooleanVector> dd = aPT.getAdd();
-        Assert.assertNotNull(dd, errMsg);
-        Assert.assertEquals(dd.readIndex(), 0, errMsg);
+
+        DotGenerator<XDD<BooleanVector>> dotGenerator = new DotGenerator<>();
+        String errMsgWithDD = errMsg + '\n' + dotGenerator.generateToString(dd, "aPT");
+
+        Assert.assertNotNull(dd, errMsgWithDD);
+        Assert.assertEquals(dd.readIndex(), 0, errMsgWithDD);
         XDD<BooleanVector> ddT = dd.t();
         XDD<BooleanVector> ddE = dd.e();
-        Assert.assertTrue(ddT.isConstant(), errMsg);
-        Assert.assertTrue(ddE.isConstant(), errMsg);
+        Assert.assertTrue(ddT.isConstant(), errMsgWithDD);
+        Assert.assertTrue(ddE.isConstant(), errMsgWithDD);
         boolean[] expectedTrueBranch = {false, false, false, false, true};
         boolean[] expectedFalseBranch = {false, false, false, false, false};
-        Assert.assertEquals(ddT.v().data(), expectedTrueBranch, errMsg);
-        Assert.assertEquals(ddE.v().data(), expectedFalseBranch, errMsg);
+        Assert.assertEquals(ddT.v().data(), expectedTrueBranch, errMsgWithDD);
+        Assert.assertEquals(ddE.v().data(), expectedFalseBranch, errMsgWithDD);
     }
 
 }
