@@ -87,6 +87,7 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
         Assert.assertNotEquals(aPT, bPT);
 
         for (int i = 0; i < Math.pow(2, numSubformulas); i++) {
+            String errMsg = "Failure in system: " + i;
             String binaryString = String.format("%05d", Integer.parseInt(Integer.toBinaryString(i)));
             boolean[] input = new boolean[numSubformulas];
             input[0] = binaryString.charAt(0) == '1';
@@ -99,22 +100,22 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
             for (int j = 0; j < numSubformulas; j++) {
                 aResult[j] = aSatVarNumbers.get(j);
             }
-            Assert.assertEquals(aResult[4], input[0]);
-            Assert.assertFalse(aResult[0]);
-            Assert.assertFalse(aResult[1]);
-            Assert.assertFalse(aResult[2]);
-            Assert.assertFalse(aResult[3]);
+            Assert.assertEquals(aResult[4], input[0], errMsg);
+            Assert.assertFalse(aResult[0], errMsg);
+            Assert.assertFalse(aResult[1], errMsg);
+            Assert.assertFalse(aResult[2], errMsg);
+            Assert.assertFalse(aResult[3], errMsg);
 
             BitSet bSatVarNumbers = bPT.evaluate(input);
             boolean[] bResult = new boolean[numSubformulas];
             for (int j = 0; j < numSubformulas; j++) {
                 bResult[j] = bSatVarNumbers.get(j);
             }
-            Assert.assertEquals(bResult[1], input[2]);
-            Assert.assertEquals(bResult[2], input[3]);
-            Assert.assertEquals(bResult[4], input[0]);
-            Assert.assertFalse(bResult[0]);
-            Assert.assertFalse(bResult[3]);
+            Assert.assertEquals(bResult[1], input[2], errMsg);
+            Assert.assertEquals(bResult[2], input[3], errMsg);
+            Assert.assertEquals(bResult[4], input[0], errMsg);
+            Assert.assertFalse(bResult[0], errMsg);
+            Assert.assertFalse(bResult[3], errMsg);
         }
     }
 
