@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
+* Updated links to the JUNG documentation.
 * Updated dead links to the FSM format (see #87).
 * Fixed a bug in the index computation of `DeterministicEquivalenceTest` (see #88).
 
