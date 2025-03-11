@@ -4,7 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.13.0-SNAPSHOT] - Unreleased
 
-[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.12.0...HEAD)
+[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.12.1...HEAD)
+
+
+## [0.12.1] - 2025-03-11
+
+[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.12.0...automatalib-0.12.1)
 
 ### Fixed
 
