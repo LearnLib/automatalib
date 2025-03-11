@@ -207,11 +207,11 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
 
     @Override
     public Graph<?, ?> asGraph() {
-        return new MooreGraphView<Node<O>, I, Node<O>, O, TransitionSystemView>(new TransitionSystemView(), alphabet) {
+        return new MooreGraphView<>(new TransitionSystemView(), alphabet) {
 
             @Override
             public VisualizationHelper<Node<O>, TransitionEdge<I, Node<O>>> getVisualizationHelper() {
-                return new MooreVisualizationHelper<Node<O>, I, Node<O>, O>(automaton) {
+                return new MooreVisualizationHelper<>(automaton) {
 
                     @Override
                     public boolean getNodeProperties(Node<O> node, Map<String, String> properties) {

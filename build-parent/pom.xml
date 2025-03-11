@@ -233,17 +233,15 @@ limitations under the License.
                                     <goal>compile</goal>
                                 </goals>
                                 <configuration>
-                                    <release>11</release>
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
-                                    <!--
-                                     Setting a different output directly can fail the build when using other annotation
-                                     processors as well. However, with using the same output directory, we pack Java 11
-                                     code in the jars which will fail other analysis tools. Currently, checkerframework
-                                     cannot be run with our other analysis steps...
-                                     -->
-                                    <!--outputDirectory>${project.build.directory}/checkerframework</outputDirectory-->
+                                    <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
                                     <annotationProcessorPaths>
+                                        <path>
+                                            <groupId>de.learnlib.tooling</groupId>
+                                            <artifactId>processors</artifactId>
+                                            <version>${build-tools.version}</version>
+                                        </path>
                                         <path>
                                             <groupId>org.checkerframework</groupId>
                                             <artifactId>checker</artifactId>
@@ -251,6 +249,9 @@ limitations under the License.
                                         </path>
                                     </annotationProcessorPaths>
                                     <annotationProcessors>
+                                        <annotationProcessor>de.learnlib.tooling.processor.builder.BuilderProcessor</annotationProcessor>
+                                        <annotationProcessor>de.learnlib.tooling.processor.edsl.EDSLProcessor</annotationProcessor>
+                                        <annotationProcessor>de.learnlib.tooling.processor.refinement.RefinementProcessor</annotationProcessor>
                                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
                                     </annotationProcessors>
                                     <compilerArgs>
@@ -284,14 +285,13 @@ limitations under the License.
                                 <configuration>
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
-                                    <!--
-                                     Setting a different output directly can fail the build when using other annotation
-                                     processors as well. However, with using the same output directory, we pack Java 11
-                                     code in the jars which will fail other analysis tools. Currently, checkerframework
-                                     cannot be run with our other analysis steps...
-                                     -->
-                                    <!--outputDirectory>${project.build.directory}/checkerframework</outputDirectory-->
+                                    <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
                                     <annotationProcessorPaths>
+                                        <path>
+                                            <groupId>de.learnlib.tooling</groupId>
+                                            <artifactId>processors</artifactId>
+                                            <version>${build-tools.version}</version>
+                                        </path>
                                         <path>
                                             <groupId>org.checkerframework</groupId>
                                             <artifactId>checker</artifactId>
@@ -299,6 +299,9 @@ limitations under the License.
                                         </path>
                                     </annotationProcessorPaths>
                                     <annotationProcessors>
+                                        <annotationProcessor>de.learnlib.tooling.processor.builder.BuilderProcessor</annotationProcessor>
+                                        <annotationProcessor>de.learnlib.tooling.processor.edsl.EDSLProcessor</annotationProcessor>
+                                        <annotationProcessor>de.learnlib.tooling.processor.refinement.RefinementProcessor</annotationProcessor>
                                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
                                     </annotationProcessors>
                                     <compilerArgs>

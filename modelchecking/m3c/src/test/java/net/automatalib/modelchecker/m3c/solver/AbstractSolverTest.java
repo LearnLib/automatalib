@@ -113,7 +113,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     void testSolveWithInvalidMainProcess() {
-        ContextFreeModalProcessSystem<String, String> cfmps = new ContextFreeModalProcessSystem<String, String>() {
+        ContextFreeModalProcessSystem<String, String> cfmps = new ContextFreeModalProcessSystem<>() {
 
             @Override
             public Map<String, ProceduralModalProcessGraph<?, String, ?, String, ?>> getPMPGs() {
@@ -130,7 +130,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     void testSolveWithNoMainProcess() {
-        ContextFreeModalProcessSystem<String, String> cfmps = new ContextFreeModalProcessSystem<String, String>() {
+        ContextFreeModalProcessSystem<String, String> cfmps = new ContextFreeModalProcessSystem<>() {
 
             @Override
             public Map<String, ProceduralModalProcessGraph<?, String, ?, String, ?>> getPMPGs() {

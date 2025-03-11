@@ -91,8 +91,7 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
 
     @Override
     public Graph<Node<O>, ?> asGraph() {
-        return new MealyGraphView<Node<O>, I, Edge<Node<O>, O>, O, MealyMachineView>(new MealyMachineView(),
-                                                                                     inputAlphabet) {
+        return new MealyGraphView<>(new MealyMachineView(), inputAlphabet) {
             @Override
             public VisualizationHelper<Node<O>, TransitionEdge<I, Edge<Node<O>, O>>> getVisualizationHelper() {
                 return new net.automatalib.incremental.mealy.VisualizationHelper<>(automaton);

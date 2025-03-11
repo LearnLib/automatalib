@@ -61,7 +61,7 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
                                 int minimumUnfolds,
                                 double multiplier) {
         super(keepFiles, string2Input);
-        unfolder = new AbstractUnfoldingModelChecker<I, A, String, L>(minimumUnfolds, multiplier) {
+        unfolder = new AbstractUnfoldingModelChecker<>(minimumUnfolds, multiplier) {
 
             @Override
             public @Nullable L findCounterExample(A automaton, Collection<? extends I> inputs, String property) {

@@ -32,7 +32,7 @@ public abstract class AbstractAlphabet<I> extends AbstractList<I> implements Alp
      */
     @Override
     public AbstractAlphabet<I> reversed() {
-        return new AbstractAlphabet<I>() {
+        return new AbstractAlphabet<>() {
 
             @Override
             public boolean containsSymbol(I symbol) {

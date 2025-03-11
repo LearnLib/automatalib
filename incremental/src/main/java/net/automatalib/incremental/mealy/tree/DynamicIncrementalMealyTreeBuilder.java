@@ -128,7 +128,7 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractMealyTreeB
 
         @Override
         public VisualizationHelper<DynamicNode<I, O>, Entry<I, Edge<DynamicNode<I, O>, O>>> getVisualizationHelper() {
-            return new DefaultVisualizationHelper<DynamicNode<I, O>, Entry<I, Edge<DynamicNode<I, O>, O>>>() {
+            return new DefaultVisualizationHelper<>() {
 
                 private int id;
 

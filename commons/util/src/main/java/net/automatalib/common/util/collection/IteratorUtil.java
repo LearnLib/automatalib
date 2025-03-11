@@ -224,7 +224,7 @@ public final class IteratorUtil {
      * @return the iterator
      */
     public static <T> Iterator<T> singleton(T element) {
-        return new Iterator<T>() {
+        return new Iterator<>() {
 
             private boolean hasNext = true;
 

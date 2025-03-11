@@ -174,12 +174,11 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
 
     @Override
     public Graph<?, ?> asGraph() {
-        return new UniversalAutomatonGraphView<Node, I, Node, Acceptance, Void, TransitionSystemView>(new TransitionSystemView(),
-                                                                                                      inputAlphabet) {
+        return new UniversalAutomatonGraphView<>(new TransitionSystemView(), inputAlphabet) {
 
             @Override
             public VisualizationHelper<Node, TransitionEdge<I, Node>> getVisualizationHelper() {
-                return new AbstractVisualizationHelper<Node, I, Node, TransitionSystemView>(automaton) {
+                return new AbstractVisualizationHelper<>(automaton) {
 
                     @Override
                     public Acceptance getAcceptance(Node node) {

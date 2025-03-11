@@ -133,7 +133,7 @@ public class DOTDialogTest extends AssertJSwingTestngTestCase {
     }
 
     private static <T extends AbstractButton> GenericTypeMatcher<T> findByText(Class<T> clazz, String name) {
-        return new GenericTypeMatcher<T>(clazz) {
+        return new GenericTypeMatcher<>(clazz) {
 
             @Override
             protected boolean isMatching(T item) {

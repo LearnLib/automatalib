@@ -132,7 +132,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
 
     @Override
     default VisualizationHelper<N, N> getVisualizationHelper() {
-        return new VisualizationHelper<N, N>() {
+        return new VisualizationHelper<>() {
 
             @Override
             public boolean getNodeProperties(N node, Map<String, String> properties) {

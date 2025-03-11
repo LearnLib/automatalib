@@ -568,11 +568,11 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
 
     @Override
     public Graph<?, ?> asGraph() {
-        return new MealyGraphView<State<O>, I, Transition<O>, O, AutomatonView>(new AutomatonView(), inputAlphabet) {
+        return new MealyGraphView<>(new AutomatonView(), inputAlphabet) {
 
             @Override
             public VisualizationHelper<State<O>, TransitionEdge<I, Transition<O>>> getVisualizationHelper() {
-                return new net.automatalib.incremental.mealy.VisualizationHelper<State<O>, I, Transition<O>, O>(this.automaton) {
+                return new net.automatalib.incremental.mealy.VisualizationHelper<>(this.automaton) {
 
                     @Override
                     public boolean getNodeProperties(State<O> node, Map<String, String> properties) {

@@ -88,7 +88,7 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
     @Override
     public VisualizationHelper<L, SevpaViewEdge<L, I>> getVisualizationHelper() {
-        return new DefaultVisualizationHelper<L, SevpaViewEdge<L, I>>() {
+        return new DefaultVisualizationHelper<>() {
 
             @Override
             protected Collection<L> initialNodes() {
