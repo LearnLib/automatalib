@@ -246,6 +246,7 @@ limitations under the License.
         <addlib.apidocs>https://scce.gitlab.io/add-lib/${addlib.version}/apidocs/</addlib.apidocs>
         <brics-automaton.apidocs>https://www.brics.dk/automaton/doc</brics-automaton.apidocs>
         <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
+        <guava.apidocs>http://google.github.io/guava/releases/${guava.version}/api/docs/</guava.apidocs>
         <java8.apidocs>https://docs.oracle.com/javase/8/docs/api/</java8.apidocs>
         <jung.apidocs>https://jrtom.github.io/jung/javadoc/</jung.apidocs>
     </properties>
@@ -715,6 +716,7 @@ limitations under the License.
                             <link>${addlib.apidocs}</link>
                             <link>${brics-automaton.apidocs}</link>
                             <link>${checkerframework.apidocs}</link>
+                            <link>${guava.apidocs}</link>
                             <link>${jung.apidocs}</link>
                         </links>
                         <sourceFileExcludes>
