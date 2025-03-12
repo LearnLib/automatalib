@@ -180,7 +180,7 @@ public final class BacktrackingSearch {
                             succ = ADS.compute(automaton, input, currentNode);
                         }
 
-                        if (!succ.isPresent()) {
+                        if (succ.isEmpty()) {
                             cache.add(currentNodeAsBitSet);
                             continue oneSymbolFuture;
                         }
@@ -339,7 +339,7 @@ public final class BacktrackingSearch {
                                                                                               new HashSet<>(),
                                                                                               bestCosts);
 
-                    if (!potentialResult.isPresent()) {
+                    if (potentialResult.isEmpty()) {
                         continue alphabetLoop;
                     }
 
@@ -369,7 +369,7 @@ public final class BacktrackingSearch {
                                                                                           nextTraceCache,
                                                                                           bestCosts);
 
-                if (!potentialResult.isPresent()) {
+                if (potentialResult.isEmpty()) {
                     continue alphabetLoop;
                 }
 

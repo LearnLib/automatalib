@@ -313,11 +313,7 @@ public final class IOUtil {
      *         if reading from or writing to the respective reader / writer throws this exception
      */
     public static void copy(Reader in, Writer out) throws IOException {
-        final char[] buf = new char[DEFAULT_BUFFER_SIZE];
-        int read;
-        while ((read = in.read(buf)) >= 0) {
-            out.write(buf, 0, read);
-        }
+        in.transferTo(out);
     }
 
     /**
