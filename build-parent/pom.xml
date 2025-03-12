@@ -236,12 +236,7 @@ limitations under the License.
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
                                     <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
-                                    <annotationProcessorPaths>
-                                        <path>
-                                            <groupId>de.learnlib.tooling</groupId>
-                                            <artifactId>processors</artifactId>
-                                            <version>${build-tools.version}</version>
-                                        </path>
+                                    <annotationProcessorPaths combine.children="append">
                                         <path>
                                             <groupId>org.checkerframework</groupId>
                                             <artifactId>checker</artifactId>
@@ -249,10 +244,9 @@ limitations under the License.
                                         </path>
                                     </annotationProcessorPaths>
                                     <annotationProcessors>
-                                        <annotationProcessor>de.learnlib.tooling.processor.builder.BuilderProcessor</annotationProcessor>
-                                        <annotationProcessor>de.learnlib.tooling.processor.edsl.EDSLProcessor</annotationProcessor>
-                                        <annotationProcessor>de.learnlib.tooling.processor.refinement.RefinementProcessor</annotationProcessor>
                                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
+                                        <!-- by having to explicitly list the CF checkers, we also need to list otherwise automatically picked-up processors -->
+                                        <annotationProcessor>de.learnlib.tooling.processor.edsl.EDSLProcessor</annotationProcessor>
                                     </annotationProcessors>
                                     <compilerArgs>
                                         <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
@@ -286,12 +280,7 @@ limitations under the License.
                                     <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
                                     <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
-                                    <annotationProcessorPaths>
-                                        <path>
-                                            <groupId>de.learnlib.tooling</groupId>
-                                            <artifactId>processors</artifactId>
-                                            <version>${build-tools.version}</version>
-                                        </path>
+                                    <annotationProcessorPaths combine.children="append">
                                         <path>
                                             <groupId>org.checkerframework</groupId>
                                             <artifactId>checker</artifactId>
@@ -299,9 +288,6 @@ limitations under the License.
                                         </path>
                                     </annotationProcessorPaths>
                                     <annotationProcessors>
-                                        <annotationProcessor>de.learnlib.tooling.processor.builder.BuilderProcessor</annotationProcessor>
-                                        <annotationProcessor>de.learnlib.tooling.processor.edsl.EDSLProcessor</annotationProcessor>
-                                        <annotationProcessor>de.learnlib.tooling.processor.refinement.RefinementProcessor</annotationProcessor>
                                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
                                     </annotationProcessors>
                                     <compilerArgs>
