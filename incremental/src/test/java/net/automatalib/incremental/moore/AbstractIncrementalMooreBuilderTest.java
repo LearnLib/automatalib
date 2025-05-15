@@ -193,7 +193,7 @@ public abstract class AbstractIncrementalMooreBuilderTest {
                 getDOTResource()))) {
 
             GraphDOT.write(incMoore.asGraph(), dotWriter);
-            IOUtil.copy(reader, expectedWriter);
+            reader.transferTo(expectedWriter);
 
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
         }

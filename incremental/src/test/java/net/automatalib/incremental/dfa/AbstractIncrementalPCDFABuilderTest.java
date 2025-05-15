@@ -174,7 +174,7 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
                 getDOTResource()))) {
 
             GraphDOT.write(incPcDfa.asGraph(), dotWriter);
-            IOUtil.copy(reader, expectedWriter);
+            reader.transferTo(expectedWriter);
 
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
         }

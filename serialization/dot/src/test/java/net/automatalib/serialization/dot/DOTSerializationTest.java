@@ -236,7 +236,7 @@ public class DOTSerializationTest {
 
         try (Reader reader = IOUtil.asBufferedUTF8Reader(DOTSerializationUtil.class.getResourceAsStream(resource))) {
 
-            IOUtil.copy(reader, expectedWriter);
+            reader.transferTo(expectedWriter);
             writer.write(dotWriter);
 
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());

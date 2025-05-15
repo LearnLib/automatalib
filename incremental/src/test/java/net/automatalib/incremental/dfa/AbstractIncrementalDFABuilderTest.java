@@ -176,7 +176,7 @@ public abstract class AbstractIncrementalDFABuilderTest {
                 getDOTResource()))) {
 
             GraphDOT.write(incDfa.asGraph(), dotWriter);
-            IOUtil.copy(reader, expectedWriter);
+            reader.transferTo(expectedWriter);
 
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
         }

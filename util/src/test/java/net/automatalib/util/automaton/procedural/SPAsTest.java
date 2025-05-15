@@ -630,7 +630,7 @@ public class SPAsTest {
         final StringWriter expectedWriter = new StringWriter();
 
         try (Reader reader = IOUtil.asBufferedUTF8Reader(SPAsTest.class.getResourceAsStream(expected))) {
-            IOUtil.copy(reader, expectedWriter);
+            reader.transferTo(expectedWriter);
             GraphDOT.write(cfmps, dotWriter);
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
         }
