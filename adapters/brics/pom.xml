@@ -92,6 +92,18 @@ limitations under the License.
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <!-- The plugin doesn't like dependencies with missing module names so build with JPMS disabled -->
+                    <legacyMode>true</legacyMode>
+                    <disableSourcepathUsage>true</disableSourcepathUsage>
+                    <sourceFileExcludes>
+                        <sourceFileExclude>**\/module-info.java</sourceFileExclude>
+                    </sourceFileExcludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
