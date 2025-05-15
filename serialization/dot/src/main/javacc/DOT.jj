@@ -186,15 +186,16 @@ TOKEN:
 |	< COMMA: "," >
 |	< EQUALS: "=" >
 |	< EDGEOP: "--" | "->" >
-|	< ID: <NUMERAL> | <LETTER> (<LETTER> | <NUMBER>)*>
-|	< LETTER: ["a"-"z","A"-"Z","\200"-"\377","_"] >
-|	< NUMBER: ["0"-"9"] >
-|	< NUMERAL: ["-"]( ("."(<NUMBER>)+) | (<NUMBER>)+ ("." (<NUMBER>)+)?)>
+|	< ALPHABETIC : <LETTER> (<LETTER> | <NUMBER>)*>
+|	< NUMERAL: ("-")?( ("."(<NUMBER>)+) | (<NUMBER>)+ ("." (<NUMBER>)+)?)>
+|	< #LETTER: ["a"-"z","A"-"Z","\200"-"\377","_"] >
+|	< #NUMBER: ["0"-"9"] >
 }
 
 SKIP:
 {
 	< BEGIN_QID: "\"" > : IN_QID
+|	< BEGIN_HTML: "<" > : IN_HTML
 }
 
 <IN_QID> TOKEN:
@@ -205,6 +206,18 @@ SKIP:
 <IN_QID> SKIP:
 {
 	< END_QID: "\"" > : DEFAULT
+}
+
+<IN_HTML> TOKEN:
+{
+	// we don't check for well-matchedness of tags since we are only interested in finding the final >
+	<HTML : ("<" (<CONTENT>)+ ">" | (<CONTENT>)+ )+ >
+|	<#CONTENT : ~["<", ">"]>
+}
+
+<IN_HTML> SKIP:
+{
+	<END_HTML : ">" > : DEFAULT
 }
 
 SKIP:
@@ -397,13 +410,15 @@ private void compass_pt():
 	"n" | "ne" | "e" | "se" | "s" | "sw" | "w" | "nw" | "c" | "_"
 }
 
-
 private String identifier():
 {
 	Token t;
 }
 {
-	t=<ID> { return t.toString(); }
-|	"\"\"" { return ""; }
+	t=<ALPHABETIC> { return t.toString(); }
+|	t=<NUMERAL> { return t.toString(); }
 |	t=<QID> { return StringUtil.unescapeQuotes(t.toString()); }
+|	t=<HTML> { return t.toString(); }
+|	"\"\"" { return ""; }
+|	"<>" { return ""; }
 }

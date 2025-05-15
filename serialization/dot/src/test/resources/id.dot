@@ -1,0 +1,19 @@
+digraph g {
+
+	<<TABLE><TR><TD BGCOLOR="yellow">class</TD></TR><TR><TD BGCOLOR="lightblue">qualifier</TD></TR></TABLE>> [shape="doublecircle"];
+	13 [shape="circle"];
+	-5.13 [shape="circle"];
+	"id with \" quotes" [shape="circle"];
+	aLpHa_B3T1C [shape="doublecircle"];
+	<> [label="empty"];
+	"" [label="empty2"]; // same id as <>, so redundant!
+
+	13 -> -5.13 [label="a"];
+	-5.13 -> "id with \" quotes" [label="b"];
+	"id with \" quotes" -> aLpHa_B3T1C [label="c"];
+	aLpHa_B3T1C -> <<TABLE><TR><TD BGCOLOR="yellow">class</TD></TR><TR><TD BGCOLOR="lightblue">qualifier</TD></TR></TABLE>> [label="d"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> 13;
+
+}
