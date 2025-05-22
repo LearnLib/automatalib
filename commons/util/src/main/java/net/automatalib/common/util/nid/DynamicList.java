@@ -140,7 +140,7 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
+        return new Iterator<>() {
 
             int index;
 

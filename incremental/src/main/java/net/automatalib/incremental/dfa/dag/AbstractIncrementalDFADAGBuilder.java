@@ -478,12 +478,11 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
 
     @Override
     public Graph<?, ?> asGraph() {
-        return new UniversalAutomatonGraphView<State, I, State, Acceptance, Void, TransitionSystemView>(new TransitionSystemView(),
-                                                                                                        inputAlphabet) {
+        return new UniversalAutomatonGraphView<>(new TransitionSystemView(), inputAlphabet) {
 
             @Override
             public VisualizationHelper<State, TransitionEdge<I, State>> getVisualizationHelper() {
-                return new AbstractVisualizationHelper<State, I, State, TransitionSystemView>(automaton) {
+                return new AbstractVisualizationHelper<>(automaton) {
 
                     @Override
                     public boolean getNodeProperties(State node, Map<String, String> properties) {

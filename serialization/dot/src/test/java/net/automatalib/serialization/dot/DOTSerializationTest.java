@@ -111,14 +111,11 @@ public class DOTSerializationTest {
 
         final Graph<?, ?> dfa = DOTSerializationUtil.DFA.graphView();
         final Graph<?, ?> mealy =
-                new MealyGraphView<Integer, String, CompactTransition<String>, String, CompactMealy<String, String>>(
-                        DOTSerializationUtil.MEALY,
-                        DOTSerializationUtil.MEALY.getInputAlphabet()) {
+                new MealyGraphView<>(DOTSerializationUtil.MEALY, DOTSerializationUtil.MEALY.getInputAlphabet()) {
 
                     @Override
                     public VisualizationHelper<Integer, TransitionEdge<String, CompactTransition<String>>> getVisualizationHelper() {
-                        return new DefaultDOTVisualizationHelper<Integer, TransitionEdge<String, CompactTransition<String>>>(
-                                super.getVisualizationHelper()) {
+                        return new DefaultDOTVisualizationHelper<>(super.getVisualizationHelper()) {
 
                             @Override
                             public void writePreamble(Appendable a) throws IOException {
@@ -239,7 +236,7 @@ public class DOTSerializationTest {
 
         try (Reader reader = IOUtil.asBufferedUTF8Reader(DOTSerializationUtil.class.getResourceAsStream(resource))) {
 
-            IOUtil.copy(reader, expectedWriter);
+            reader.transferTo(expectedWriter);
             writer.write(dotWriter);
 
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());

@@ -589,11 +589,11 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
 
     @Override
     public Graph<?, ?> asGraph() {
-        return new MooreGraphView<State<O>, I, State<O>, O, AutomatonView>(new AutomatonView(), inputAlphabet) {
+        return new MooreGraphView<>(new AutomatonView(), inputAlphabet) {
 
             @Override
             public VisualizationHelper<State<O>, TransitionEdge<I, State<O>>> getVisualizationHelper() {
-                return new MooreVisualizationHelper<State<O>, I, State<O>, O>(automaton) {
+                return new MooreVisualizationHelper<>(automaton) {
 
                     @Override
                     public boolean getNodeProperties(State<O> node, Map<String, String> properties) {

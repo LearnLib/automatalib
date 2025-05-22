@@ -193,7 +193,7 @@ public abstract class AbstractIncrementalMealyBuilderTest {
                 getDOTResource()))) {
 
             GraphDOT.write(incMealy.asGraph(), dotWriter);
-            IOUtil.copy(reader, expectedWriter);
+            reader.transferTo(expectedWriter);
 
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
         }

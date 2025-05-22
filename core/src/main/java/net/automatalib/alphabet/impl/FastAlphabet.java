@@ -78,7 +78,7 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> imp
      */
     @Override
     public FastAlphabet<I> reversed() {
-        return new FastAlphabet<I>() {
+        return new FastAlphabet<>() {
 
             @Override
             public boolean containsSymbol(I symbol) {

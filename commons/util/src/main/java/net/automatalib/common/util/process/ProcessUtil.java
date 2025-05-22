@@ -285,7 +285,7 @@ public final class ProcessUtil {
         if (input != null) {
             try (OutputStream processInput = process.getOutputStream();
                  Writer writer = IOUtil.asBufferedUTF8Writer(processInput)) {
-                IOUtil.copy(input, writer);
+                input.transferTo(writer);
             }
         }
     }

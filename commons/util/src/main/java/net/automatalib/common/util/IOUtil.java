@@ -302,25 +302,6 @@ public final class IOUtil {
     }
 
     /**
-     * Copies the contents of the given reader into the given writer.
-     *
-     * @param in
-     *         the reader to read data from
-     * @param out
-     *         the writer to write data to
-     *
-     * @throws IOException
-     *         if reading from or writing to the respective reader / writer throws this exception
-     */
-    public static void copy(Reader in, Writer out) throws IOException {
-        final char[] buf = new char[DEFAULT_BUFFER_SIZE];
-        int read;
-        while ((read = in.read(buf)) >= 0) {
-            out.write(buf, 0, read);
-        }
-    }
-
-    /**
      * Reads the data from the given reader and returns its contents as a string.
      *
      * @param r
@@ -333,7 +314,7 @@ public final class IOUtil {
      */
     public static String toString(Reader r) throws IOException {
         final StringWriter w = new StringWriter();
-        copy(r, w);
+        r.transferTo(w);
         return w.toString();
     }
 }

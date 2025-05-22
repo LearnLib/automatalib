@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.12.1...HEAD)
 
+### Changed
+
+* AutomataLib now requires Java 11 at runtime.
+
+### Removed
+
+* `IOUtil#copy(Reader, Writer)` has been removed. Use `Reader#transferTo(Writer)` instead.
+
 
 ## [0.12.1] - 2025-03-11
 

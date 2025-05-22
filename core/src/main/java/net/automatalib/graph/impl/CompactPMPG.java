@@ -16,6 +16,7 @@
 package net.automatalib.graph.impl;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 
 import net.automatalib.common.util.array.ArrayStorage;
@@ -42,20 +43,12 @@ public class CompactPMPG<L, AP>
 
     @Override
     public void setInitialNode(@Nullable Integer initialNode) {
-        if (initialNode == null) {
-            this.initialNode = -1;
-        } else {
-            this.initialNode = initialNode;
-        }
+        this.initialNode = Objects.requireNonNullElse(initialNode, -1);
     }
 
     @Override
     public void setFinalNode(@Nullable Integer finalNode) {
-        if (finalNode == null) {
-            this.finalNode = -1;
-        } else {
-            this.finalNode = finalNode;
-        }
+        this.finalNode = Objects.requireNonNullElse(finalNode, -1);
     }
 
     @Override
