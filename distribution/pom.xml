@@ -428,7 +428,7 @@ limitations under the License.
                             <finalName>automatalib-${project.version}</finalName>
                             <jarOutputDirectory>${project.build.directory}/bundles</jarOutputDirectory>
                             <includeDependencySources>true</includeDependencySources>
-                            <!-- The plugin doesn't like dependencies with missing module names so build with JPMS disabled -->
+                            <!-- Aggregating multiple (sometimes even missing) module-info,javas causes problems -->
                             <legacyMode>true</legacyMode>
                             <disableSourcepathUsage>true</disableSourcepathUsage>
                             <sourceFileExcludes>

@@ -244,7 +244,6 @@ limitations under the License.
         <brics-automaton.apidocs>https://www.brics.dk/automaton/doc</brics-automaton.apidocs>
         <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
         <guava.apidocs>http://google.github.io/guava/releases/${guava.version}/api/docs/</guava.apidocs>
-        <java11.apidocs>https://docs.oracle.com/javase/11/docs/api/</java11.apidocs>
         <jung.apidocs>https://jrtom.github.io/jung/javadoc/</jung.apidocs>
     </properties>
 

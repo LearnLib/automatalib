@@ -279,11 +279,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     protected final @Nullable Object[] updateTransitionStorage(@Nullable Object[] oldStorage,
                                                                @Nullable Object defaultValue,
                                                                Payload payload) {
-        // explicit generic declaration required for checkerframework
-        return payload.type.<@Nullable Object[]>updateStorage(oldStorage,
-                                                              payload,
-                                                              (IntFunction<@Nullable Object[]>) Object[]::new,
-                                                              (arr, idx) -> arr[idx] = defaultValue);
+        return payload.type.updateStorage(oldStorage, payload, Object[]::new, (arr, idx) -> arr[idx] = defaultValue);
     }
 
     /**
