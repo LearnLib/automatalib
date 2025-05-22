@@ -56,6 +56,7 @@ import net.automatalib.word.Word;
 
 final class DOTSerializationUtil {
 
+    static final String ID_RESOURCE = "/id.dot";
     static final String EMPTY_RESOURCE = "/empty.dot";
     static final String DFA_RESOURCE = "/dfa.dot";
     static final String NFA_RESOURCE = "/nfa.dot";

@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 
@@ -187,6 +188,15 @@ public class DOTDeserializationTest {
         final DFA<?, String> parsed = DOTParsers.dfa().readModel(bais).model;
 
         checkIsomorphism(dfa, parsed, dfa.getInputAlphabet());
+    }
+
+    @Test
+    public void testIDs() throws IOException, FormatException {
+        final DFA<?, String> parsed =
+                DOTParsers.dfa().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.ID_RESOURCE)).model;
+
+        Assert.assertEquals(parsed.size(), 6);
+        Assert.assertTrue(parsed.accepts(Word.fromString("abcd").transform(Objects::toString)));
     }
 
     private static <S1, S2, I, T1, T2, SP, TP> void checkIsomorphism(UniversalAutomaton<S1, I, T1, SP, TP> source,
