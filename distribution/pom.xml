@@ -428,7 +428,7 @@ limitations under the License.
                             <finalName>automatalib-${project.version}</finalName>
                             <jarOutputDirectory>${project.build.directory}/bundles</jarOutputDirectory>
                             <includeDependencySources>true</includeDependencySources>
-                            <!-- Aggregating multiple (sometimes even missing) module-info,javas causes problems -->
+                            <!-- Aggregating multiple (sometimes even missing) module-info.javas causes problems -->
                             <legacyMode>true</legacyMode>
                             <disableSourcepathUsage>true</disableSourcepathUsage>
                             <sourceFileExcludes>
