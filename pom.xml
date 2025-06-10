@@ -1113,6 +1113,7 @@ limitations under the License.
                         <configuration>
                             <deploymentName>AutomataLib ${project.version}</deploymentName>
                             <publishingServerId>sonatype</publishingServerId>
+                            <excludeArtifacts>automata-examples</excludeArtifacts>
                         </configuration>
                     </plugin>
                     <plugin>
