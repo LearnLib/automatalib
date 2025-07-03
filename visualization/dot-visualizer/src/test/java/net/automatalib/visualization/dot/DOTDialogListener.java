@@ -15,7 +15,6 @@
  */
 package net.automatalib.visualization.dot;
 
-import net.automatalib.common.util.system.JVMUtil;
 import org.assertj.swing.testng.testcase.AssertJSwingTestngTestCase;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
@@ -30,7 +29,7 @@ public class DOTDialogListener implements IInvokedMethodListener {
 
     @Override
     public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
-        if (!(DOT.checkUsable() && JVMUtil.getCanonicalSpecVersion() == 11)) {
+        if (!(DOT.checkUsable() && Runtime.version().feature() == 11)) {
             testResult.setThrowable(new SkipException(
                     "Either DOT is not available or the headless AWT environment is not supported"));
             testResult.setStatus(ITestResult.SKIP);

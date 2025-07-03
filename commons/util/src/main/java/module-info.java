@@ -50,5 +50,4 @@ open module net.automatalib.common.util {
     exports net.automatalib.common.util.ref;
     exports net.automatalib.common.util.setting;
     exports net.automatalib.common.util.string;
-    exports net.automatalib.common.util.system;
 }

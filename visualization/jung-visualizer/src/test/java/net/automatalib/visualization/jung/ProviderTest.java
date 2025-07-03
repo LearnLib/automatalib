@@ -23,7 +23,6 @@ import javax.swing.SwingUtilities;
 
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
-import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.visualization.VPManager;
 import net.automatalib.visualization.Visualization;
@@ -50,7 +49,7 @@ public class ProviderTest {
     @Test(dependsOnMethods = "testProviderConfiguration", timeOut = 30000)
     public void testDisplay() throws InterruptedException, InvocationTargetException {
 
-        if (!(JVMUtil.getCanonicalSpecVersion() == 11)) {
+        if (!(Runtime.version().feature() == 11)) {
             throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
 
