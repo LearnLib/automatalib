@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.util.automaton.conformance;
 
 import java.util.ArrayList;
@@ -8,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.common.util.HashUtil;
@@ -23,6 +39,8 @@ import net.automatalib.word.WordBuilder;
 public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>>
         implements Iterator<Word<I>> {
 
+    private static final int DEFAULT_RANDOM_WALK_LENGTH = 20;
+
     private final A automaton;
     private final List<? extends I> alphabet;
     private final Random random;
@@ -37,7 +55,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
     }
 
     public KWayStateCoverTestsIterator(A automaton, Collection<? extends I> inputs, Random random) {
-        this(automaton, inputs, random, 2, 20, CombinationMethod.Permutations);
+        this(automaton, inputs, random, 2, DEFAULT_RANDOM_WALK_LENGTH, CombinationMethod.PERMUTATIONS);
     }
 
     public KWayStateCoverTestsIterator(A automaton,
@@ -76,7 +94,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
         WordBuilder<I> choices = new WordBuilder<>(count);
 
         for (int i = 0; i < count; i++) {
-            choices.add(alphabet.get(random.nextInt(alphabet.size())));
+            choices.append(alphabet.get(random.nextInt(alphabet.size())));
         }
 
         return choices.toWord();
@@ -87,15 +105,13 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
      */
     private final class FirstPhaseIterator extends AbstractSimplifiedIterator<Word<I>> {
 
-        private int idx = 0;
+        private int idx;
 
         @Override
         protected boolean calculateNext() {
-            if (automaton.size() == 1) {
-                if (idx++ < randomWalkLen) {
-                    super.nextValue = getRandomChoices(alphabet, randomWalkLen, random);
-                    return true;
-                }
+            if (automaton.size() == 1 && idx++ < randomWalkLen) {
+                super.nextValue = getRandomChoices(alphabet, randomWalkLen, random);
+                return true;
             }
             return false;
         }
@@ -111,7 +127,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
 
         private APSPResult<S, TransitionEdge<I, T>> apsp;
 
-        public SecondPhaseIterator() {
+        SecondPhaseIterator() {
             List<S> states = new ArrayList<>(automaton.getStates());
             Collections.shuffle(states, random);
             this.combIter = method.getCombinations(states, k);
@@ -141,7 +157,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
 
                 final WordBuilder<I> pathBuilder = new WordBuilder<>();
                 for (TransitionEdge<I, T> e : firstPath) {
-                    pathBuilder.add(e.getInput());
+                    pathBuilder.append(e.getInput());
                 }
 
                 /*
@@ -163,17 +179,15 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
                     }
                 }
 
-                if (!possibleTestCase) {
-                    continue;
-                }
+                if (possibleTestCase) {
+                    // Add random walk at the end
+                    for (I p : getRandomChoices(alphabet, randomWalkLen, random)) {
+                        pathBuilder.append(p);
+                    }
 
-                // Add random walk at the end
-                for (I p : getRandomChoices(alphabet, randomWalkLen, random)) {
-                    pathBuilder.append(p);
+                    super.nextValue = pathBuilder.toWord();
+                    return true;
                 }
-
-                super.nextValue = pathBuilder.toWord();
-                return true;
             }
 
             return false;
@@ -193,13 +207,13 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
     }
 
     public enum CombinationMethod {
-        Combinations {
+        COMBINATIONS {
             @Override
             <S> Iterator<List<S>> getCombinations(List<S> states, int k) {
                 throw new NoSuchMethodError("TODO");
             }
         },
-        Permutations {
+        PERMUTATIONS {
             @Override
             <S> Iterator<List<S>> getCombinations(List<S> states, int k) {
                 return IterableUtil.allTuples(states, k).iterator();
