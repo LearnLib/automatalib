@@ -726,7 +726,7 @@ limitations under the License.
                         <detectLinks>true</detectLinks>
                         <linksource>false</linksource>
                         <links>
-                            <link>${addlib.apidocs}</link>
+<!--                            <link>${addlib.apidocs}</link>-->
                             <link>${brics-automaton.apidocs}</link>
                             <link>${checkerframework.apidocs}</link>
                             <link>${guava.apidocs}</link>
