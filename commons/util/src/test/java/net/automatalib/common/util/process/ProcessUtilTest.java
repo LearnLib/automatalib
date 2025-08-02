@@ -17,6 +17,9 @@ package net.automatalib.common.util.process;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -31,9 +34,10 @@ public class ProcessUtilTest {
     private final String program;
     private final String path;
 
-    public ProcessUtilTest() {
+    public ProcessUtilTest() throws URISyntaxException {
         this.program = "python";
-        this.path = Objects.requireNonNull(ProcessUtilTest.class.getResource("/process.py")).getPath();
+        URL resource = Objects.requireNonNull(ProcessUtilTest.class.getResource("/process.py"));
+        this.path = Paths.get(resource.toURI()).toFile().getAbsolutePath();
     }
 
     @BeforeTest
