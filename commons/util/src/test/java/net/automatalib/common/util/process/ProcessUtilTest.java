@@ -36,8 +36,12 @@ public class ProcessUtilTest {
 
     public ProcessUtilTest() throws URISyntaxException {
         this.program = "python";
-        URL resource = Objects.requireNonNull(ProcessUtilTest.class.getResource("/process.py"));
-        this.path = Paths.get(resource.toURI()).toFile().getAbsolutePath();
+        this.path = getPathToScript();
+    }
+
+    private static String getPathToScript() throws URISyntaxException {
+        final URL resource = Objects.requireNonNull(ProcessUtilTest.class.getResource("/process.py"));
+        return Paths.get(resource.toURI()).toFile().getAbsolutePath();
     }
 
     @BeforeTest
