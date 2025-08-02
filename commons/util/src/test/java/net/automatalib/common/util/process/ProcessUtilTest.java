@@ -61,35 +61,38 @@ public class ProcessUtilTest {
         StringJoiner stdOutJoiner = new StringJoiner("\n");
         StringJoiner stdErrBuilder = new StringJoiner("\n");
 
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path, "abc"},
-                                                      stdOutJoiner::add,
-                                                      stdErrBuilder::add), 0);
+        int returnCode =
+                ProcessUtil.invokeProcess(new String[] {program, path, "abc"}, stdOutJoiner::add, stdErrBuilder::add);
+        Assert.assertEquals(returnCode, 0, stdErrBuilder.toString());
         Assert.assertEquals(stdOutJoiner.toString(), "294");
         Assert.assertEquals(stdErrBuilder.toString(), "abc");
 
         stdOutJoiner = new StringJoiner("\n");
         stdErrBuilder = new StringJoiner("\n");
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path, "abc", "def"},
-                                                      stdOutJoiner::add,
-                                                      stdErrBuilder::add), 1);
+        returnCode = ProcessUtil.invokeProcess(new String[] {program, path, "abc", "def"},
+                                               stdOutJoiner::add,
+                                               stdErrBuilder::add);
+        Assert.assertEquals(returnCode, 1, stdErrBuilder.toString());
         Assert.assertEquals(stdOutJoiner.toString(), "294\n303");
         Assert.assertEquals(stdErrBuilder.toString(), "abc\ndef");
 
         stdOutJoiner = new StringJoiner("\n");
         stdErrBuilder = new StringJoiner("\n");
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path},
-                                                      new StringReader("abc"),
-                                                      stdOutJoiner::add,
-                                                      stdErrBuilder::add), 0);
+        returnCode = ProcessUtil.invokeProcess(new String[] {program, path},
+                                               new StringReader("abc"),
+                                               stdOutJoiner::add,
+                                               stdErrBuilder::add);
+        Assert.assertEquals(returnCode, 0, stdErrBuilder.toString());
         Assert.assertEquals(stdOutJoiner.toString(), "294");
         Assert.assertEquals(stdErrBuilder.toString(), "abc");
 
         stdOutJoiner = new StringJoiner("\n");
         stdErrBuilder = new StringJoiner("\n");
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path},
-                                                      new StringReader("abc def"),
-                                                      stdOutJoiner::add,
-                                                      stdErrBuilder::add), 1);
+        returnCode = ProcessUtil.invokeProcess(new String[] {program, path},
+                                               new StringReader("abc def"),
+                                               stdOutJoiner::add,
+                                               stdErrBuilder::add);
+        Assert.assertEquals(returnCode, 1, stdErrBuilder.toString());
         Assert.assertEquals(stdOutJoiner.toString(), "294\n303");
         Assert.assertEquals(stdErrBuilder.toString(), "abc\ndef");
 
