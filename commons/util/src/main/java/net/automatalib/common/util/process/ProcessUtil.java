@@ -216,7 +216,7 @@ public final class ProcessUtil {
      *         if the process is interrupted prior to finishing
      */
     public static int invokeProcess(List<String> commandLine,
-                                    Reader input,
+                                    @Nullable Reader input,
                                     Consumer<String> stdOutConsumer,
                                     Consumer<String> stdErrConsumer) throws IOException, InterruptedException {
         return invokeProcess(commandLine,
@@ -275,7 +275,7 @@ public final class ProcessUtil {
      *         if the process is interrupted prior to finishing
      */
     public static int invokeProcess(List<String> commandLine,
-                                    Reader input,
+                                    @Nullable Reader input,
                                     OutputStream stdOutConsumer,
                                     OutputStream stdErrConsumer) throws IOException, InterruptedException {
         return invokeProcess(commandLine, input, new CopyConsumer(stdOutConsumer), new CopyConsumer(stdErrConsumer));
