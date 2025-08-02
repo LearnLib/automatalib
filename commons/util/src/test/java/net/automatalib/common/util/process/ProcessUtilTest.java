@@ -28,16 +28,18 @@ import org.testng.annotations.Test;
 @Test
 public class ProcessUtilTest {
 
-    private final String process;
+    private final String program;
+    private final String path;
 
     public ProcessUtilTest() {
-        this.process = Objects.requireNonNull(ProcessUtilTest.class.getResource("/process.py")).getPath();
+        this.program = "python";
+        this.path = Objects.requireNonNull(ProcessUtilTest.class.getResource("/process.py")).getPath();
     }
 
     @BeforeTest
     public void setUp() {
         try {
-            if (ProcessUtil.invokeProcess(new String[] {"python", "--version"}) != 0) {
+            if (ProcessUtil.invokeProcess(new String[] {program, "--version"}) != 0) {
                 throw new SkipException("python not supported");
             }
         } catch (IOException | InterruptedException e) {
@@ -47,11 +49,11 @@ public class ProcessUtilTest {
 
     @Test
     public void testReturnValue() throws IOException, InterruptedException {
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {process, "abc"}), 0);
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {process, "abc", "def"}), 1);
+        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path, "abc"}), 0);
+        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path, "abc", "def"}), 1);
 
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {process}, new StringReader("abc")), 0);
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {process}, new StringReader("abc def")), 1);
+        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path}, new StringReader("abc")), 0);
+        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path}, new StringReader("abc def")), 1);
     }
 
     @Test
@@ -59,7 +61,7 @@ public class ProcessUtilTest {
         StringJoiner stdOutJoiner = new StringJoiner("\n");
         StringJoiner stdErrBuilder = new StringJoiner("\n");
 
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {process, "abc"},
+        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path, "abc"},
                                                       stdOutJoiner::add,
                                                       stdErrBuilder::add), 0);
         Assert.assertEquals(stdOutJoiner.toString(), "294");
@@ -67,7 +69,7 @@ public class ProcessUtilTest {
 
         stdOutJoiner = new StringJoiner("\n");
         stdErrBuilder = new StringJoiner("\n");
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {process, "abc", "def"},
+        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path, "abc", "def"},
                                                       stdOutJoiner::add,
                                                       stdErrBuilder::add), 1);
         Assert.assertEquals(stdOutJoiner.toString(), "294\n303");
@@ -75,7 +77,7 @@ public class ProcessUtilTest {
 
         stdOutJoiner = new StringJoiner("\n");
         stdErrBuilder = new StringJoiner("\n");
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {process},
+        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path},
                                                       new StringReader("abc"),
                                                       stdOutJoiner::add,
                                                       stdErrBuilder::add), 0);
@@ -84,7 +86,7 @@ public class ProcessUtilTest {
 
         stdOutJoiner = new StringJoiner("\n");
         stdErrBuilder = new StringJoiner("\n");
-        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {process},
+        Assert.assertEquals(ProcessUtil.invokeProcess(new String[] {program, path},
                                                       new StringReader("abc def"),
                                                       stdOutJoiner::add,
                                                       stdErrBuilder::add), 1);
