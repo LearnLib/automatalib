@@ -284,8 +284,8 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
 
     private static int runCommandLine(List<String> commandLine) {
         try {
-            LOGGER.debug("Invoking LTSmin binary as: {}", String.join(" ", commandLine));
-            return ProcessUtil.invokeProcess(commandLine, LOGGER::debug);
+            LOGGER.debug("Invoking LTSmin binary as: '{}'", String.join(" ", commandLine));
+            return ProcessUtil.invokeProcess(commandLine, LOGGER::debug, LOGGER::warn);
         } catch (IOException | InterruptedException e) {
             throw new ModelCheckingException(e);
         }

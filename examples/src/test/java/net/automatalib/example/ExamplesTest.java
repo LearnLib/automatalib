@@ -78,7 +78,7 @@ public class ExamplesTest {
         SwingUtilities.invokeAndWait(() -> {
             try {
                 DOTExample.main(new String[0]);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });

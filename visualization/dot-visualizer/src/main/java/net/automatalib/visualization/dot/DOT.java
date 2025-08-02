@@ -17,13 +17,17 @@ package net.automatalib.visualization.dot;
 
 import java.awt.Desktop;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -104,8 +108,11 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the file or the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static InputStream runDOT(File dotFile, String format, String... additionalOpts) throws IOException {
+    public static InputStream runDOT(File dotFile, String format, String... additionalOpts)
+            throws IOException, InterruptedException {
         return runDOT(IOUtil.asBufferedUTF8Reader(dotFile), format, additionalOpts);
     }
 
@@ -123,13 +130,17 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the reader or the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static InputStream runDOT(Reader r, String format, String... additionalOpts) throws IOException {
+    public static InputStream runDOT(Reader r, String format, String... additionalOpts)
+            throws IOException, InterruptedException {
         final String[] dotCommand = buildDOTCommand(format, additionalOpts);
 
-        final Process p = ProcessUtil.buildProcess(dotCommand, r, null, LOGGER::warn);
-
-        return p.getInputStream();
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ProcessUtil.invokeProcess(Arrays.asList(dotCommand), r, baos, OutputStream.nullOutputStream());
+            return new ByteArrayInputStream(baos.toByteArray());
+        }
     }
 
     /**
@@ -146,8 +157,11 @@ public final class DOT {
      *
      * @throws IOException
      *         if the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static InputStream runDOT(String dotText, String format, String... additionalOpts) throws IOException {
+    public static InputStream runDOT(String dotText, String format, String... additionalOpts)
+            throws IOException, InterruptedException {
         try (StringReader sr = new StringReader(dotText)) {
             return runDOT(sr, format, additionalOpts);
         }
@@ -166,8 +180,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the file, the call to the DOT utility, or writing to the file fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void runDOT(File dotFile, String format, File out) throws IOException {
+    public static void runDOT(File dotFile, String format, File out) throws IOException, InterruptedException {
         runDOT(IOUtil.asBufferedUTF8Reader(dotFile), format, out);
     }
 
@@ -183,15 +199,13 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the reader, the call to the DOT utility, or writing to the file fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void runDOT(Reader r, String format, File out) throws IOException {
+    public static void runDOT(Reader r, String format, File out) throws IOException, InterruptedException {
         final String[] dotCommand = buildDOTCommand(format, "-o" + out.getAbsolutePath());
 
-        try {
-            ProcessUtil.invokeProcess(dotCommand, r, LOGGER::warn);
-        } catch (InterruptedException ex) {
-            LOGGER.error("Interrupted while waiting for 'dot' process to exit.", ex);
-        }
+        ProcessUtil.invokeProcess(dotCommand, r, LOGGER::debug, LOGGER::warn);
     }
 
     /**
@@ -207,8 +221,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if the call to the DOT utility or writing to the file fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void runDOT(String dotText, String format, File out) throws IOException {
+    public static void runDOT(String dotText, String format, File out) throws IOException, InterruptedException {
         runDOT(new StringReader(dotText), format, out);
     }
 
@@ -223,8 +239,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the file or the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void renderDOTExternal(File dotFile, String format) throws IOException {
+    public static void renderDOTExternal(File dotFile, String format) throws IOException, InterruptedException {
         renderDOTExternal(IOUtil.asBufferedUTF8Reader(dotFile), format);
     }
 
@@ -239,8 +257,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the reader or the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void renderDOTExternal(Reader r, String format) throws IOException {
+    public static void renderDOTExternal(Reader r, String format) throws IOException, InterruptedException {
         final File image = File.createTempFile("dot", format);
         runDOT(r, format, image);
         Desktop.getDesktop().open(image);
@@ -257,8 +277,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void renderDOTExternal(String dotText, String format) throws IOException {
+    public static void renderDOTExternal(String dotText, String format) throws IOException, InterruptedException {
         renderDOTExternal(new StringReader(dotText), format);
     }
 
@@ -273,8 +295,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the file or the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void renderDOT(File dotFile, boolean modal) throws IOException {
+    public static void renderDOT(File dotFile, boolean modal) throws IOException, InterruptedException {
         renderDOT(IOUtil.asBufferedUTF8Reader(dotFile), modal);
     }
 
@@ -289,8 +313,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the reader or the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void renderDOT(Reader r, boolean modal) throws IOException {
+    public static void renderDOT(Reader r, boolean modal) throws IOException, InterruptedException {
         renderDOT(IOUtil.toString(r), modal);
     }
 
@@ -304,8 +330,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void renderDOT(String dotText, boolean modal) throws IOException {
+    public static void renderDOT(String dotText, boolean modal) throws IOException, InterruptedException {
         new DOTDialog(dotText, modal);
     }
 
@@ -321,8 +349,11 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the files or the calls to the DOT utility fail.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void renderDOTFiles(List<Pair<String, File>> files, boolean modal) throws IOException {
+    public static void renderDOTFiles(List<Pair<String, File>> files, boolean modal)
+            throws IOException, InterruptedException {
         renderDOTInternal(files, modal, f -> IOUtil.toString(IOUtil.asBufferedUTF8Reader(f)));
     }
 
@@ -338,8 +369,11 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the readers or the calls to the DOT utility fail.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void renderDOTReaders(List<Pair<String, Reader>> readers, boolean modal) throws IOException {
+    public static void renderDOTReaders(List<Pair<String, Reader>> readers, boolean modal)
+            throws IOException, InterruptedException {
         renderDOTInternal(readers, modal, IOUtil::toString);
     }
 
@@ -354,14 +388,18 @@ public final class DOT {
      *
      * @throws IOException
      *         if the calls to the DOT utility fail.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static void renderDOTStrings(List<Pair<String, String>> dotTexts, boolean modal) throws IOException {
+    public static void renderDOTStrings(List<Pair<String, String>> dotTexts, boolean modal)
+            throws IOException, InterruptedException {
         renderDOTInternal(dotTexts, modal, s -> s);
     }
 
     private static <I> void renderDOTInternal(List<Pair<String, I>> dots,
                                               boolean modal,
-                                              ThrowableExtractor<I, String> extractor) throws IOException {
+                                              ThrowableExtractor<I, String> extractor)
+            throws IOException, InterruptedException {
         new DOTMultiDialog<>(dots, modal, extractor);
     }
 
@@ -375,8 +413,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the file or the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static BufferedImage renderDOTImage(File dotFile) throws IOException {
+    public static BufferedImage renderDOTImage(File dotFile) throws IOException, InterruptedException {
         return renderDOTImage(IOUtil.asBufferedUTF8Reader(dotFile));
     }
 
@@ -390,8 +430,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if reading from the reader or the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static BufferedImage renderDOTImage(Reader dotReader) throws IOException {
+    public static BufferedImage renderDOTImage(Reader dotReader) throws IOException, InterruptedException {
         try (InputStream pngIs = runDOT(dotReader, "png")) {
             return ImageIO.read(pngIs);
         }
@@ -407,8 +449,10 @@ public final class DOT {
      *
      * @throws IOException
      *         if the call to the DOT utility fails.
+     * @throws InterruptedException
+     *         if the process is interrupted prior to finishing
      */
-    public static BufferedImage renderDOTImage(String dotText) throws IOException {
+    public static BufferedImage renderDOTImage(String dotText) throws IOException, InterruptedException {
         return renderDOTImage(new StringReader(dotText));
     }
 

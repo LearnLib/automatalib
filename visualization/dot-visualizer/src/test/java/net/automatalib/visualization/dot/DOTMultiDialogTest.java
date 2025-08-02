@@ -57,7 +57,7 @@ public class DOTMultiDialogTest {
         SwingUtilities.invokeAndWait(() -> {
             try {
                 DOT.renderDOTStrings(graphs, false);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -75,7 +75,7 @@ public class DOTMultiDialogTest {
         SwingUtilities.invokeAndWait(() -> {
             try {
                 DOT.renderDOTReaders(Collections.emptyList(), false);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });

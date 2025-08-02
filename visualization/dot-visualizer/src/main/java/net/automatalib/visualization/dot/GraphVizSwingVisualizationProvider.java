@@ -61,7 +61,7 @@ public class GraphVizSwingVisualizationProvider implements VisualizationProvider
             final StringBuilder sb = new StringBuilder();
             GraphDOT.write(graph, sb, additionalHelpers);
             DOT.renderDOT(sb.toString(), modal);
-        } catch (IOException ex) {
+        } catch (IOException | InterruptedException ex) {
             JOptionPane.showMessageDialog(null,
                                           "Error rendering graph: " + ex.getMessage(),
                                           "Error rendering graph",

@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 
 * AutomataLib now requires Java 11 at runtime.
+* `ProcessUtil#invokeProcess` now handles consumers for stdout and stderr separately.
 
 ### Removed
 

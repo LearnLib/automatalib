@@ -46,7 +46,7 @@ public final class DOTExample {
         // prevent instantiation
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         if (DOT.checkUsable()) {
             final Random r = new Random(42);
             final List<Pair<String, String>> graphs = Arrays.asList(Pair.of("Automaton 1", generateRandomAutomaton(r)),

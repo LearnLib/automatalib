@@ -18,6 +18,7 @@ package net.automatalib.common.util.process;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.function.Consumer;
 
 import net.automatalib.common.util.IOUtil;
@@ -30,16 +31,19 @@ interface InputStreamConsumer {
     void consume(InputStream is) throws IOException;
 
     /**
-     * Consumes an input stream by throwing away all of its content.
+     * Consumes an input stream by copying it to a given output stream.
      */
-    class NOPConsumer implements InputStreamConsumer {
+    class CopyConsumer implements InputStreamConsumer {
+
+        private final OutputStream outputStream;
+
+        CopyConsumer(OutputStream outputStream) {
+            this.outputStream = outputStream;
+        }
 
         @Override
         public void consume(InputStream inputStream) throws IOException {
-            final byte[] buf = new byte[IOUtil.DEFAULT_BUFFER_SIZE];
-            while (inputStream.read(buf) >= 0) {
-                // do nothing
-            }
+            inputStream.transferTo(outputStream);
         }
     }
 

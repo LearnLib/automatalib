@@ -43,7 +43,7 @@ public class FileVisualizationTest {
     }
 
     @Test
-    public void testFileVisualization() throws IOException {
+    public void testFileVisualization() throws IOException, InterruptedException {
         final File dotFile = File.createTempFile("automaton", ".dot");
         final File dotOutputFile = File.createTempFile("automaton-as-png", ".png");
 
