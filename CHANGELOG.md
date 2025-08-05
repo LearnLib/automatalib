@@ -14,10 +14,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 
 * AutomataLib now requires Java 11 at runtime.
+* `ProcessUtil#invokeProcess` now handles consumers for stdout and stderr separately.
 
 ### Removed
 
 * `IOUtil#copy(Reader, Writer)` has been removed. Use `Reader#transferTo(Writer)` instead.
+* `JVMUtil` has been removed. Use `Runtime.version().feature()` for its previously (only) provided method.
 
 
 ## [0.12.1] - 2025-03-11

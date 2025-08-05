@@ -80,7 +80,7 @@ public class GraphVizBrowserVisualizationProvider implements VisualizationProvid
             if (modal) {
                 JOptionPane.showMessageDialog(null, "Click OK to continue ...");
             }
-        } catch (IOException ex) {
+        } catch (IOException | InterruptedException ex) {
             JOptionPane.showMessageDialog(null,
                                           "Error rendering graph: " + ex.getMessage(),
                                           "Error rendering graph",

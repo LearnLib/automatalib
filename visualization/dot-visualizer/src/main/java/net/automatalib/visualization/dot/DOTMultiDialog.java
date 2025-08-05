@@ -38,7 +38,7 @@ import net.automatalib.common.util.Pair;
 final class DOTMultiDialog<I> extends JDialog {
 
     DOTMultiDialog(List<Pair<String, I>> dots, boolean modal, ThrowableExtractor<I, String> extractor)
-            throws IOException {
+            throws IOException, InterruptedException {
         super((Dialog) null, modal);
 
         final DefaultListModel<PlottedGraph> graphs = new DefaultListModel<>();

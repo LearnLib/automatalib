@@ -24,7 +24,7 @@ final class PlottedGraph {
     private final String dotText;
     private final BufferedImage image;
 
-    PlottedGraph(String name, String dotText) throws IOException {
+    PlottedGraph(String name, String dotText) throws IOException, InterruptedException {
         this.name = name;
         this.dotText = dotText;
         this.image = DOT.renderDOTImage(dotText);

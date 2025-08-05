@@ -25,7 +25,6 @@ import java.util.Random;
 import javax.swing.SwingUtilities;
 
 import net.automatalib.common.util.Pair;
-import net.automatalib.common.util.system.JVMUtil;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -44,7 +43,7 @@ public class DOTMultiDialogTest {
     @Test(timeOut = 30000)
     public void testFrame() throws InvocationTargetException, InterruptedException {
 
-        if (!(JVMUtil.getCanonicalSpecVersion() == 11)) {
+        if (!(Runtime.version().feature() == 11)) {
             throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
 
@@ -58,7 +57,7 @@ public class DOTMultiDialogTest {
         SwingUtilities.invokeAndWait(() -> {
             try {
                 DOT.renderDOTStrings(graphs, false);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -68,7 +67,7 @@ public class DOTMultiDialogTest {
     @Test(timeOut = 30000)
     public void testEmptyFrame() throws InvocationTargetException, InterruptedException {
 
-        if (!(JVMUtil.getCanonicalSpecVersion() == 11)) {
+        if (!(Runtime.version().feature() == 11)) {
             throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
 
@@ -76,7 +75,7 @@ public class DOTMultiDialogTest {
         SwingUtilities.invokeAndWait(() -> {
             try {
                 DOT.renderDOTReaders(Collections.emptyList(), false);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });

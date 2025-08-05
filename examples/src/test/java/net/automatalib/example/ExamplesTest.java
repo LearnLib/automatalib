@@ -24,7 +24,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
 
-import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.example.ads.ADSExample;
 import net.automatalib.example.brics.SimpleBricsExample;
 import net.automatalib.example.dot.DOTExample;
@@ -79,7 +78,7 @@ public class ExamplesTest {
         SwingUtilities.invokeAndWait(() -> {
             try {
                 DOTExample.main(new String[0]);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -152,7 +151,7 @@ public class ExamplesTest {
     }
 
     private static boolean isJVMCompatible() {
-        return JVMUtil.getCanonicalSpecVersion() == 11;
+        return Runtime.version().feature() == 11;
     }
 
     private static void requireJVMCompatibility() {

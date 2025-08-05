@@ -27,7 +27,7 @@ import javax.swing.JScrollPane;
 
 final class DOTDialog extends JDialog {
 
-    DOTDialog(String dot, boolean modal) throws IOException {
+    DOTDialog(String dot, boolean modal) throws IOException, InterruptedException {
         super((Dialog) null, modal);
 
         final PlottedGraph pg = new PlottedGraph("Graph", dot);

@@ -176,7 +176,7 @@ public final class LTSminUtil {
         final StringWriter stringWriter = new StringWriter();
 
         try {
-            final int exitValue = ProcessUtil.invokeProcess(commandLine, stringWriter::append);
+            final int exitValue = ProcessUtil.invokeProcess(commandLine, stringWriter::append, LOGGER::warn);
 
             if (exitValue == VERSION_EXIT) {
                 return LTSminVersion.parse(stringWriter.toString());
