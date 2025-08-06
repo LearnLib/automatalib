@@ -34,19 +34,38 @@ import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.collection.AbstractTwoLevelIterator;
 import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.collection.IterableUtil;
+import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.util.graph.Graphs;
 import net.automatalib.util.graph.apsp.APSPResult;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
+/**
+ * A randomized state cover test generator based on the concepts of mutation testing as described in the paper <a
+ * href="https://doi.org/10.1007/978-3-319-57288-8_2">Learning from Faults: Mutation Testing in Active Automata
+ * Learning</a> by Bernhard K. Aichernig and Martin Tappler.
+ * <p>
+ * This iterates selects test cases based on k-way transitions coverage. It does that by generating random test words
+ * and finding the smallest subset with the highest coverage. In other words, this iterator generates test words by
+ * running random paths that cover all pairwise / k-way transitions.
+ *
+ * @param <S>
+ *         automaton state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <A>
+ *         automaton type
+ */
 public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>>
         implements Iterator<Word<I>> {
 
-    private static final int DEFAULT_K = 2;
-    private static final int DEFAULT_NUM_GENERATED_PATHS = 1_000;
-    private static final int DEFAULT_MAX_PATH_LENGTH = 50;
-    private static final int DEFAULT_MAX_NUMBER_OF_STEPS = 0;
-    private static final int DEFAULT_RANDOM_WALK_LENGTH = 10;
+    public static final int DEFAULT_R_WALK_LEN = 10;
+    public static final int DEFAULT_NUM_GEN_PATHS = 1_000;
+    public static final int DEFAULT_MAX_PATH_LENGTH = 50;
+    public static final int DEFAULT_MAX_NUM_STEPS = 0;
+    public static final int DEFAULT_K = 2;
 
     private final A automaton;
     private final List<? extends I> alphabet;
@@ -55,61 +74,105 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
     private final int numGeneratePaths;
     private final int maxPathLen;
     private final int maxNumberOfSteps;
-    private final Optimize optimize;
+    private final OptimizationMetric optimizationMetric;
     private final int randomWalkLen;
-
-    // Cached paths for reuse
-    private final List<Path<S, I>> cachedPaths = new ArrayList<>();
 
     private final Iterator<Word<I>> iterator;
 
+    /**
+     * Convenience constructor which uses a fresh {@code random} object.
+     *
+     * @param automaton
+     *         the automaton for which to generate test cases
+     * @param inputs
+     *         the inputs to consider for test case generation
+     *
+     * @see #KWayTransitionCoverTestsIterator(UniversalDeterministicAutomaton, Collection, Random)
+     */
     public KWayTransitionCoverTestsIterator(A automaton, Collection<? extends I> inputs) {
         this(automaton, inputs, new Random());
     }
 
+    /**
+     * Convenience constructor. Uses {@code randomWalkLen=10}, {@code numGeneratePaths = 1_000},
+     * {@code maxPathLen = 50}, {@code maxNumberOfSteps = 0}, {@code k = 2},
+     * {@code generationMethod = GenerationMethod.RANDOM}, and {@code optimizationMetric = OptimizationMetric.STEPS}.
+     *
+     * @param automaton
+     *         the automaton for which to generate test cases
+     * @param inputs
+     *         the inputs to consider for test case generation
+     * @param random
+     *         the random number generator to use
+     *
+     * @see #KWayTransitionCoverTestsIterator(UniversalDeterministicAutomaton, Collection, Random, int, int, int, int,
+     * int, GenerationMethod, OptimizationMetric)
+     */
     public KWayTransitionCoverTestsIterator(A automaton, Collection<? extends I> inputs, Random random) {
         this(automaton,
              inputs,
              random,
-             DEFAULT_K,
-             Method.RANDOM,
-             DEFAULT_NUM_GENERATED_PATHS,
+             DEFAULT_R_WALK_LEN,
+             DEFAULT_NUM_GEN_PATHS,
              DEFAULT_MAX_PATH_LENGTH,
-             DEFAULT_MAX_NUMBER_OF_STEPS,
-             Optimize.STEPS,
-             DEFAULT_RANDOM_WALK_LENGTH);
+             DEFAULT_MAX_NUM_STEPS,
+             DEFAULT_K,
+             GenerationMethod.RANDOM,
+             OptimizationMetric.STEPS);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param automaton
+     *         the automaton for which to generate test cases
+     * @param inputs
+     *         the inputs to consider for test case generation
+     * @param random
+     *         the random number generator to use
+     * @param randomWalkLen
+     *         the number of steps that are added by 'prefix' generated paths
+     * @param numGeneratePaths
+     *         number of random queries used to find the optimal subset
+     * @param maxPathLen
+     *         the maximum step size of a generated path
+     * @param maxNumberOfSteps
+     *         maximum number of steps that will be executed on the automaton (<=0 = no limit)
+     * @param k
+     *         k value used for K-Way transitions, i.e the number of steps between the start and the end of a
+     *         transition
+     * @param generationMethod
+     *         defines how the queries are generated 'random' or 'prefix'
+     * @param optimizationMetric
+     *         minimize either the number of 'steps' or 'queries' that are executed
+     */
     public KWayTransitionCoverTestsIterator(A automaton,
                                             Collection<? extends I> inputs,
                                             Random random,
-                                            int k,
-                                            Method method,
+                                            int randomWalkLen,
                                             int numGeneratePaths,
                                             int maxPathLen,
                                             int maxNumberOfSteps,
-                                            Optimize optimize,
-                                            int randomWalkLen) {
+                                            int k,
+                                            GenerationMethod generationMethod,
+                                            OptimizationMetric optimizationMetric) {
         this.automaton = automaton;
         this.alphabet = CollectionUtil.randomAccessList(inputs);
         this.random = random;
 
-        this.k = k;
+        this.k = Math.min(k, automaton.size());
         this.numGeneratePaths = numGeneratePaths;
         this.maxPathLen = maxPathLen;
         this.maxNumberOfSteps = maxNumberOfSteps;
-        this.optimize = optimize;
+        this.optimizationMetric = optimizationMetric;
         this.randomWalkLen = randomWalkLen;
 
-        switch (method) {
-            case PREFIX:
-                this.iterator = generatePrefixSteps(automaton);
-                break;
-            case RANDOM:
-                this.iterator = new GreedySetCoverIterator();
-                break;
-            default:
-                this.iterator = Collections.emptyIterator();
+        final S initial = automaton.getInitialState();
+
+        if (automaton.size() == 0 || initial == null) {
+            this.iterator = Collections.emptyIterator();
+        } else {
+            this.iterator = generationMethod.getIterator(this);
         }
     }
 
@@ -128,7 +191,7 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
 
         for (int i = 0; i < numGeneratePaths; i++) {
             int randomLength = random.nextInt(maxPathLen - k + 1) + k; // Ensuring length is at least `k`
-            Word<I> steps = KWayStateCoverTestsIterator.getRandomChoices(alphabet, randomLength, random);
+            Word<I> steps = Word.fromList(RandomUtil.sample(random, alphabet, randomLength));
             Path<S, I> path = createPath(hypothesis, steps);
             result.add(path);
         }
@@ -176,17 +239,31 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
     }
 
     private Path<S, I> selectOptimalPath(Set<KWayTransition<S, I>> covered, Collection<Path<S, I>> paths) {
-        Path<S, I> max = Collections.max(paths, optimize.getPathComparator(covered));
-        // require max to provide new transitions
-        return covered.containsAll(max.kWayTransitions) ? null : max;
+        Path<S, I> max = Collections.max(paths, optimizationMetric.getPathComparator(covered));
+        return max.kWayTransitions.size() == covered.size() ? null : max;
     }
 
-    public enum Method {
-        RANDOM,
-        PREFIX
+    public enum GenerationMethod {
+        RANDOM {
+            @Override
+            <S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>> Iterator<Word<I>> getIterator(
+                    KWayTransitionCoverTestsIterator<S, I, T, A> self) {
+                return self.new GreedySetCoverIterator();
+            }
+        },
+        PREFIX {
+            @Override
+            <S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>> Iterator<Word<I>> getIterator(
+                    KWayTransitionCoverTestsIterator<S, I, T, A> self) {
+                return self.generatePrefixSteps(self.automaton);
+            }
+        };
+
+        abstract <S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>> Iterator<Word<I>> getIterator(
+                KWayTransitionCoverTestsIterator<S, I, T, A> self);
     }
 
-    public enum Optimize {
+    public enum OptimizationMetric {
         STEPS {
             @Override
             <S, I> Comparator<Path<S, I>> getPathComparator(Set<KWayTransition<S, I>> covered) {
@@ -197,7 +274,7 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
         QUERIES {
             @Override
             <S, I> Comparator<Path<S, I>> getPathComparator(Set<KWayTransition<S, I>> covered) {
-                return Comparator.comparingDouble(p -> computeSizeOfDiff(p.kWayTransitions, covered));
+                return Comparator.comparingDouble(p -> p.kWayTransitions.size() - covered.size());
             }
         };
 
@@ -231,7 +308,6 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
 
         GreedySetCoverIterator() {
             this.paths = generateRandomPaths(automaton);
-            this.paths.addAll(cachedPaths);
             this.covered = new HashSet<>();
             this.stepCount = 0;
             this.sizeOfUniverse = automaton.getStates().size() * (int) Math.pow(alphabet.size(), k);
@@ -246,7 +322,6 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
                     covered.addAll(path.kWayTransitions);
                     paths.remove(path);
                     stepCount += path.steps.size();
-                    //result.add(path);
                     super.nextValue = path.steps;
                     return true;
                 }
@@ -296,8 +371,8 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
                 wb.append(edge.getInput());
             }
 
-            wb.append(steps);
-            wb.append(KWayStateCoverTestsIterator.getRandomChoices(alphabet, randomWalkLen, random));
+            wb.addAll(steps);
+            wb.addAll(RandomUtil.sample(random, alphabet, randomWalkLen));
 
             return wb.toWord();
         }

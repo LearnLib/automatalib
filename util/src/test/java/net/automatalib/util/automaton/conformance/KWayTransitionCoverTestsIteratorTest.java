@@ -15,64 +15,122 @@
  */
 package net.automatalib.util.automaton.conformance;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
-import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.collection.IteratorUtil;
-import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.util.automaton.conformance.KWayTransitionCoverTestsIterator.GenerationMethod;
+import net.automatalib.util.automaton.conformance.KWayTransitionCoverTestsIterator.OptimizationMetric;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @Test
 public class KWayTransitionCoverTestsIteratorTest {
 
-    @Test
-    public void testDefault() {
+    private static final Alphabet<Character> ALPHABET = Alphabets.characters('a', 'c');
+    private static final int AUTOMATON_SIZE = 10;
 
-        Random random = new Random(42);
-        Alphabet<Integer> alphabet = Alphabets.integers(0, 9);
-        CompactDFA<Integer> dfa = RandomAutomata.randomDFA(random, 10, alphabet);
+    @DataProvider(name = "config")
+    public static Object[][] getConfig() {
+        final Object[][] result = new Object[GenerationMethod.values().length * OptimizationMetric.values().length][];
+        int idx = 0;
 
-        KWayTransitionCoverTestsIterator<?, Integer, ?, ?> iter =
-                new KWayTransitionCoverTestsIterator<>(dfa, alphabet, random);
+        for (GenerationMethod method : GenerationMethod.values()) {
+            for (OptimizationMetric metric : OptimizationMetric.values()) {
+                result[idx++] = new Object[] {method, metric};
+            }
+        }
 
-        List<Word<Integer>> tests = IteratorUtil.list(iter);
-
-        assertTransitionCoverage(dfa, alphabet, tests);
-
+        return result;
     }
 
-    private <S, I, T> void assertTransitionCoverage(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                    Collection<I> inputs,
-                                                    Collection<Word<I>> tests) {
+    @Test
+    public void testEmptyAutomaton() {
+        final CompactDFA<Character> dfa = new CompactDFA<>(ALPHABET);
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(dfa, ALPHABET));
 
-        MutableMapping<S, Set<T>> mapping = automaton.createStaticStateMapping();
+        Assert.assertTrue(tests.isEmpty());
+    }
 
-        for (S s : automaton) {
-            mapping.put(s, new HashSet<>());
+    @Test(dataProvider = "config")
+    public void testSingleStateAutomaton(GenerationMethod method, OptimizationMetric metric) {
+        final CompactDFA<Character> dfa = new CompactDFA<>(ALPHABET);
+
+        final int initial = dfa.addIntInitialState();
+        for (int i = 0; i < ALPHABET.size(); i++) {
+            dfa.setTransition(initial, i, initial);
         }
 
-        for (Word<I> test : tests) {
-            S state = automaton.getState(test.prefix(-1));
-            T t = automaton.getTransition(state, test.lastSymbol());
-            mapping.get(state).add(t);
-        }
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(dfa,
+                                                                                                     ALPHABET,
+                                                                                                     new Random(42),
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_NUM_GEN_PATHS,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_K,
+                                                                                                     method,
+                                                                                                     metric));
+        KWayStateCoverTestsIteratorTest.verifyEachStateVisited(dfa, tests);
+    }
 
-        for (S s : automaton) {
-            Set<T> transitions = mapping.get(s);
-            Assert.assertNotNull(transitions);
-            Assert.assertEquals(transitions.size(), inputs.size(), Objects.toString(s));
-        }
+    @Test(dataProvider = "config")
+    public void testNoInitialStateAutomaton(GenerationMethod method, OptimizationMetric metric) {
+        final CompactDFA<Character> dfa = RandomAutomata.randomDFA(new Random(42), AUTOMATON_SIZE, ALPHABET);
 
+        dfa.setInitialState(null);
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(dfa,
+                                                                                                     ALPHABET,
+                                                                                                     new Random(42),
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_NUM_GEN_PATHS,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_K,
+                                                                                                     method,
+                                                                                                     metric));
+        Assert.assertTrue(tests.isEmpty());
+    }
+
+    @Test(dataProvider = "config")
+    public void testRandomAutomaton(GenerationMethod method, OptimizationMetric metric) {
+        final CompactMealy<Character, Integer> mealy =
+                RandomAutomata.randomMealy(new Random(42), AUTOMATON_SIZE, ALPHABET, Alphabets.integers(0, 2));
+
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(mealy,
+                                                                                                     ALPHABET,
+                                                                                                     new Random(42),
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_NUM_GEN_PATHS,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_K,
+                                                                                                     method,
+                                                                                                     metric));
+        KWayStateCoverTestsIteratorTest.verifyEachStateVisited(mealy, tests);
+    }
+
+    @Test(dataProvider = "config")
+    public void testKeylockAutomaton(GenerationMethod method, OptimizationMetric metric) {
+        final CompactDFA<Character> mealy = KWayStateCoverTestsIteratorTest.generateKeylockAutomaton(ALPHABET);
+
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(mealy,
+                                                                                                     ALPHABET,
+                                                                                                     new Random(42),
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_NUM_GEN_PATHS,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_K,
+                                                                                                     method,
+                                                                                                     metric));
+        KWayStateCoverTestsIteratorTest.verifyEachStateVisited(mealy, tests);
     }
 }

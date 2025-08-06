@@ -15,7 +15,6 @@
  */
 package net.automatalib.util.automaton.conformance;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -25,39 +24,144 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
+import net.automatalib.util.automaton.conformance.KWayStateCoverTestsIterator.CombinationMethod;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @Test
 public class KWayStateCoverTestsIteratorTest {
 
-    @Test
-    public void testDefault() {
+    private static final Alphabet<Character> ALPHABET = Alphabets.characters('a', 'c');
 
-        Random random = new Random(42);
-        Alphabet<Integer> alphabet = Alphabets.integers(0, 9);
-        CompactDFA<Integer> dfa = RandomAutomata.randomDFA(random, 10, alphabet);
-
-        KWayStateCoverTestsIterator<?, Integer, ?, ?> iter = new KWayStateCoverTestsIterator<>(dfa, alphabet, random);
-
-        List<Word<Integer>> tests = IteratorUtil.list(iter);
-
-        assertStateCoverage(dfa, tests);
-
+    @DataProvider(name = "methods")
+    public static Object[][] getMethods() {
+        return new Object[][] {{CombinationMethod.COMBINATIONS}, {CombinationMethod.PERMUTATIONS}};
     }
 
-    private <S, I, T> void assertStateCoverage(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                               Collection<Word<I>> tests) {
+    @Test
+    public void testEmptyAutomaton() {
+        final CompactDFA<Character> dfa = new CompactDFA<>(ALPHABET);
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayStateCoverTestsIterator<>(dfa, ALPHABET));
 
-        Set<S> cache = new HashSet<>();
+        Assert.assertTrue(tests.isEmpty());
+    }
 
-        for (Word<I> test : tests) {
-            cache.add(automaton.getState(test));
+    @Test(dataProvider = "methods")
+    public void testSingleStateAutomaton(CombinationMethod method) {
+        final CompactDFA<Character> dfa = new CompactDFA<>(ALPHABET);
+
+        final int initial = dfa.addIntInitialState();
+        for (int i = 0; i < ALPHABET.size(); i++) {
+            dfa.setTransition(initial, i, initial);
         }
 
-        Assert.assertEquals(cache.size(), automaton.size());
+        final int length = KWayStateCoverTestsIterator.DEFAULT_R_WALK_LEN;
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayStateCoverTestsIterator<>(dfa,
+                                                                                                ALPHABET,
+                                                                                                new Random(42),
+                                                                                                length,
+                                                                                                KWayStateCoverTestsIterator.DEFAULT_K,
+                                                                                                method));
+
+        // check that the first 'length' queries are the randomly generated ones.
+        Assert.assertTrue(tests.size() >= length);
+        for (Word<Character> t : tests.subList(0, length)) {
+            Assert.assertEquals(t.size(), length);
+        }
+    }
+
+    @Test(dataProvider = "methods")
+    public void testNoInitialStateAutomaton(CombinationMethod method) {
+        final CompactDFA<Character> dfa = RandomAutomata.randomDFA(new Random(42), 10, ALPHABET);
+
+        dfa.setInitialState(null);
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayStateCoverTestsIterator<>(dfa,
+                                                                                                ALPHABET,
+                                                                                                new Random(42),
+                                                                                                KWayStateCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                KWayStateCoverTestsIterator.DEFAULT_K,
+                                                                                                method));
+
+        Assert.assertTrue(tests.isEmpty());
+    }
+
+    @Test(dataProvider = "methods")
+    public void testRandomAutomaton(CombinationMethod method) {
+        final CompactMealy<Character, Integer> mealy =
+                RandomAutomata.randomMealy(new Random(42), 10, ALPHABET, Alphabets.integers(0, 2));
+
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayStateCoverTestsIterator<>(mealy,
+                                                                                                ALPHABET,
+                                                                                                new Random(42),
+                                                                                                KWayStateCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                KWayStateCoverTestsIterator.DEFAULT_K,
+                                                                                                method));
+
+        verifyEachStateVisited(mealy, tests);
+    }
+
+    @Test(dataProvider = "methods")
+    public void testKeylockAutomaton(CombinationMethod method) {
+        final CompactDFA<Character> mealy = generateKeylockAutomaton(ALPHABET);
+
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayStateCoverTestsIterator<>(mealy,
+                                                                                                ALPHABET,
+                                                                                                new Random(42),
+                                                                                                KWayStateCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                KWayStateCoverTestsIterator.DEFAULT_K,
+                                                                                                method));
+
+        verifyEachStateVisited(mealy, tests);
+    }
+
+    static <S, I> void verifyEachStateVisited(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                              List<Word<I>> tests) {
+        final Set<S> visited = new HashSet<>(HashUtil.capacity(automaton.size()));
+
+        final S init = automaton.getInitialState();
+        Assert.assertNotNull(init);
+
+        visited.add(init);
+
+        for (Word<I> t : tests) {
+            S iter = init;
+            for (I i : t) {
+                S succ = automaton.getSuccessor(iter, i);
+                Assert.assertNotNull(succ);
+                visited.add(succ);
+                iter = succ;
+            }
+        }
+
+        Assert.assertEquals(visited, new HashSet<>(automaton.getStates()));
+    }
+
+    static <I> CompactDFA<I> generateKeylockAutomaton(Alphabet<I> alphabet) {
+
+        final CompactDFA<I> result = new CompactDFA<>(alphabet);
+
+        int iter = result.addIntInitialState();
+
+        for (int i = 0; i < 10 - 1; i++) {
+            for (int j = 1; j < alphabet.size(); j++) {
+                result.setTransition(iter, j, iter);
+            }
+            int next = result.addIntState();
+            result.setTransition(iter, 0, next);
+            iter = next;
+        }
+
+        result.setAccepting(iter, true);
+        for (int i = 0; i < alphabet.size(); i++) {
+            result.setTransition(iter, i, iter);
+        }
+
+        return result;
     }
 }

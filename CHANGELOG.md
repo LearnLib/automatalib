@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Added a new `automata-serialization-mata` module for serializing (explicit) NFAs in the `.mata` format as used by the [mata library](https://github.com/VeriFIT/mata).
 * `automata-modelchecking-m3c` now supports ARM-based macOS systems.
 * `automata-modelchecking-m3c` can now be included in jlink images.
+* Added `KWay{State,Transition}CoverTestsIterator`s to `automata-util` as a new means for conformance testing.
+* Added `CollectionUtil#allCombintationsIterator` and `CollectionUtil#allPermutationsIterator` for computing k-combinations and k-permutations.
 
 ### Changed
 

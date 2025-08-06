@@ -29,17 +29,35 @@ import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.collection.CollectionUtil;
-import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
+import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.util.graph.Graphs;
 import net.automatalib.util.graph.apsp.APSPResult;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
+/**
+ * A randomized state cover test generator based on the concepts of mutation testing as described in the paper <a
+ * href="https://doi.org/10.1007/978-3-319-57288-8_2">Learning from Faults: Mutation Testing in Active Automata
+ * Learning</a> by Bernhard K. Aichernig and Martin Tappler.
+ * <p>
+ * A test case will be computed for every k-combination or k-permutation of states with additional random walk at the
+ * end.
+ *
+ * @param <S>
+ *         automaton state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <A>
+ *         automaton type
+ */
 public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>>
         implements Iterator<Word<I>> {
 
-    private static final int DEFAULT_RANDOM_WALK_LENGTH = 20;
+    public static final int DEFAULT_R_WALK_LEN = 20;
+    public static final int DEFAULT_K = 2;
 
     private final A automaton;
     private final List<? extends I> alphabet;
@@ -50,32 +68,74 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
 
     private final Iterator<Word<I>> iterator;
 
+    /**
+     * Convenience constructor which uses a fresh {@code random} object.
+     *
+     * @param automaton
+     *         the automaton for which to generate test cases
+     * @param inputs
+     *         the inputs to consider for test case generation
+     *
+     * @see #KWayStateCoverTestsIterator(UniversalDeterministicAutomaton, Collection, Random)
+     */
     public KWayStateCoverTestsIterator(A automaton, Collection<? extends I> inputs) {
         this(automaton, inputs, new Random());
     }
 
+    /**
+     * Convenience constructor. Uses {@code k=2}, {@code randomWalkLen = 20}, and
+     * {@code method = CombinationMethod.PERMUTATIONS}.
+     *
+     * @param automaton
+     *         the automaton for which to generate test cases
+     * @param inputs
+     *         the inputs to consider for test case generation
+     * @param random
+     *         the random number generator to use
+     *
+     * @see #KWayStateCoverTestsIterator(UniversalDeterministicAutomaton, Collection, Random, int, int,
+     * CombinationMethod)
+     */
     public KWayStateCoverTestsIterator(A automaton, Collection<? extends I> inputs, Random random) {
-        this(automaton, inputs, random, 2, DEFAULT_RANDOM_WALK_LENGTH, CombinationMethod.PERMUTATIONS);
+        this(automaton, inputs, random, DEFAULT_R_WALK_LEN, DEFAULT_K, CombinationMethod.PERMUTATIONS);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param automaton
+     *         the automaton for which to generate test cases
+     * @param inputs
+     *         the inputs to consider for test case generation
+     * @param random
+     *         the random number generator to use
+     * @param randomWalkLen
+     *         length of random walk performed at the end of each combination/permutation
+     * @param k
+     *         k value used for k-wise combinations/permutations of states
+     * @param method
+     *         the method for computing combinations
+     */
     public KWayStateCoverTestsIterator(A automaton,
                                        Collection<? extends I> inputs,
                                        Random random,
-                                       int k,
                                        int randomWalkLen,
+                                       int k,
                                        CombinationMethod method) {
         this.automaton = automaton;
         this.alphabet = CollectionUtil.randomAccessList(inputs);
-        this.k = k;
+        this.k = Math.min(k, automaton.size());
         this.randomWalkLen = randomWalkLen;
         this.method = method;
         this.random = random;
 
-        if (automaton.size() == 0) {
+        final S initial = automaton.getInitialState();
+
+        if (automaton.size() == 0 || initial == null) {
             this.iterator = Collections.emptyIterator();
         } else {
             final FirstPhaseIterator firstIterator = new FirstPhaseIterator();
-            final SecondPhaseIterator secondPhaseIterator = new SecondPhaseIterator();
+            final SecondPhaseIterator secondPhaseIterator = new SecondPhaseIterator(initial);
             this.iterator = IteratorUtil.concat(firstIterator, secondPhaseIterator);
         }
     }
@@ -90,16 +150,6 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
         return iterator.next();
     }
 
-    static <I> Word<I> getRandomChoices(List<? extends I> alphabet, int count, Random random) {
-        WordBuilder<I> choices = new WordBuilder<>(count);
-
-        for (int i = 0; i < count; i++) {
-            choices.append(alphabet.get(random.nextInt(alphabet.size())));
-        }
-
-        return choices.toWord();
-    }
-
     /**
      * Performs random walks if the automaton only has a single state.
      */
@@ -110,7 +160,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
         @Override
         protected boolean calculateNext() {
             if (automaton.size() == 1 && idx++ < randomWalkLen) {
-                super.nextValue = getRandomChoices(alphabet, randomWalkLen, random);
+                super.nextValue = Word.fromList(RandomUtil.sample(random, alphabet, randomWalkLen));
                 return true;
             }
             return false;
@@ -124,10 +174,12 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
 
         private final Iterator<List<S>> combIter;
         private final Set<Set<List<TransitionEdge<I, T>>>> cache;
+        private final S initial;
 
         private APSPResult<S, TransitionEdge<I, T>> apsp;
 
-        SecondPhaseIterator() {
+        SecondPhaseIterator(S initial) {
+            this.initial = initial;
             List<S> states = new ArrayList<>(automaton.getStates());
             Collections.shuffle(states, random);
             this.combIter = method.getCombinations(states, k);
@@ -137,7 +189,6 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
         @Override
         protected boolean calculateNext() {
 
-            final S initial = automaton.getInitialState();
             final APSPResult<S, TransitionEdge<I, T>> apsp = getAPSP();
 
             while (combIter.hasNext()) {
@@ -166,7 +217,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
                  */
                 boolean possibleTestCase = true;
                 for (int index = 0; index < comb.size() - 1; index++) {
-                    final List<? extends TransitionEdge<I, ?>> pathBetweenStates =
+                    final List<TransitionEdge<I, T>> pathBetweenStates =
                             apsp.getShortestPath(comb.get(index), comb.get(index + 1));
 
                     if (pathBetweenStates == null || pathBetweenStates.isEmpty()) {
@@ -180,11 +231,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
                 }
 
                 if (possibleTestCase) {
-                    // Add random walk at the end
-                    for (I p : getRandomChoices(alphabet, randomWalkLen, random)) {
-                        pathBuilder.append(p);
-                    }
-
+                    pathBuilder.append(RandomUtil.sample(random, alphabet, randomWalkLen));
                     super.nextValue = pathBuilder.toWord();
                     return true;
                 }
@@ -206,17 +253,30 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
         }
     }
 
+    /**
+     * The specific method for generating combinations of states during exploration.
+     */
     public enum CombinationMethod {
+        /**
+         * Generate all k-combinations of states.
+         *
+         * @see CollectionUtil#allCombintationsIterator(Collection, int)
+         */
         COMBINATIONS {
             @Override
             <S> Iterator<List<S>> getCombinations(List<S> states, int k) {
-                throw new NoSuchMethodError("TODO");
+                return CollectionUtil.allCombintationsIterator(states, k);
             }
         },
+        /**
+         * Generate all k-permutations of states.
+         *
+         * @see CollectionUtil#allPermutationsIterator(Collection, int)
+         */
         PERMUTATIONS {
             @Override
             <S> Iterator<List<S>> getCombinations(List<S> states, int k) {
-                return IterableUtil.allTuples(states, k).iterator();
+                return CollectionUtil.allPermutationsIterator(states, k);
             }
         };
 
