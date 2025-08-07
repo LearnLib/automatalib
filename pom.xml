@@ -222,7 +222,7 @@ limitations under the License.
         <tidy-pom.version>1.3.0</tidy-pom.version>
 
         <!-- dependency versions -->
-        <addlib.version>4.0.0-SNAPSHOT</addlib.version>
+        <addlib.version>4.0.0</addlib.version>
         <assertj.version>3.17.1</assertj.version>
         <brics-automaton.version>1.12-4</brics-automaton.version>
         <build-tools.version>0.1.1</build-tools.version>
@@ -575,26 +575,6 @@ limitations under the License.
         </dependencies>
     </dependencyManagement>
 
-    <repositories>
-        <!-- explicitly name maven-central, so it is queried first -->
-        <repository>
-            <id>maven-central</id>
-            <name>Maven Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </repository>
-        <repository>
-            <name>Central Portal Snapshots</name>
-            <id>central-portal-snapshots</id>
-            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <!--
     ================================= BUILD PLUGINS =============================
     -->
@@ -732,7 +712,7 @@ limitations under the License.
                         <detectLinks>true</detectLinks>
                         <linksource>false</linksource>
                         <links>
-<!--                            <link>${addlib.apidocs}</link>-->
+                            <link>${addlib.apidocs}</link>
                             <link>${brics-automaton.apidocs}</link>
                             <link>${checkerframework.apidocs}</link>
                             <link>${guava.apidocs}</link>
