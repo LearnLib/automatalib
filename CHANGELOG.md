@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.12.1...HEAD)
 
+### Added
+
+* `automata-modelchecking-m3c` now supports ARM-based macOS systems.
+* `automata-modelchecking-m3c` can now be included in jlink images.
+
 ### Changed
 
 * AutomataLib now requires Java 11 at runtime.
