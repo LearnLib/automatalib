@@ -35,6 +35,7 @@ import net.automatalib.util.graph.Graphs;
 import net.automatalib.util.graph.apsp.APSPResult;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A randomized state cover test generator based on the concepts of mutation testing as described in the paper <a
@@ -173,7 +174,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
     private final class SecondPhaseIterator extends AbstractSimplifiedIterator<Word<I>> {
 
         private final Iterator<List<S>> combIter;
-        private final Set<Set<List<TransitionEdge<I, T>>>> cache;
+        private final Set<Set<@Nullable List<TransitionEdge<I, T>>>> cache;
         private final S initial;
 
         private APSPResult<S, TransitionEdge<I, T>> apsp;
@@ -193,7 +194,8 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
 
             while (combIter.hasNext()) {
                 final List<S> comb = combIter.next();
-                final Set<List<TransitionEdge<I, T>>> prefixes = new HashSet<>(HashUtil.capacity(comb.size()));
+                final Set<@Nullable List<TransitionEdge<I, T>>> prefixes =
+                        new HashSet<>(HashUtil.capacity(comb.size()));
 
                 for (S c : comb) {
                     prefixes.add(apsp.getShortestPath(initial, c));
@@ -225,8 +227,8 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
                         break;
                     }
 
-                    for (TransitionEdge<I, ?> pathBetweenState : pathBetweenStates) {
-                        pathBuilder.append(pathBetweenState.getInput());
+                    for (TransitionEdge<I, ?> t : pathBetweenStates) {
+                        pathBuilder.append(t.getInput());
                     }
                 }
 

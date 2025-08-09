@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -39,13 +38,14 @@ import net.automatalib.util.graph.Graphs;
 import net.automatalib.util.graph.apsp.APSPResult;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A randomized state cover test generator based on the concepts of mutation testing as described in the paper <a
+ * A randomized transition cover test generator based on the concepts of mutation testing as described in the paper <a
  * href="https://doi.org/10.1007/978-3-319-57288-8_2">Learning from Faults: Mutation Testing in Active Automata
  * Learning</a> by Bernhard K. Aichernig and Martin Tappler.
  * <p>
- * This iterates selects test cases based on k-way transitions coverage. It does that by generating random test words
+ * This iterator selects test cases based on k-way transitions coverage. It does that by generating random test words
  * and finding the smallest subset with the highest coverage. In other words, this iterator generates test words by
  * running random paths that cover all pairwise / k-way transitions.
  *
@@ -131,20 +131,20 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
      * @param random
      *         the random number generator to use
      * @param randomWalkLen
-     *         the number of steps that are added by 'prefix' generated paths
+     *         the number of steps that are added by {@link GenerationMethod#PREFIX prefix}-generated paths
      * @param numGeneratePaths
-     *         number of random queries used to find the optimal subset
+     *         number of {@link GenerationMethod#RANDOM randomly}-generated queries used to find the optimal subset
      * @param maxPathLen
-     *         the maximum step size of a generated path
+     *         the maximum step size of {@link GenerationMethod#RANDOM randomly}-generated paths
      * @param maxNumberOfSteps
-     *         maximum number of steps that will be executed on the automaton (<=0 = no limit)
+     *         threshold for the number of steps after which no more new test words will be generated (<=0 = no limit)
      * @param k
-     *         k value used for K-Way transitions, i.e the number of steps between the start and the end of a
+     *         k value used for K-Way transitions, i.e.,the number of steps between the start and the end of a
      *         transition
      * @param generationMethod
-     *         defines how the queries are generated 'random' or 'prefix'
+     *         defines how the queries are generated
      * @param optimizationMetric
-     *         minimize either the number of 'steps' or 'queries' that are executed
+     *         the metric after which test cases are minimized
      */
     public KWayTransitionCoverTestsIterator(A automaton,
                                             Collection<? extends I> inputs,
@@ -172,7 +172,7 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
         if (automaton.size() == 0 || initial == null) {
             this.iterator = Collections.emptyIterator();
         } else {
-            this.iterator = generationMethod.getIterator(this);
+            this.iterator = generationMethod.getIterator(this, initial);
         }
     }
 
@@ -186,128 +186,156 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
         return iterator.next();
     }
 
-    private Set<Path<S, I>> generateRandomPaths(A hypothesis) {
-        Set<Path<S, I>> result = new LinkedHashSet<>(HashUtil.capacity(numGeneratePaths));
+    private Set<Path<S, I>> generateRandomPaths(A hypothesis, S initial) {
+        final Set<Path<S, I>> result = new HashSet<>(HashUtil.capacity(numGeneratePaths));
 
         for (int i = 0; i < numGeneratePaths; i++) {
-            int randomLength = random.nextInt(maxPathLen - k + 1) + k; // Ensuring length is at least `k`
-            Word<I> steps = Word.fromList(RandomUtil.sample(random, alphabet, randomLength));
-            Path<S, I> path = createPath(hypothesis, steps);
+            final int randomLength = random.nextInt(maxPathLen - k + 1) + k; // Ensuring length is at least `k`
+            final Word<I> steps = Word.fromList(RandomUtil.sample(random, alphabet, randomLength));
+            final Path<S, I> path = createPath(hypothesis, initial, steps);
             result.add(path);
         }
 
         return result;
     }
 
-    private Path<S, I> createPath(A hypothesis, Word<I> steps) {
-        Set<KWayTransition<S, I>> transitions = new HashSet<>();
-        List<KWayTransition<S, I>> transitionsLog = new ArrayList<>();
+    private Path<S, I> createPath(A hypothesis, S initial, Word<I> steps) {
+        final Set<KWayTransition<S, I>> transitions = new HashSet<>();
 
-        List<S> prevStates = new ArrayList<>(steps.size());
-        List<S> endStates = new ArrayList<>(steps.size());
+        final List<S> prevStates = new ArrayList<>(steps.size());
+        final List<S> endStates = new ArrayList<>(steps.size());
 
-        S iter = hypothesis.getInitialState();
+        S iter = initial;
+        Word<I> reachableSteps = steps;
 
-        for (I i : steps) {
-            prevStates.add(iter);
-            iter = hypothesis.getSuccessor(iter, i);
-            endStates.add(iter);
+        for (int i = 0; i < steps.length(); i++) {
+            final S succ = hypothesis.getSuccessor(iter, steps.getSymbol(i));
+            if (succ == null) {
+                reachableSteps = steps.subWord(0, i);
+            } else {
+                prevStates.add(iter);
+                endStates.add(succ);
+                iter = succ;
+            }
         }
 
-        for (int i = 0; i < steps.size() - k + 1; i++) {
-            S prevState = prevStates.get(i);
-            S endState = endStates.get(i + k - 1);
-            Word<I> chunk = steps.subWord(i, i + k);
+        for (int i = 0; i < reachableSteps.size() - k + 1; i++) {
+            final S prevState = prevStates.get(i);
+            final S endState = endStates.get(i + k - 1);
+            final Word<I> chunk = steps.subWord(i, i + k);
 
-            KWayTransition<S, I> transition = new KWayTransition<>(prevState, endState, chunk);
+            final KWayTransition<S, I> transition = new KWayTransition<>(prevState, endState, chunk);
 
-            transitionsLog.add(transition);
             transitions.add(transition);
         }
 
-        return new Path<>(hypothesis.getInitialState(),
-                          endStates.get(endStates.size() - 1),
-                          steps,
-                          transitions,
-                          transitionsLog);
+        return new Path<>(steps, transitions);
     }
 
-    private Iterator<Word<I>> generatePrefixSteps(A hypothesis) {
-        List<S> states = new ArrayList<>(hypothesis.getStates());
+    private Iterator<Word<I>> generatePrefixSteps(A hypothesis, S initial) {
+        final List<S> states = new ArrayList<>(hypothesis.getStates());
         Collections.reverse(states);
-        return new PrefixStepsIterator(states.iterator());
+        return new PrefixStepsIterator(states.iterator(), initial);
     }
 
-    private Path<S, I> selectOptimalPath(Set<KWayTransition<S, I>> covered, Collection<Path<S, I>> paths) {
-        Path<S, I> max = Collections.max(paths, optimizationMetric.getPathComparator(covered));
-        return max.kWayTransitions.size() == covered.size() ? null : max;
+    private @Nullable Path<S, I> selectOptimalPath(Set<KWayTransition<S, I>> covered, Set<Path<S, I>> paths) {
+        final Path<S, I> max = Collections.max(paths, optimizationMetric.getPathComparator(covered));
+        return sizeOfSetDifference(max.kWayTransitions, covered) > 0 ? max : null;
     }
 
+    static <T> int sizeOfSetDifference(Set<T> minuend, Set<T> subtrahend) {
+        /*
+         * This method is performance-critical so we do a little bit more involved computation.
+         */
+        final Set<T> smaller, bigger;
+        if (minuend.size() < subtrahend.size()) {
+            smaller = minuend;
+            bigger = subtrahend;
+        } else {
+            smaller = subtrahend;
+            bigger = minuend;
+        }
+
+        int size = minuend.size();
+        for (T t : smaller) {
+            if (bigger.contains(t)) {
+                size--;
+            }
+        }
+        return size;
+    }
+
+    /**
+     * Method by which the prefixes of test words should be generated.
+     */
     public enum GenerationMethod {
+        /**
+         * Generate prefixes randomly.
+         */
         RANDOM {
             @Override
             <S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>> Iterator<Word<I>> getIterator(
-                    KWayTransitionCoverTestsIterator<S, I, T, A> self) {
-                return self.new GreedySetCoverIterator();
+                    KWayTransitionCoverTestsIterator<S, I, T, A> self,
+                    S initial) {
+                return self.new GreedySetCoverIterator(initial);
             }
         },
+        /**
+         * Generate prefixes based on access sequences.
+         */
         PREFIX {
             @Override
             <S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>> Iterator<Word<I>> getIterator(
-                    KWayTransitionCoverTestsIterator<S, I, T, A> self) {
-                return self.generatePrefixSteps(self.automaton);
+                    KWayTransitionCoverTestsIterator<S, I, T, A> self,
+                    S initial) {
+                return self.generatePrefixSteps(self.automaton, initial);
             }
         };
 
         abstract <S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>> Iterator<Word<I>> getIterator(
-                KWayTransitionCoverTestsIterator<S, I, T, A> self);
+                KWayTransitionCoverTestsIterator<S, I, T, A> self,
+                S initial);
     }
 
+    /**
+     * The metric by which to optimize path selection.
+     */
     public enum OptimizationMetric {
+        /**
+         * Selects the paths maximum coverage per step, thus reducing the number of total steps.
+         */
         STEPS {
             @Override
             <S, I> Comparator<Path<S, I>> getPathComparator(Set<KWayTransition<S, I>> covered) {
-                return Comparator.comparingDouble(p -> ((double) computeSizeOfDiff(p.kWayTransitions, covered)) /
+                return Comparator.comparingDouble(p -> ((double) sizeOfSetDifference(p.kWayTransitions, covered)) /
                                                        p.steps.size());
             }
         },
+        /**
+         * Selects the paths with maximum coverage, thus reducing number of test words.
+         */
         QUERIES {
             @Override
             <S, I> Comparator<Path<S, I>> getPathComparator(Set<KWayTransition<S, I>> covered) {
-                return Comparator.comparingDouble(p -> p.kWayTransitions.size() - covered.size());
+                return Comparator.comparingDouble(p -> sizeOfSetDifference(p.kWayTransitions, covered));
             }
         };
 
         abstract <S, I> Comparator<Path<S, I>> getPathComparator(Set<KWayTransition<S, I>> covered);
-
-        /**
-         * Computes the size of the set difference without actually materializing the difference.
-         *
-         * @return size of the difference
-         */
-        private static <S, I> int computeSizeOfDiff(Set<KWayTransition<S, I>> transitions,
-                                                    Set<KWayTransition<S, I>> covered) {
-            int size = transitions.size();
-            for (KWayTransition<S, I> t : covered) {
-                if (transitions.contains(t)) {
-                    size--;
-                }
-            }
-
-            return size;
-        }
     }
 
     private class GreedySetCoverIterator extends AbstractSimplifiedIterator<Word<I>> {
 
+        private final S initial;
         private final Set<Path<S, I>> paths;
-        private final int sizeOfUniverse;
         private final Set<KWayTransition<S, I>> covered;
+        private final int sizeOfUniverse;
 
         private int stepCount;
 
-        GreedySetCoverIterator() {
-            this.paths = generateRandomPaths(automaton);
+        GreedySetCoverIterator(S initial) {
+            this.initial = initial;
+            this.paths = generateRandomPaths(automaton, initial);
             this.covered = new HashSet<>();
             this.stepCount = 0;
             this.sizeOfUniverse = automaton.getStates().size() * (int) Math.pow(alphabet.size(), k);
@@ -315,8 +343,8 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
 
         @Override
         protected boolean calculateNext() {
-            if (sizeOfUniverse > covered.size()) {
-                Path<S, I> path = selectOptimalPath(covered, paths);
+            while (sizeOfUniverse > covered.size()) {
+                final Path<S, I> path = selectOptimalPath(covered, paths);
 
                 if (path != null) {
                     covered.addAll(path.kWayTransitions);
@@ -327,11 +355,14 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
                 }
 
                 if (paths.isEmpty()) {
-                    Iterator<Word<I>> prefixIterator = generatePrefixSteps(automaton);
+                    final Iterator<Word<I>> prefixIterator = generatePrefixSteps(automaton, initial);
                     while (prefixIterator.hasNext()) {
-                        Word<I> generatePrefixStep = prefixIterator.next();
-                        paths.add(createPath(automaton, generatePrefixStep));
+                        final Word<I> generatePrefixStep = prefixIterator.next();
+                        paths.add(createPath(automaton, initial, generatePrefixStep));
                     }
+                } else {
+                    // prevent infinite loops
+                    return false;
                 }
 
                 if (maxNumberOfSteps != 0 && stepCount > maxNumberOfSteps) {
@@ -347,21 +378,27 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
         private final APSPResult<S, TransitionEdge<I, T>> apsp;
         private final S initial;
 
-        PrefixStepsIterator(Iterator<S> listIterator) {
-            super(listIterator);
+        PrefixStepsIterator(Iterator<S> iterator, S initial) {
+            super(iterator);
             this.apsp = Graphs.findAPSP(automaton.transitionGraphView(alphabet));
-            this.initial = automaton.getInitialState();
+            this.initial = initial;
         }
 
         @Override
         protected Iterator<List<I>> l2Iterator(S state) {
-            Iterable<List<I>> lists = IterableUtil.allTuples(alphabet, k);
+            /*
+             * The original code shuffles all tuples globally. Since we can't do this lazily, we approximate this
+             * behavior by at least shuffling the input symbols for a randomized tuple order.
+             */
+            final List<I> inputs = new ArrayList<>(alphabet);
+            Collections.shuffle(inputs, random);
+            final Iterable<List<I>> lists = IterableUtil.allTuples(inputs, k);
             return lists.iterator();
         }
 
         @Override
         protected Word<I> combine(S state, List<I> steps) {
-            List<TransitionEdge<I, T>> prefix = apsp.getShortestPath(initial, state);
+            final List<TransitionEdge<I, T>> prefix = apsp.getShortestPath(initial, state);
             if (prefix == null) {
                 return Word.epsilon();
             }
@@ -384,71 +421,77 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
         private final S endState;
         private final Word<I> steps;
 
+        /**
+         * Since we need to compute the hash code quite often, cache it since we're immutable.
+         */
+        private final int hashCode;
+
         KWayTransition(S startState, S endState, Word<I> steps) {
             this.startState = startState;
             this.endState = endState;
             this.steps = steps;
+
+            this.hashCode = computeHashCode(startState, endState, steps);
+        }
+
+        private int computeHashCode(S startState, S endState, Word<I> steps) {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + Objects.hashCode(startState);
+            result = prime * result + Objects.hashCode(endState);
+            result = prime * result + Objects.hashCode(steps);
+            return result;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
+            if (this == o) {
+                return true;
+            }
+
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
 
-            KWayTransition<?, ?> that = (KWayTransition<?, ?>) o;
+            final KWayTransition<?, ?> that = (KWayTransition<?, ?>) o;
             return Objects.equals(startState, that.startState) && Objects.equals(endState, that.endState) &&
                    Objects.equals(steps, that.steps);
         }
 
         @Override
         public int hashCode() {
-            int result = Objects.hashCode(startState);
-            result = 31 * result + Objects.hashCode(endState);
-            result = 31 * result + Objects.hashCode(steps);
-            return result;
+            return hashCode;
         }
     }
 
     private static final class Path<S, I> {
 
-        private final S startState;
-        private final S endState;
         private final Word<I> steps;
         private final Set<KWayTransition<S, I>> kWayTransitions;
-        private final List<KWayTransition<S, I>> transitionsLog;
 
-        Path(S startState,
-             S endState,
-             Word<I> steps,
-             Set<KWayTransition<S, I>> kWayTransitions,
-             List<KWayTransition<S, I>> transitionsLog) {
-            this.startState = startState;
-            this.endState = endState;
+        Path(Word<I> steps, Set<KWayTransition<S, I>> kWayTransitions) {
             this.steps = steps;
             this.kWayTransitions = kWayTransitions;
-            this.transitionsLog = transitionsLog;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
+            if (o == this) {
+                return true;
+            }
+
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
 
-            Path<?, ?> path = (Path<?, ?>) o;
-            return Objects.equals(startState, path.startState) && Objects.equals(endState, path.endState) &&
-                   Objects.equals(steps, path.steps) && Objects.equals(kWayTransitions, path.kWayTransitions) &&
-                   Objects.equals(transitionsLog, path.transitionsLog);
+            final Path<?, ?> path = (Path<?, ?>) o;
+            return Objects.equals(steps, path.steps) && Objects.equals(kWayTransitions, path.kWayTransitions);
         }
 
         @Override
         public int hashCode() {
-            int result = Objects.hashCode(startState);
-            result = 31 * result + Objects.hashCode(endState);
-            result = 31 * result + Objects.hashCode(steps);
+            int result = Objects.hashCode(steps);
             result = 31 * result + Objects.hashCode(kWayTransitions);
-            result = 31 * result + Objects.hashCode(transitionsLog);
             return result;
         }
     }

@@ -17,6 +17,7 @@ package net.automatalib.util.automaton.conformance;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -49,6 +50,30 @@ public class KWayTransitionCoverTestsIteratorTest {
         }
 
         return result;
+    }
+
+    @Test
+    public void testSizeOfSetDifference() {
+        final Set<Character> s1 = Set.of('A', 'B', 'C');
+        final Set<Character> s2 = Set.of('A', 'B');
+        final Set<Character> s3 = Set.of('A');
+        final Set<Character> s4 = Set.of('X', 'Y', 'Z');
+        final Set<Character> s5 = Set.of('A', 'X');
+
+        Assert.assertEquals(KWayTransitionCoverTestsIterator.sizeOfSetDifference(s1, s2), 1);
+        Assert.assertEquals(KWayTransitionCoverTestsIterator.sizeOfSetDifference(s2, s1), 0);
+
+        Assert.assertEquals(KWayTransitionCoverTestsIterator.sizeOfSetDifference(s1, s3), 2);
+        Assert.assertEquals(KWayTransitionCoverTestsIterator.sizeOfSetDifference(s3, s1), 0);
+
+        Assert.assertEquals(KWayTransitionCoverTestsIterator.sizeOfSetDifference(s1, s4), 3);
+        Assert.assertEquals(KWayTransitionCoverTestsIterator.sizeOfSetDifference(s4, s1), 3);
+
+        Assert.assertEquals(KWayTransitionCoverTestsIterator.sizeOfSetDifference(s1, s5), 2);
+        Assert.assertEquals(KWayTransitionCoverTestsIterator.sizeOfSetDifference(s5, s1), 1);
+
+        Assert.assertEquals(KWayTransitionCoverTestsIterator.sizeOfSetDifference(s4, s5), 2);
+        Assert.assertEquals(KWayTransitionCoverTestsIterator.sizeOfSetDifference(s5, s4), 1);
     }
 
     @Test
@@ -132,5 +157,59 @@ public class KWayTransitionCoverTestsIteratorTest {
                                                                                                      method,
                                                                                                      metric));
         KWayStateCoverTestsIteratorTest.verifyEachStateVisited(mealy, tests);
+    }
+
+    @Test
+    public void testLimits() {
+        final Random random = new Random(42);
+        final Alphabet<Integer> alphabet = Alphabets.integers(0, 6);
+        final CompactDFA<Integer> dfa = RandomAutomata.randomDFA(random, 10, alphabet, false);
+        final int randomWalkLen = 50;
+
+        final List<Word<Integer>> rWalkTests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(dfa,
+                                                                                                        alphabet,
+                                                                                                        random,
+                                                                                                        randomWalkLen,
+                                                                                                        KWayTransitionCoverTestsIterator.DEFAULT_NUM_GEN_PATHS,
+                                                                                                        KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
+                                                                                                        KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
+                                                                                                        KWayTransitionCoverTestsIterator.DEFAULT_K,
+                                                                                                        GenerationMethod.PREFIX,
+                                                                                                        OptimizationMetric.QUERIES));
+
+        for (Word<Integer> t : rWalkTests) {
+            Assert.assertTrue(t.size() > randomWalkLen, t.toString());
+        }
+
+        final int maxPathLength = 10;
+        final List<Word<Integer>> maxPathTests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(dfa,
+                                                                                                          alphabet,
+                                                                                                          random,
+                                                                                                          KWayTransitionCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                          KWayTransitionCoverTestsIterator.DEFAULT_NUM_GEN_PATHS,
+                                                                                                          maxPathLength,
+                                                                                                          KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
+                                                                                                          KWayTransitionCoverTestsIterator.DEFAULT_K,
+                                                                                                          GenerationMethod.RANDOM,
+                                                                                                          OptimizationMetric.QUERIES));
+
+        for (Word<Integer> t : maxPathTests) {
+            Assert.assertTrue(t.size() <= maxPathLength, t.toString());
+        }
+
+        final int maxNumSteps = 20;
+        final List<Word<Integer>> maxNumStepsTests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(dfa,
+                                                                                                              alphabet,
+                                                                                                              random,
+                                                                                                              KWayTransitionCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                              KWayTransitionCoverTestsIterator.DEFAULT_NUM_GEN_PATHS,
+                                                                                                              KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
+                                                                                                              maxNumSteps,
+                                                                                                              KWayTransitionCoverTestsIterator.DEFAULT_K,
+                                                                                                              GenerationMethod.RANDOM,
+                                                                                                              OptimizationMetric.STEPS));
+
+        Assert.assertTrue(maxNumStepsTests.stream().mapToInt(Word::size).sum() >= maxNumSteps,
+                          maxNumStepsTests.toString());
     }
 }
