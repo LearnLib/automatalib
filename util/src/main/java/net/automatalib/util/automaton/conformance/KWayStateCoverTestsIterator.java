@@ -35,7 +35,6 @@ import net.automatalib.util.graph.Graphs;
 import net.automatalib.util.graph.apsp.APSPResult;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A randomized state cover test generator based on the concepts of mutation testing as described in the paper <a
@@ -174,7 +173,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
     private final class SecondPhaseIterator extends AbstractSimplifiedIterator<Word<I>> {
 
         private final Iterator<List<S>> combIter;
-        private final Set<Set<@Nullable List<TransitionEdge<I, T>>>> cache;
+        private final Set<Set<List<TransitionEdge<I, T>>>> cache;
         private final S initial;
 
         private APSPResult<S, TransitionEdge<I, T>> apsp;
@@ -194,22 +193,26 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
 
             while (combIter.hasNext()) {
                 final List<S> comb = combIter.next();
-                final Set<@Nullable List<TransitionEdge<I, T>>> prefixes =
-                        new HashSet<>(HashUtil.capacity(comb.size()));
+                final Set<List<TransitionEdge<I, T>>> prefixes = new HashSet<>(HashUtil.capacity(comb.size()));
+
+                List<TransitionEdge<I, T>> path = null;
 
                 for (S c : comb) {
-                    prefixes.add(apsp.getShortestPath(initial, c));
+                    List<TransitionEdge<I, T>> sp = apsp.getShortestPath(initial, c);
+                    if (sp != null) {
+                        prefixes.add(sp);
+                        if (path == null) {
+                            path = sp;
+                        }
+                    }
                 }
 
-                if (!cache.add(prefixes)) {
+                if (path == null || !cache.add(prefixes)) {
                     continue;
                 }
 
-                final List<TransitionEdge<I, T>> firstPath = apsp.getShortestPath(initial, comb.get(0));
-                assert firstPath != null;
-
                 final WordBuilder<I> pathBuilder = new WordBuilder<>();
-                for (TransitionEdge<I, T> e : firstPath) {
+                for (TransitionEdge<I, T> e : path) {
                     pathBuilder.append(e.getInput());
                 }
 

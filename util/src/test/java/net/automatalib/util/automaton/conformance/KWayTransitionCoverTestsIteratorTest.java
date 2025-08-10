@@ -24,6 +24,7 @@ import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.collection.IteratorUtil;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.conformance.KWayTransitionCoverTestsIterator.GenerationMethod;
 import net.automatalib.util.automaton.conformance.KWayTransitionCoverTestsIterator.OptimizationMetric;
 import net.automatalib.util.automaton.random.RandomAutomata;
@@ -125,6 +126,30 @@ public class KWayTransitionCoverTestsIteratorTest {
     }
 
     @Test(dataProvider = "config")
+    public void testPartialAutomaton(GenerationMethod method, OptimizationMetric metric) {
+        // @formatter:off
+        final CompactDFA<Character> dfa = AutomatonBuilders.newDFA(ALPHABET)
+                                                           .from("s0").on('a').to("s1")
+                                                           .from("s1").on('b').to("s2")
+                                                           .withInitial("s0")
+                                                           .withAccepting("s2", "s3")
+                                                           .create();
+        // @formatter:on
+
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(dfa,
+                                                                                                     ALPHABET,
+                                                                                                     new Random(42),
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_NUM_GEN_PATHS,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
+                                                                                                     KWayTransitionCoverTestsIterator.DEFAULT_K,
+                                                                                                     metric,
+                                                                                                     method));
+        KWayStateCoverTestsIteratorTest.verifyEachStateVisited(dfa, tests, Set.of(0, 1, 2));
+    }
+
+    @Test(dataProvider = "config")
     public void testRandomAutomaton(GenerationMethod method, OptimizationMetric metric) {
         final CompactMealy<Character, Integer> mealy =
                 RandomAutomata.randomMealy(new Random(42), AUTOMATON_SIZE, ALPHABET, Alphabets.integers(0, 2));
@@ -185,7 +210,8 @@ public class KWayTransitionCoverTestsIteratorTest {
         final List<Word<Integer>> maxPathTests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(dfa,
                                                                                                           alphabet,
                                                                                                           random,
-                                                                                                          KWayTransitionCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                          maxPathLength *
+                                                                                                          maxPathLength,
                                                                                                           KWayTransitionCoverTestsIterator.DEFAULT_NUM_GEN_PATHS,
                                                                                                           maxPathLength,
                                                                                                           KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
@@ -194,22 +220,29 @@ public class KWayTransitionCoverTestsIteratorTest {
                                                                                                           GenerationMethod.RANDOM));
 
         for (Word<Integer> t : maxPathTests) {
-            Assert.assertTrue(t.size() <= maxPathLength, t.toString());
+            final int length = t.size();
+            /*
+             * In case the random generation can no longer find any meaningful test sequences it re-generates candidates
+             * via the prefix method which uses the randomWalkLength. We make this value reasonably large to check that
+             * test sequences were only generated from these two possibilities.
+             */
+            Assert.assertTrue(length <= maxPathLength || length > maxPathLength * maxPathLength, t.toString());
         }
 
-        final int maxNumSteps = 20;
+        final int maxNumSteps = 10;
         final List<Word<Integer>> maxNumStepsTests = IteratorUtil.list(new KWayTransitionCoverTestsIterator<>(dfa,
                                                                                                               alphabet,
                                                                                                               random,
                                                                                                               KWayTransitionCoverTestsIterator.DEFAULT_R_WALK_LEN,
                                                                                                               KWayTransitionCoverTestsIterator.DEFAULT_NUM_GEN_PATHS,
-                                                                                                              KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
+                                                                                                              maxPathLength,
                                                                                                               maxNumSteps,
                                                                                                               KWayTransitionCoverTestsIterator.DEFAULT_K,
                                                                                                               OptimizationMetric.STEPS,
                                                                                                               GenerationMethod.RANDOM));
 
-        Assert.assertTrue(maxNumStepsTests.stream().mapToInt(Word::size).sum() >= maxNumSteps,
-                          maxNumStepsTests.toString());
+        final int numSteps = maxNumStepsTests.stream().mapToInt(Word::size).sum();
+        Assert.assertTrue(numSteps >= maxNumSteps, maxNumStepsTests.toString());
+        Assert.assertTrue(numSteps <= maxNumSteps + maxPathLength, maxNumStepsTests.toString());
     }
 }

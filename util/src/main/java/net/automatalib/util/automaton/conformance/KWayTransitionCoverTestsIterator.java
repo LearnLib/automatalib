@@ -203,26 +203,20 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
     private Path<S, I> createPath(A hypothesis, S initial, Word<I> steps) {
         final Set<KWayTransition<S, I>> transitions = new HashSet<>();
 
-        final List<S> prevStates = new ArrayList<>(steps.size());
-        final List<S> endStates = new ArrayList<>(steps.size());
+        final List<@Nullable S> prevStates = new ArrayList<>(steps.size());
+        final List<@Nullable S> endStates = new ArrayList<>(steps.size());
 
         S iter = initial;
-        Word<I> reachableSteps = steps;
 
-        for (int i = 0; i < steps.length(); i++) {
-            final S succ = hypothesis.getSuccessor(iter, steps.getSymbol(i));
-            if (succ == null) {
-                reachableSteps = steps.subWord(0, i);
-            } else {
-                prevStates.add(iter);
-                endStates.add(succ);
-                iter = succ;
-            }
+        for (I i : steps) {
+            prevStates.add(iter);
+            iter = iter == null ? null : hypothesis.getSuccessor(iter, i);
+            endStates.add(iter);
         }
 
-        for (int i = 0; i < reachableSteps.size() - k + 1; i++) {
-            final S prevState = prevStates.get(i);
-            final S endState = endStates.get(i + k - 1);
+        for (int i = 0; i < steps.size() - k + 1; i++) {
+            final @Nullable S prevState = prevStates.get(i);
+            final @Nullable S endState = endStates.get(i + k - 1);
             final Word<I> chunk = steps.subWord(i, i + k);
 
             final KWayTransition<S, I> transition = new KWayTransition<>(prevState, endState, chunk);
@@ -285,7 +279,7 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
 
         @Override
         protected boolean calculateNext() {
-            while (sizeOfUniverse > covered.size()) {
+            while (sizeOfUniverse > covered.size() && (maxNumberOfSteps == 0 || stepCount <= maxNumberOfSteps)) {
                 final Path<S, I> path = selectOptimalPath(covered, paths);
 
                 if (path != null) {
@@ -293,25 +287,24 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
                     paths.remove(path);
                     stepCount += path.steps.size();
                     super.nextValue = path.steps;
-                    return true;
-                }
 
-                if (paths.isEmpty()) {
-                    final Iterator<Word<I>> prefixIterator = generatePrefixSteps(automaton, initial);
-                    while (prefixIterator.hasNext()) {
-                        final Word<I> generatePrefixStep = prefixIterator.next();
-                        paths.add(createPath(automaton, initial, generatePrefixStep));
+                    if (paths.isEmpty()){
+                        computeNewPaths();
                     }
+                    return true;
                 } else {
-                    // prevent infinite loops
-                    return false;
-                }
-
-                if (maxNumberOfSteps != 0 && stepCount > maxNumberOfSteps) {
-                    return false;
+                    computeNewPaths();
                 }
             }
             return false;
+        }
+
+        private void computeNewPaths() {
+            final Iterator<Word<I>> prefixIterator = generatePrefixSteps(automaton, initial);
+            while (prefixIterator.hasNext()) {
+                final Word<I> generatePrefixStep = prefixIterator.next();
+                paths.add(createPath(automaton, initial, generatePrefixStep));
+            }
         }
     }
 
@@ -359,8 +352,8 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
 
     private static final class KWayTransition<S, I> {
 
-        private final S startState;
-        private final S endState;
+        private final @Nullable S startState;
+        private final @Nullable S endState;
         private final Word<I> steps;
 
         /**
@@ -368,7 +361,7 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
          */
         private final int hashCode;
 
-        KWayTransition(S startState, S endState, Word<I> steps) {
+        KWayTransition(@Nullable S startState, @Nullable S endState, Word<I> steps) {
             this.startState = startState;
             this.endState = endState;
             this.steps = steps;
@@ -376,7 +369,7 @@ public class KWayTransitionCoverTestsIterator<S, I, T, A extends UniversalDeterm
             this.hashCode = computeHashCode(startState, endState, steps);
         }
 
-        private int computeHashCode(S startState, S endState, Word<I> steps) {
+        private int computeHashCode(@Nullable S startState, @Nullable S endState, Word<I> steps) {
             final int prime = 31;
             int result = 1;
             result = prime * result + Objects.hashCode(startState);

@@ -27,6 +27,7 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.conformance.KWayStateCoverTestsIterator.CombinationMethod;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
@@ -92,6 +93,26 @@ public class KWayStateCoverTestsIteratorTest {
     }
 
     @Test(dataProvider = "methods")
+    public void testPartialAutomaton(CombinationMethod method) {
+        // @formatter:off
+        final CompactDFA<Character> dfa = AutomatonBuilders.newDFA(ALPHABET)
+                                                           .from("s0").on('a').to("s1")
+                                                           .from("s1").on('b').to("s2")
+                                                           .withInitial("s0")
+                                                           .withAccepting("s2", "s3")
+                                                           .create();
+        // @formatter:on
+
+        final List<Word<Character>> tests = IteratorUtil.list(new KWayStateCoverTestsIterator<>(dfa,
+                                                                                                ALPHABET,
+                                                                                                new Random(42),
+                                                                                                KWayStateCoverTestsIterator.DEFAULT_R_WALK_LEN,
+                                                                                                KWayStateCoverTestsIterator.DEFAULT_K,
+                                                                                                method));
+        verifyEachStateVisited(dfa, tests, Set.of(0, 1, 2));
+    }
+
+    @Test(dataProvider = "methods")
     public void testRandomAutomaton(CombinationMethod method) {
         final CompactMealy<Character, Integer> mealy =
                 RandomAutomata.randomMealy(new Random(42), 10, ALPHABET, Alphabets.integers(0, 2));
@@ -122,6 +143,12 @@ public class KWayStateCoverTestsIteratorTest {
 
     static <S, I> void verifyEachStateVisited(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
                                               List<Word<I>> tests) {
+        verifyEachStateVisited(automaton, tests, new HashSet<>(automaton.getStates()));
+    }
+
+    static <S, I> void verifyEachStateVisited(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                              List<Word<I>> tests,
+                                              Set<S> expected) {
         final Set<S> visited = new HashSet<>(HashUtil.capacity(automaton.size()));
 
         final S init = automaton.getInitialState();
@@ -133,13 +160,15 @@ public class KWayStateCoverTestsIteratorTest {
             S iter = init;
             for (I i : t) {
                 S succ = automaton.getSuccessor(iter, i);
-                Assert.assertNotNull(succ);
+                if (succ == null) {
+                    break;
+                }
                 visited.add(succ);
                 iter = succ;
             }
         }
 
-        Assert.assertEquals(visited, new HashSet<>(automaton.getStates()));
+        Assert.assertEquals(visited, expected);
     }
 
     static <I> CompactDFA<I> generateKeylockAutomaton(Alphabet<I> alphabet) {
