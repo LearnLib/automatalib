@@ -63,8 +63,8 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
     private final A automaton;
     private final List<? extends I> alphabet;
     private final Random random;
-    private final int k;
     private final int randomWalkLen;
+    private final int k;
     private final CombinationMethod method;
 
     private final Iterator<Word<I>> iterator;
@@ -125,10 +125,10 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
                                        CombinationMethod method) {
         this.automaton = automaton;
         this.alphabet = CollectionUtil.randomAccessList(inputs);
-        this.k = Math.min(k, automaton.size());
-        this.randomWalkLen = randomWalkLen;
-        this.method = method;
         this.random = random;
+        this.randomWalkLen = randomWalkLen;
+        this.k = Math.min(k, automaton.size());
+        this.method = method;
 
         final S initial = automaton.getInitialState();
 

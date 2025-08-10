@@ -101,8 +101,8 @@ public class KWayTransitionCoverTestsIteratorTest {
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_K,
-                                                                                                     method,
-                                                                                                     metric));
+                                                                                                     metric,
+                                                                                                     method));
         KWayStateCoverTestsIteratorTest.verifyEachStateVisited(dfa, tests);
     }
 
@@ -119,8 +119,8 @@ public class KWayTransitionCoverTestsIteratorTest {
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_K,
-                                                                                                     method,
-                                                                                                     metric));
+                                                                                                     metric,
+                                                                                                     method));
         Assert.assertTrue(tests.isEmpty());
     }
 
@@ -137,8 +137,8 @@ public class KWayTransitionCoverTestsIteratorTest {
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_K,
-                                                                                                     method,
-                                                                                                     metric));
+                                                                                                     metric,
+                                                                                                     method));
         KWayStateCoverTestsIteratorTest.verifyEachStateVisited(mealy, tests);
     }
 
@@ -154,8 +154,8 @@ public class KWayTransitionCoverTestsIteratorTest {
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
                                                                                                      KWayTransitionCoverTestsIterator.DEFAULT_K,
-                                                                                                     method,
-                                                                                                     metric));
+                                                                                                     metric,
+                                                                                                     method));
         KWayStateCoverTestsIteratorTest.verifyEachStateVisited(mealy, tests);
     }
 
@@ -174,8 +174,8 @@ public class KWayTransitionCoverTestsIteratorTest {
                                                                                                         KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
                                                                                                         KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
                                                                                                         KWayTransitionCoverTestsIterator.DEFAULT_K,
-                                                                                                        GenerationMethod.PREFIX,
-                                                                                                        OptimizationMetric.QUERIES));
+                                                                                                        OptimizationMetric.QUERIES,
+                                                                                                        GenerationMethod.PREFIX));
 
         for (Word<Integer> t : rWalkTests) {
             Assert.assertTrue(t.size() > randomWalkLen, t.toString());
@@ -190,8 +190,8 @@ public class KWayTransitionCoverTestsIteratorTest {
                                                                                                           maxPathLength,
                                                                                                           KWayTransitionCoverTestsIterator.DEFAULT_MAX_NUM_STEPS,
                                                                                                           KWayTransitionCoverTestsIterator.DEFAULT_K,
-                                                                                                          GenerationMethod.RANDOM,
-                                                                                                          OptimizationMetric.QUERIES));
+                                                                                                          OptimizationMetric.QUERIES,
+                                                                                                          GenerationMethod.RANDOM));
 
         for (Word<Integer> t : maxPathTests) {
             Assert.assertTrue(t.size() <= maxPathLength, t.toString());
@@ -206,8 +206,8 @@ public class KWayTransitionCoverTestsIteratorTest {
                                                                                                               KWayTransitionCoverTestsIterator.DEFAULT_MAX_PATH_LENGTH,
                                                                                                               maxNumSteps,
                                                                                                               KWayTransitionCoverTestsIterator.DEFAULT_K,
-                                                                                                              GenerationMethod.RANDOM,
-                                                                                                              OptimizationMetric.STEPS));
+                                                                                                              OptimizationMetric.STEPS,
+                                                                                                              GenerationMethod.RANDOM));
 
         Assert.assertTrue(maxNumStepsTests.stream().mapToInt(Word::size).sum() >= maxNumSteps,
                           maxNumStepsTests.toString());
