@@ -65,7 +65,9 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractMealyTreeB
                 curr = insertNode(curr, sym, out);
             } else {
                 if (!Objects.equals(out, edge.getOutput())) {
-                    throw new ConflictException();
+                    throw new ConflictException(
+                            "Error inserting " + input.prefix(i + 1) + " / " + outputWord.prefix(i + 1) +
+                            ": Incompatible output symbols: " + out + " vs " + edge.getOutput());
                 }
                 curr = edge.getTarget();
             }

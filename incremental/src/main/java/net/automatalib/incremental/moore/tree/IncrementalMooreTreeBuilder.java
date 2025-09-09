@@ -190,11 +190,12 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
         for (I sym : word) {
             int inputIdx = alphabet.getSymbolIndex(sym);
             Node<O> succ = curr.getChild(inputIdx);
+            O out = outIter.next();
             if (succ == null) {
-                succ = new Node<>(outIter.next());
+                succ = new Node<>(out);
                 curr.setChild(inputIdx, alphabetSize, succ);
-            } else if (!Objects.equals(succ.getOutput(), outIter.next())) {
-                throw new ConflictException();
+            } else if (!Objects.equals(succ.getOutput(), out)) {
+                throw new ConflictException("Incompatible outputs: " + succ.getOutput() + " vs " + out);
             }
             curr = succ;
         }
