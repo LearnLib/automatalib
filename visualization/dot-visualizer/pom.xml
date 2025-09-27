@@ -117,7 +117,23 @@ limitations under the License.
                         <configuration>
                             <!-- core is only a testing dependency not defined in module-info.java -->
                             <!-- append to existing argLine to nicely work together with jacoco plugin -->
-                            <argLine>@{argLine} --add-reads=net.automatalib.visualization.dot=net.automatalib.core</argLine>
+                            <argLine>
+                                @{argLine}
+                                --add-reads=net.automatalib.visualization.dot=net.automatalib.core
+                                --add-exports=java.desktop/java.awt=ALL-UNNAMED
+                                --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED
+                                --add-exports=java.desktop/sun.awt.image=ALL-UNNAMED
+                                --add-exports=java.desktop/sun.java2d=ALL-UNNAMED
+                                --add-exports=java.desktop/java.awt.dnd.peer=ALL-UNNAMED
+                                --add-exports=java.desktop/sun.awt=ALL-UNNAMED
+                                --add-exports=java.desktop/sun.awt.event=ALL-UNNAMED
+                                --add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED
+                                --add-exports=java.base/sun.security.action=ALL-UNNAMED
+                                --add-opens=java.base/java.util=ALL-UNNAMED
+                                --add-opens=java.desktop/java.awt=ALL-UNNAMED
+                                --add-opens=java.desktop/sun.java2d=ALL-UNNAMED
+                                --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+                            </argLine>
                         </configuration>
                     </execution>
                 </executions>

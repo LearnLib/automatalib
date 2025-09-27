@@ -21,6 +21,7 @@ import java.util.Random;
 
 import javax.swing.SwingUtilities;
 
+import com.github.caciocavallosilano.cacio.ctc.junit.CacioExtension;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.util.automaton.random.RandomAutomata;
@@ -49,9 +50,7 @@ public class ProviderTest {
     @Test(dependsOnMethods = "testProviderConfiguration", timeOut = 30000)
     public void testDisplay() throws InterruptedException, InvocationTargetException {
 
-        if (!(Runtime.version().feature() == 11)) {
-            throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
-        }
+        checkExecution();
 
         final Random random = new Random(42);
         final CompactDFA<Integer> dfa = RandomAutomata.randomDFA(random, 10, Alphabets.integers(1, 6));
@@ -60,6 +59,16 @@ public class ProviderTest {
         SwingUtilities.invokeAndWait(() -> Visualization.visualize(dfa.graphView(),
                                                                    false,
                                                                    new RandomEdgeStyler<>(random)));
+    }
+
+    private static void checkExecution() {
+        final int feature = Runtime.version().feature();
+        if (feature == 17 || feature == 21) {
+            // hack: the static initializer of this class does the magic we want, so only invoke it on compatible JVMs
+            new CacioExtension();
+        } else {
+            throw new SkipException("The headless AWT environment is not supported on this platform");
+        }
     }
 
     private static final class RandomEdgeStyler<N, E> implements VisualizationHelper<N, E> {

@@ -25,28 +25,15 @@ import java.util.Random;
 import javax.swing.SwingUtilities;
 
 import net.automatalib.common.util.Pair;
-import org.testng.SkipException;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+@Listeners(ActivationListener.class)
 public class DOTMultiDialogTest {
-
-    @BeforeClass
-    public void checkDOT() {
-        if (!DOT.checkUsable()) {
-            // Do not fail on platforms, where DOT is not installed
-            throw new SkipException("DOT is not installed");
-        }
-    }
 
     // Headless GUI testing is a pain. Therefore, just check that we don't throw any exceptions for now.
     @Test(timeOut = 30000)
     public void testFrame() throws InvocationTargetException, InterruptedException {
-
-        if (!(Runtime.version().feature() == 11)) {
-            throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
-        }
-
         final Random r = new Random(42);
         final List<Pair<String, String>> graphs =
                 Arrays.asList(Pair.of("Automaton 1", TestUtil.generateRandomAutomatonDot(r)),
@@ -66,11 +53,6 @@ public class DOTMultiDialogTest {
     // Headless GUI testing is a pain. Therefore, just check that we don't throw any exceptions for now.
     @Test(timeOut = 30000)
     public void testEmptyFrame() throws InvocationTargetException, InterruptedException {
-
-        if (!(Runtime.version().feature() == 11)) {
-            throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
-        }
-
         // invokeAndWait so that TestNG doesn't kill our GUI thread that we want to check.
         SwingUtilities.invokeAndWait(() -> {
             try {

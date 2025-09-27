@@ -39,7 +39,7 @@ import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-@Listeners(DOTDialogListener.class)
+@Listeners(ActivationListener.class)
 public class DOTDialogTest extends AssertJSwingTestngTestCase {
 
     private final String dot;

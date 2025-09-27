@@ -15,21 +15,23 @@
  */
 package net.automatalib.visualization.dot;
 
-import org.assertj.swing.testng.testcase.AssertJSwingTestngTestCase;
+import com.github.caciocavallosilano.cacio.ctc.junit.CacioExtension;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;
 import org.testng.SkipException;
 
 /**
- * This listener fully skips GUI tests including the (otherwise un-skipable)
- * {@link AssertJSwingTestngTestCase#setUpOnce} method.
+ * This listener checks wether GUI tests can be executed and if so, sets up the necessary headless environments.
  */
-public class DOTDialogListener implements IInvokedMethodListener {
+public class ActivationListener implements IInvokedMethodListener {
 
     @Override
     public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
-        if (!(DOT.checkUsable() && Runtime.version().feature() == 11)) {
+        if (TestUtil.shouldRunGUITests()) {
+            // hack: the static initializer of this class does the magic we want, so only invoke it on compatible JVMs
+            new CacioExtension();
+        } else {
             testResult.setThrowable(new SkipException(
                     "Either DOT is not available or the headless AWT environment is not supported"));
             testResult.setStatus(ITestResult.SKIP);
