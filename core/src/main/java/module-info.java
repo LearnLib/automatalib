@@ -35,6 +35,7 @@ open module net.automatalib.core {
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
+    requires org.slf4j;
 
     exports net.automatalib.alphabet.impl;
     exports net.automatalib.automaton.base;
@@ -51,4 +52,7 @@ open module net.automatalib.core {
     exports net.automatalib.ts.modal.impl;
     exports net.automatalib.ts.modal.transition.impl;
     exports net.automatalib.ts.powerset.impl;
+    exports net.automatalib.alphabet.impl.time.mmlt;
+    exports net.automatalib.automaton.time.mmlt.semantics;
+    exports net.automatalib.automaton.time.mmlt;
 }
