@@ -7,13 +7,45 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
-public class LocalTimerMealyDeserializationTest {
+public class LocalTimerMealyTests {
+
+    @Test
+    public void parseAndWriteDemoModel() {
+        var demoResource = LocalTimerMealyTests.class.getResource("/demo_mmlt.dot");
+        var expResultPath = Paths.get(LocalTimerMealyTests.class.getResource("/demo_expected_serialized.dot").getPath());
+        var demoModel = LocalTimerMealyGraphvizParser.parseLocalTimerMealy(new File(demoResource.getFile()), "void", StringSymbolCombiner.getInstance());
+
+
+        StringBuilder sbOutput = new StringBuilder();
+        try {
+            List<String> expected = Files.readAllLines(expResultPath).stream()
+                    .filter(l -> !l.isBlank() && !l.startsWith("//"))
+                    .map(String::trim)
+                    .toList();
+
+            GraphDOT.write(demoModel.transitionGraphView(true, true), sbOutput);
+            var actualData = sbOutput.toString();
+            System.out.println(actualData);
+            List<String> actual = Arrays.stream(actualData.split("\\n"))
+                    .filter(l -> !l.isBlank())
+                    .map(String::trim)
+                    .toList();
+
+            Assert.assertEquals(expected, actual);
+        } catch (Exception ex) {
+            throw new AssertionError();
+        }
+    }
 
     @Test
     public void parseSensorModel() {
         // Load a model from file:
-        var resource = LocalTimerMealyDeserializationTest.class.getResource("/sensor_mmlt.dot");
+        var resource = LocalTimerMealyTests.class.getResource("/sensor_mmlt.dot");
 
         var dotAutomaton = LocalTimerMealyGraphvizParser.parseLocalTimerMealy(new File(resource.getFile()), "void", StringSymbolCombiner.getInstance());
 
