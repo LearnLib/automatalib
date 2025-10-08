@@ -1,10 +1,10 @@
 package net.automatalib.automaton.impl;
 
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.impl.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.impl.time.mmlt.TimeStepSequence;
-import net.automatalib.automaton.time.mmlt.CompactLocalTimerMealy;
-import net.automatalib.automaton.time.mmlt.StringSymbolCombiner;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.alphabet.time.mmlt.TimeStepSequence;
+import net.automatalib.automaton.time.impl.mmlt.CompactLocalTimerMealy;
+import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;

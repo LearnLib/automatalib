@@ -1,4 +1,6 @@
-package net.automatalib.automaton.time.mmlt;
+package net.automatalib.automaton.time.impl.mmlt;
+
+import net.automatalib.automaton.time.mmlt.AbstractSymbolCombiner;
 
 import java.util.Arrays;
 import java.util.HashSet;

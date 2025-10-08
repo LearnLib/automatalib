@@ -1,10 +1,11 @@
-package net.automatalib.automaton.time.mmlt.semantics;
+package net.automatalib.automaton.time.impl.mmlt;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.time.mmlt.ILocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.impl.time.mmlt.LocalTimerMealyOutputSymbol;
-import net.automatalib.alphabet.impl.time.mmlt.TimeoutSymbol;
+import net.automatalib.alphabet.time.mmlt.ILocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
+import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealyConfiguration;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

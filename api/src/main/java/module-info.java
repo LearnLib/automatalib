@@ -70,6 +70,9 @@ open module net.automatalib.api {
     exports net.automatalib.ts.simple;
     exports net.automatalib.visualization;
     exports net.automatalib.word;
+    exports net.automatalib.alphabet.time.mmlt;
+    exports net.automatalib.automaton.time.mmlt.semantics;
+    exports net.automatalib.automaton.time.mmlt;
 
     uses VisualizationProvider;
 }

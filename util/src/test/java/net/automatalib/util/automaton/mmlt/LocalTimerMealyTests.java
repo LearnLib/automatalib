@@ -1,9 +1,9 @@
 package net.automatalib.util.automaton.mmlt;
 
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.impl.time.mmlt.NonDelayingInput;
-import net.automatalib.automaton.time.mmlt.CompactLocalTimerMealy;
-import net.automatalib.automaton.time.mmlt.StringSymbolCombiner;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.automaton.time.impl.mmlt.CompactLocalTimerMealy;
+import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

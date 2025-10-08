@@ -1,4 +1,4 @@
-package net.automatalib.alphabet.impl.time.mmlt;
+package net.automatalib.alphabet.time.mmlt;
 
 /**
  * Base type for input symbols for the structural automaton of an MMLT.

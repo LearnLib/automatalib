@@ -1,8 +1,8 @@
 package net.automatalib.automaton.time.mmlt;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.time.mmlt.ILocalTimerMealyInputSymbol;
-import net.automatalib.alphabet.impl.time.mmlt.NonDelayingInput;
+import net.automatalib.alphabet.time.mmlt.ILocalTimerMealyInputSymbol;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
@@ -110,9 +110,7 @@ public interface LocalTimerMealy<S, I, O> extends UniversalDeterministicAutomato
      *
      * @return Semantics automaton
      */
-    default LocalTimerMealySemantics<S, I, O> getSemantics() {
-        return new LocalTimerMealySemantics<>(this);
-    }
+    LocalTimerMealySemantics<S, I, O> getSemantics();
 
     // =======================================
 

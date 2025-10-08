@@ -1,8 +1,8 @@
 package net.automatalib.util.automaton.cover;
 
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.impl.time.mmlt.ILocalTimerMealySemanticInputSymbol;
-import net.automatalib.alphabet.impl.time.mmlt.TimeoutSymbol;
+import net.automatalib.alphabet.time.mmlt.ILocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealyConfiguration;
 import net.automatalib.word.Word;

@@ -1,6 +1,6 @@
 package net.automatalib.automaton.time.mmlt;
 
-import net.automatalib.alphabet.impl.time.mmlt.NonDelayingInput;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
 
 public interface MutableLocalTimerMealy<S, I, O> {
 

@@ -52,7 +52,5 @@ open module net.automatalib.core {
     exports net.automatalib.ts.modal.impl;
     exports net.automatalib.ts.modal.transition.impl;
     exports net.automatalib.ts.powerset.impl;
-    exports net.automatalib.alphabet.impl.time.mmlt;
-    exports net.automatalib.automaton.time.mmlt.semantics;
-    exports net.automatalib.automaton.time.mmlt;
+    exports net.automatalib.automaton.time.impl.mmlt;
 }

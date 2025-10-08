@@ -1,10 +1,12 @@
-package net.automatalib.automaton.time.mmlt.semantics;
+package net.automatalib.automaton.time.impl.mmlt;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.impl.time.mmlt.*;
+import net.automatalib.alphabet.time.mmlt.*;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealyConfiguration;
+import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealySemanticTransition;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -26,26 +28,12 @@ import java.util.List;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output type of the MMLT
  */
-public class LocalTimerMealySemantics<S, I, O> {
+public class LocalTimerMealySemantics<S, I, O> implements net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealySemantics<S, I, O> {
     private final LocalTimerMealyConfiguration<S, I, O> initialConfiguration;
     private final LocalTimerMealy<S, I, O> model;
 
     private final Alphabet<ILocalTimerMealySemanticInputSymbol<I>> alphabet;
     private final LocalTimerMealyOutputSymbol<O> silentOutput;
-
-    /**
-     * Represents a transition in the semantics automaton ("expanded form") of an MMLT.
-     *
-     * @param output Transition output
-     * @param target Transition target
-     * @param <S>    Location type
-     * @param <I>    Input type
-     * @param <O>    Output type
-     */
-    public record LocalTimerMealySemanticTransition<S, I, O>(LocalTimerMealyOutputSymbol<O> output,
-                                                             LocalTimerMealyConfiguration<S, I, O> target) {
-
-    }
 
     public LocalTimerMealySemantics(LocalTimerMealy<S, I, O> model) {
         this.model = model;
@@ -60,45 +48,26 @@ public class LocalTimerMealySemantics<S, I, O> {
         this.silentOutput = new LocalTimerMealyOutputSymbol<>(model.getSilentOutput());
     }
 
-    /**
-     * Returns the input alphabet of the semantics automaton. This consists of all non-delaying inputs
-     * of the associated MMLT, as well as the time step symbol and the symbolic timeout symbol.
-     *
-     * @return Input alphabet
-     */
+
+    @Override
     public Alphabet<ILocalTimerMealySemanticInputSymbol<I>> getInputAlphabet() {
         return alphabet;
     }
 
-    /**
-     * Returns the symbol used for silent outputs.
-     *
-     * @return Silent output symbol
-     */
+
+    @Override
     public LocalTimerMealyOutputSymbol<O> getSilentOutput() {
         return this.silentOutput;
     }
 
-    /**
-     * Returns the initial configuration of this MMLT. This is a tuple of the
-     * initial location and its initial timer values.
-     *
-     * @return Initial configuration
-     */
+
+    @Override
     public LocalTimerMealyConfiguration<S, I, O> getInitialConfiguration() {
         return this.initialConfiguration;
     }
 
-    /**
-     * Enters the suffix into the provided configuration and returns corresponding outputs.
-     * <p>
-     * Cannot provide TimeSequences with more than 1 symbol for the suffix, as this might trigger multiple timeouts
-     * and thus lead to output sequences that are longer than the suffix.
-     *
-     * @param configuration Configuration
-     * @param suffix        Suffix inputs
-     * @return Outputs for the suffix
-     */
+
+    @Override
     public Word<LocalTimerMealyOutputSymbol<O>> computeSuffixOutput(LocalTimerMealyConfiguration<S, I, O> configuration, Word<ILocalTimerMealySemanticInputSymbol<I>> suffix) {
         WordBuilder<LocalTimerMealyOutputSymbol<O>> wbOutput = new WordBuilder<>();
 
@@ -116,24 +85,15 @@ public class LocalTimerMealySemantics<S, I, O> {
         return wbOutput.toWord();
     }
 
-    /**
-     * Enters the prefix and suffix sequences into the automaton and returns the outputs that occur for the suffixes.
-     *
-     * @param prefix Configuration prefix
-     * @param suffix Suffix inputs
-     * @return Outputs for the suffix
-     */
+
+    @Override
     public Word<LocalTimerMealyOutputSymbol<O>> computeSuffixOutput(Word<ILocalTimerMealySemanticInputSymbol<I>> prefix, Word<ILocalTimerMealySemanticInputSymbol<I>> suffix) {
         var prefixConfig = this.traceInputs(prefix);
         return computeSuffixOutput(prefixConfig, suffix);
     }
 
-    /**
-     * Traces the provided prefix and returns the reached configuration.
-     *
-     * @param prefix Configuration prefix
-     * @return Reached configuration
-     */
+
+    @Override
     public LocalTimerMealyConfiguration<S, I, O> traceInputs(Word<ILocalTimerMealySemanticInputSymbol<I>> prefix) {
         var currentConfiguration = getInitialConfiguration().copy();
         for (var sym : prefix) {
@@ -143,28 +103,16 @@ public class LocalTimerMealySemantics<S, I, O> {
     }
 
 
-    @NonNull
-    public LocalTimerMealySemanticTransition<S, I, O> getTransition(LocalTimerMealyConfiguration<S, I, O> source, ILocalTimerMealySemanticInputSymbol<I> input) {
+    @Override
+    public @NonNull LocalTimerMealySemanticTransition<S, I, O> getTransition(LocalTimerMealyConfiguration<S, I, O> source, ILocalTimerMealySemanticInputSymbol<I> input) {
         return getTransition(source, input, Long.MAX_VALUE);
     }
 
-    /**
-     * Retrieves the transition in the semantics automaton that has the provided input and source configuration.
-     * <p>
-     * If the input is a sequence of time steps, the target of the transition is the configuration reached after
-     * executing all time steps. If the sequence counts more than one step, the sequence might trigger multiple
-     * timeouts. To avoid ambiguity, the transition output is set to null in this case.
-     * If the sequence comprises a single time step only, the output is either that of a timeout or silence.
-     *
-     * @param source         Source configuration
-     * @param input          Input symbol
-     * @param maxWaitingTime Maximum time steps to wait for a timeout
-     * @return Transition in semantics automaton
-     */
-    @NonNull
-    public LocalTimerMealySemanticTransition<S, I, O> getTransition(LocalTimerMealyConfiguration<S, I, O> source,
-                                                                    ILocalTimerMealySemanticInputSymbol<I> input,
-                                                                    long maxWaitingTime) {
+
+    @Override
+    public @NonNull LocalTimerMealySemanticTransition<S, I, O> getTransition(LocalTimerMealyConfiguration<S, I, O> source,
+                                                                             ILocalTimerMealySemanticInputSymbol<I> input,
+                                                                             long maxWaitingTime) {
         var sourceCopy = source.copy(); // we do not want to modify values of the source configuration
 
         if (input instanceof NonDelayingInput<I> ndi) {

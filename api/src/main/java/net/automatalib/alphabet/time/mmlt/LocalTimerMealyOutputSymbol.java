@@ -1,4 +1,4 @@
-package net.automatalib.alphabet.impl.time.mmlt;
+package net.automatalib.alphabet.time.mmlt;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 

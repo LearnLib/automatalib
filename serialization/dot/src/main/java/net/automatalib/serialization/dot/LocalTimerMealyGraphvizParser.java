@@ -1,7 +1,8 @@
 package net.automatalib.serialization.dot;
 
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.impl.time.mmlt.NonDelayingInput;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.automaton.time.impl.mmlt.CompactLocalTimerMealy;
 import net.automatalib.automaton.time.mmlt.*;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;

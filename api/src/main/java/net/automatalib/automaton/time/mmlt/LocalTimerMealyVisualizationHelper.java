@@ -1,8 +1,8 @@
 package net.automatalib.automaton.time.mmlt;
 
-import net.automatalib.alphabet.impl.time.mmlt.ILocalTimerMealyInputSymbol;
-import net.automatalib.alphabet.impl.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.impl.time.mmlt.TimerTimeoutSymbol;
+import net.automatalib.alphabet.time.mmlt.ILocalTimerMealyInputSymbol;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.alphabet.time.mmlt.TimerTimeoutSymbol;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.visualization.AutomatonVisualizationHelper;
 

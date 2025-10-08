@@ -1,9 +1,9 @@
 package net.automatalib.util.automaton.mmlt;
 
-import net.automatalib.alphabet.impl.time.mmlt.ILocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.ILocalTimerMealySemanticInputSymbol;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
-import net.automatalib.automaton.time.mmlt.semantics.ReducedLocalTimerMealySemantics;
+import net.automatalib.automaton.time.impl.mmlt.ReducedLocalTimerMealySemantics;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;

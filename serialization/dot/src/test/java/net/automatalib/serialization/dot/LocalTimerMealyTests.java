@@ -1,8 +1,8 @@
 package net.automatalib.serialization.dot;
 
-import net.automatalib.alphabet.impl.time.mmlt.NonDelayingInput;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
-import net.automatalib.automaton.time.mmlt.StringSymbolCombiner;
+import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

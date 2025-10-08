@@ -1,11 +1,16 @@
-package net.automatalib.automaton.time.mmlt;
+package net.automatalib.automaton.time.impl.mmlt;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.impl.time.mmlt.ILocalTimerMealyInputSymbol;
-import net.automatalib.alphabet.impl.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.impl.time.mmlt.TimerTimeoutSymbol;
+import net.automatalib.alphabet.time.mmlt.ILocalTimerMealyInputSymbol;
+import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.alphabet.time.mmlt.TimerTimeoutSymbol;
+import net.automatalib.automaton.time.mmlt.AbstractSymbolCombiner;
+import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
+import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.time.mmlt.MutableLocalTimerMealy;
+import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealySemantics;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -83,6 +88,11 @@ public class CompactLocalTimerMealy<I, O> implements LocalTimerMealy<Integer, I,
     @Override
     public List<MealyTimerInfo<O>> getSortedTimers(Integer location) {
         return Collections.unmodifiableList(this.sortedTimers.getOrDefault(location, Collections.emptyList()));
+    }
+
+    @Override
+    public LocalTimerMealySemantics<Integer, I, O> getSemantics() {
+        return new net.automatalib.automaton.time.impl.mmlt.LocalTimerMealySemantics<>(this);
     }
 
     @Override

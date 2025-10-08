@@ -1,4 +1,4 @@
-package net.automatalib.alphabet.impl.time.mmlt;
+package net.automatalib.alphabet.time.mmlt;
 
 /**
  * Input for the semantics automaton: delay for a single time step.

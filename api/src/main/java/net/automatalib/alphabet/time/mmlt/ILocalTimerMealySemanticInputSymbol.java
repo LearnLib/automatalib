@@ -1,4 +1,4 @@
-package net.automatalib.alphabet.impl.time.mmlt;
+package net.automatalib.alphabet.time.mmlt;
 
 /**
  * Base class for an input for the semantics automaton of some MMLT.
