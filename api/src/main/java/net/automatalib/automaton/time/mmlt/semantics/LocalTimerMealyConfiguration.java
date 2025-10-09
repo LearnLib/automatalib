@@ -1,6 +1,6 @@
 package net.automatalib.automaton.time.mmlt.semantics;
 
-import net.automatalib.alphabet.time.mmlt.ILocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -34,7 +34,7 @@ public final class LocalTimerMealyConfiguration<S, I, O> {
         this(location, sortedTimers, null);
     }
 
-    public LocalTimerMealyConfiguration(S location, List<MealyTimerInfo<O>> sortedTimers, Word<ILocalTimerMealySemanticInputSymbol<I>> locationPrefix) {
+    public LocalTimerMealyConfiguration(S location, List<MealyTimerInfo<O>> sortedTimers, Word<LocalTimerMealySemanticInputSymbol<I>> locationPrefix) {
         this.location = location;
 
         this.sortedTimers = sortedTimers;

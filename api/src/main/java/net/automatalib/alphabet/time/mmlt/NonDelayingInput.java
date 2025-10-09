@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  * @param <U>
  */
-public class NonDelayingInput<U> implements ILocalTimerMealySemanticInputSymbol<U>, ILocalTimerMealyInputSymbol<U> {
+public class NonDelayingInput<U> implements LocalTimerMealySemanticInputSymbol<U>, LocalTimerMealyInputSymbol<U> {
     private final U symbol;
 
     public NonDelayingInput(@NonNull U input) {

@@ -1,6 +1,6 @@
 package net.automatalib.util.automaton.mmlt;
 
-import net.automatalib.alphabet.time.mmlt.ILocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.automaton.time.mmlt.MealyTimerInfo;
 import net.automatalib.automaton.time.impl.mmlt.ReducedLocalTimerMealySemantics;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class LocalTimerMealyUtil {
 
-    public static @Nullable <S1, S2, I, O> Word<ILocalTimerMealySemanticInputSymbol<I>> findSeparatingWord(LocalTimerMealy<S1, I, O> modelA, LocalTimerMealy<S2, I, O> modelB) {
+    public static @Nullable <S1, S2, I, O> Word<LocalTimerMealySemanticInputSymbol<I>> findSeparatingWord(LocalTimerMealy<S1, I, O> modelA, LocalTimerMealy<S2, I, O> modelB) {
         var expandedA = ReducedLocalTimerMealySemantics.forLocalTimerMealy(modelA);
         var expandedB = ReducedLocalTimerMealySemantics.forLocalTimerMealy(modelB);
 

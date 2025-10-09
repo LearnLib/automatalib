@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Convenience type for aggregating multiple subsequent time steps.
  */
-public class TimeStepSequence<U> implements ILocalTimerMealySemanticInputSymbol<U> {
+public class TimeStepSequence<U> implements LocalTimerMealySemanticInputSymbol<U> {
 
     private long timeSteps;
 

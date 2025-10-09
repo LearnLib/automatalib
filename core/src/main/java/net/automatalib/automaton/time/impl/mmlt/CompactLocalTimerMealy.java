@@ -3,7 +3,7 @@ package net.automatalib.automaton.time.impl.mmlt;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.time.mmlt.ILocalTimerMealyInputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealyInputSymbol;
 import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
 import net.automatalib.alphabet.time.mmlt.TimerTimeoutSymbol;
 import net.automatalib.automaton.time.mmlt.AbstractSymbolCombiner;
@@ -24,7 +24,7 @@ import java.util.*;
  * @param <O> Output symbol type
  */
 public class CompactLocalTimerMealy<I, O> implements LocalTimerMealy<Integer, I, O>, MutableLocalTimerMealy<Integer, I, O> {
-    private final CompactMealy<ILocalTimerMealyInputSymbol<I>, O> automaton;
+    private final CompactMealy<LocalTimerMealyInputSymbol<I>, O> automaton;
     private final Map<Integer, List<MealyTimerInfo<O>>> sortedTimers; // location -> (sorted timers)
     private final Map<Integer, Set<NonDelayingInput<I>>> resets; // location -> inputs (that reset all timers)
 
@@ -54,7 +54,7 @@ public class CompactLocalTimerMealy<I, O> implements LocalTimerMealy<Integer, I,
         this.outputCombiner = outputCombiner;
 
         // Prepare compact Mealy:
-        GrowingMapAlphabet<ILocalTimerMealyInputSymbol<I>> inputAlphabet = new GrowingMapAlphabet<>();
+        GrowingMapAlphabet<LocalTimerMealyInputSymbol<I>> inputAlphabet = new GrowingMapAlphabet<>();
         inputAlphabet.addAll(nonDelayingInputs);
         this.automaton = new CompactMealy<>(inputAlphabet);
     }
@@ -71,7 +71,7 @@ public class CompactLocalTimerMealy<I, O> implements LocalTimerMealy<Integer, I,
     }
 
     @Override
-    public Alphabet<ILocalTimerMealyInputSymbol<I>> getInputAlphabet() {
+    public Alphabet<LocalTimerMealyInputSymbol<I>> getInputAlphabet() {
         return this.automaton.getInputAlphabet();
     }
 
@@ -101,7 +101,7 @@ public class CompactLocalTimerMealy<I, O> implements LocalTimerMealy<Integer, I,
     }
 
     @Override
-    public @Nullable LocalTimerMealyTransition<Integer, O> getTransition(Integer location, ILocalTimerMealyInputSymbol<I> input) {
+    public @Nullable LocalTimerMealyTransition<Integer, O> getTransition(Integer location, LocalTimerMealyInputSymbol<I> input) {
         var trans = this.automaton.getTransition(location, input);
         if (trans == null) {
             return null;

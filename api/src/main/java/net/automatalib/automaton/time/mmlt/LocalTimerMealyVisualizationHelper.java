@@ -1,6 +1,6 @@
 package net.automatalib.automaton.time.mmlt;
 
-import net.automatalib.alphabet.time.mmlt.ILocalTimerMealyInputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealyInputSymbol;
 import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
 import net.automatalib.alphabet.time.mmlt.TimerTimeoutSymbol;
 import net.automatalib.automaton.graph.TransitionEdge;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 class LocalTimerMealyVisualizationHelper<S, I, O> extends
-        AutomatonVisualizationHelper<S, ILocalTimerMealyInputSymbol<I>, LocalTimerMealy.LocalTimerMealyTransition<S, O>, LocalTimerMealy<S, I, O>> {
+        AutomatonVisualizationHelper<S, LocalTimerMealyInputSymbol<I>, LocalTimerMealy.LocalTimerMealyTransition<S, O>, LocalTimerMealy<S, I, O>> {
 
     private final boolean colorEdges;
     private final boolean includeResets;
@@ -52,7 +52,7 @@ class LocalTimerMealyVisualizationHelper<S, I, O> extends
 
     @Override
     public boolean getEdgeProperties(S src,
-                                     TransitionEdge<ILocalTimerMealyInputSymbol<I>, LocalTimerMealy.LocalTimerMealyTransition<S, O>> edge,
+                                     TransitionEdge<LocalTimerMealyInputSymbol<I>, LocalTimerMealy.LocalTimerMealyTransition<S, O>> edge,
                                      S tgt, Map<String, String> properties) {
         super.getEdgeProperties(src, edge, tgt, properties);
 

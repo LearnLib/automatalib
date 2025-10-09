@@ -1,7 +1,7 @@
 package net.automatalib.automaton.time.impl.mmlt;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.time.mmlt.ILocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
 import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
@@ -28,13 +28,13 @@ import java.util.Map;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public class ReducedLocalTimerMealySemantics<S, I, O> extends CompactMealy<ILocalTimerMealySemanticInputSymbol<I>, LocalTimerMealyOutputSymbol<O>> {
+public class ReducedLocalTimerMealySemantics<S, I, O> extends CompactMealy<LocalTimerMealySemanticInputSymbol<I>, LocalTimerMealyOutputSymbol<O>> {
 
     private final static Logger logger = LoggerFactory.getLogger(ReducedLocalTimerMealySemantics.class);
 
     private final Map<LocalTimerMealyConfiguration<S, I, O>, Integer> stateMap;
 
-    private ReducedLocalTimerMealySemantics(Alphabet<ILocalTimerMealySemanticInputSymbol<I>> alphabet) {
+    private ReducedLocalTimerMealySemantics(Alphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet) {
         super(alphabet);
         this.stateMap = new HashMap<>();
     }

@@ -1,7 +1,7 @@
 package net.automatalib.automaton.time.mmlt;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.time.mmlt.ILocalTimerMealyInputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealyInputSymbol;
 import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.graph.TransitionEdge;
@@ -40,7 +40,7 @@ import java.util.Set;
  * @param <I> Input type for non-delaying inputs
  * @param <O> Output symbol type
  */
-public interface LocalTimerMealy<S, I, O> extends UniversalDeterministicAutomaton<S, ILocalTimerMealyInputSymbol<I>, LocalTimerMealy.LocalTimerMealyTransition<S, O>, Void, O> {
+public interface LocalTimerMealy<S, I, O> extends UniversalDeterministicAutomaton<S, LocalTimerMealyInputSymbol<I>, LocalTimerMealy.LocalTimerMealyTransition<S, O>, Void, O> {
 
     record LocalTimerMealyTransition<S, O>(@NonNull S successor, @NonNull O output) {
 
@@ -68,7 +68,7 @@ public interface LocalTimerMealy<S, I, O> extends UniversalDeterministicAutomato
      *
      * @return Input alphabet
      */
-    Alphabet<ILocalTimerMealyInputSymbol<I>> getInputAlphabet();
+    Alphabet<LocalTimerMealyInputSymbol<I>> getInputAlphabet();
 
     /**
      * Retrieves the non-delaying inputs for this automaton.
@@ -115,15 +115,15 @@ public interface LocalTimerMealy<S, I, O> extends UniversalDeterministicAutomato
     // =======================================
 
     @Override
-    default UniversalGraph<S, TransitionEdge<ILocalTimerMealyInputSymbol<I>, LocalTimerMealyTransition<S, O>>, Void, TransitionEdge.Property<ILocalTimerMealyInputSymbol<I>, O>> transitionGraphView(Collection<? extends ILocalTimerMealyInputSymbol<I>> inputs) {
+    default UniversalGraph<S, TransitionEdge<LocalTimerMealyInputSymbol<I>, LocalTimerMealyTransition<S, O>>, Void, TransitionEdge.Property<LocalTimerMealyInputSymbol<I>, O>> transitionGraphView(Collection<? extends LocalTimerMealyInputSymbol<I>> inputs) {
         return new LocalTimerMealyGraphView<>(this, inputs, false, false);
     }
 
-    default UniversalGraph<S, TransitionEdge<ILocalTimerMealyInputSymbol<I>, LocalTimerMealyTransition<S, O>>, Void, TransitionEdge.Property<ILocalTimerMealyInputSymbol<I>, O>> transitionGraphView() {
+    default UniversalGraph<S, TransitionEdge<LocalTimerMealyInputSymbol<I>, LocalTimerMealyTransition<S, O>>, Void, TransitionEdge.Property<LocalTimerMealyInputSymbol<I>, O>> transitionGraphView() {
         return this.transitionGraphView(getInputAlphabet());
     }
 
-    default UniversalGraph<S, TransitionEdge<ILocalTimerMealyInputSymbol<I>, LocalTimerMealyTransition<S, O>>, Void, TransitionEdge.Property<ILocalTimerMealyInputSymbol<I>, O>> transitionGraphView(boolean colorEdges, boolean includeResets) {
+    default UniversalGraph<S, TransitionEdge<LocalTimerMealyInputSymbol<I>, LocalTimerMealyTransition<S, O>>, Void, TransitionEdge.Property<LocalTimerMealyInputSymbol<I>, O>> transitionGraphView(boolean colorEdges, boolean includeResets) {
         return new LocalTimerMealyGraphView<>(this, getInputAlphabet(), colorEdges, includeResets);
     }
 
@@ -136,32 +136,32 @@ public interface LocalTimerMealy<S, I, O> extends UniversalDeterministicAutomato
 
     // We do not want to provide tracing abilities for inputs of the structure automaton:
     @Override
-    default Set<S> getStates(Iterable<? extends ILocalTimerMealyInputSymbol<I>> input) {
+    default Set<S> getStates(Iterable<? extends LocalTimerMealyInputSymbol<I>> input) {
         throw new IllegalStateException("Not supported. Use the semantics automaton to trace inputs.");
     }
 
     @Override
     @Nullable
-    default S getSuccessor(S state, Iterable<? extends ILocalTimerMealyInputSymbol<I>> input) {
+    default S getSuccessor(S state, Iterable<? extends LocalTimerMealyInputSymbol<I>> input) {
         throw new IllegalStateException("Not supported. Use the semantics automaton to trace inputs.");
     }
 
     @Override
     @Nullable
-    default S getState(Iterable<? extends ILocalTimerMealyInputSymbol<I>> input) {
+    default S getState(Iterable<? extends LocalTimerMealyInputSymbol<I>> input) {
         throw new IllegalStateException("Not supported. Use the semantics automaton to trace inputs.");
     }
 
     // =======================================
 
     class LocalTimerMealyGraphView<SX, IX, OX> extends
-            UniversalAutomatonGraphView<SX, ILocalTimerMealyInputSymbol<IX>, LocalTimerMealy.LocalTimerMealyTransition<SX, OX>, Void, OX, LocalTimerMealy<SX, IX, OX>> {
+            UniversalAutomatonGraphView<SX, LocalTimerMealyInputSymbol<IX>, LocalTimerMealy.LocalTimerMealyTransition<SX, OX>, Void, OX, LocalTimerMealy<SX, IX, OX>> {
 
         private final boolean colorEdges;
         private final boolean includeResets;
 
         public LocalTimerMealyGraphView(LocalTimerMealy<SX, IX, OX> automaton,
-                                        Collection<? extends ILocalTimerMealyInputSymbol<IX>> inputs,
+                                        Collection<? extends LocalTimerMealyInputSymbol<IX>> inputs,
                                         boolean colorEdges, boolean includeResets) {
             super(automaton, inputs);
             this.colorEdges = colorEdges;
@@ -169,7 +169,7 @@ public interface LocalTimerMealy<S, I, O> extends UniversalDeterministicAutomato
         }
 
         @Override
-        public VisualizationHelper<SX, TransitionEdge<ILocalTimerMealyInputSymbol<IX>, LocalTimerMealyTransition<SX, OX>>> getVisualizationHelper() {
+        public VisualizationHelper<SX, TransitionEdge<LocalTimerMealyInputSymbol<IX>, LocalTimerMealyTransition<SX, OX>>> getVisualizationHelper() {
             return new LocalTimerMealyVisualizationHelper<>(automaton, colorEdges, includeResets);
         }
     }

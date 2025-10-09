@@ -1,7 +1,7 @@
 package net.automatalib.automaton.time.mmlt.semantics;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.time.mmlt.ILocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealyOutputSymbol;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -28,7 +28,7 @@ public interface LocalTimerMealySemantics<S, I, O> {
      *
      * @return Input alphabet
      */
-    Alphabet<ILocalTimerMealySemanticInputSymbol<I>> getInputAlphabet();
+    Alphabet<LocalTimerMealySemanticInputSymbol<I>> getInputAlphabet();
 
     /**
      * Returns the symbol used for silent outputs.
@@ -55,7 +55,7 @@ public interface LocalTimerMealySemantics<S, I, O> {
      * @param suffix        Suffix inputs
      * @return Outputs for the suffix
      */
-    Word<LocalTimerMealyOutputSymbol<O>> computeSuffixOutput(LocalTimerMealyConfiguration<S, I, O> configuration, Word<ILocalTimerMealySemanticInputSymbol<I>> suffix);
+    Word<LocalTimerMealyOutputSymbol<O>> computeSuffixOutput(LocalTimerMealyConfiguration<S, I, O> configuration, Word<LocalTimerMealySemanticInputSymbol<I>> suffix);
 
     /**
      * Enters the prefix and suffix sequences into the automaton and returns the outputs that occur for the suffixes.
@@ -64,7 +64,7 @@ public interface LocalTimerMealySemantics<S, I, O> {
      * @param suffix Suffix inputs
      * @return Outputs for the suffix
      */
-    Word<LocalTimerMealyOutputSymbol<O>> computeSuffixOutput(Word<ILocalTimerMealySemanticInputSymbol<I>> prefix, Word<ILocalTimerMealySemanticInputSymbol<I>> suffix);
+    Word<LocalTimerMealyOutputSymbol<O>> computeSuffixOutput(Word<LocalTimerMealySemanticInputSymbol<I>> prefix, Word<LocalTimerMealySemanticInputSymbol<I>> suffix);
 
     /**
      * Traces the provided prefix and returns the reached configuration.
@@ -72,10 +72,10 @@ public interface LocalTimerMealySemantics<S, I, O> {
      * @param prefix Configuration prefix
      * @return Reached configuration
      */
-    LocalTimerMealyConfiguration<S, I, O> traceInputs(Word<ILocalTimerMealySemanticInputSymbol<I>> prefix);
+    LocalTimerMealyConfiguration<S, I, O> traceInputs(Word<LocalTimerMealySemanticInputSymbol<I>> prefix);
 
     @NonNull
-    LocalTimerMealySemanticTransition<S, I, O> getTransition(LocalTimerMealyConfiguration<S, I, O> source, ILocalTimerMealySemanticInputSymbol<I> input);
+    LocalTimerMealySemanticTransition<S, I, O> getTransition(LocalTimerMealyConfiguration<S, I, O> source, LocalTimerMealySemanticInputSymbol<I> input);
 
     /**
      * Retrieves the transition in the semantics automaton that has the provided input and source configuration.
@@ -92,6 +92,6 @@ public interface LocalTimerMealySemantics<S, I, O> {
      */
     @NonNull
     LocalTimerMealySemanticTransition<S, I, O> getTransition(LocalTimerMealyConfiguration<S, I, O> source,
-                                                             ILocalTimerMealySemanticInputSymbol<I> input,
+                                                             LocalTimerMealySemanticInputSymbol<I> input,
                                                              long maxWaitingTime);
 }

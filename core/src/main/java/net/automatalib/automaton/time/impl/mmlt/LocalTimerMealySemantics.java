@@ -32,7 +32,7 @@ public class LocalTimerMealySemantics<S, I, O> implements net.automatalib.automa
     private final LocalTimerMealyConfiguration<S, I, O> initialConfiguration;
     private final LocalTimerMealy<S, I, O> model;
 
-    private final Alphabet<ILocalTimerMealySemanticInputSymbol<I>> alphabet;
+    private final Alphabet<LocalTimerMealySemanticInputSymbol<I>> alphabet;
     private final LocalTimerMealyOutputSymbol<O> silentOutput;
 
     public LocalTimerMealySemantics(LocalTimerMealy<S, I, O> model) {
@@ -50,7 +50,7 @@ public class LocalTimerMealySemantics<S, I, O> implements net.automatalib.automa
 
 
     @Override
-    public Alphabet<ILocalTimerMealySemanticInputSymbol<I>> getInputAlphabet() {
+    public Alphabet<LocalTimerMealySemanticInputSymbol<I>> getInputAlphabet() {
         return alphabet;
     }
 
@@ -68,7 +68,7 @@ public class LocalTimerMealySemantics<S, I, O> implements net.automatalib.automa
 
 
     @Override
-    public Word<LocalTimerMealyOutputSymbol<O>> computeSuffixOutput(LocalTimerMealyConfiguration<S, I, O> configuration, Word<ILocalTimerMealySemanticInputSymbol<I>> suffix) {
+    public Word<LocalTimerMealyOutputSymbol<O>> computeSuffixOutput(LocalTimerMealyConfiguration<S, I, O> configuration, Word<LocalTimerMealySemanticInputSymbol<I>> suffix) {
         WordBuilder<LocalTimerMealyOutputSymbol<O>> wbOutput = new WordBuilder<>();
 
         var currentConfiguration = configuration;
@@ -87,14 +87,14 @@ public class LocalTimerMealySemantics<S, I, O> implements net.automatalib.automa
 
 
     @Override
-    public Word<LocalTimerMealyOutputSymbol<O>> computeSuffixOutput(Word<ILocalTimerMealySemanticInputSymbol<I>> prefix, Word<ILocalTimerMealySemanticInputSymbol<I>> suffix) {
+    public Word<LocalTimerMealyOutputSymbol<O>> computeSuffixOutput(Word<LocalTimerMealySemanticInputSymbol<I>> prefix, Word<LocalTimerMealySemanticInputSymbol<I>> suffix) {
         var prefixConfig = this.traceInputs(prefix);
         return computeSuffixOutput(prefixConfig, suffix);
     }
 
 
     @Override
-    public LocalTimerMealyConfiguration<S, I, O> traceInputs(Word<ILocalTimerMealySemanticInputSymbol<I>> prefix) {
+    public LocalTimerMealyConfiguration<S, I, O> traceInputs(Word<LocalTimerMealySemanticInputSymbol<I>> prefix) {
         var currentConfiguration = getInitialConfiguration().copy();
         for (var sym : prefix) {
             currentConfiguration = getTransition(currentConfiguration, sym).target();
@@ -104,14 +104,14 @@ public class LocalTimerMealySemantics<S, I, O> implements net.automatalib.automa
 
 
     @Override
-    public @NonNull LocalTimerMealySemanticTransition<S, I, O> getTransition(LocalTimerMealyConfiguration<S, I, O> source, ILocalTimerMealySemanticInputSymbol<I> input) {
+    public @NonNull LocalTimerMealySemanticTransition<S, I, O> getTransition(LocalTimerMealyConfiguration<S, I, O> source, LocalTimerMealySemanticInputSymbol<I> input) {
         return getTransition(source, input, Long.MAX_VALUE);
     }
 
 
     @Override
     public @NonNull LocalTimerMealySemanticTransition<S, I, O> getTransition(LocalTimerMealyConfiguration<S, I, O> source,
-                                                                             ILocalTimerMealySemanticInputSymbol<I> input,
+                                                                             LocalTimerMealySemanticInputSymbol<I> input,
                                                                              long maxWaitingTime) {
         var sourceCopy = source.copy(); // we do not want to modify values of the source configuration
 

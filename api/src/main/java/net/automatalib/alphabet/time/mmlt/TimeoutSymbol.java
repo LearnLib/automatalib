@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Symbolic input for the semantics automaton: causes a delay until the next timeout.
  */
-public class TimeoutSymbol<U> implements ILocalTimerMealySemanticInputSymbol<U> {
+public class TimeoutSymbol<U> implements LocalTimerMealySemanticInputSymbol<U> {
 
     @Override
     public String toString() {

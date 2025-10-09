@@ -1,7 +1,7 @@
 package net.automatalib.util.automaton.cover;
 
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.time.mmlt.ILocalTimerMealySemanticInputSymbol;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.automaton.time.mmlt.LocalTimerMealy;
 import net.automatalib.automaton.time.mmlt.semantics.LocalTimerMealyConfiguration;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class LocalTimerMealyCover {
 
-    public static <S, I, O> Map<S, Word<ILocalTimerMealySemanticInputSymbol<I>>> getLocalTimerMealyLocationCover(LocalTimerMealy<S, I, O> automaton) {
+    public static <S, I, O> Map<S, Word<LocalTimerMealySemanticInputSymbol<I>>> getLocalTimerMealyLocationCover(LocalTimerMealy<S, I, O> automaton) {
         return getLocalTimerMealyLocationCover(automaton, true);
     }
 
@@ -29,16 +29,16 @@ public class LocalTimerMealyCover {
      * @param allowIncomplete If set, no error is thrown if some locations are unreachable.
      * @return Location cover in format location -> prefix.
      */
-    public static <S, I, O> Map<S, Word<ILocalTimerMealySemanticInputSymbol<I>>> getLocalTimerMealyLocationCover(LocalTimerMealy<S, I, O> automaton, boolean allowIncomplete) {
-        Map<S, Word<ILocalTimerMealySemanticInputSymbol<I>>> locPrefixes = new HashMap<>();
-        Map<LocalTimerMealyConfiguration<S, I, O>, Word<ILocalTimerMealySemanticInputSymbol<I>>> cfgPrefixes = new HashMap<>();
+    public static <S, I, O> Map<S, Word<LocalTimerMealySemanticInputSymbol<I>>> getLocalTimerMealyLocationCover(LocalTimerMealy<S, I, O> automaton, boolean allowIncomplete) {
+        Map<S, Word<LocalTimerMealySemanticInputSymbol<I>>> locPrefixes = new HashMap<>();
+        Map<LocalTimerMealyConfiguration<S, I, O>, Word<LocalTimerMealySemanticInputSymbol<I>>> cfgPrefixes = new HashMap<>();
         List<LocalTimerMealyConfiguration<S, I, O>> queue = new ArrayList<>();
 
         queue.add(automaton.getSemantics().getInitialConfiguration());
         cfgPrefixes.put(automaton.getSemantics().getInitialConfiguration(), Word.epsilon());
         locPrefixes.put(automaton.getInitialState(), Word.epsilon());
 
-        GrowingMapAlphabet<ILocalTimerMealySemanticInputSymbol<I>> exploreAlphabet = new GrowingMapAlphabet<>(automaton.getUntimedAlphabet());
+        GrowingMapAlphabet<LocalTimerMealySemanticInputSymbol<I>> exploreAlphabet = new GrowingMapAlphabet<>(automaton.getUntimedAlphabet());
         exploreAlphabet.add(new TimeoutSymbol<>());
 
         while (!queue.isEmpty()) {

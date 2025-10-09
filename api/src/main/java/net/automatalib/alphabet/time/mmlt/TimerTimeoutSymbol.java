@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @param <U>
  */
-public class TimerTimeoutSymbol<U> implements ILocalTimerMealyInputSymbol<U> {
+public class TimerTimeoutSymbol<U> implements LocalTimerMealyInputSymbol<U> {
     private final String timer;
 
     public TimerTimeoutSymbol(String timer) {
