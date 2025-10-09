@@ -367,6 +367,7 @@ limitations under the License.
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-modelchecking-parent</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
 
             <dependency>
