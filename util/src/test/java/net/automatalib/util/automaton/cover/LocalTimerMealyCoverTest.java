@@ -73,7 +73,7 @@ public class LocalTimerMealyCoverTest {
         symbols.forEach(s -> partialAlphabet.add(new NonDelayingInput<>(s)));
 
         // Test if detecting incomplete cover:
-        Assert.assertThrows(AssertionError.class, () -> LocalTimerMealyCover.getLocalTimerMealyLocationCover(automaton, partialAlphabet, false));
+        Assert.assertThrows(AssertionError.class, () -> LocalTimerMealyCover.getLocalTimerMealyLocationCover(automaton, partialAlphabet, true, false));
 
         // Verify that state 3 is not covered:
         var cover = LocalTimerMealyCover.getLocalTimerMealyLocationCover(automaton, partialAlphabet);
