@@ -3,7 +3,6 @@ package net.automatalib.util.automaton.cover;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.automaton.time.impl.mmlt.CompactLocalTimerMealy;
 import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
 import org.testng.Assert;

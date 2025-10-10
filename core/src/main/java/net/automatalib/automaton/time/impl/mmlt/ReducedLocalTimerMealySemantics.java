@@ -160,4 +160,19 @@ public class ReducedLocalTimerMealySemantics<S, I, O> extends CompactMealy<Local
 
         return stateMap.get(closestMatch);
     }
+
+    /**
+     * Returns the configuration that represents the provided state.
+     * Throws an error if the state is not part of the reduced automaton.
+     *
+     * @param state Considered state
+     * @return Corresponding configuration
+     */
+    public LocalTimerMealyConfiguration<S, I, O> getConfigurationForState(int state) {
+        return this.stateMap.entrySet().stream()
+                .filter(e -> e.getValue() == state)
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not find corresponding configuration in expanded form."));
+    }
 }

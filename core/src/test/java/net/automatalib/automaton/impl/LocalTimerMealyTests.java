@@ -1,9 +1,9 @@
 package net.automatalib.automaton.impl;
 
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
-import net.automatalib.alphabet.time.mmlt.TimeStepSequence;
+import net.automatalib.alphabet.time.mmlt.*;
 import net.automatalib.automaton.time.impl.mmlt.CompactLocalTimerMealy;
+import net.automatalib.automaton.time.impl.mmlt.ReducedLocalTimerMealySemantics;
 import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -111,6 +111,61 @@ public class LocalTimerMealyTests {
         Assert.assertFalse(stableConfig.isEntryConfig());
         Assert.assertEquals(stableConfig.getEntryDistance(), 2);
         Assert.assertEquals(stableConfig.getLocation().intValue(), 1);
+    }
+
+    @Test
+    public void testReducedSemanticsIncludedConfiguration() {
+        var automaton = buildBaseModel();
+        var reducedSemanticsModel = ReducedLocalTimerMealySemantics.forLocalTimerMealy(automaton);
+        Assert.assertEquals(reducedSemanticsModel.size(), 31);
+
+        // Reachable in both automata:
+        Word<LocalTimerMealySemanticInputSymbol<String>> includedConfigPrefix = Word.fromSymbols(
+                new NonDelayingInput<>("p1"), new TimeoutSymbol<>(), new TimeoutSymbol<>(), new TimeoutSymbol<>(),
+                new TimeoutSymbol<>(), new TimeoutSymbol<>(), new TimeoutSymbol<>(), new TimeStepSymbol<>()
+        );
+        var includedConfig = automaton.getSemantics().traceInputs(includedConfigPrefix);
+
+        // Verify that the reached states are identical:
+        var expectedState = reducedSemanticsModel.getStateForConfiguration(includedConfig, false);
+        var reachedState = reducedSemanticsModel.getState(includedConfigPrefix);
+
+        // Verify that the output is identical:
+        var fullOutput = automaton.getSemantics().computeSuffixOutput(Word.epsilon(), includedConfigPrefix);
+        var reducedOutput = reducedSemanticsModel.computeOutput(includedConfigPrefix);
+        Assert.assertEquals(fullOutput, reducedOutput);
+
+        Assert.assertEquals(expectedState, reachedState);
+    }
+
+    @Test
+    public void testReducedSemanticsOmittedConfiguration() {
+        var automaton = buildBaseModel();
+        var reducedSemanticsModel = ReducedLocalTimerMealySemantics.forLocalTimerMealy(automaton);
+        Assert.assertEquals(reducedSemanticsModel.size(), 31);
+
+        // Only reachable via at least two following time steps:
+        Word<LocalTimerMealySemanticInputSymbol<String>> omittedConfigPrefix = Word.fromSymbols(
+                new NonDelayingInput<>("p1"), new TimeoutSymbol<>(), new TimeoutSymbol<>(),
+                new TimeStepSymbol<>(), new TimeStepSymbol<>()
+        );
+        var omittedConfig = automaton.getSemantics().traceInputs(omittedConfigPrefix);
+
+        // Verify that we cannot reach this state in the reduced semantics:
+        Assert.assertNull(reducedSemanticsModel.getState(omittedConfigPrefix));
+        Assert.assertThrows(IllegalStateException.class, () -> reducedSemanticsModel.getStateForConfiguration(omittedConfig, false));
+
+        // Verify that the output is incomplete:
+        var fullOutput = automaton.getSemantics().computeSuffixOutput(Word.epsilon(), omittedConfigPrefix);
+        var reducedOutput = reducedSemanticsModel.computeOutput(omittedConfigPrefix);
+        Assert.assertNotEquals(fullOutput, reducedOutput);
+
+        // Check the approximated state:
+        var approxStateId = reducedSemanticsModel.getStateForConfiguration(omittedConfig, true);
+        var approxConfig = reducedSemanticsModel.getConfigurationForState(approxStateId);
+
+        Assert.assertEquals(approxConfig.getLocation(), omittedConfig.getLocation());
+        Assert.assertEquals(approxConfig.getEntryDistance(), 7);
     }
 
 
