@@ -19,11 +19,12 @@ import java.util.List;
  */
 public class LocalTimerMealyUtil {
 
-    public static @Nullable <S1, S2, I, O> Word<LocalTimerMealySemanticInputSymbol<I>> findSeparatingWord(LocalTimerMealy<S1, I, O> modelA, LocalTimerMealy<S2, I, O> modelB) {
+    public static @Nullable <S1, S2, I, O> Word<LocalTimerMealySemanticInputSymbol<I>> findSeparatingWord(LocalTimerMealy<S1, I, O> modelA, LocalTimerMealy<S2, I, O> modelB,
+                                                                                                          Collection<LocalTimerMealySemanticInputSymbol<I>> inputs) {
         var expandedA = ReducedLocalTimerMealySemantics.forLocalTimerMealy(modelA);
         var expandedB = ReducedLocalTimerMealySemantics.forLocalTimerMealy(modelB);
 
-        var separatingWord = Automata.findSeparatingWord(expandedA, expandedB, expandedA.getInputAlphabet());
+        var separatingWord = Automata.findSeparatingWord(expandedA, expandedB, inputs);
 
         if (separatingWord != null) {
             var outputA = modelA.getSemantics().computeSuffixOutput(Word.epsilon(), separatingWord);

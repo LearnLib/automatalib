@@ -1,13 +1,16 @@
 package net.automatalib.util.automaton.mmlt;
 
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.time.mmlt.LocalTimerMealySemanticInputSymbol;
 import net.automatalib.alphabet.time.mmlt.NonDelayingInput;
+import net.automatalib.alphabet.time.mmlt.TimeoutSymbol;
 import net.automatalib.automaton.time.impl.mmlt.CompactLocalTimerMealy;
 import net.automatalib.automaton.time.impl.mmlt.StringSymbolCombiner;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LocalTimerMealyTests {
@@ -65,7 +68,7 @@ public class LocalTimerMealyTests {
 
         // Still needs to be equivalent to original:
         var originalModel = buildBaseModel();
-        Assert.assertNull(LocalTimerMealyUtil.findSeparatingWord(model, originalModel));
+        Assert.assertNull(LocalTimerMealyUtil.findSeparatingWord(model, originalModel, originalModel.getSemantics().getInputAlphabet()));
     }
 
     @Test
@@ -87,7 +90,12 @@ public class LocalTimerMealyTests {
         modelB.addPeriodicTimer(s0B, "a", 3, "test");
         modelB.addTransition(s0B, new NonDelayingInput<>("x"), "ok", s0B);
 
-        Assert.assertNotNull(LocalTimerMealyUtil.findSeparatingWord(modelA, modelB));
+        Assert.assertNotNull(LocalTimerMealyUtil.findSeparatingWord(modelA, modelB, modelA.getSemantics().getInputAlphabet()));
+
+        // If we remove the timestep, should not find a counterexample:
+        List<LocalTimerMealySemanticInputSymbol<String>> reducedInputs = new ArrayList<>(modelA.getUntimedAlphabet());
+        reducedInputs.add(new TimeoutSymbol<>());
+        Assert.assertNull(LocalTimerMealyUtil.findSeparatingWord(modelA, modelB, reducedInputs));
     }
 
     @Test
@@ -113,7 +121,12 @@ public class LocalTimerMealyTests {
         modelB.addTransition(s1B, new NonDelayingInput<>("x"), "void", s1B);
         modelB.addLocalReset(s1B, new NonDelayingInput<>("x"));
 
-        Assert.assertNotNull(LocalTimerMealyUtil.findSeparatingWord(modelA, modelB));
+        Assert.assertNotNull(LocalTimerMealyUtil.findSeparatingWord(modelA, modelB, modelA.getSemantics().getInputAlphabet()));
+
+        // If we remove the timestep, should not find a counterexample:
+        List<LocalTimerMealySemanticInputSymbol<String>> reducedInputs = new ArrayList<>(modelA.getUntimedAlphabet());
+        reducedInputs.add(new TimeoutSymbol<>());
+        Assert.assertNull(LocalTimerMealyUtil.findSeparatingWord(modelA, modelB, reducedInputs));
     }
 
 
