@@ -6,6 +6,7 @@ import net.automatalib.automaton.time.impl.mmlt.CompactLocalTimerMealy;
 import net.automatalib.automaton.time.mmlt.*;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
+import net.automatalib.exception.FormatException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.File;
@@ -80,6 +81,17 @@ import java.util.regex.Pattern;
 public class LocalTimerMealyGraphvizParser {
 
     private static final Pattern assignPattern = Pattern.compile("(\\S+)=(\\d+)");
+
+    public static LocalTimerMealy<Integer, String, String> parseLocalTimerMealy(InputStream stream, String silentOutput, AbstractSymbolCombiner<String> outputCombiner) {
+        InternalDOTParser parser;
+        try {
+            parser = new InternalDOTParser(stream);
+            parser.parse();
+        } catch (FormatException fe) {
+            throw new RuntimeException(String.format("Parsing failed: %s", fe));
+        }
+        return parseLocalTimerMealy(parser, silentOutput, outputCombiner);
+    }
 
     public static LocalTimerMealy<Integer, String, String> parseLocalTimerMealy(File path, String silentOutput, AbstractSymbolCombiner<String> outputCombiner) {
         InternalDOTParser parser;
