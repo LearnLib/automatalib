@@ -15,6 +15,7 @@
  */
 package net.automatalib.common.util.nid;
 
+@FunctionalInterface
 public interface IDChangeListener<T extends NumericID> {
 
     void idChanged(T obj, int newId, int oldId);

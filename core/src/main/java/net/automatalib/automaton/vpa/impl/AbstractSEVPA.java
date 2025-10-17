@@ -43,6 +43,7 @@ public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
     }
 
     @Override
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public @Nullable State<L> getTransition(State<L> state, I input) {
         final L loc = state.getLocation();
         final VPAlphabet.SymbolType type = alphabet.getSymbolType(input);

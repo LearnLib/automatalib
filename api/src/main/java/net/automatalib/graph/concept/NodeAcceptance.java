@@ -23,6 +23,7 @@ import net.automatalib.graph.Graph;
  * @param <N>
  *         node class
  */
+@FunctionalInterface
 public interface NodeAcceptance<N> {
 
     /**

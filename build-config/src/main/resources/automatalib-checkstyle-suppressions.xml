@@ -23,4 +23,7 @@ limitations under the License.
     <suppress checks="." files="target/*"/>
 
     <suppress checks="MagicNumber" files="src/test/*"/>
+
+    <!-- PMD.ExhaustiveSwitchHasDefault checks exhaustiveness -->
+    <suppress checks="MissingSwitchDefault" files="."/>
 </suppressions>

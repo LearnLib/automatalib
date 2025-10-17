@@ -120,6 +120,7 @@ final class DOTMultiDialog<I> extends JDialog {
         setVisible(true);
     }
 
+    @FunctionalInterface
     interface ThrowableExtractor<I, O> {
 
         O extract(I input) throws IOException;

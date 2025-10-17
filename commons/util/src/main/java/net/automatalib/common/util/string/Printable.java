@@ -21,6 +21,7 @@ import java.io.IOException;
  * Interface that allows outputting to an {@link Appendable} (e.g., a {@link StringBuilder}) instead of simply using
  * {@link Object#toString()}.
  */
+@FunctionalInterface
 public interface Printable {
 
     static String toString(Printable p) {

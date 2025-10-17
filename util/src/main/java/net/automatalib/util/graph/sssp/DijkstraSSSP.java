@@ -180,6 +180,7 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
     /**
      * Internal data record. Note: this class has a natural ordering that is inconsistent with equals.
      */
+    @SuppressWarnings("PMD.OverrideBothEqualsAndHashCodeOnComparable")
     private static final class Record<N, E> implements Comparable<Record<N, E>> {
 
         public final N node;

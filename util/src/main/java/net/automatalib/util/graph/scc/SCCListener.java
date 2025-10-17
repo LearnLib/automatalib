@@ -17,6 +17,7 @@ package net.automatalib.util.graph.scc;
 
 import java.util.Collection;
 
+@FunctionalInterface
 public interface SCCListener<N> {
 
     void foundSCC(Collection<? extends N> scc);

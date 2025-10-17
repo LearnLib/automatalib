@@ -17,4 +17,5 @@ package net.automatalib.common.setting;
 
 import net.automatalib.common.util.setting.SettingsSource;
 
+@FunctionalInterface
 public interface AutomataLibSettingsSource extends SettingsSource {}

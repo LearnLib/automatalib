@@ -37,6 +37,7 @@ import net.automatalib.ts.simple.SimpleTS;
  * @param <M>
  *         the type of objects implementing classes can deserialize
  */
+@FunctionalInterface
 public interface DOTInputModelDeserializer<S, I, M extends SimpleTS<S, I>> extends InputModelDeserializer<I, M> {
 
     @Override

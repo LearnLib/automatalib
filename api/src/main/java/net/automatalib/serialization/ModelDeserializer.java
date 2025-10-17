@@ -31,6 +31,7 @@ import net.automatalib.exception.FormatException;
  * @param <M>
  *         the type of objects implementing classes can deserialize
  */
+@FunctionalInterface
 public interface ModelDeserializer<M> {
 
     /**

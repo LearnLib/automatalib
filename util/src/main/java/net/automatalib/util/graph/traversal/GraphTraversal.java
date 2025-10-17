@@ -157,9 +157,6 @@ public final class GraphTraversal {
                         bfsQueue.add(new BFRecord<>(init, dataHolder.value));
                         nodeCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown action " + act);
             }
         }
 
@@ -198,9 +195,6 @@ public final class GraphTraversal {
                             bfsQueue.offer(new BFRecord<>(tgtNode, dataHolder.value));
                             nodeCount++;
                         }
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unknown action " + act);
                 }
             }
 
@@ -366,9 +360,6 @@ public final class GraphTraversal {
                         dfsStack.push(new DFRecord<>(init, dataHolder.value));
                         nodeCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown action " + act);
             }
         }
 
@@ -416,9 +407,6 @@ public final class GraphTraversal {
                         dfsStack.push(new DFRecord<>(tgt, data));
                         nodeCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown action " + act);
             }
         }
 
@@ -563,6 +551,7 @@ public final class GraphTraversal {
      *
      * @return {@code false} if the number of explored nodes reached {@code limit}, {@code true} otherwise
      */
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public static <N, E, D> boolean traverse(TraversalOrder order,
                                              IndefiniteGraph<N, E> graph,
                                              int limit,

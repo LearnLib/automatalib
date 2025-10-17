@@ -23,6 +23,7 @@ import net.automatalib.exception.GrowingAlphabetNotSupportedException;
  * @param <I>
  *         input alphabet type
  */
+@FunctionalInterface
 public interface SupportsGrowingAlphabet<I> {
 
     /**

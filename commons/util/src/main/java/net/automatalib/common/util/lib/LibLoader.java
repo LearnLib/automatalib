@@ -127,8 +127,6 @@ public final class LibLoader {
             case SYSTEM_ONLY:
                 loadSystemLibrary(name);
                 break;
-            default:
-                throw new IllegalStateException("Unknown policy " + policy);
         }
 
         loaded.add(name);

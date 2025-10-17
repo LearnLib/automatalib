@@ -41,6 +41,7 @@ import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
  * @param <R>
  *         counterexample type
  */
+@FunctionalInterface
 interface InternalModelCheckerDelegator<MC extends ModelChecker<I, A, P, R>, I, A, P, R> {
 
     MC getModelChecker();

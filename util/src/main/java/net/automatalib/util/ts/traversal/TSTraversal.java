@@ -111,9 +111,6 @@ public final class TSTraversal {
                         bfsQueue.offer(new BFSRecord<>(initS, dataHolder.value));
                         stateCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown action " + act);
             }
         }
 
@@ -154,9 +151,6 @@ public final class TSTraversal {
                                 bfsQueue.offer(new BFSRecord<>(succ, dataHolder.value));
                                 stateCount++;
                             }
-                            break;
-                        default:
-                            throw new IllegalStateException("Unknown action " + act);
                     }
                 }
             }
@@ -280,9 +274,6 @@ public final class TSTraversal {
                         dfsStack.push(new DFRecord<>(initS, inputs, dataHolder.value));
                         stateCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown action " + act);
             }
         }
 
@@ -342,9 +333,6 @@ public final class TSTraversal {
                         dfsStack.push(new DFRecord<>(succ, inputs, data));
                         stateCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown action " + act);
             }
         }
 
@@ -438,6 +426,7 @@ public final class TSTraversal {
      *
      * @return {@code false} if the number of explored states reached {@code limit}, {@code true} otherwise
      */
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public static <S, I, T, D> boolean traverse(TraversalOrder order,
                                                 TransitionSystem<S, ? super I, T> ts,
                                                 int limit,

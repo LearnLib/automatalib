@@ -28,6 +28,7 @@ import net.automatalib.word.WordBuilder;
  * @param <D>
  *         output domain type
  */
+@FunctionalInterface
 public interface Output<I, D> {
 
     D computeOutput(Iterable<? extends I> input);

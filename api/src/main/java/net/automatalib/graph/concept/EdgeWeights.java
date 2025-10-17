@@ -21,6 +21,7 @@ package net.automatalib.graph.concept;
  * @param <E>
  *         edge class
  */
+@FunctionalInterface
 public interface EdgeWeights<E> {
 
     /**

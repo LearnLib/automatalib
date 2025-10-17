@@ -69,7 +69,6 @@ public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
      * useful in combination with a {@link ForceEnqueuingHandler} that forcefully enqueues the scheduled task to this
      * (otherwise unbounded) queue.
      */
-    @SuppressWarnings("PMD.NonSerializableClass") // not publicly exposed
     private static final class ScalingLinkedBlockingQueue extends LinkedBlockingQueue<Runnable> {
 
         private ThreadPoolExecutor tpe;

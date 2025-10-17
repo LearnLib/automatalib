@@ -17,6 +17,7 @@ package net.automatalib.graph.concept;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@FunctionalInterface
 public interface FinalNode<N> {
 
     /**

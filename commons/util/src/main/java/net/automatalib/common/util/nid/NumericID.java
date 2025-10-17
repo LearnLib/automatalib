@@ -15,6 +15,7 @@
  */
 package net.automatalib.common.util.nid;
 
+@FunctionalInterface
 public interface NumericID {
 
     int getId();

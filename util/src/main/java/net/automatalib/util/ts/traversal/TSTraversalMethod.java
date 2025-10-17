@@ -19,6 +19,7 @@ import java.util.Collection;
 
 import net.automatalib.ts.TransitionSystem;
 
+@FunctionalInterface
 public interface TSTraversalMethod {
 
     TSTraversalMethod BREADTH_FIRST = TSTraversal::breadthFirst;

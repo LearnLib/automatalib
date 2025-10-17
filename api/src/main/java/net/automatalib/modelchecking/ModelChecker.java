@@ -36,6 +36,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <R>
  *         the type of counterexample
  */
+@FunctionalInterface
 public interface ModelChecker<I, A, P, R> {
 
     /**
@@ -55,6 +56,7 @@ public interface ModelChecker<I, A, P, R> {
      */
     @Nullable R findCounterExample(A automaton, Collection<? extends I> inputs, P property);
 
+    @FunctionalInterface
     interface DFAModelChecker<I, P, R> extends ModelChecker<I, DFA<?, I>, P, R> {}
 
     /**

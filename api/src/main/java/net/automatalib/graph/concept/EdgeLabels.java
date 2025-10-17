@@ -25,6 +25,7 @@ import net.automatalib.graph.Graph;
  * @param <L>
  *         label class
  */
+@FunctionalInterface
 public interface EdgeLabels<E, L> {
 
     /**

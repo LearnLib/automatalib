@@ -26,6 +26,7 @@ import java.util.Set;
  * @param <AP>
  *         atomic proposition class
  */
+@FunctionalInterface
 public interface KripkeInterpretation<N, AP> {
 
     /**

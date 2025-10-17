@@ -31,6 +31,7 @@ import net.automatalib.serialization.InputModelDeserializer;
 final class TAFAnyParser implements InputModelDeserializer<String, FiniteAlphabetAutomaton<?, String, ?>> {
 
     @Override
+    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public InputModelData<String, FiniteAlphabetAutomaton<?, String, ?>> readModel(InputStream is) throws IOException, FormatException {
 
         try (Reader r = IOUtil.asNonClosingUTF8Reader(is)) {

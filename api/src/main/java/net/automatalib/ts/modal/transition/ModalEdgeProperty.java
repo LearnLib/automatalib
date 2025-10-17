@@ -15,6 +15,7 @@
  */
 package net.automatalib.ts.modal.transition;
 
+@FunctionalInterface
 public interface ModalEdgeProperty {
 
     enum ModalType {

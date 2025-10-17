@@ -24,6 +24,7 @@ import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.traversal.TraversalOrder;
 
+@FunctionalInterface
 public interface AutomatonCopyMethod {
 
     AutomatonCopyMethod STATE_BY_STATE = PlainAutomatonCopy::new;

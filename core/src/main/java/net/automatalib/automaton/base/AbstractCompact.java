@@ -424,6 +424,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      * @param <T>
      *         the array type
      */
+    @FunctionalInterface
     private interface ArrayInitializer<T> {
 
         void setDefaultValue(T array, int idx);
