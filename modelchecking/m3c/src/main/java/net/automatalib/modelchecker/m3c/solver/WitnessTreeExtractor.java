@@ -112,18 +112,18 @@ final class WitnessTreeExtractor<L, AP> {
 
         FormulaNode<L, AP> visitedFormula = queueElement.subformula;
 
-        if (visitedFormula instanceof LfpNode) {
-            visitedFormula = ((LfpNode<L, AP>) visitedFormula).getChild();
+        if (visitedFormula instanceof LfpNode<L, AP> f) {
+            visitedFormula = f.getChild();
         }
         if (visitedFormula instanceof VariableNode) {
             // fetch fresh child formula because in case of a VariableNode we want the whole formula again
             visitedFormula = dg.getFormulaNodes().get(visitedFormula.getVarNumber());
         }
 
-        if (visitedFormula instanceof OrNode) {
-            return exploreOR((OrNode<L, AP>) visitedFormula, queueElement);
-        } else if (visitedFormula instanceof DiamondNode) {
-            return exploreDia((DiamondNode<L, AP>) visitedFormula, queueElement);
+        if (visitedFormula instanceof OrNode<L, AP> f) {
+            return exploreOR(f, queueElement);
+        } else if (visitedFormula instanceof DiamondNode<L, AP> f) {
+            return exploreDia(f, queueElement);
         } else if (visitedFormula instanceof TrueNode) {
             return Collections.emptyList();
         } else if (visitedFormula instanceof AtomicNode) {

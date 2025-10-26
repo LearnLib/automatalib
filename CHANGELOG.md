@@ -13,7 +13,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-* AutomataLib now requires Java 11 at runtime.
+* AutomataLib now requires Java 17 at runtime.
+* The following classes have been refactored to `record`s:
+  * `BricsTransitionProperty`
+  * `TransitionEdge{,.Property}`
+  * `ProbabilisticOutput`
+* The following classes have been refactored to `sealed` classes:
+  * `CommonAttrs`
+  * `EdgeAttrs`
+  * `CommonStyles`
 * `ProcessUtil#invokeProcess` now handles consumers for stdout and stderr separately.
 
 ### Removed

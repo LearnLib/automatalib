@@ -64,12 +64,9 @@ public class CompactTransition<TP> {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CompactTransition)) {
-            return false;
-        }
 
-        final CompactTransition<?> that = (CompactTransition<?>) o;
-        return memoryIdx == that.memoryIdx && succId == that.succId && Objects.equals(property, that.property);
+        return o instanceof CompactTransition<?> that && memoryIdx == that.memoryIdx && succId == that.succId &&
+               Objects.equals(property, that.property);
     }
 
     @Override

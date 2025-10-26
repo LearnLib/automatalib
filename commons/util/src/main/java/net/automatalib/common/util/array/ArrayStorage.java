@@ -161,26 +161,8 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ArrayStorage)) {
-            return false;
-        }
-
-        final ArrayStorage<?> that = (ArrayStorage<?>) o;
-
-        if (this.size != that.size) {
-            return false;
-        }
-
-        for (int i = 0; i < this.size; i++) {
-            if (!Objects.equals(this.storage[i], that.storage[i])) {
-                return false;
-            }
-        }
-
-        return true;
+        return this == o || o instanceof ArrayStorage<?> that && this.size == that.size &&
+                            Arrays.equals(this.storage, 0, this.size, that.storage, 0, this.size);
     }
 
     @Override

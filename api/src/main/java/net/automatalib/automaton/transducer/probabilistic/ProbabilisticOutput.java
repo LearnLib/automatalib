@@ -15,46 +15,4 @@
  */
 package net.automatalib.automaton.transducer.probabilistic;
 
-import java.util.Objects;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-public final class ProbabilisticOutput<O> {
-
-    private final float probability;
-    private final O output;
-
-    public ProbabilisticOutput(float probability, O output) {
-        this.probability = probability;
-        this.output = output;
-    }
-
-    public float getProbability() {
-        return probability;
-    }
-
-    public O getOutput() {
-        return output;
-    }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ProbabilisticOutput)) {
-            return false;
-        }
-
-        final ProbabilisticOutput<?> that = (ProbabilisticOutput<?>) o;
-        return Float.compare(probability, that.probability) == 0 && Objects.equals(output, that.output);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = 31 * result + Float.hashCode(probability);
-        result = 31 * result + Objects.hashCode(output);
-        return result;
-    }
-}
+public record ProbabilisticOutput<O>(float probability, O output) {}

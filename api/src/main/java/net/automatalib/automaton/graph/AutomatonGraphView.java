@@ -55,7 +55,7 @@ public class AutomatonGraphView<S, I, T, A extends Automaton<S, I, T>>
 
     @Override
     public S getTarget(TransitionEdge<I, T> edge) {
-        return automaton.getSuccessor(edge.getTransition());
+        return automaton.getSuccessor(edge.transition());
     }
 
     @Override

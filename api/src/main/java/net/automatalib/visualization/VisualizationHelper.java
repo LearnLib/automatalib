@@ -71,7 +71,7 @@ public interface VisualizationHelper<N, E> {
      */
     boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties);
 
-    class CommonAttrs {
+    sealed class CommonAttrs permits NodeAttrs, EdgeAttrs {
 
         public static final String LABEL = "label";
         public static final String COLOR = "color";
@@ -97,12 +97,21 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    class EdgeAttrs extends CommonAttrs {
+    sealed class EdgeAttrs extends CommonAttrs permits MTSEdgeAttrs {
 
         public static final String PENWIDTH = "penwidth";
         public static final String ARROWHEAD = "arrowhead";
 
         private EdgeAttrs() {
+            // prevent instantiation
+        }
+    }
+
+    final class MTSEdgeAttrs extends EdgeAttrs {
+
+        public static final String MODALITY = "modality";
+
+        private MTSEdgeAttrs() {
             // prevent instantiation
         }
     }
@@ -127,7 +136,7 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    class CommonStyles {
+    sealed class CommonStyles permits NodeStyles, EdgeStyles {
 
         public static final String DASHED = "dashed";
         public static final String DOTTED = "dotted";
@@ -154,15 +163,6 @@ public interface VisualizationHelper<N, E> {
     final class EdgeStyles extends CommonStyles {
 
         private EdgeStyles() {
-            // prevent instantiation
-        }
-    }
-
-    final class MTSEdgeAttrs extends EdgeAttrs {
-
-        public static final String MODALITY = "modality";
-
-        private MTSEdgeAttrs() {
             // prevent instantiation
         }
     }

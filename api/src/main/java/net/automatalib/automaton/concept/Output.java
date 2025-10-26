@@ -34,10 +34,10 @@ public interface Output<I, D> {
     D computeOutput(Iterable<? extends I> input);
 
     static <T> WordBuilder<T> getBuilderFor(Iterable<?> iterable) {
-        if (iterable instanceof Word) {
-            return new WordBuilder<>(((Word<?>) iterable).length());
-        } else if (iterable instanceof Collection) {
-            return new WordBuilder<>(((Collection<?>) iterable).size());
+        if (iterable instanceof Word<?> w) {
+            return new WordBuilder<>(w.length());
+        } else if (iterable instanceof Collection<?> c) {
+            return new WordBuilder<>(c.size());
         } else {
             return new WordBuilder<>();
         }

@@ -303,11 +303,11 @@ public final class SPAs {
                                     final WordBuilder<I> wb = new WordBuilder<>(init2s.size() + succ2acc.size() + 1);
 
                                     for (TransitionEdge<I, S> t : init2s) {
-                                        wb.append(t.getInput());
+                                        wb.append(t.input());
                                     }
                                     wb.append(i);
                                     for (TransitionEdge<I, S> t : succ2acc) {
-                                        wb.append(t.getInput());
+                                        wb.append(t.input());
                                     }
 
                                     result.add(wb.toWord());

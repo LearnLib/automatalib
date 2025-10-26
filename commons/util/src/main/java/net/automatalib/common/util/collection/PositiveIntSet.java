@@ -72,7 +72,7 @@ public class PositiveIntSet extends AbstractSet<Integer> {
 
     @Override
     public boolean contains(@Nullable Object o) {
-        return o instanceof Integer && containsInt((Integer) o);
+        return o instanceof Integer i && containsInt(i);
     }
 
     public boolean containsInt(int integer) {
@@ -102,7 +102,7 @@ public class PositiveIntSet extends AbstractSet<Integer> {
 
     @Override
     public boolean remove(@Nullable Object o) {
-        return o instanceof Integer && removeInt((Integer) o);
+        return o instanceof Integer i && removeInt(i);
     }
 
     public boolean removeInt(int integer) {

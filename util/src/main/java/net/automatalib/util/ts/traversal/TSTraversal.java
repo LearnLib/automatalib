@@ -426,20 +426,15 @@ public final class TSTraversal {
      *
      * @return {@code false} if the number of explored states reached {@code limit}, {@code true} otherwise
      */
-    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public static <S, I, T, D> boolean traverse(TraversalOrder order,
                                                 TransitionSystem<S, ? super I, T> ts,
                                                 int limit,
                                                 Collection<? extends I> inputs,
                                                 TSTraversalVisitor<S, I, T, D> visitor) {
-        switch (order) {
-            case BREADTH_FIRST:
-                return breadthFirst(ts, limit, inputs, visitor);
-            case DEPTH_FIRST:
-                return depthFirst(ts, limit, inputs, visitor);
-            default:
-                throw new IllegalArgumentException("Unknown traversal order: " + order);
-        }
+        return switch (order) {
+            case BREADTH_FIRST -> breadthFirst(ts, limit, inputs, visitor);
+            case DEPTH_FIRST -> depthFirst(ts, limit, inputs, visitor);
+        };
     }
 
 }

@@ -103,15 +103,7 @@ public final class StateSignature {
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof StateSignature)) {
-            return false;
-        }
-
-        final StateSignature that = (StateSignature) o;
-        return Arrays.equals(properties, that.properties);
+        return this == o || o instanceof StateSignature that && Arrays.equals(properties, that.properties);
     }
 
     @Override

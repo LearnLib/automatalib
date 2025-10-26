@@ -22,6 +22,7 @@ import java.io.StreamTokenizer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
@@ -320,13 +321,8 @@ public final class FSM2DFAParser<I, A extends MutableDFA<Integer, I>> extends Ab
 
         parse(reader);
 
-        final Alphabet<I> alphabet;
-
-        if (targetInputs != null) {
-            alphabet = Alphabets.fromCollection(targetInputs);
-        } else {
-            alphabet = Alphabets.fromCollection(getInputs());
-        }
+        final Alphabet<I> alphabet =
+                Alphabets.fromCollection(Objects.requireNonNullElseGet(targetInputs, this::getInputs));
 
         final A dfa = creator.createAutomaton(alphabet);
 

@@ -36,7 +36,7 @@ public class UniversalAutomatonGraphView<S, I, T, SP, TP, A extends UniversalAut
 
     @Override
     public Property<I, TP> getEdgeProperty(TransitionEdge<I, T> edge) {
-        return new TransitionEdge.Property<>(edge.getInput(), automaton.getTransitionProperty(edge.getTransition()));
+        return new TransitionEdge.Property<>(edge.input(), automaton.getTransitionProperty(edge.transition()));
     }
 
 }

@@ -262,10 +262,9 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         if (this == other) {
             return true;
         }
-        if (!(other instanceof Word)) {
+        if (!(other instanceof Word<?> otherWord)) {
             return false;
         }
-        Word<?> otherWord = (Word<?>) other;
         int len = otherWord.length();
         if (len != length()) {
             return false;

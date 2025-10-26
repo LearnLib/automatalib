@@ -52,12 +52,8 @@ public class FastPowersetState<S> extends AbstractSet<S> {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof FastPowersetState)) {
-            return false;
-        }
 
-        final FastPowersetState<?> that = (FastPowersetState<?>) o;
-        return bs.equals(that.bs);
+        return o instanceof FastPowersetState<?> that && bs.equals(that.bs);
     }
 
     @Override

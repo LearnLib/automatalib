@@ -61,10 +61,9 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> {
 
     @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
     public boolean remove(@Nullable Object elem, @Nullable IDChangeNotifier<T> tracker) {
-        if (!(elem instanceof MutableNumericID)) {
+        if (!(elem instanceof MutableNumericID idElem)) {
             return false;
         }
-        MutableNumericID idElem = (MutableNumericID) elem;
         int idx = idElem.getId();
         T myElem = safeGet(idx);
         if (elem != myElem) {

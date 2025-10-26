@@ -127,15 +127,8 @@ public final class LTSminVersion {
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof LTSminVersion)) {
-            return false;
-        }
-
-        final LTSminVersion that = (LTSminVersion) o;
-        return major == that.major && minor == that.minor && patch == that.patch;
+        return this == o ||
+               o instanceof LTSminVersion that && major == that.major && minor == that.minor && patch == that.patch;
     }
 
     @Override

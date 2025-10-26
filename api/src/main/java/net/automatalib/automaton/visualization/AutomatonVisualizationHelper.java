@@ -40,7 +40,7 @@ public class AutomatonVisualizationHelper<S, I, T, A extends Automaton<S, I, T>>
     public boolean getEdgeProperties(S src, TransitionEdge<I, T> edge, S tgt, Map<String, String> properties) {
         super.getEdgeProperties(src, edge, tgt, properties);
 
-        properties.put(EdgeAttrs.LABEL, String.valueOf(edge.getInput()));
+        properties.put(EdgeAttrs.LABEL, String.valueOf(edge.input()));
 
         return true;
     }

@@ -20,10 +20,11 @@ limitations under the License.
 
 <suppressions>
     <suppress checks="AbstractClassName" files="Word.java"/>
+    <!-- PMD checks for exhaustiveness and SpotBugs for missing branches -->
+    <suppress checks="MissingSwitchDefault" files="."/>
+
+    <!-- ignore generated sources -->
     <suppress checks="." files="target/*"/>
 
     <suppress checks="MagicNumber" files="src/test/*"/>
-
-    <!-- PMD.ExhaustiveSwitchHasDefault checks exhaustiveness -->
-    <suppress checks="MissingSwitchDefault" files="."/>
 </suppressions>

@@ -285,8 +285,8 @@ public final class GraphDOT {
         writeRawBody(graph, a, dotHelper, directed, "");
         writeRawFooter(a);
 
-        if (a instanceof Flushable) {
-            ((Flushable) a).flush();
+        if (a instanceof Flushable f) {
+            f.flush();
         }
     }
 
@@ -458,8 +458,8 @@ public final class GraphDOT {
     }
 
     public static <N, E> DOTVisualizationHelper<N, E> toDOTVisualizationHelper(VisualizationHelper<N, E> helper) {
-        if (helper instanceof DOTVisualizationHelper) {
-            return (DOTVisualizationHelper<N, E>) helper;
+        if (helper instanceof DOTVisualizationHelper<N, E> h) {
+            return h;
         }
 
         return new DefaultDOTVisualizationHelper<>(helper);

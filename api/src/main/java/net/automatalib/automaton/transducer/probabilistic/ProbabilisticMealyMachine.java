@@ -32,11 +32,11 @@ public interface ProbabilisticMealyMachine<S, I, T, O> extends Automaton<S, I, T
 
     @Override
     default float getTransitionProbability(T transition) {
-        return getTransitionProperty(transition).getProbability();
+        return getTransitionProperty(transition).probability();
     }
 
     @Override
     default O getTransitionOutput(T transition) {
-        return getTransitionProperty(transition).getOutput();
+        return getTransitionProperty(transition).output();
     }
 }

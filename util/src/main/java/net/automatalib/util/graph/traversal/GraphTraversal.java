@@ -551,20 +551,15 @@ public final class GraphTraversal {
      *
      * @return {@code false} if the number of explored nodes reached {@code limit}, {@code true} otherwise
      */
-    @SuppressWarnings("PMD.ExhaustiveSwitchHasDefault")
     public static <N, E, D> boolean traverse(TraversalOrder order,
                                              IndefiniteGraph<N, E> graph,
                                              int limit,
                                              Collection<? extends N> initialNodes,
                                              GraphTraversalVisitor<N, E, D> visitor) {
-        switch (order) {
-            case BREADTH_FIRST:
-                return breadthFirst(graph, limit, initialNodes, visitor);
-            case DEPTH_FIRST:
-                return depthFirst(graph, limit, initialNodes, visitor);
-            default:
-                throw new IllegalArgumentException("Unknown traversal order " + order);
-        }
+        return switch (order) {
+            case BREADTH_FIRST -> breadthFirst(graph, limit, initialNodes, visitor);
+            case DEPTH_FIRST -> depthFirst(graph, limit, initialNodes, visitor);
+        };
     }
 
 }

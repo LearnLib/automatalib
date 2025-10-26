@@ -49,26 +49,26 @@ public class NNFVisitor<L, AP> {
     }
 
     private FormulaNode<L, AP> visit(FormulaNode<L, AP> node, boolean negate) {
-        if (node instanceof GfpNode) {
-            return visitGFPNode((GfpNode<L, AP>) node, negate);
-        } else if (node instanceof LfpNode) {
-            return visitLFPNode((LfpNode<L, AP>) node, negate);
-        } else if (node instanceof AndNode) {
-            return visitAndNode((AndNode<L, AP>) node, negate);
-        } else if (node instanceof AtomicNode) {
-            return visitAtomicNode((AtomicNode<L, AP>) node, negate);
-        } else if (node instanceof BoxNode) {
-            return visitBoxNode((BoxNode<L, AP>) node, negate);
-        } else if (node instanceof DiamondNode) {
-            return visitDiamondNode((DiamondNode<L, AP>) node, negate);
+        if (node instanceof GfpNode<L, AP> n) {
+            return visitGFPNode(n, negate);
+        } else if (node instanceof LfpNode<L, AP> n) {
+            return visitLFPNode(n, negate);
+        } else if (node instanceof AndNode<L, AP> n) {
+            return visitAndNode(n, negate);
+        } else if (node instanceof AtomicNode<L, AP> n) {
+            return visitAtomicNode(n, negate);
+        } else if (node instanceof BoxNode<L, AP> n) {
+            return visitBoxNode(n, negate);
+        } else if (node instanceof DiamondNode<L, AP> n) {
+            return visitDiamondNode(n, negate);
         } else if (node instanceof FalseNode) {
             return visitFalseNode(negate);
-        } else if (node instanceof VariableNode) {
-            return visitVariableNode((VariableNode<L, AP>) node, negate);
-        } else if (node instanceof NotNode) {
-            return visitNotNode((NotNode<L, AP>) node, negate);
-        } else if (node instanceof OrNode) {
-            return visitOrNode((OrNode<L, AP>) node, negate);
+        } else if (node instanceof VariableNode<L, AP> n) {
+            return visitVariableNode(n, negate);
+        } else if (node instanceof NotNode<L, AP> n) {
+            return visitNotNode(n, negate);
+        } else if (node instanceof OrNode<L, AP> n) {
+            return visitOrNode(n, negate);
         } else if (node instanceof TrueNode) {
             return visitTrueNode(negate);
         } else {
