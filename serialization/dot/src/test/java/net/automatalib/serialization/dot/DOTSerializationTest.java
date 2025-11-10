@@ -30,6 +30,7 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.impl.CompactTransition;
+import net.automatalib.automaton.mmlt.impl.CompactMMLT;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.SPMM;
@@ -37,6 +38,7 @@ import net.automatalib.automaton.transducer.MealyMachine.MealyGraphView;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.automaton.transducer.impl.CompactSST;
+import net.automatalib.automaton.visualization.MMLTVisualizationHelper;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.graph.Graph;
@@ -179,6 +181,18 @@ public class DOTSerializationTest {
 
         ThrowingWriter writer = w -> GraphDOT.write(spmm, w);
         checkDOTOutput(writer, DOTSerializationUtil.SPMM_RESOURCE);
+    }
+
+    @Test
+    public void testMMLTExport() throws IOException {
+
+        final CompactMMLT<String, String> mmlt = DOTSerializationUtil.MMLT;
+
+        ThrowingWriter writer = w -> GraphDOT.write(mmlt, mmlt.getInputAlphabet(), w);
+        checkDOTOutput(writer, DOTSerializationUtil.MMLT_RESOURCE);
+
+        ThrowingWriter writer2 = w -> GraphDOT.write(mmlt, mmlt.getInputAlphabet(), w, new MMLTVisualizationHelper<>(mmlt, true, true));
+        checkDOTOutput(writer2, DOTSerializationUtil.MMLT_WITH_RESETS_RESOURCE);
     }
 
     @Test

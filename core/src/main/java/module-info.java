@@ -41,6 +41,7 @@ open module net.automatalib.core {
     exports net.automatalib.automaton.base;
     exports net.automatalib.automaton.fsa.impl;
     exports net.automatalib.automaton.impl;
+    exports net.automatalib.automaton.mmlt.impl;
     exports net.automatalib.automaton.procedural.impl;
     exports net.automatalib.automaton.transducer.impl;
     exports net.automatalib.automaton.transducer.probabilistic.impl;
@@ -52,5 +53,4 @@ open module net.automatalib.core {
     exports net.automatalib.ts.modal.impl;
     exports net.automatalib.ts.modal.transition.impl;
     exports net.automatalib.ts.powerset.impl;
-    exports net.automatalib.automaton.time.impl.mmlt;
 }
