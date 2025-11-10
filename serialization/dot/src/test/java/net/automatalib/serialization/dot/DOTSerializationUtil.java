@@ -26,7 +26,6 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
@@ -50,7 +49,6 @@ import net.automatalib.graph.impl.CompactPMPG;
 import net.automatalib.graph.impl.CompactPMPGEdge;
 import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.graph.impl.DefaultCFMPS;
-import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
@@ -445,21 +443,19 @@ final class DOTSerializationUtil {
     }
 
     private static CompactMMLT<String, String> buildMMLT() {
-        GrowingMapAlphabet<InputSymbol<String>> alphabet = new GrowingMapAlphabet<>();
-        Alphabets.closedCharStringRange('x', 'y').forEach(s -> alphabet.add(new InputSymbol<>(s)));
+        Alphabet<String> alphabet = Alphabets.closedCharStringRange('x', 'y');
 
-        final CompactMMLT<String, String> mmlt = new CompactMMLT<>(alphabet,
-                                                                     "void",
-                                                                     StringSymbolCombiner.getInstance());
+        final CompactMMLT<String, String> mmlt =
+                new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
         var s0 = mmlt.addInitialState();
         var s1 = mmlt.addState();
         var s2 = mmlt.addState();
 
-        mmlt.addTransition(s1, new InputSymbol<>("x"), s2, "void");
-        mmlt.addTransition(s1, new InputSymbol<>("y"), s1, "Y");
-        mmlt.addTransition(s2, new InputSymbol<>("y"), s2, "D");
+        mmlt.addTransition(s1, "x", s2, "void");
+        mmlt.addTransition(s1, "y", s1, "Y");
+        mmlt.addTransition(s2, "y", s2, "D");
 
-        mmlt.addLocalReset(s1, new InputSymbol<>("y"));
+        mmlt.addLocalReset(s1, "y");
 
         mmlt.addOneShotTimer(s0, "a", 2, "A", s1);
         mmlt.addPeriodicTimer(s1, "b", 4, "B");

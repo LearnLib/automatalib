@@ -52,7 +52,7 @@ public class CompactMMLTSemantics<S, I, T, O>
         var initialLocation = model.getInitialState();
         this.initialConfiguration = new State<>(initialLocation, model.getSortedTimers(initialLocation));
 
-        this.alphabet = new GrowingMapAlphabet<>(model.getUntimedAlphabet());
+        this.alphabet = new GrowingMapAlphabet<>(model.getUntimedAlphabet().stream().map(TimedInput::input).toList());
         this.alphabet.add(TimedInput.timeout());
         this.alphabet.add(TimedInput.step());
 
@@ -194,7 +194,7 @@ public class CompactMMLTSemantics<S, I, T, O>
         State<S, O> target;
         TimedOutput<O> output;
 
-        var trans = model.getTransition(source.getLocation(), input);
+        var trans = model.getTransition(source.getLocation(), input.symbol());
         if (trans == null) { // silent self-loop
             target = source;
             output = this.getSilentOutput();
@@ -205,7 +205,7 @@ public class CompactMMLTSemantics<S, I, T, O>
                 // Change to a different location resets all timers in target:
                 target = new State<>(succ, model.getSortedTimers(succ));
                 target.resetTimers();
-            } else if (model.isLocalReset(source.getLocation(), input)) {
+            } else if (model.isLocalReset(source.getLocation(), input.symbol())) {
                 target = source;
                 target.resetTimers();
             } else {

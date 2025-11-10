@@ -1,24 +1,20 @@
 package net.automatalib.util.automaton.mmlt;
 
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.symbol.time.TimedInput;
-import net.automatalib.symbol.time.InputSymbol;
-import net.automatalib.symbol.time.TimeoutSymbol;
+import java.util.HashSet;
+import java.util.Set;
+
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.mmlt.impl.CompactMMLT;
 import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
+import net.automatalib.symbol.time.TimedInput;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MMLTUtilTest {
 
     public CompactMMLT<String, String> buildBaseModel() {
-        var symbols = List.of("p1", "p2", "abort", "collect");
-        GrowingMapAlphabet<InputSymbol<String>> alphabet = new GrowingMapAlphabet<>();
-        symbols.forEach(s -> alphabet.add(new InputSymbol<>(s)));
-
+        var alphabet = Alphabets.fromArray("p1", "p2", "abort", "collect");
         var model = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
 
         var s0 = model.addState();
@@ -28,19 +24,19 @@ public class MMLTUtilTest {
 
         model.setInitialState(s0);
 
-        model.addTransition(s0, new InputSymbol<>("p1"), s1, "go");
-        model.addTransition(s1, new InputSymbol<>("abort"), s1, "ok");
-        model.addLocalReset(s1, new InputSymbol<>("abort"));
+        model.addTransition(s0, "p1", s1, "go");
+        model.addTransition(s1, "abort", s1, "ok");
+        model.addLocalReset(s1, "abort");
 
         model.addPeriodicTimer(s1, "a", 3, "part");
         model.addPeriodicTimer(s1, "b", 6, "noise");
         model.addOneShotTimer(s1, "c", 40, "done", s3);
 
-        model.addTransition(s0, new InputSymbol<>("p2"), s2, "go");
-        model.addTransition(s2, new InputSymbol<>("abort"), s3, "void");
+        model.addTransition(s0, "p2", s2, "go");
+        model.addTransition(s2, "abort", s3, "void");
         model.addOneShotTimer(s2, "d", 4, "done", s3);
 
-        model.addTransition(s3, new InputSymbol<>("collect"), s0, "void");
+        model.addTransition(s3, "collect", s0, "void");
 
         return model;
     }
@@ -62,8 +58,8 @@ public class MMLTUtilTest {
         model.addOneShotTimer(s1, "c", 40, "done", s3);
         model.removeTimer(s1, "e");
 
-        model.removeLocalReset(s1, new InputSymbol<>("abort"));
-        model.addLocalReset(s1, new InputSymbol<>("abort"));
+        model.removeLocalReset(s1, "abort");
+        model.addLocalReset(s1, "abort");
 
         // Still needs to be equivalent to original:
         var originalModel = buildBaseModel();
@@ -74,37 +70,35 @@ public class MMLTUtilTest {
 
     @Test
     public void testSeparatedByResetsSimple() {
-        GrowingMapAlphabet<InputSymbol<String>> alphabet = new GrowingMapAlphabet<>();
-        alphabet.addSymbol(new InputSymbol<>("x"));
+        Alphabet<String> alphabet = Alphabets.singleton("x");
 
         // Same model, but with reset in A and no reset in B:
         var modelA = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
         var s0 = modelA.addState();
         modelA.setInitialState(s0);
         modelA.addPeriodicTimer(s0, "a", 3, "test");
-        modelA.addTransition(s0, new InputSymbol<>("x"), s0, "ok");
-        modelA.addLocalReset(s0, new InputSymbol<>("x"));
+        modelA.addTransition(s0, "x", s0, "ok");
+        modelA.addLocalReset(s0, "x");
 
         var modelB = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
         var s0B = modelB.addState();
         modelB.setInitialState(s0B);
         modelB.addPeriodicTimer(s0B, "a", 3, "test");
-        modelB.addTransition(s0B, new InputSymbol<>("x"), s0B, "ok");
+        modelB.addTransition(s0B, "x", s0B, "ok");
 
         Assert.assertNotNull(MMLTUtil.findSeparatingWord(modelA,
                                                          modelB,
                                                          modelA.getSemantics().getInputAlphabet()));
 
         // If we remove the timestep, should not find a counterexample:
-        List<TimedInput<String>> reducedInputs = new ArrayList<>(modelA.getUntimedAlphabet());
-        reducedInputs.add(new TimeoutSymbol<>());
+        Set<TimedInput<String>> reducedInputs = new HashSet<>(modelA.getSemantics().getInputAlphabet());
+        reducedInputs.remove(TimedInput.step());
         Assert.assertNull(MMLTUtil.findSeparatingWord(modelA, modelB, reducedInputs));
     }
 
     @Test
     public void testSeparatedByResetsComplex() {
-        GrowingMapAlphabet<InputSymbol<String>> alphabet = new GrowingMapAlphabet<>();
-        alphabet.addSymbol(new InputSymbol<>("x"));
+        Alphabet<String> alphabet = Alphabets.singleton("x");
 
         // Same model, but with reset in A and no reset in B:
         var modelA = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
@@ -121,16 +115,16 @@ public class MMLTUtilTest {
         modelB.setInitialState(s0B);
         modelB.addOneShotTimer(s0B, "a", 3, "test", s1B);
         modelB.addOneShotTimer(s1B, "b", 2, "test2", s2B);
-        modelB.addTransition(s1B, new InputSymbol<>("x"), s1B, "void");
-        modelB.addLocalReset(s1B, new InputSymbol<>("x"));
+        modelB.addTransition(s1B, "x", s1B, "void");
+        modelB.addLocalReset(s1B, "x");
 
         Assert.assertNotNull(MMLTUtil.findSeparatingWord(modelA,
                                                          modelB,
                                                          modelA.getSemantics().getInputAlphabet()));
 
         // If we remove the timestep, should not find a counterexample:
-        List<TimedInput<String>> reducedInputs = new ArrayList<>(modelA.getUntimedAlphabet());
-        reducedInputs.add(new TimeoutSymbol<>());
+        Set<TimedInput<String>> reducedInputs = new HashSet<>(modelA.getSemantics().getInputAlphabet());
+        reducedInputs.remove(TimedInput.step());
         Assert.assertNull(MMLTUtil.findSeparatingWord(modelA, modelB, reducedInputs));
     }
 

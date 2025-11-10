@@ -39,8 +39,8 @@ import net.automatalib.symbol.time.TimerTimeoutSymbol;
  * @param <O>
  *         Output symbol type
  */
-public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, InputSymbol<I>, T, Void, O>,
-                                          InputAlphabetHolder<InputSymbol<I>>,
+public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, T, Void, O>,
+                                          InputAlphabetHolder<I>,
                                           GraphViewable {
 
     /**
@@ -63,14 +63,14 @@ public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, Inp
      *
      * @return Input alphabet
      */
-    Alphabet<InputSymbol<I>> getInputAlphabet();
+    Alphabet<I> getInputAlphabet();
 
     /**
      * Retrieves the non-delaying inputs for this automaton. Excludes timer timeout symbols. May be empty.
      *
      * @return Untimed alphabet.
      */
-    Alphabet<InputSymbol<I>> getUntimedAlphabet();
+    Alphabet<I> getUntimedAlphabet();
 
     /**
      * Indicates if the provided input performs a local reset in the given location.
@@ -82,7 +82,7 @@ public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, Inp
      *
      * @return True if performing a local reset
      */
-    boolean isLocalReset(S location, InputSymbol<I> input);
+    boolean isLocalReset(S location, I input);
 
     /**
      * Returns the timers of the specified location sorted ascendingly by their initial time.

@@ -21,10 +21,10 @@ import net.automatalib.symbol.time.InputSymbol;
 @FunctionalInterface
 public interface MMLTCreator<A, I, O> {
 
-    default A createMMLT(Alphabet<InputSymbol<I>> alphabet, int numStatesHint, O silentOutput, SymbolCombiner<O> outputCombiner) {
+    default A createMMLT(Alphabet<I> alphabet, int numStatesHint, O silentOutput, SymbolCombiner<O> outputCombiner) {
         return createMMLT(alphabet, silentOutput, outputCombiner);
     }
 
-    A createMMLT(Alphabet<InputSymbol<I>> alphabet, O silentOutput, SymbolCombiner<O> symbolCombiner);
+    A createMMLT(Alphabet<I> alphabet, O silentOutput, SymbolCombiner<O> symbolCombiner);
 
 }

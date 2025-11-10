@@ -10,6 +10,7 @@ import net.automatalib.common.util.Triple;
 import net.automatalib.graph.Graph;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.SymbolicInput;
+import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimerTimeoutSymbol;
 import net.automatalib.visualization.VisualizationHelper;
 
@@ -24,15 +25,15 @@ public class MMLTGraphView<S, I, T, O> implements Graph<S, Triple<SymbolicInput<
     @Override
     public Collection<Triple<SymbolicInput<I>, O, S>> getOutgoingEdges(S node) {
 
-        Alphabet<InputSymbol<I>> alphabet = mmlt.getInputAlphabet();
+        Alphabet<I> alphabet = mmlt.getInputAlphabet();
         List<MealyTimerInfo<S, O>> timers = mmlt.getSortedTimers(node);
 
         List<Triple<SymbolicInput<I>, O, S>> result = new ArrayList<>(alphabet.size() + timers.size());
 
-        for (InputSymbol<I> i : alphabet) {
+        for (I i : alphabet) {
             var t = mmlt.getTransition(node, i);
             if (t != null) {
-                result.add(Triple.of(i, mmlt.getTransitionProperty(t), mmlt.getSuccessor(t)));
+                result.add(Triple.of(TimedInput.input(i), mmlt.getTransitionProperty(t), mmlt.getSuccessor(t)));
             }
         }
 

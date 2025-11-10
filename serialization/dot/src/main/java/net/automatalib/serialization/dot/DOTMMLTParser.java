@@ -23,7 +23,6 @@ import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.exception.FormatException;
-import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.MMLTEdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
@@ -91,12 +90,12 @@ import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
  */
 
 public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
-        implements DOTInputModelDeserializer<S, InputSymbol<I>, A> {
+        implements DOTInputModelDeserializer<S, I, A> {
 
     private static final Pattern assignPattern = Pattern.compile("(\\S+)=(\\d+)");
 
     private final MMLTCreator<A, I, O> creator;
-    private final Function<String, InputSymbol<I>> inputParser;
+    private final Function<String, I> inputParser;
     private final Function<String, O> outputParser;
     private final O silentSymbol;
     private final SymbolCombiner<O> outputCombiner;
@@ -104,7 +103,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
     private final boolean fakeInitialNodeIds;
 
     public DOTMMLTParser(MMLTCreator<A, I, O> creator,
-                         Function<String, InputSymbol<I>> inputParser,
+                         Function<String, I> inputParser,
                          Function<String, O> outputParser,
                          O silentOutput,
                          SymbolCombiner<O> outputCombiner,
@@ -120,7 +119,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
     }
 
     @Override
-    public DOTInputModelData<S, InputSymbol<I>, A> readModel(InputStream is) throws IOException, FormatException {
+    public DOTInputModelData<S, I, A> readModel(InputStream is) throws IOException, FormatException {
 
         try (Reader r = IOUtil.asNonClosingUTF8Reader(is)) {
             InternalDOTParser parser = new InternalDOTParser(r);
@@ -128,7 +127,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
 
             assert parser.isDirected();
 
-            final Set<InputSymbol<I>> inputs = new HashSet<>();
+            final Set<I> inputs = new HashSet<>();
 
             for (Edge edge : parser.getEdges()) {
                 if (!fakeInitialNodeIds || !initialNodeIds.contains(edge.src)) {
@@ -139,7 +138,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                 }
             }
 
-            final Alphabet<InputSymbol<I>> alphabet = Alphabets.fromCollection(inputs);
+            final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
             final A automaton = creator.createMMLT(alphabet, parser.getNodes().size(), silentSymbol, outputCombiner);
 
             final Mapping<S, String> labels = parseNodesAndEdges(parser, automaton);
@@ -275,7 +274,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                 }
             } else {
                 // Non-delaying input:
-                final InputSymbol<I> i = inputParser.apply(input);
+                final I i = inputParser.apply(input);
                 final O o = outputParser.apply(output);
 
                 result.addTransition(stateMap.get(edge.src), i, stateMap.get(edge.tgt), o);

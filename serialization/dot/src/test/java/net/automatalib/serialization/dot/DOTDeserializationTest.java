@@ -164,10 +164,10 @@ public class DOTDeserializationTest {
                              .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MMLT_SENSOR)).model;
 
         // Compare to reference:
-        var p1 = new InputSymbol<>("p1");
-        var p2 = new InputSymbol<>("p2");
-        var abort = new InputSymbol<>("abort");
-        var collect = new InputSymbol<>("collect");
+        var p1 = "p1";
+        var p2 = "p2";
+        var abort = "abort";
+        var collect = "collect";
 
         int s0 = 0;
         int s1 = 1;
@@ -377,7 +377,7 @@ public class DOTDeserializationTest {
     private <T> void assertTransition(MMLT<Integer, String, T, String> model,
                                       int state,
                                       int target,
-                                      InputSymbol<String> input,
+                                      String input,
                                       String output) {
         var trans = model.getTransition(state, input);
         Assert.assertNotNull(trans);
@@ -387,7 +387,7 @@ public class DOTDeserializationTest {
         }
     }
 
-    private <T> void assertSilentLoop(MMLT<Integer, String, T, String> model, int state, InputSymbol<String> input) {
+    private <T> void assertSilentLoop(MMLT<Integer, String, T, String> model, int state, String input) {
         var trans = model.getTransition(state, input);
         if (trans != null &&
             (model.getSuccessor(trans) != state || !"void".equals(model.getTransitionProperty(trans)))) {

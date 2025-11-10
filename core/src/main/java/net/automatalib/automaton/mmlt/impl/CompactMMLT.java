@@ -32,10 +32,10 @@ import net.automatalib.symbol.time.SymbolicInput;
  * @param <O>
  *         Output symbol type
  */
-public class CompactMMLT<I, O> extends CompactMealy<InputSymbol<I>, O> implements MutableMMLT<Integer, I, CompactTransition<O>, O> {
+public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT<Integer, I, CompactTransition<O>, O> {
 
     private final Map<Integer, List<MealyTimerInfo<Integer, O>>> sortedTimers; // location -> (sorted timers)
-    private final Map<Integer, Set<SymbolicInput<I>>> resets; // location -> inputs (that reset all timers)
+    private final Map<Integer, Set<I>> resets; // location -> inputs (that reset all timers)
 
     private final O silentOutput;
     private final SymbolCombiner<O> outputCombiner;
@@ -50,7 +50,7 @@ public class CompactMMLT<I, O> extends CompactMealy<InputSymbol<I>, O> implement
      * @param outputCombiner
      *         The combiner function for simultaneous timeouts of periodic timers.
      */
-    public CompactMMLT(Alphabet<InputSymbol<I>> nonDelayingInputs, O silentOutput, SymbolCombiner<O> outputCombiner) {
+    public CompactMMLT(Alphabet<I> nonDelayingInputs, O silentOutput, SymbolCombiner<O> outputCombiner) {
         super(nonDelayingInputs);
 
         this.sortedTimers = new HashMap<>();
@@ -71,12 +71,12 @@ public class CompactMMLT<I, O> extends CompactMealy<InputSymbol<I>, O> implement
     }
 
     @Override
-    public Alphabet<InputSymbol<I>> getUntimedAlphabet() {
+    public Alphabet<I> getUntimedAlphabet() {
         return getInputAlphabet();
     }
 
     @Override
-    public boolean isLocalReset(Integer location, InputSymbol<I> input) {
+    public boolean isLocalReset(Integer location, I input) {
         return this.resets.getOrDefault(location, Collections.emptySet()).contains(input);
     }
 
@@ -181,7 +181,7 @@ public class CompactMMLT<I, O> extends CompactMealy<InputSymbol<I>, O> implement
     }
 
     @Override
-    public void addLocalReset(Integer location, InputSymbol<I> input) {
+    public void addLocalReset(Integer location, I input) {
         // Ensure that input causes self-loop:
         var target = this.getSuccessor(location, input);
         if (target == null || !target.equals(location)) {
@@ -193,7 +193,7 @@ public class CompactMMLT<I, O> extends CompactMealy<InputSymbol<I>, O> implement
     }
 
     @Override
-    public void removeLocalReset(Integer location, InputSymbol<I> input) {
+    public void removeLocalReset(Integer location, I input) {
         var localResets = resets.get(location);
         if (localResets == null) {
             return;

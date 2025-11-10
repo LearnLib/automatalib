@@ -104,7 +104,7 @@ public class MMLTVisualizationHelper<S, I, T, O>
                 edgeColor = "chartreuse3";
             }
         } else if (input instanceof InputSymbol<I> ndi) {
-            if (src.equals(tgt) && automaton.isLocalReset(src, ndi)) {
+            if (src.equals(tgt) && automaton.isLocalReset(src, ndi.symbol())) {
                 // Self-loop + local reset -> resets all in target:
                 resetExtraInfo = automaton.getSortedTimers(tgt)
                                      .stream()

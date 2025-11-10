@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -16,10 +16,7 @@ import org.testng.annotations.Test;
 public class MMLTTests {
 
     public CompactMMLT<String, String> buildBaseModel() {
-        var symbols = List.of("p1", "p2", "abort", "collect");
-        GrowingMapAlphabet<InputSymbol<String>> alphabet = new GrowingMapAlphabet<>();
-        symbols.forEach(s -> alphabet.add(new InputSymbol<>(s)));
-
+        var alphabet = Alphabets.fromArray("p1", "p2", "abort", "collect");
         var model = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
 
         var s0 = model.addState();
@@ -29,19 +26,19 @@ public class MMLTTests {
 
         model.setInitialState(s0);
 
-        model.addTransition(s0, new InputSymbol<>("p1"), s1, "go");
-        model.addTransition(s1, new InputSymbol<>("abort"), s1, "ok");
-        model.addLocalReset(s1, new InputSymbol<>("abort"));
+        model.addTransition(s0, "p1", s1, "go");
+        model.addTransition(s1, "abort", s1, "ok");
+        model.addLocalReset(s1, "abort");
 
         model.addPeriodicTimer(s1, "a", 3, "part");
         model.addPeriodicTimer(s1, "b", 6, "noise");
         model.addOneShotTimer(s1, "c", 40, "done", s3);
 
-        model.addTransition(s0, new InputSymbol<>("p2"), s2, "go");
-        model.addTransition(s2, new InputSymbol<>("abort"), s3, "void");
+        model.addTransition(s0, "p2", s2, "go");
+        model.addTransition(s2, "abort", s3, "void");
         model.addOneShotTimer(s2, "d", 4, "done", s3);
 
-        model.addTransition(s3, new InputSymbol<>("collect"), s0, "void");
+        model.addTransition(s3, "collect", s0, "void");
 
         return model;
     }
