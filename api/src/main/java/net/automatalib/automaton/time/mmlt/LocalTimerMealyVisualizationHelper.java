@@ -59,6 +59,7 @@ class LocalTimerMealyVisualizationHelper<S, I, O> extends
         String label = String.format("%s / %s", edge.getInput(), edge.getTransition().output());
 
         // Infer the label color + reset information for the transition:
+        String resetExtraInfo = "";
         String resetInfo = "";
         String edgeColor = "";
         if (edge.getInput() instanceof TimerTimeoutSymbol<I> ts) {
@@ -70,21 +71,35 @@ class LocalTimerMealyVisualizationHelper<S, I, O> extends
 
             if (optTimer.get().periodic()) {
                 // Periodic -> resets itself:
-                resetInfo = String.format("%s↦%d", optTimer.get().name(), optTimer.get().initial());
+                resetExtraInfo = String.format("%s↦%d", optTimer.get().name(), optTimer.get().initial());
                 edgeColor = "cornflowerblue";
             } else {
                 // One-shot -> resets all in target:
-                resetInfo = automaton.getSortedTimers(tgt).stream()
+                resetExtraInfo = automaton.getSortedTimers(tgt).stream()
                         .map(t -> String.format("%s↦%d", t.name(), t.initial()))
                         .sorted()
                         .collect(Collectors.joining(","));
                 edgeColor = "chartreuse3";
+
+                if (tgt.equals(src)) {
+                    // If the target is another location, reset info can always be inferred from context.
+                    // --> Only include if self-loop:
+                    resetInfo = automaton.getSortedTimers(tgt).stream()
+                            .map(MealyTimerInfo::name)
+                            .sorted()
+                            .collect(Collectors.joining(","));
+                }
             }
         } else if (edge.getInput() instanceof NonDelayingInput<I> ndi) {
             if (src.equals(tgt) && automaton.isLocalReset(src, ndi)) {
                 // Self-loop + local reset -> resets all in target:
-                resetInfo = automaton.getSortedTimers(tgt).stream()
+                resetExtraInfo = automaton.getSortedTimers(tgt).stream()
                         .map(t -> String.format("%s↦%d", t.name(), t.initial()))
+                        .sorted()
+                        .collect(Collectors.joining(","));
+
+                resetInfo = automaton.getSortedTimers(tgt).stream()
+                        .map(MealyTimerInfo::name)
                         .sorted()
                         .collect(Collectors.joining(","));
                 edgeColor = "orange";
@@ -96,7 +111,10 @@ class LocalTimerMealyVisualizationHelper<S, I, O> extends
             properties.put("fontcolor", edgeColor);
         }
         if (this.includeResets) {
-            label += " {" + resetInfo + "}";
+            label += " {" + resetExtraInfo + "}";
+        }
+        if (!resetInfo.isEmpty()) {
+            properties.put("resets", resetInfo);
         }
         properties.put(EdgeAttrs.LABEL, label);
 
