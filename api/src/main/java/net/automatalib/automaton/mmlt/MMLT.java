@@ -1,20 +1,16 @@
 package net.automatalib.automaton.mmlt;
 
-import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.visualization.MMLTVisualizationHelper;
-import net.automatalib.symbol.time.SymbolicInput;
-import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
-import net.automatalib.automaton.graph.TransitionEdge;
-import net.automatalib.automaton.graph.TransitionEdge.Property;
-import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
-import net.automatalib.graph.UniversalGraph;
+import net.automatalib.common.util.Triple;
+import net.automatalib.graph.Graph;
+import net.automatalib.graph.concept.GraphViewable;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.SymbolicInput;
 import net.automatalib.symbol.time.TimerTimeoutSymbol;
-import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * Base type for a Mealy Machine with Local Timers (MMLT).
@@ -43,8 +39,9 @@ import net.automatalib.visualization.VisualizationHelper;
  * @param <O>
  *         Output symbol type
  */
-public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, SymbolicInput<I>, T, Void, O>,
-                                          InputAlphabetHolder<SymbolicInput<I>> {
+public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, InputSymbol<I>, T, Void, O>,
+                                          InputAlphabetHolder<InputSymbol<I>>,
+                                          GraphViewable {
 
     /**
      * Returns the symbol used for silent outputs.
@@ -66,7 +63,7 @@ public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, Sym
      *
      * @return Input alphabet
      */
-    Alphabet<SymbolicInput<I>> getInputAlphabet();
+    Alphabet<InputSymbol<I>> getInputAlphabet();
 
     /**
      * Retrieves the non-delaying inputs for this automaton. Excludes timer timeout symbols. May be empty.
@@ -95,7 +92,7 @@ public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, Sym
      *
      * @return Sorted list of local timers. Empty if location has no timers.
      */
-    List<MealyTimerInfo<O>> getSortedTimers(S location);
+    List<MealyTimerInfo<S, O>> getSortedTimers(S location);
 
     /**
      * Returns the semantics automaton that describes the behavior of this MMLT.
@@ -105,15 +102,7 @@ public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, Sym
     MMLTSemantics<S, I, ?, O> getSemantics();
 
     @Override
-    default UniversalGraph<S, TransitionEdge<SymbolicInput<I>, T>, Void, Property<SymbolicInput<I>, O>> transitionGraphView(
-            Collection<? extends SymbolicInput<I>> inputs) {
-        return new UniversalAutomatonGraphView<>(this, inputs) {
-
-            @Override
-            public VisualizationHelper<S, TransitionEdge<SymbolicInput<I>, T>> getVisualizationHelper() {
-                return new MMLTVisualizationHelper<>(automaton, false, false);
-            }
-        };
+    default Graph<S, Triple<SymbolicInput<I>, O, S>> graphView() {
+        return new MMLTGraphView<>(this);
     }
-
 }

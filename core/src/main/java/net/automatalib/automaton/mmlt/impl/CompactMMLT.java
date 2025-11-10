@@ -12,18 +12,17 @@ import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.impl.CompactTransition;
+import net.automatalib.automaton.mmlt.MMLTGraphView;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
 import net.automatalib.automaton.mmlt.MealyTimerInfo;
 import net.automatalib.automaton.mmlt.MutableMMLT;
 import net.automatalib.automaton.mmlt.SymbolCombiner;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.common.util.Triple;
+import net.automatalib.graph.Graph;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.SymbolicInput;
-import net.automatalib.symbol.time.TimerTimeoutSymbol;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implements a LocalTimerMealy that is mutable. The structure automaton is backed by a CompactMealy automaton.
@@ -33,13 +32,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         Output symbol type
  */
-public class CompactMMLT<I, O> implements MutableMMLT<Integer, I, CompactTransition<O>, O> {
+public class CompactMMLT<I, O> extends CompactMealy<InputSymbol<I>, O> implements MutableMMLT<Integer, I, CompactTransition<O>, O> {
 
-    private final CompactMealy<SymbolicInput<I>, O> automaton;
-    private final Map<Integer, List<MealyTimerInfo<O>>> sortedTimers; // location -> (sorted timers)
+    private final Map<Integer, List<MealyTimerInfo<Integer, O>>> sortedTimers; // location -> (sorted timers)
     private final Map<Integer, Set<SymbolicInput<I>>> resets; // location -> inputs (that reset all timers)
-
-    private final Alphabet<InputSymbol<I>> untimedAlphabet;
 
     private final O silentOutput;
     private final SymbolCombiner<O> outputCombiner;
@@ -54,17 +50,14 @@ public class CompactMMLT<I, O> implements MutableMMLT<Integer, I, CompactTransit
      * @param outputCombiner
      *         The combiner function for simultaneous timeouts of periodic timers.
      */
-    public CompactMMLT(Collection<InputSymbol<I>> nonDelayingInputs, O silentOutput, SymbolCombiner<O> outputCombiner) {
-        this.untimedAlphabet = Alphabets.fromCollection(nonDelayingInputs);
+    public CompactMMLT(Alphabet<InputSymbol<I>> nonDelayingInputs, O silentOutput, SymbolCombiner<O> outputCombiner) {
+        super(nonDelayingInputs);
 
         this.sortedTimers = new HashMap<>();
         this.resets = new HashMap<>();
 
         this.silentOutput = silentOutput;
         this.outputCombiner = outputCombiner;
-
-        // Prepare compact Mealy:
-        this.automaton = new CompactMealy<>(new GrowingMapAlphabet<>(nonDelayingInputs));
     }
 
     @Override
@@ -78,13 +71,8 @@ public class CompactMMLT<I, O> implements MutableMMLT<Integer, I, CompactTransit
     }
 
     @Override
-    public Alphabet<SymbolicInput<I>> getInputAlphabet() {
-        return this.automaton.getInputAlphabet();
-    }
-
-    @Override
     public Alphabet<InputSymbol<I>> getUntimedAlphabet() {
-        return this.untimedAlphabet;
+        return getInputAlphabet();
     }
 
     @Override
@@ -93,7 +81,7 @@ public class CompactMMLT<I, O> implements MutableMMLT<Integer, I, CompactTransit
     }
 
     @Override
-    public List<MealyTimerInfo<O>> getSortedTimers(Integer location) {
+    public List<MealyTimerInfo<Integer, O>> getSortedTimers(Integer location) {
         return Collections.unmodifiableList(this.sortedTimers.getOrDefault(location, Collections.emptyList()));
     }
 
@@ -102,85 +90,7 @@ public class CompactMMLT<I, O> implements MutableMMLT<Integer, I, CompactTransit
         return new CompactMMLTSemantics<>(this);
     }
 
-    @Override
-    public Collection<Integer> getStates() {
-        return automaton.getStates();
-    }
-
-    @Override
-    public @Nullable CompactTransition<O> getTransition(Integer location, SymbolicInput<I> input) {
-        return automaton.getTransition(location, input);
-    }
-
-    @Override
-    public @Nullable Integer getInitialState() {
-        return automaton.getInitialState();
-    }
-
-    @Override
-    public void clear() {
-        this.automaton.clear();
-    }
-
-    @Override
-    public Integer addState(@Nullable Void property) {
-        return this.automaton.addState(property);
-    }
-
-    @Override
-    public void setStateProperty(Integer state, Void property) {}
-
-    @Override
-    public void setTransitionProperty(CompactTransition<O> transition, O property) {
-        this.automaton.setTransitionProperty(transition, property);
-    }
-
-    @Override
-    public void removeAllTransitions(Integer state) {
-        this.automaton.removeAllTransitions(state);
-    }
-
-    @Override
-    public CompactTransition<O> createTransition(Integer successor, O properties) {
-        return this.automaton.createTransition(successor, properties);
-    }
-
-    @Override
-    public void setInitialState(Integer location) {
-        automaton.setInitialState(location);
-    }
-
-    @Override
-    public void setTransition(Integer state, SymbolicInput<I> input, @Nullable CompactTransition<O> transition) {
-        this.automaton.setTransition(state, input, transition);
-    }
-
-    @Override
-    public Void getStateProperty(Integer state) {
-        return null;
-    }
-
-    @Override
-    public O getTransitionProperty(CompactTransition<O> transition) {
-        return transition.getProperty();
-    }
-
-    @Override
-    public Integer getSuccessor(CompactTransition<O> transition) {
-        return transition.getSuccId();
-    }
-
-    @Override
-    public <V> MutableMapping<Integer, V> createStaticStateMapping() {
-        return automaton.createStaticStateMapping();
-    }
-
-    @Override
-    public <V> MutableMapping<Integer, V> createDynamicStateMapping() {
-        return automaton.createDynamicStateMapping();
-    }
-
-    private void ensureThatCanAddTimer(List<MealyTimerInfo<O>> timers,
+    private void ensureThatCanAddTimer(List<MealyTimerInfo<Integer, O>> timers,
                                        String name,
                                        long initial,
                                        O output,
@@ -232,13 +142,13 @@ public class CompactMMLT<I, O> implements MutableMMLT<Integer, I, CompactTransit
         var localTimers = this.sortedTimers.get(location);
 
         ensureThatCanAddTimer(localTimers, name, initial, output, true);
-        localTimers.add(new MealyTimerInfo<>(name, initial, output, true));
+        localTimers.add(new MealyTimerInfo<>(name, initial, output, true, location));
         localTimers.sort(Comparator.comparingLong(MealyTimerInfo::initial));
 
         // Add self-looping transition:
-        TimerTimeoutSymbol<I> newTimerSymbol = new TimerTimeoutSymbol<>(name);
-        this.automaton.addAlphabetSymbol(newTimerSymbol);
-        automaton.addTransition(location, newTimerSymbol, location, output);
+//        TimerTimeoutSymbol<I> newTimerSymbol = new TimerTimeoutSymbol<>(name);
+//        this.automaton.addAlphabetSymbol(newTimerSymbol);
+//        automaton.addTransition(location, newTimerSymbol, location, output);
     }
 
     @Override
@@ -247,13 +157,13 @@ public class CompactMMLT<I, O> implements MutableMMLT<Integer, I, CompactTransit
         var localTimers = this.sortedTimers.get(location);
 
         ensureThatCanAddTimer(localTimers, name, initial, output, false);
-        localTimers.add(new MealyTimerInfo<>(name, initial, output, false));
+        localTimers.add(new MealyTimerInfo<>(name, initial, output, false, target));
         localTimers.sort(Comparator.comparingLong(MealyTimerInfo::initial));
 
         // Add transition with location change:
-        TimerTimeoutSymbol<I> newTimerSymbol = new TimerTimeoutSymbol<>(name);
-        this.automaton.addAlphabetSymbol(newTimerSymbol);
-        automaton.addTransition(location, newTimerSymbol, target, output);
+//        TimerTimeoutSymbol<I> newTimerSymbol = new TimerTimeoutSymbol<>(name);
+//        this.automaton.addAlphabetSymbol(newTimerSymbol);
+//        automaton.addTransition(location, newTimerSymbol, target, output);
 
         // Remove all timers with higher initial value, as these can no longer time out:
         localTimers.removeIf(t -> t.initial() > initial);
@@ -267,7 +177,7 @@ public class CompactMMLT<I, O> implements MutableMMLT<Integer, I, CompactTransit
         }
 
         localTimers.removeIf(t -> t.name().equals(timerName));
-        automaton.removeAllTransitions(location, new TimerTimeoutSymbol<>(timerName));
+//        automaton.removeAllTransitions(location, new TimerTimeoutSymbol<>(timerName));
     }
 
     @Override
@@ -290,5 +200,17 @@ public class CompactMMLT<I, O> implements MutableMMLT<Integer, I, CompactTransit
         }
 
         localResets.remove(input);
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        this.sortedTimers.clear();
+        this.resets.clear();
+    }
+
+    @Override
+    public Graph<Integer, Triple<SymbolicInput<I>, O, Integer>> graphView() {
+        return new MMLTGraphView<>(this);
     }
 }

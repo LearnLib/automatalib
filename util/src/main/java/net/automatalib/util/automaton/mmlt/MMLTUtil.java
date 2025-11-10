@@ -51,7 +51,7 @@ public class MMLTUtil {
      * @return Maximum configuration time. Long.MAX_VALUE, if exceeding integer maximum.
      */
     public static <S, I, T, O> long getConfigurationCount(MMLT<S, I, T, O> automaton, S location) {
-        Collection<MealyTimerInfo<O>> timers = automaton.getSortedTimers(location);
+        Collection<MealyTimerInfo<S, O>> timers = automaton.getSortedTimers(location);
         if (timers.isEmpty()) {
             return 1;
         }

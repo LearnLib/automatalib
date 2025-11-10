@@ -1,18 +1,21 @@
 package net.automatalib.automaton.visualization;
 
-import net.automatalib.automaton.mmlt.MMLT;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
-import net.automatalib.symbol.time.SymbolicInput;
-import net.automatalib.symbol.time.InputSymbol;
-import net.automatalib.symbol.time.TimerTimeoutSymbol;
-import net.automatalib.automaton.graph.TransitionEdge;
-
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class MMLTVisualizationHelper<S, I, T, O>
-        extends AutomatonVisualizationHelper<S, SymbolicInput<I>, T, MMLT<S, I, T, O>> {
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.common.util.Triple;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.SymbolicInput;
+import net.automatalib.symbol.time.TimerTimeoutSymbol;
+import net.automatalib.visualization.DefaultVisualizationHelper;
 
+public class MMLTVisualizationHelper<S, I, T, O>
+        extends DefaultVisualizationHelper<S, Triple<SymbolicInput<I>, O, S>> {
+
+    private final MMLT<S, I, T, O> automaton;
     private final boolean colorEdges;
     private final boolean includeResets;
 
@@ -33,7 +36,7 @@ public class MMLTVisualizationHelper<S, I, T, O>
     public MMLTVisualizationHelper(MMLT<S, I, T, O> automaton,
                                    boolean colorEdges,
                                    boolean includeResets) {
-        super(automaton);
+        this.automaton = automaton;
         this.colorEdges = colorEdges;
         this.includeResets = includeResets;
     }
@@ -41,6 +44,10 @@ public class MMLTVisualizationHelper<S, I, T, O>
     @Override
     public boolean getNodeProperties(S node, Map<String, String> properties) {
         super.getNodeProperties(node, properties);
+
+        if (Objects.equals(node, automaton.getInitialState())) {
+            properties.put(NodeAttrs.INITIAL, Boolean.TRUE.toString());
+        }
 
         // Include timer assignments:
         var localTimers = automaton.getSortedTimers(node);
@@ -57,18 +64,18 @@ public class MMLTVisualizationHelper<S, I, T, O>
     }
 
     @Override
-    public boolean getEdgeProperties(S src, TransitionEdge<SymbolicInput<I>, T> edge, S tgt, Map<String, String> properties) {
+    public boolean getEdgeProperties(S src, Triple<SymbolicInput<I>, O, S> edge, S tgt, Map<String, String> properties) {
         super.getEdgeProperties(src, edge, tgt, properties);
 
-        final SymbolicInput<I> input = edge.getInput();
+        final SymbolicInput<I> input = edge.getFirst();
 
-        String label = String.format("%s / %s", input, automaton.getTransitionProperty(edge.getTransition()));
+        String label = String.format("%s / %s", input, edge.getSecond());
 
         // Infer the label color + reset information for the transition:
         String resetExtraInfo = "";
         String resetInfo = "";
         String edgeColor = "";
-        if (edge.getInput() instanceof TimerTimeoutSymbol<I> ts) {
+        if (input instanceof TimerTimeoutSymbol<I> ts) {
             // Get info for corresponding timer:
             var optTimer = automaton.getSortedTimers(src).stream()
                     .filter(t -> t.name().equals(ts.timer()))
@@ -96,7 +103,7 @@ public class MMLTVisualizationHelper<S, I, T, O>
                 }
                 edgeColor = "chartreuse3";
             }
-        } else if (edge.getInput() instanceof InputSymbol<I> ndi) {
+        } else if (input instanceof InputSymbol<I> ndi) {
             if (src.equals(tgt) && automaton.isLocalReset(src, ndi)) {
                 // Self-loop + local reset -> resets all in target:
                 resetExtraInfo = automaton.getSortedTimers(tgt)

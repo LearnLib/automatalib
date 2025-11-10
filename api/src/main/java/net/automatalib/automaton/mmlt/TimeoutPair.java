@@ -12,7 +12,7 @@ import java.util.List;
  * @param <O>
  *         Output suffix type
  */
-public record TimeoutPair<O>(long delay, List<MealyTimerInfo<O>> timers) {
+public record TimeoutPair<S, O>(long delay, List<MealyTimerInfo<S, O>> timers) {
 
     public boolean allPeriodic() {
         if (timers.size() == 1) {

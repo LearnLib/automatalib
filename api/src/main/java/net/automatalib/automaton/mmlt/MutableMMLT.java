@@ -1,10 +1,9 @@
 package net.automatalib.automaton.mmlt;
 
-import net.automatalib.symbol.time.SymbolicInput;
-import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.symbol.time.InputSymbol;
 
-public interface MutableMMLT<S, I, T, O> extends MMLT<S, I, T, O>, MutableDeterministic<S, SymbolicInput<I>, T, Void, O> {
+public interface MutableMMLT<S, I, T, O> extends MMLT<S, I, T, O>, MutableDeterministic<S, InputSymbol<I>, T, Void, O> {
 
     /**
      * Adds a new periodic timer to the provided location.

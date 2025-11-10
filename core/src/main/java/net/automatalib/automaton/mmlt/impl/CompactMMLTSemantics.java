@@ -15,7 +15,6 @@ import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
-import net.automatalib.symbol.time.TimerTimeoutSymbol;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -171,9 +170,9 @@ public class CompactMMLTSemantics<S, I, T, O>
             } else {
                 // query target + update configuration:
                 assert nextTimeouts.timers().size() == 1;
-                TimerTimeoutSymbol<I> expiringTimerSym = new TimerTimeoutSymbol<>(nextTimeouts.timers().get(0).name());
+                var timer = nextTimeouts.timers().get(0);
+                var successor = timer.target();
 
-                var successor = model.getSuccessor(source.getLocation(), expiringTimerSym);
                 target = new State<>(successor, model.getSortedTimers(successor));
                 target.resetTimers();
             }

@@ -46,7 +46,6 @@ import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.symbol.time.InputSymbol;
-import net.automatalib.symbol.time.SymbolicInput;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
@@ -702,19 +701,19 @@ public final class DOTParsers {
                                                true);
     }
 
-    public static DOTInputModelDeserializer<Integer, SymbolicInput<String>, CompactMMLT<String, String>> mmlt(String silentOutput,
-                                                                                                              SymbolCombiner<String> outputCombiner) {
+    public static DOTInputModelDeserializer<Integer, InputSymbol<String>, CompactMMLT<String, String>> mmlt(String silentOutput,
+                                                                                                            SymbolCombiner<String> outputCombiner) {
         return mmlt(TimedInput::input, Function.identity(), silentOutput, outputCombiner);
     }
 
-    public static <I, O> DOTInputModelDeserializer<Integer, SymbolicInput<I>, CompactMMLT<I, O>> mmlt(Function<String, InputSymbol<I>> inputParser,
-                                                                                                      Function<String, O> outputParser,
-                                                                                                      O silentOutput,
-                                                                                                      SymbolCombiner<O> outputCombiner) {
+    public static <I, O> DOTInputModelDeserializer<Integer, InputSymbol<I>, CompactMMLT<I, O>> mmlt(Function<String, InputSymbol<I>> inputParser,
+                                                                                                    Function<String, O> outputParser,
+                                                                                                    O silentOutput,
+                                                                                                    SymbolCombiner<O> outputCombiner) {
         return mmlt(CompactMMLT::new, inputParser, outputParser, silentOutput, outputCombiner);
     }
 
-    public static <S, I, T, O, A extends MutableMMLT<S, I, T, O>> DOTInputModelDeserializer<S, SymbolicInput<I>, A> mmlt(
+    public static <S, I, T, O, A extends MutableMMLT<S, I, T, O>> DOTInputModelDeserializer<S, InputSymbol<I>, A> mmlt(
             MMLTCreator<A, I, O> creator,
             Function<String, InputSymbol<I>> inputParser,
             Function<String, O> outputParser,
@@ -729,7 +728,7 @@ public final class DOTParsers {
                     true);
     }
 
-    public static <S, I, T, O, A extends MutableMMLT<S, I, T, O>> DOTInputModelDeserializer<S, SymbolicInput<I>, A> mmlt(
+    public static <S, I, T, O, A extends MutableMMLT<S, I, T, O>> DOTInputModelDeserializer<S, InputSymbol<I>, A> mmlt(
             MMLTCreator<A, I, O> creator,
             Function<String, InputSymbol<I>> inputParser,
             Function<String, O> outputParser,

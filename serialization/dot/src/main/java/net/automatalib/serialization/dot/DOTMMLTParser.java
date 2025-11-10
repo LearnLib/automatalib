@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.MapAlphabet;
 import net.automatalib.automaton.mmlt.MMLTCreator;
 import net.automatalib.automaton.mmlt.MealyTimerInfo;
 import net.automatalib.automaton.mmlt.MutableMMLT;
@@ -25,7 +24,6 @@ import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.exception.FormatException;
 import net.automatalib.symbol.time.InputSymbol;
-import net.automatalib.symbol.time.SymbolicInput;
 import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.MMLTEdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
@@ -93,7 +91,7 @@ import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
  */
 
 public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
-        implements DOTInputModelDeserializer<S, SymbolicInput<I>, A> {
+        implements DOTInputModelDeserializer<S, InputSymbol<I>, A> {
 
     private static final Pattern assignPattern = Pattern.compile("(\\S+)=(\\d+)");
 
@@ -122,7 +120,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
     }
 
     @Override
-    public DOTInputModelData<S, SymbolicInput<I>, A> readModel(InputStream is) throws IOException, FormatException {
+    public DOTInputModelData<S, InputSymbol<I>, A> readModel(InputStream is) throws IOException, FormatException {
 
         try (Reader r = IOUtil.asNonClosingUTF8Reader(is)) {
             InternalDOTParser parser = new InternalDOTParser(r);
@@ -146,7 +144,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
 
             final Mapping<S, String> labels = parseNodesAndEdges(parser, automaton);
 
-            return new DOTInputModelData<>(automaton, new MapAlphabet<>(alphabet), labels);
+            return new DOTInputModelData<>(automaton, alphabet, labels);
         }
     }
 
@@ -155,7 +153,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
         final Collection<Node> nodes = parser.getNodes();
         final Collection<Edge> edges = parser.getEdges();
 
-        final Map<String, Map<String, MealyTimerInfo<O>>> timers =
+        final Map<String, Map<String, MealyTimerInfo<S, O>>> timers =
                 new HashMap<>(nodes.size() - 1); // id in dot -> local timers
         final Map<String, S> stateMap = new HashMap<>(nodes.size() - 1); // name in dot -> new id
         final MutableMapping<S, String> mapping = result.createDynamicStateMapping();
@@ -193,7 +191,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                                 node.id));
                     }
 
-                    Map<String, MealyTimerInfo<O>> timeInfo = timers.computeIfAbsent(node.id, k -> new HashMap<>());
+                    Map<String, MealyTimerInfo<S, O>> timeInfo = timers.computeIfAbsent(node.id, k -> new HashMap<>());
                     if (timeInfo.containsKey(timerName)) {
                         throw new IllegalArgumentException(String.format(
                                 "Timer %s in location %s must only be set once.",
@@ -202,7 +200,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                     }
 
                     // Add timer:
-                    timeInfo.put(timerName, new MealyTimerInfo<>(timerName, value, null));
+                    timeInfo.put(timerName, new MealyTimerInfo<>(timerName, value, null, null));
                 }
             } else {
                 timers.put(node.id, Collections.emptyMap()); // no timers in this location
@@ -242,7 +240,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                 }
 
                 // Add output to timer info:
-                final MealyTimerInfo<O> oldInfo = timers.get(edge.src).get(timerName);
+                final MealyTimerInfo<S, O> oldInfo = timers.get(edge.src).get(timerName);
 
                 // Infer timer type:
                 final long initial = oldInfo.initial();

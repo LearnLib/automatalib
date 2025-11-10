@@ -7,7 +7,7 @@ import java.util.Objects;
  *
  * @param <O> Output symbol type
  */
-public class MealyTimerInfo<O> {
+public class MealyTimerInfo<S, O> {
     /**
      * Name of the timer
      */
@@ -28,7 +28,10 @@ public class MealyTimerInfo<O> {
      */
     private boolean periodic;
 
-    public MealyTimerInfo(String name, long initial, O output, boolean periodic) {
+    private final S target;
+
+    public MealyTimerInfo(String name, long initial, O output, boolean periodic, S target) {
+        this.target = target;
         if (initial <= 0) {
             throw new IllegalArgumentException("Timer values must be greater than zero.");
         }
@@ -39,8 +42,8 @@ public class MealyTimerInfo<O> {
         this.periodic = periodic;
     }
 
-    public MealyTimerInfo(String name, long initial, O output) {
-        this(name, initial, output, true);
+    public MealyTimerInfo(String name, long initial, O output, S target) {
+        this(name, initial, output, true, target);
     }
 
     public void setOneShot() {
@@ -63,6 +66,10 @@ public class MealyTimerInfo<O> {
         return output;
     }
 
+    public S target() {
+        return target;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
@@ -70,12 +77,13 @@ public class MealyTimerInfo<O> {
         var that = (MealyTimerInfo) obj;
         return Objects.equals(this.name, that.name) &&
                 this.initial == that.initial &&
-                Objects.equals(this.output, that.output);
+                Objects.equals(this.output, that.output) &&
+                Objects.equals(this.target, that.target);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, initial, output);
+        return Objects.hash(name, initial, output, target);
     }
 
     @Override

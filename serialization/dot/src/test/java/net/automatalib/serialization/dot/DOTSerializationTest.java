@@ -188,10 +188,10 @@ public class DOTSerializationTest {
 
         final CompactMMLT<String, String> mmlt = DOTSerializationUtil.MMLT;
 
-        ThrowingWriter writer = w -> GraphDOT.write(mmlt, mmlt.getInputAlphabet(), w);
+        ThrowingWriter writer = w -> GraphDOT.write(mmlt, w);
         checkDOTOutput(writer, DOTSerializationUtil.MMLT_RESOURCE);
 
-        ThrowingWriter writer2 = w -> GraphDOT.write(mmlt, mmlt.getInputAlphabet(), w, new MMLTVisualizationHelper<>(mmlt, true, true));
+        ThrowingWriter writer2 = w -> GraphDOT.write(mmlt.graphView(), w, new MMLTVisualizationHelper<>(mmlt, true, true));
         checkDOTOutput(writer2, DOTSerializationUtil.MMLT_WITH_RESETS_RESOURCE);
     }
 
