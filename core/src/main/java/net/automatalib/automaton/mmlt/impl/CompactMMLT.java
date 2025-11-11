@@ -51,7 +51,11 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
      *         The combiner function for simultaneous timeouts of periodic timers.
      */
     public CompactMMLT(Alphabet<I> nonDelayingInputs, O silentOutput, SymbolCombiner<O> outputCombiner) {
-        super(nonDelayingInputs);
+        this(nonDelayingInputs, DEFAULT_INIT_CAPACITY, silentOutput, outputCombiner);
+    }
+
+    public CompactMMLT(Alphabet<I> nonDelayingInputs, int sizeHint, O silentOutput, SymbolCombiner<O> outputCombiner) {
+        super(nonDelayingInputs, sizeHint);
 
         this.sortedTimers = new HashMap<>();
         this.resets = new HashMap<>();
