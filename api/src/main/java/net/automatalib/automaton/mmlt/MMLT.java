@@ -59,18 +59,11 @@ public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, 
     SymbolCombiner<O> getOutputCombiner();
 
     /**
-     * Returns the input alphabet of this MMLT, consisting of non-delaying inputs and timeout-symbols for its timers.
+     * Retrieves the non-delaying inputs for this automaton. Excludes timer timeout symbols. May be empty.
      *
      * @return Input alphabet
      */
     Alphabet<I> getInputAlphabet();
-
-    /**
-     * Retrieves the non-delaying inputs for this automaton. Excludes timer timeout symbols. May be empty.
-     *
-     * @return Untimed alphabet.
-     */
-    Alphabet<I> getUntimedAlphabet();
 
     /**
      * Indicates if the provided input performs a local reset in the given location.

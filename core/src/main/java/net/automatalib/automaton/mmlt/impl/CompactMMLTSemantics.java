@@ -52,7 +52,7 @@ public class CompactMMLTSemantics<S, I, T, O>
         var initialLocation = model.getInitialState();
         this.initialConfiguration = new State<>(initialLocation, model.getSortedTimers(initialLocation));
 
-        this.alphabet = new GrowingMapAlphabet<>(model.getUntimedAlphabet().stream().map(TimedInput::input).toList());
+        this.alphabet = new GrowingMapAlphabet<>(model.getInputAlphabet().stream().map(TimedInput::input).toList());
         this.alphabet.add(TimedInput.timeout());
         this.alphabet.add(TimedInput.step());
 

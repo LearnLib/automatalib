@@ -71,11 +71,6 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
     }
 
     @Override
-    public Alphabet<I> getUntimedAlphabet() {
-        return getInputAlphabet();
-    }
-
-    @Override
     public boolean isLocalReset(Integer location, I input) {
         return this.resets.getOrDefault(location, Collections.emptySet()).contains(input);
     }
