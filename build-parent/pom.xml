@@ -67,6 +67,13 @@ limitations under the License.
                             <exclude>net/automatalib/serialization/dot/Token.class</exclude>
                             <exclude>net/automatalib/serialization/dot/TokenMgrError.class</exclude>
 
+                            <!-- generated parser for Mata serialization -->
+                            <exclude>net/automatalib/serialization/mata/ExplicitMataParser*.class</exclude>
+                            <exclude>net/automatalib/serialization/mata/ParseException.class</exclude>
+                            <exclude>net/automatalib/serialization/mata/SimpleCharStream.class</exclude>
+                            <exclude>net/automatalib/serialization/mata/Token.class</exclude>
+                            <exclude>net/automatalib/serialization/mata/TokenMgrError.class</exclude>
+
                             <!-- generated parser for TAF serialization -->
                             <exclude>net/automatalib/serialization/taf/parser/InternalTAFParser*.class</exclude>
                             <exclude>net/automatalib/serialization/taf/parser/ParseException.class</exclude>

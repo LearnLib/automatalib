@@ -38,6 +38,7 @@ limitations under the License.
         <module>etf</module>
         <module>fsm</module>
         <module>learnlibv2</module>
+        <module>mata</module>
         <module>saf</module>
         <module>taf</module>
     </modules>

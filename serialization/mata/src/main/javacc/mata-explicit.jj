@@ -1,0 +1,212 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+options {
+	LOOKAHEAD = 1;
+	STATIC = false;
+	SUPPORT_CLASS_VISIBILITY_PUBLIC = false;
+}
+
+PARSER_BEGIN(ExplicitMataParser)
+
+package net.automatalib.serialization.mata.parser;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.fsa.MutableNFA;
+import net.automatalib.automaton.fsa.NFA;
+import net.automatalib.automaton.fsa.impl.CompactNFA;
+import net.automatalib.automaton.fsa.impl.FastNFA;
+import net.automatalib.common.util.HashUtil;
+import net.automatalib.common.util.Triple;
+import net.automatalib.exception.FormatException;
+import net.automatalib.serialization.InputModelData;
+
+public class ExplicitMataParser {
+
+	private NFA<?, Integer> nfa;
+	private Alphabet<Integer> alphabet;
+
+	private Set<String> labels;
+	private Set<String> states;
+	private Set<String> initials;
+	private Set<String> finals;
+	private List<Triple<String, String, String>> transitions;
+	private boolean parsed;
+
+
+	public void parse() throws ParseException {
+		if (!this.parsed) {
+			file();
+			this.parsed = true;
+		}
+	}
+
+    public <S, I, A extends MutableNFA<S, I>> InputModelData<I, A> extract(AutomatonCreator<A, I> creator,
+																		   Function<String, I> symbolParser) {
+		Map<String, S> name2State = new HashMap<String, S>(HashUtil.capacity(this.states.size()));
+		Map<String, I> label2Input = new HashMap<String, I>(HashUtil.capacity(this.labels.size()));
+
+		final List<I> inputs = new ArrayList<I>(this.labels.size());
+        for (String l : this.labels) {
+			inputs.add(symbolParser.apply(l));
+        }
+		final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
+
+		final A nfa = creator.createAutomaton(alphabet, this.states.size());
+
+		for (String s : this.states) {
+			if (this.initials.contains(s)) {
+				name2State.put(s, nfa.addInitialState(this.finals.contains(s)));
+			} else {
+				name2State.put(s, nfa.addState(this.finals.contains(s)));
+			}
+		}
+		for (Triple<String, String, String> t : this.transitions) {
+			nfa.addTransition(name2State.get(t.getFirst()),
+							  label2Input.get(t.getSecond()),
+							  name2State.get(t.getThird()));
+        }
+
+        return new InputModelData<>(nfa, alphabet);
+    }
+}
+
+
+PARSER_END(ExplicitMataParser)
+
+SKIP :
+{
+	" "
+|	"\t"
+}
+
+TOKEN:
+{
+	< SECTION: "@NFA" >
+|	< ALPHABET: "%Alphabet" >
+|	< STATES: "%States" >
+|	< INITIAL: "%Initial" >
+|	< FINAL: "%Final" >
+|	< DASH: "-" >
+|	< NEWLINE : "\r" | "\n" | "\r\n">
+|	< STRING : (<LETTER> | <NUMBER>)+>
+|	< #LETTER: ["a"-"z","A"-"Z"] >
+|	< #NUMBER: ["0"-"9"] >
+}
+
+SKIP:
+{
+	< BEGIN_COMMENT: "#" > : IN_COMMENT
+}
+
+<IN_COMMENT> SKIP:
+{
+	< EOL : "\r" | "\n" | "\r\n" > : DEFAULT
+|	< ~[] >
+}
+
+
+private void file():
+{}
+{
+	{
+		this.labels = new LinkedHashSet<String>();
+		this.states = new LinkedHashSet<String>();
+		this.initials = new HashSet<String>();
+		this.finals = new HashSet<String>();
+		this.transitions = new ArrayList<Triple<String, String, String>>();
+	}
+	section() <NEWLINE>
+	(alphabet() <NEWLINE>)?
+	(states() <NEWLINE>)?
+	(initials() <NEWLINE>)?
+	(finals() <NEWLINE>)?
+	transitions() <EOF>
+}
+
+private void section():
+{}
+{
+	<SECTION>(<DASH><STRING>)?
+}
+
+private void alphabet():
+{
+	Token t;
+}
+{
+	<ALPHABET>(<DASH><STRING>)? (t = <STRING> { this.labels.add(t.toString()); })*
+}
+
+private void states():
+{
+	Token t;
+}
+{
+	<STATES>(<DASH><STRING>)? (t = <STRING> { this.states.add(t.toString()); })*
+}
+
+private void initials():
+{
+	Token t;
+}
+{
+	<INITIAL> (t = <STRING> { this.initials.add(t.toString()); })*
+}
+
+private void finals():
+{
+	Token t;
+}
+{
+	<FINAL> (t = <STRING> { this.finals.add(t.toString()); })*
+}
+
+private void transitions():
+{}
+{
+	(transition())*
+}
+
+private void transition():
+{
+	Token src;
+	Token input;
+	Token tgt;
+}
+{
+	src = <STRING> input = <STRING> tgt = <STRING> (<NEWLINE> | <EOF>)
+	{
+		String srcs = src.toString();
+		String inputs = input.toString();
+		String tgts = tgt.toString();
+		this.transitions.add(Triple.of(srcs, inputs, tgts));
+		this.labels.add(inputs);
+		this.states.add(srcs);
+		this.states.add(tgts);
+	}
+}
