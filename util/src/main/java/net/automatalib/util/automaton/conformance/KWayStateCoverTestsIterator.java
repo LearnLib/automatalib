@@ -35,6 +35,7 @@ import net.automatalib.util.graph.Graphs;
 import net.automatalib.util.graph.apsp.APSPResult;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A randomized state cover test generator based on the concepts of mutation testing as described in the paper <a
@@ -43,6 +44,11 @@ import net.automatalib.word.WordBuilder;
  * <p>
  * A test case will be computed for every k-combination or k-permutation of states with additional random walk at the
  * end.
+ * <p>
+ * <b>Implementation detail:</b> Note that this test generator heavily relies on the sampling of states. If the given
+ * automaton has very few or very many states, the number of generated test cases may be very low or high, respectively.
+ * As a result, it may be advisable to {@link IteratorUtil#concat(Iterator[]) combine} this generator with other
+ * generators or limit the number of generated test cases.
  *
  * @param <S>
  *         automaton state type
@@ -54,19 +60,19 @@ import net.automatalib.word.WordBuilder;
  *         automaton type
  */
 public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>>
-        implements Iterator<Word<I>> {
+        extends AbstractSimplifiedIterator<Word<I>> {
 
     public static final int DEFAULT_R_WALK_LEN = 20;
     public static final int DEFAULT_K = 2;
 
-    private final A automaton;
     private final List<? extends I> alphabet;
     private final Random random;
     private final int randomWalkLen;
-    private final int k;
-    private final CombinationMethod method;
 
-    private final Iterator<Word<I>> iterator;
+    private final Iterator<List<S>> combIter;
+    private final Set<Set<List<TransitionEdge<I, T>>>> cache;
+    private final @Nullable S initial;
+    private final APSPResult<S, TransitionEdge<I, T>> apsp;
 
     /**
      * Convenience constructor which uses a fresh {@code random} object.
@@ -122,140 +128,80 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
                                        int randomWalkLen,
                                        int k,
                                        CombinationMethod method) {
-        this.automaton = automaton;
         this.alphabet = CollectionUtil.randomAccessList(inputs);
         this.random = random;
         this.randomWalkLen = randomWalkLen;
-        this.k = Math.min(k, automaton.size());
-        this.method = method;
 
-        final S initial = automaton.getInitialState();
+        this.cache = new HashSet<>();
+        this.apsp = Graphs.findAPSP(automaton.transitionGraphView(alphabet));
+        this.initial = automaton.getInitialState();
 
-        if (automaton.size() == 0 || initial == null) {
-            this.iterator = Collections.emptyIterator();
+        if (this.initial == null) {
+            this.combIter = Collections.emptyIterator();
         } else {
-            final FirstPhaseIterator firstIterator = new FirstPhaseIterator();
-            final SecondPhaseIterator secondPhaseIterator = new SecondPhaseIterator(initial);
-            this.iterator = IteratorUtil.concat(firstIterator, secondPhaseIterator);
+            final List<S> states = new ArrayList<>(automaton.getStates());
+            Collections.shuffle(states, random);
+            this.combIter = method.getCombinations(states, Math.min(k, automaton.size()));
         }
+
     }
 
     @Override
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
+    protected boolean calculateNext() {
 
-    @Override
-    public Word<I> next() {
-        return iterator.next();
-    }
+        while (combIter.hasNext()) {
+            final List<S> comb = combIter.next();
+            final Set<List<TransitionEdge<I, T>>> prefixes = new HashSet<>(HashUtil.capacity(comb.size()));
 
-    /**
-     * Performs random walks if the automaton only has a single state.
-     */
-    private final class FirstPhaseIterator extends AbstractSimplifiedIterator<Word<I>> {
+            List<TransitionEdge<I, T>> path = null;
+            assert initial != null;
 
-        private int idx;
+            for (S c : comb) {
+                List<TransitionEdge<I, T>> sp = apsp.getShortestPath(initial, c);
+                if (sp != null) {
+                    prefixes.add(sp);
+                    if (path == null) {
+                        path = sp;
+                    }
+                }
+            }
 
-        @Override
-        protected boolean calculateNext() {
-            if (automaton.size() == 1 && idx++ < randomWalkLen) {
-                super.nextValue = Word.fromList(RandomUtil.sample(random, alphabet, randomWalkLen));
+            if (path == null || !cache.add(prefixes)) {
+                continue;
+            }
+
+            final WordBuilder<I> pathBuilder = new WordBuilder<>();
+            for (TransitionEdge<I, T> e : path) {
+                pathBuilder.append(e.getInput());
+            }
+
+            /*
+             * in case of non-strongly connected automata test case might not be possible as a path between 2 states
+             * might not exist
+             */
+            boolean possibleTestCase = true;
+            for (int index = 0; index < comb.size() - 1; index++) {
+                final List<TransitionEdge<I, T>> pathBetweenStates =
+                        apsp.getShortestPath(comb.get(index), comb.get(index + 1));
+
+                if (pathBetweenStates == null || pathBetweenStates.isEmpty()) {
+                    possibleTestCase = false;
+                    break;
+                }
+
+                for (TransitionEdge<I, ?> t : pathBetweenStates) {
+                    pathBuilder.append(t.getInput());
+                }
+            }
+
+            if (possibleTestCase) {
+                pathBuilder.append(RandomUtil.sample(random, alphabet, randomWalkLen));
+                super.nextValue = pathBuilder.toWord();
                 return true;
             }
-            return false;
-        }
-    }
-
-    /**
-     * Performs the actual k-way coverage for automata with more than a single state.
-     */
-    private final class SecondPhaseIterator extends AbstractSimplifiedIterator<Word<I>> {
-
-        private final Iterator<List<S>> combIter;
-        private final Set<Set<List<TransitionEdge<I, T>>>> cache;
-        private final S initial;
-
-        private APSPResult<S, TransitionEdge<I, T>> apsp;
-
-        SecondPhaseIterator(S initial) {
-            this.initial = initial;
-            List<S> states = new ArrayList<>(automaton.getStates());
-            Collections.shuffle(states, random);
-            this.combIter = method.getCombinations(states, k);
-            this.cache = new HashSet<>();
         }
 
-        @Override
-        protected boolean calculateNext() {
-
-            final APSPResult<S, TransitionEdge<I, T>> apsp = getAPSP();
-
-            while (combIter.hasNext()) {
-                final List<S> comb = combIter.next();
-                final Set<List<TransitionEdge<I, T>>> prefixes = new HashSet<>(HashUtil.capacity(comb.size()));
-
-                List<TransitionEdge<I, T>> path = null;
-
-                for (S c : comb) {
-                    List<TransitionEdge<I, T>> sp = apsp.getShortestPath(initial, c);
-                    if (sp != null) {
-                        prefixes.add(sp);
-                        if (path == null) {
-                            path = sp;
-                        }
-                    }
-                }
-
-                if (path == null || !cache.add(prefixes)) {
-                    continue;
-                }
-
-                final WordBuilder<I> pathBuilder = new WordBuilder<>();
-                for (TransitionEdge<I, T> e : path) {
-                    pathBuilder.append(e.getInput());
-                }
-
-                /*
-                 * in case of non-strongly connected automata test case might not be possible as a path between 2 states
-                 * might not exist
-                 */
-                boolean possibleTestCase = true;
-                for (int index = 0; index < comb.size() - 1; index++) {
-                    final List<TransitionEdge<I, T>> pathBetweenStates =
-                            apsp.getShortestPath(comb.get(index), comb.get(index + 1));
-
-                    if (pathBetweenStates == null || pathBetweenStates.isEmpty()) {
-                        possibleTestCase = false;
-                        break;
-                    }
-
-                    for (TransitionEdge<I, ?> t : pathBetweenStates) {
-                        pathBuilder.append(t.getInput());
-                    }
-                }
-
-                if (possibleTestCase) {
-                    pathBuilder.append(RandomUtil.sample(random, alphabet, randomWalkLen));
-                    super.nextValue = pathBuilder.toWord();
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /**
-         * Compute all-pair-shortest-paths lazily, in case this iterator is never queried.
-         *
-         * @return the all-pair-shortest-paths result
-         */
-        private APSPResult<S, TransitionEdge<I, T>> getAPSP() {
-            if (this.apsp == null) {
-                this.apsp = Graphs.findAPSP(automaton.transitionGraphView(alphabet));
-            }
-            return this.apsp;
-        }
+        return false;
     }
 
     /**

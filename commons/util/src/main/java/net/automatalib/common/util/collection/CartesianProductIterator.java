@@ -35,7 +35,7 @@ final class CartesianProductIterator<T> implements Iterator<List<T>> {
     private final Iterable<? extends T>[] iterables;
     private final Iterator<? extends T>[] iterators;
     private final List<T> current;
-    private boolean first = true;
+    private boolean first;
     private boolean empty;
 
     @SuppressWarnings("unchecked")
@@ -44,6 +44,8 @@ final class CartesianProductIterator<T> implements Iterator<List<T>> {
         this.iterables = iterables;
         this.iterators = new Iterator[iterables.length];
         this.current = new ArrayList<>(iterables.length);
+        this.first = true;
+
         for (int i = 0; i < iterators.length; i++) {
             Iterator<? extends T> it = iterables[i].iterator();
             if (!it.hasNext()) {

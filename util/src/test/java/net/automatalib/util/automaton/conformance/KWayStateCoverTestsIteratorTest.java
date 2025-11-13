@@ -71,10 +71,8 @@ public class KWayStateCoverTestsIteratorTest {
                                                                                                 method));
 
         // check that the first 'length' queries are the randomly generated ones.
-        Assert.assertTrue(tests.size() >= length);
-        for (Word<Character> t : tests.subList(0, length)) {
-            Assert.assertEquals(t.size(), length);
-        }
+        Assert.assertEquals(tests.size(), 1);
+        Assert.assertEquals(tests.get(0).length(), length);
     }
 
     @Test(dataProvider = "methods")
