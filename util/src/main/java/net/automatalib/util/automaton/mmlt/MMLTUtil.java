@@ -19,6 +19,12 @@ import java.util.List;
  */
 public class MMLTUtil {
 
+    public static <I, O> boolean testEquivalence(MMLT<?, I, ?, O> modelA,
+                                                 MMLT<?, I, ?, O> modelB,
+                                                 Collection<TimedInput<I>> inputs) {
+        return findSeparatingWord(modelA, modelB, inputs) == null;
+    }
+
     public static @Nullable <I, O> Word<TimedInput<I>> findSeparatingWord(MMLT<?, I, ?, O> modelA, MMLT<?, I, ?, O> modelB,
                                                                           Collection<TimedInput<I>> inputs) {
         var expandedA = ReducedMMLTSemantics.forLocalTimerMealy(modelA);
