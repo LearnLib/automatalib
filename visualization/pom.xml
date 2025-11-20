@@ -42,6 +42,9 @@ limitations under the License.
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <systemPropertyVariables>
+                        <java.awt.headless>false</java.awt.headless>
+                    </systemPropertyVariables>
                     <argLine>
                         --add-exports=java.desktop/java.awt=ALL-UNNAMED
                         --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED
