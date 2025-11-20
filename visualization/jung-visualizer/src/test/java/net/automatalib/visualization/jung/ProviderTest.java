@@ -63,7 +63,7 @@ public class ProviderTest {
 
     private static void checkExecution() {
         final int feature = Runtime.version().feature();
-        if (feature == 17) { // TODO: Java 21 currently crashes when loading fonts. Bug in the JVM?
+        if (feature == 17 || feature == 21) {
             // hack: the static initializer of this class does the magic we want, so only invoke it on compatible JVMs
             new CacioExtension();
         } else {
