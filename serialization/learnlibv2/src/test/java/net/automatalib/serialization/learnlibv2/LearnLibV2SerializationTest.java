@@ -17,7 +17,6 @@ package net.automatalib.serialization.learnlibv2;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
@@ -44,7 +43,7 @@ public class LearnLibV2SerializationTest {
     }
 
     @Test
-    public void outputEqualsInputTest() throws IOException {
+    public void outputEqualsInputTest() {
         final Alphabet<Integer> alphabet = this.automaton.getInputAlphabet();
         final InputModelData<Integer, DFA<Integer, Integer>> deserializedData = writeAndRead(this.automaton, alphabet);
 
@@ -68,7 +67,7 @@ public class LearnLibV2SerializationTest {
     }
 
     @Test
-    public void doNotCloseInputOutputStreamTest() throws IOException {
+    public void doNotCloseInputOutputStreamTest() {
         final Alphabet<Integer> alphabet = this.automaton.getInputAlphabet();
         LearnLibV2Serialization<Integer> serializer = LearnLibV2Serialization.getInstance();
 
@@ -80,7 +79,7 @@ public class LearnLibV2SerializationTest {
     }
 
     private InputModelData<Integer, DFA<Integer, Integer>> writeAndRead(DFA<Integer, Integer> automaton,
-                                                                        Alphabet<Integer> alphabet) throws IOException {
+                                                                        Alphabet<Integer> alphabet) {
         LearnLibV2Serialization<Integer> serializer = LearnLibV2Serialization.getInstance();
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();

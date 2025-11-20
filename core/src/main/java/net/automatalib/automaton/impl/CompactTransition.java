@@ -61,11 +61,8 @@ public class CompactTransition<TP> {
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        return o instanceof CompactTransition<?> that && memoryIdx == that.memoryIdx && succId == that.succId &&
+        return this == o ||
+               o instanceof CompactTransition<?> that && memoryIdx == that.memoryIdx && succId == that.succId &&
                Objects.equals(property, that.property);
     }
 

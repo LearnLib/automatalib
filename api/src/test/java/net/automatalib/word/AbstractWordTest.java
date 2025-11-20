@@ -191,17 +191,17 @@ public abstract class AbstractWordTest {
 
     @Test
     public void testEquals() {
-        Assert.assertTrue(testWord.equals(testWord));
+        Assert.assertEquals(testWord, testWord);
         Assert.assertFalse(testWord.equals(null));
 
         for (Word<?> eq : equalWords) {
-            Assert.assertTrue(testWord.equals(eq));
-            Assert.assertTrue(eq.equals(testWord));
+            Assert.assertEquals(eq, testWord);
+            Assert.assertEquals(testWord, eq);
         }
 
         for (Word<?> neq : unequalWords) {
-            Assert.assertFalse(testWord.equals(neq));
-            Assert.assertFalse(neq.equals(testWord));
+            Assert.assertNotEquals(neq, testWord);
+            Assert.assertNotEquals(testWord, neq);
         }
     }
 

@@ -125,8 +125,8 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
      *         if {@code this} alphabet does not implement {@link GrowingAlphabet}
      */
     default GrowingAlphabet<I> asGrowingAlphabetOrThrowException() {
-        if (this instanceof GrowingAlphabet) {
-            return (GrowingAlphabet<I>) this;
+        if (this instanceof GrowingAlphabet<I> result) {
+            return result;
         } else {
             throw new GrowingAlphabetNotSupportedException(this);
         }

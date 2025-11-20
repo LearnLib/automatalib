@@ -18,14 +18,20 @@ package net.automatalib.modelchecker.ltsmin;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A class for describing LTSmin version.
+ * A record for describing LTSmin versions.
+ *
+ * @param major
+ *         the major version
+ * @param minor
+ *         the minor version
+ * @param patch
+ *         the patch version
  */
-public final class LTSminVersion {
+public record LTSminVersion(int major, int minor, int patch) {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LTSminVersion.class);
 
@@ -33,14 +39,6 @@ public final class LTSminVersion {
      * The pattern for LTSmin versioning scheme: 'v[major].[minor].[patch][ignoredSuffix]'.
      */
     private static final Pattern VERSION_PATTERN = Pattern.compile("^v([0-9]+)\\.([0-9]+)\\.([0-9]+)");
-
-    private final int major, minor, patch;
-
-    private LTSminVersion(int major, int minor, int patch) {
-        this.major = major;
-        this.minor = minor;
-        this.patch = patch;
-    }
 
     /**
      * Returns an {@link LTSminVersion} instance described by the provided versions.
@@ -123,20 +121,5 @@ public final class LTSminVersion {
     @Override
     public String toString() {
         return String.format("v%d.%d.%d", major, minor, patch);
-    }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        return this == o ||
-               o instanceof LTSminVersion that && major == that.major && minor == that.minor && patch == that.patch;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = 31 * result + Integer.hashCode(major);
-        result = 31 * result + Integer.hashCode(minor);
-        result = 31 * result + Integer.hashCode(patch);
-        return result;
     }
 }

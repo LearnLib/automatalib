@@ -246,15 +246,6 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final ADDTransformer<?, ?> that = (ADDTransformer<?, ?>) o;
-
-        return Objects.equals(this.add, that.add);
+        return this == o || o instanceof ADDTransformer<?, ?> that && Objects.equals(this.add, that.add);
     }
 }

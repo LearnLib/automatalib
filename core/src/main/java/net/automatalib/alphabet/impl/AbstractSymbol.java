@@ -30,7 +30,7 @@ public abstract class AbstractSymbol<S extends AbstractSymbol<S>> extends Abstra
 
     @Override
     public final boolean equals(@Nullable Object o) {
-        return this == o || o instanceof Symbol<?> that && this.id == that.id;
+        return this == o || o instanceof AbstractSymbol<?> that && this.id == that.id;
     }
 
     @Override

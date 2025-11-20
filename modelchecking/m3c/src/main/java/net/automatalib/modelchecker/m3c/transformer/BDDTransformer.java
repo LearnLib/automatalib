@@ -248,15 +248,6 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final BDDTransformer<?, ?> that = (BDDTransformer<?, ?>) o;
-
-        return Arrays.equals(this.bdds, that.bdds);
+        return this == o || o instanceof BDDTransformer<?, ?> that && Arrays.equals(this.bdds, that.bdds);
     }
 }

@@ -178,10 +178,11 @@ public class DeterministicEquivalenceTestTest {
                                                                                                                       M a2,
                                                                                                                       Alphabet<I> alphabet,
                                                                                                                       boolean equivalent) {
-        final UniversalDeterministicAutomaton<?, I, ?, ?, ?> m1 = a1;
-        final UniversalDeterministicAutomaton<?, I, ?, ?, ?> m2 = a2;
 
-        final Word<I> separatingWord = DeterministicEquivalenceTest.findSeparatingWord(m1, m2, alphabet);
+        final Word<I> separatingWord =
+                DeterministicEquivalenceTest.findSeparatingWord((UniversalDeterministicAutomaton<?, I, ?, ?, ?>) a1,
+                                                                (UniversalDeterministicAutomaton<?, I, ?, ?, ?>) a2,
+                                                                alphabet);
 
         Assert.assertEquals(equivalent, separatingWord == null);
 
