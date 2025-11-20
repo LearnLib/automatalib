@@ -18,9 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * `BricsTransitionProperty`
   * `TransitionEdge{,.Property}`
   * `ProbabilisticOutput`
-* The following classes have been refactored to `sealed` classes:
+* The following class hierarchies have been made `sealed`:
   * `CommonAttrs`
-  * `EdgeAttrs`
   * `CommonStyles`
 * `ProcessUtil#invokeProcess` now handles consumers for stdout and stderr separately.
 
