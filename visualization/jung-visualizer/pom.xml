@@ -147,7 +147,7 @@ limitations under the License.
                     <execution>
                         <id>default-test</id>
                         <configuration>
-                            <!-- core is only a testing dependency not defined in module-info.java -->
+                            <!-- patch module to deal with the split packages of JUNG -->
                             <!-- append to existing argLine to nicely work together with jacoco plugin -->
                             <argLine>
                                 @{argLine}

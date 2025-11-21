@@ -55,6 +55,7 @@ limitations under the License.
                         <java.awt.headless>false</java.awt.headless>
                     </systemPropertyVariables>
                     <argLine>
+                        @{argLine}
                         --add-exports=java.desktop/java.awt=ALL-UNNAMED
                         --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED
                         --add-exports=java.desktop/sun.awt.image=ALL-UNNAMED
