@@ -111,9 +111,6 @@ public final class TSTraversal {
                         bfsQueue.offer(new BFSRecord<>(initS, dataHolder.value));
                         stateCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown action " + act);
             }
         }
 
@@ -154,9 +151,6 @@ public final class TSTraversal {
                                 bfsQueue.offer(new BFSRecord<>(succ, dataHolder.value));
                                 stateCount++;
                             }
-                            break;
-                        default:
-                            throw new IllegalStateException("Unknown action " + act);
                     }
                 }
             }
@@ -280,9 +274,6 @@ public final class TSTraversal {
                         dfsStack.push(new DFRecord<>(initS, inputs, dataHolder.value));
                         stateCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown action " + act);
             }
         }
 
@@ -342,9 +333,6 @@ public final class TSTraversal {
                         dfsStack.push(new DFRecord<>(succ, inputs, data));
                         stateCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown action " + act);
             }
         }
 
@@ -443,14 +431,10 @@ public final class TSTraversal {
                                                 int limit,
                                                 Collection<? extends I> inputs,
                                                 TSTraversalVisitor<S, I, T, D> visitor) {
-        switch (order) {
-            case BREADTH_FIRST:
-                return breadthFirst(ts, limit, inputs, visitor);
-            case DEPTH_FIRST:
-                return depthFirst(ts, limit, inputs, visitor);
-            default:
-                throw new IllegalArgumentException("Unknown traversal order: " + order);
-        }
+        return switch (order) {
+            case BREADTH_FIRST -> breadthFirst(ts, limit, inputs, visitor);
+            case DEPTH_FIRST -> depthFirst(ts, limit, inputs, visitor);
+        };
     }
 
 }

@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.util.Collection;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -135,7 +134,7 @@ public final class FSM2MealyParserIO<I, O, A extends MutableMealyMachine<Integer
         // Only if no states are defined we add all from the transitions we found.
         // This is necessary because states are not necessarily defined in FSMs.
         if (getStates().isEmpty()) {
-            getStates().addAll(getTransitions().keySet().stream().map(Pair::getFirst).collect(Collectors.toList()));
+            getStates().addAll(getTransitions().keySet().stream().map(Pair::getFirst).toList());
         }
     }
 

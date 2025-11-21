@@ -209,7 +209,7 @@ class InternalAUTParser<I, T, @Nullable TP, A extends MutableAutomaton<Integer, 
             sym = currentLineContent[currentPos];
         }
 
-        if (sb.length() == 0) {
+        if (sb.isEmpty()) {
             throw new FormatException(buildErrorMessage("Expected a positive number"));
         }
 

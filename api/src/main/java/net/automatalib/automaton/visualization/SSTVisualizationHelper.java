@@ -32,8 +32,8 @@ public class SSTVisualizationHelper<S, I, T, O>
     public boolean getEdgeProperties(S src, TransitionEdge<I, T> edge, S tgt, Map<String, String> properties) {
         super.getEdgeProperties(src, edge, tgt, properties);
 
-        final Word<O> output = automaton.getTransitionProperty(edge.getTransition());
-        properties.put(EdgeAttrs.LABEL, edge.getInput() + " / " + output);
+        final Word<O> output = automaton.getTransitionProperty(edge.transition());
+        properties.put(EdgeAttrs.LABEL, edge.input() + " / " + output);
 
         return true;
     }

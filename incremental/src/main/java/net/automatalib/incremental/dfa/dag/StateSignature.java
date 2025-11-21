@@ -62,16 +62,8 @@ final class StateSignature {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof StateSignature)) {
-            return false;
-        }
-
-        final StateSignature other = (StateSignature) obj;
-
-        return hashCode == other.hashCode && acceptance == other.acceptance &&
+        return this == obj ||
+               obj instanceof StateSignature other && hashCode == other.hashCode && acceptance == other.acceptance &&
                Objects.equals(successors, other.successors);
     }
 

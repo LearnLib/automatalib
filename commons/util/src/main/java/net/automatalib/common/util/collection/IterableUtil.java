@@ -135,8 +135,8 @@ public final class IterableUtil {
      * @return the number of elements of the iterable
      */
     public static int size(Iterable<?> iterable) {
-        if (iterable instanceof Collection) {
-            return ((Collection<?>) iterable).size();
+        if (iterable instanceof Collection<?> c) {
+            return c.size();
         }
 
         return IteratorUtil.size(iterable.iterator());

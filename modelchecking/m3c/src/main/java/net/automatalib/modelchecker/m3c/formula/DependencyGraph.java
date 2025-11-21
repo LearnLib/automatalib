@@ -95,11 +95,9 @@ public final class DependencyGraph<L, AP> {
         }
 
         /* Recurse into subtrees */
-        if (node instanceof AbstractUnaryFormulaNode) {
-            final AbstractUnaryFormulaNode<L, AP> unaryNode = (AbstractUnaryFormulaNode<L, AP>) node;
+        if (node instanceof AbstractUnaryFormulaNode<L, AP> unaryNode) {
             createEquationalBlocks(unaryNode.getChild(), newBlockNumber);
-        } else if (node instanceof AbstractBinaryFormulaNode) {
-            final AbstractBinaryFormulaNode<L, AP> binaryNode = (AbstractBinaryFormulaNode<L, AP>) node;
+        } else if (node instanceof AbstractBinaryFormulaNode<L, AP> binaryNode) {
             createEquationalBlocks(binaryNode.getLeftChild(), newBlockNumber);
             createEquationalBlocks(binaryNode.getRightChild(), newBlockNumber);
         }
@@ -107,14 +105,14 @@ public final class DependencyGraph<L, AP> {
 
     private int setVarNumbers(FormulaNode<L, AP> node, int varNumber) {
         /* Fill fixedPointVarMap */
-        if (node instanceof AbstractFixedPointFormulaNode) {
-            fixedPointVarMap.put(((AbstractFixedPointFormulaNode<L, AP>) node).getVariable(), node);
+        if (node instanceof AbstractFixedPointFormulaNode<L, AP> n) {
+            fixedPointVarMap.put(n.getVariable(), node);
         }
 
         /* Set node's variableNumber */
-        if (node instanceof VariableNode) {
+        if (node instanceof VariableNode<L, AP> n) {
             /* VariableNode has same variableNumber as the fixed point it references */
-            String refVariable = ((VariableNode<L, AP>) node).getVariable();
+            String refVariable = n.getVariable();
             @SuppressWarnings("nullness") // validated by the parser
             @NonNull FormulaNode<L, AP> refNode = fixedPointVarMap.get(refVariable);
             node.setVarNumber(refNode.getVarNumber());
@@ -130,11 +128,9 @@ public final class DependencyGraph<L, AP> {
         }
 
         /* Recurse into subtrees */
-        if (node instanceof AbstractUnaryFormulaNode) {
-            final AbstractUnaryFormulaNode<L, AP> unaryNode = (AbstractUnaryFormulaNode<L, AP>) node;
+        if (node instanceof AbstractUnaryFormulaNode<L, AP> unaryNode) {
             newVarNumber = setVarNumbers(unaryNode.getChild(), newVarNumber);
-        } else if (node instanceof AbstractBinaryFormulaNode) {
-            final AbstractBinaryFormulaNode<L, AP> binaryNode = (AbstractBinaryFormulaNode<L, AP>) node;
+        } else if (node instanceof AbstractBinaryFormulaNode<L, AP> binaryNode) {
             newVarNumber = setVarNumbers(binaryNode.getLeftChild(), newVarNumber);
             newVarNumber = setVarNumbers(binaryNode.getRightChild(), newVarNumber);
         }

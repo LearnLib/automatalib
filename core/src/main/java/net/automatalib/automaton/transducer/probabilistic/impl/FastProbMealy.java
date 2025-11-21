@@ -42,13 +42,13 @@ public class FastProbMealy<I, O>
     @Override
     public void setTransitionOutput(MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>> transition,
                                     O output) {
-        transition.setOutput(new ProbabilisticOutput<>(transition.getOutput().getProbability(), output));
+        transition.setOutput(new ProbabilisticOutput<>(transition.getOutput().probability(), output));
     }
 
     @Override
     public void setTransitionProbability(MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>> transition,
                                          float probability) {
-        transition.setOutput(new ProbabilisticOutput<>(probability, transition.getOutput().getOutput()));
+        transition.setOutput(new ProbabilisticOutput<>(probability, transition.getOutput().output()));
     }
 
     @Override

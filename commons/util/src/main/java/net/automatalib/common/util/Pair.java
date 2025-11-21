@@ -83,15 +83,8 @@ public final class Pair<T1, T2> extends AbstractPrintable {
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Pair)) {
-            return false;
-        }
-
-        final Pair<?, ?> that = (Pair<?, ?>) o;
-        return Objects.equals(first, that.first) && Objects.equals(second, that.second);
+        return this == o ||
+               o instanceof Pair<?, ?> that && Objects.equals(first, that.first) && Objects.equals(second, that.second);
     }
 
     @Override

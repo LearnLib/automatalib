@@ -17,6 +17,7 @@ package net.automatalib.automaton.concept;
 
 import net.automatalib.alphabet.Alphabet;
 
+@FunctionalInterface
 public interface InputAlphabetHolder<I> {
 
     Alphabet<I> getInputAlphabet();

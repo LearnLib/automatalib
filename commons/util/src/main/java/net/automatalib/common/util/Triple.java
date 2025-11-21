@@ -97,16 +97,8 @@ public final class Triple<T1, T2, T3> extends AbstractPrintable {
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Triple)) {
-            return false;
-        }
-
-        final Triple<?, ?, ?> that = (Triple<?, ?, ?>) o;
-        return Objects.equals(first, that.first) && Objects.equals(second, that.second) &&
-               Objects.equals(third, that.third);
+        return this == o || o instanceof Triple<?, ?, ?> that && Objects.equals(first, that.first) &&
+                            Objects.equals(second, that.second) && Objects.equals(third, that.third);
     }
 
     @Override

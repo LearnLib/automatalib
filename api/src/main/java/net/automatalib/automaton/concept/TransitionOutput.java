@@ -23,6 +23,7 @@ package net.automatalib.automaton.concept;
  * @param <O>
  *         output class.
  */
+@FunctionalInterface
 public interface TransitionOutput<T, O> {
 
     O getTransitionOutput(T transition);

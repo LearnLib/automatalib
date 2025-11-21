@@ -75,7 +75,6 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
      * @return {@code true} if the element has been inserted, {@code false} if it has been merged with an existing
      * element.
      */
-    @SuppressWarnings("PMD.AvoidArrayLoops") // we move non-contiguous elements that can't be batched
     private boolean upHeap() {
         int currIdx = size - 1;
         E elem = storage.get(currIdx);
@@ -184,6 +183,7 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
      * @param <E>
      *         element type
      */
+    @FunctionalInterface
     public interface MergeOperation<E> {
 
         /**

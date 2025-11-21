@@ -244,7 +244,6 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
         // if any of the successor of curr would have an acceptance value
         // of true, also curr would
         if (prev == null) {
-            assert curr == root;
             root.makeSink();
         } else {
             Node sink = getSink();

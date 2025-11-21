@@ -23,6 +23,7 @@ import net.automatalib.automaton.simple.SimpleAutomaton;
  * {@link SimpleAutomaton}). For example, push-down systems can have infinitely many states but may be representable
  * with a finite amount of locations.
  */
+@FunctionalInterface
 public interface FiniteRepresentation {
 
     /**

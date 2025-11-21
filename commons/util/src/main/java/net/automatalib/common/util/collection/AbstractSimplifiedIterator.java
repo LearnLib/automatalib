@@ -55,14 +55,11 @@ public abstract class AbstractSimplifiedIterator<E> implements Iterator<E> {
 
     @Override
     public boolean hasNext() {
-        switch (state) {
-            case AWAIT_NEXT:
-                return advance();
-            case HAS_NEXT:
-                return true;
-            default: // case FINISHED:
-                return false;
-        }
+        return switch (state) {
+            case AWAIT_NEXT -> advance();
+            case HAS_NEXT -> true;
+            case FINISHED -> false;
+        };
     }
 
     @Override

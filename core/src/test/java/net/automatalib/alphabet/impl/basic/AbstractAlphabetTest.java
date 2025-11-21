@@ -152,8 +152,8 @@ public abstract class AbstractAlphabetTest<I, M extends Alphabet<I>> {
         final Comparator<I> r = alphabet.reversed();
         final Alphabet<I> reversed;
 
-        if (r instanceof Alphabet) {
-            reversed = (Alphabet<I>) r;
+        if (r instanceof Alphabet<I> rev) {
+            reversed = rev;
         } else {
             return;
         }

@@ -49,15 +49,7 @@ public class FastPowersetState<S> extends AbstractSet<S> {
 
     @Override
     public final boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof FastPowersetState)) {
-            return false;
-        }
-
-        final FastPowersetState<?> that = (FastPowersetState<?>) o;
-        return bs.equals(that.bs);
+        return this == o || o instanceof FastPowersetState<?> that && bs.equals(that.bs);
     }
 
     @Override

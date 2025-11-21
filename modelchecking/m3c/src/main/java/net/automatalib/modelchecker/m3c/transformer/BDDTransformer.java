@@ -107,8 +107,7 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         this(bddManager, new BDD[dependencyGraph.getNumVariables()], edgeProperty.isMust());
         for (FormulaNode<L, AP> node : dependencyGraph.getFormulaNodes()) {
             int xi = node.getVarNumber();
-            if (node instanceof AbstractModalFormulaNode) {
-                final AbstractModalFormulaNode<L, AP> modalNode = (AbstractModalFormulaNode<L, AP>) node;
+            if (node instanceof AbstractModalFormulaNode<L, AP> modalNode) {
                 final L action = modalNode.getAction();
                 /* action matches edgeLabel AND (node instanceof DiamondNode => edge.isMust) */
                 if ((action == null || action.equals(edgeLabel)) &&
@@ -185,21 +184,18 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
             result = andBddList(compositions, varIdx);
         } else if (node instanceof DiamondNode) {
             result = orBddList(compositions, varIdx);
-        } else if (node instanceof AndNode) {
-            final AndNode<L, AP> andNode = (AndNode<L, AP>) node;
+        } else if (node instanceof AndNode<L, AP> andNode) {
             result = updatedBDDs[andNode.getVarNumberLeft()].and(updatedBDDs[andNode.getVarNumberRight()]);
-        } else if (node instanceof OrNode) {
-            final OrNode<L, AP> orNode = (OrNode<L, AP>) node;
+        } else if (node instanceof OrNode<L, AP> orNode) {
             result = updatedBDDs[orNode.getVarNumberLeft()].or(updatedBDDs[orNode.getVarNumberRight()]);
         } else if (node instanceof TrueNode) {
             result = bddManager.readOne();
         } else if (node instanceof FalseNode) {
             result = bddManager.readLogicZero();
-        } else if (node instanceof NotNode) {
-            final NotNode<L, AP> notNode = (NotNode<L, AP>) node;
+        } else if (node instanceof NotNode<L, AP> notNode) {
             result = bdds[notNode.getVarNumberChild()].not();
-        } else if (node instanceof AtomicNode) {
-            final AP atomicProp = ((AtomicNode<L, AP>) node).getProposition();
+        } else if (node instanceof AtomicNode<L, AP> atomicNode) {
+            final AP atomicProp = atomicNode.getProposition();
             if (atomicPropositions.contains(atomicProp)) {
                 result = bddManager.readOne();
             } else {
@@ -252,15 +248,6 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final BDDTransformer<?, ?> that = (BDDTransformer<?, ?>) o;
-
-        return Arrays.equals(this.bdds, that.bdds);
+        return this == o || o instanceof BDDTransformer<?, ?> that && Arrays.equals(this.bdds, that.bdds);
     }
 }

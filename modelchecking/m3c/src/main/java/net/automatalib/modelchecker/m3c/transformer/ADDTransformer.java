@@ -116,8 +116,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         for (FormulaNode<L, AP> node : dependGraph.getFormulaNodes()) {
             final boolean[] terminal = new boolean[dependGraph.getNumVariables()];
             final XDD<BooleanVector> falseDD = xddManager.constant(new BooleanVector(terminal));
-            if (node instanceof AbstractModalFormulaNode) {
-                final AbstractModalFormulaNode<L, AP> modalNode = (AbstractModalFormulaNode<L, AP>) node;
+            if (node instanceof AbstractModalFormulaNode<L, AP> modalNode) {
                 final L action = modalNode.getAction();
                 if ((action == null || action.equals(edgeLabel)) &&
                     (!(modalNode instanceof DiamondNode) || edgeProperty.isMust())) {
@@ -247,15 +246,6 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final ADDTransformer<?, ?> that = (ADDTransformer<?, ?>) o;
-
-        return Objects.equals(this.add, that.add);
+        return this == o || o instanceof ADDTransformer<?, ?> that && Objects.equals(this.add, that.add);
     }
 }

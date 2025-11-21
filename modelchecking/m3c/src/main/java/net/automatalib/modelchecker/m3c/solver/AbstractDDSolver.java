@@ -360,23 +360,19 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
                 } else if (node instanceof BoxNode) {
                     /* End node has no outgoing edges */
                     satisfiedVariables.set(node.getVarNumber());
-                } else if (node instanceof AndNode) {
-                    final AndNode<L, AP> andNode = (AndNode<L, AP>) node;
+                } else if (node instanceof AndNode<L, AP> andNode) {
                     if (satisfiedVariables.get(andNode.getVarNumberLeft()) &&
                         satisfiedVariables.get(andNode.getVarNumberRight())) {
                         satisfiedVariables.set(andNode.getVarNumber());
                     }
-                } else if (node instanceof OrNode) {
-                    final OrNode<L, AP> orNode = (OrNode<L, AP>) node;
+                } else if (node instanceof OrNode<L, AP> orNode) {
                     if (satisfiedVariables.get(orNode.getVarNumberLeft()) ||
                         satisfiedVariables.get(orNode.getVarNumberRight())) {
                         satisfiedVariables.set(orNode.getVarNumber());
                     }
-                } else if (node instanceof NotNode) {
-                    final NotNode<L, AP> notNode = (NotNode<L, AP>) node;
-                    if (!satisfiedVariables.get(notNode.getVarNumberChild())) {
-                        satisfiedVariables.set(notNode.getVarNumber());
-                    }
+                } else if (node instanceof NotNode<L, AP> notNode &&
+                           !satisfiedVariables.get(notNode.getVarNumberChild())) {
+                    satisfiedVariables.set(notNode.getVarNumber());
                 }
             }
         }

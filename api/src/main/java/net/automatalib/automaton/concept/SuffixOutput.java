@@ -29,6 +29,7 @@ import net.automatalib.word.Word;
  * @param <D>
  *         output domain type
  */
+@FunctionalInterface
 public interface SuffixOutput<I, D> extends Output<I, D> {
 
     @Override

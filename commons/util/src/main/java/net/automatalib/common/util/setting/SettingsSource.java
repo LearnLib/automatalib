@@ -25,6 +25,7 @@ import net.automatalib.common.util.collection.IteratorUtil;
 /**
  * Utility interface to mark the source of a setting.
  */
+@FunctionalInterface
 public interface SettingsSource {
 
     /**

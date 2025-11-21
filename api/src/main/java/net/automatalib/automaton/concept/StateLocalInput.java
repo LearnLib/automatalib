@@ -27,6 +27,7 @@ import java.util.Collection;
  * @param <I>
  *         input symbol type
  */
+@FunctionalInterface
 public interface StateLocalInput<S, I> {
 
     /**

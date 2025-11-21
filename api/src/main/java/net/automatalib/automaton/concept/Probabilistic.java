@@ -15,6 +15,7 @@
  */
 package net.automatalib.automaton.concept;
 
+@FunctionalInterface
 public interface Probabilistic<T> {
 
     float getTransitionProbability(T transition);

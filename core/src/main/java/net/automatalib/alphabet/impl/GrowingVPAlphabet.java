@@ -48,18 +48,11 @@ public class GrowingVPAlphabet<I> extends AbstractVPAlphabet<VPSym<I>> implement
     }
 
     public VPSym<I> addNewSymbol(I userObject, SymbolType type) {
-        final List<VPSym<I>> localList;
-        switch (type) {
-            case CALL:
-                localList = callSyms;
-                break;
-            case RETURN:
-                localList = returnSyms;
-                break;
-            default:
-                localList = internalSyms;
-                break;
-        }
+        final List<VPSym<I>> localList = switch (type) {
+            case CALL -> callSyms;
+            case INTERNAL -> internalSyms;
+            case RETURN -> returnSyms;
+        };
 
         final VPSym<I> vpSym = new VPSym<>(userObject, type, localList.size(), allSyms.size());
         allSyms.add(vpSym);

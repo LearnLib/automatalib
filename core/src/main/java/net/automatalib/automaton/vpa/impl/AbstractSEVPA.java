@@ -46,32 +46,30 @@ public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
     public @Nullable State<L> getTransition(State<L> state, I input) {
         final L loc = state.getLocation();
         final VPAlphabet.SymbolType type = alphabet.getSymbolType(input);
-        switch (type) {
+        return switch (type) {
             case CALL:
                 final int newStackElem = encodeStackSym(loc, input);
-                return new State<>(getModuleEntry(input), StackContents.push(newStackElem, state.getStackContents()));
+                yield new State<>(getModuleEntry(input), StackContents.push(newStackElem, state.getStackContents()));
             case RETURN: {
                 final StackContents contents = state.getStackContents();
                 if (contents == null) {
-                    return null;
+                    yield null;
                 }
                 final int stackElem = contents.peek();
                 final L succ = getReturnSuccessor(loc, input, stackElem);
                 if (succ == null) {
-                    return null;
+                    yield null;
                 }
-                return new State<>(succ, contents.pop());
+                yield new State<>(succ, contents.pop());
             }
             case INTERNAL: {
                 final L succ = getInternalSuccessor(loc, input);
                 if (succ == null) {
-                    return null;
+                    yield null;
                 }
-                return new State<>(succ, state.getStackContents());
+                yield new State<>(succ, state.getStackContents());
             }
-            default:
-                throw new IllegalStateException("Unknown symbol type " + type);
-        }
+        };
     }
 
     @Override

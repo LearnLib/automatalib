@@ -43,8 +43,7 @@ public final class Graphs {
     private Graphs() {}
 
     public static <N, E> Mapping<N, Collection<E>> incomingEdges(Graph<N, E> graph) {
-        if (graph instanceof BidirectionalGraph) {
-            final BidirectionalGraph<N, E> bdGraph = (BidirectionalGraph<N, E>) graph;
+        if (graph instanceof BidirectionalGraph<N, E> bdGraph) {
             return bdGraph::getIncomingEdges;
         }
 

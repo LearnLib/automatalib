@@ -33,11 +33,11 @@ public final class ExceptionUtil {
      *         the throwable to analyse
      */
     public static void throwIfUnchecked(@Nullable Throwable throwable) {
-        if (throwable instanceof RuntimeException) {
-            throw (RuntimeException) throwable;
+        if (throwable instanceof RuntimeException t) {
+            throw t;
         }
-        if (throwable instanceof Error) {
-            throw (Error) throwable;
+        if (throwable instanceof Error e) {
+            throw e;
         }
     }
 }

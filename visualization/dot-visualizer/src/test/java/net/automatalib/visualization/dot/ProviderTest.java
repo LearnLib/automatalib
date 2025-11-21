@@ -57,8 +57,8 @@ public class ProviderTest {
     @Test(dependsOnMethods = "testProviderConfiguration", timeOut = 10000)
     public void testDisplay() throws InterruptedException, InvocationTargetException {
 
-        if (!(Runtime.version().feature() == 11)) {
-            throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
+        if (!(TestUtil.shouldRunGUITests())) {
+            throw new SkipException("The conditions for running GUI tests are not met");
         }
 
         final CompactDFA<Integer> dfa = TestUtil.generateRandomAutomaton(new Random(42));

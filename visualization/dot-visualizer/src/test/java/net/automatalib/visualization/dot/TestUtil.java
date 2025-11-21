@@ -51,4 +51,9 @@ public final class TestUtil {
 
         return writer.toString();
     }
+
+    static boolean shouldRunGUITests() {
+        final int feature = Runtime.version().feature();
+        return DOT.checkUsable() && (feature == 17 || feature == 21);
+    }
 }

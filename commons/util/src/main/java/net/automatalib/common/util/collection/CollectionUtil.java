@@ -49,8 +49,8 @@ public final class CollectionUtil {
     }
 
     public static <T> List<T> randomAccessList(Collection<T> coll) {
-        if (coll instanceof List && coll instanceof RandomAccess) {
-            return (List<T>) coll;
+        if (coll instanceof List<T> list && coll instanceof RandomAccess) {
+            return list;
         }
         return new ArrayList<>(coll);
     }

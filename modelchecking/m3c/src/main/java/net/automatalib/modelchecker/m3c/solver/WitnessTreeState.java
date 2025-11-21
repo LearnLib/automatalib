@@ -36,8 +36,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class WitnessTreeState<N, L, E, AP> {
 
+    final AbstractDDSolver<?, L, AP>.WorkUnit<N, E> unit;
+
     public final @Nullable WitnessTreeState<?, L, ?, AP> stack;
-    public final AbstractDDSolver<?, L, AP>.WorkUnit<N, E> unit;
     public final L procedure;
     public final ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg;
     public final N state;
@@ -48,9 +49,8 @@ public class WitnessTreeState<N, L, E, AP> {
     public final int parentId;
     public boolean isPartOfResult;
 
-    WitnessTreeState(@Nullable WitnessTreeState<?, L, ?, AP> stack,
-                     AbstractDDSolver<?, L, AP>.WorkUnit<N, E> unit,
-                     N state,
+    WitnessTreeState(AbstractDDSolver<?, L, AP>.WorkUnit<N, E> unit,
+                     @Nullable WitnessTreeState<?, L, ?, AP> stack, N state,
                      FormulaNode<L, AP> subformula,
                      BitSet context,
                      String displayLabel,

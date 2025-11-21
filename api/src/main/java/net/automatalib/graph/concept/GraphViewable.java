@@ -17,6 +17,7 @@ package net.automatalib.graph.concept;
 
 import net.automatalib.graph.Graph;
 
+@FunctionalInterface
 public interface GraphViewable {
 
     Graph<?, ?> graphView();

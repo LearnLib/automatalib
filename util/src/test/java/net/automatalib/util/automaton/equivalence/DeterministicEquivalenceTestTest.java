@@ -136,7 +136,7 @@ public class DeterministicEquivalenceTestTest {
         testIndexComputation((int size1, int size2) -> new MapRegistry<>(size1));
     }
 
-    private static <I> void testIndexComputation(BiIntFunction<Registry<Integer>> constructor) {
+    private static void testIndexComputation(BiIntFunction<Registry<Integer>> constructor) {
         final int size1 = 3;
         final int size2 = 5;
         final Registry<Integer> registry = constructor.apply(size1, size2);
@@ -178,6 +178,7 @@ public class DeterministicEquivalenceTestTest {
                                                                                                                       M a2,
                                                                                                                       Alphabet<I> alphabet,
                                                                                                                       boolean equivalent) {
+        // explicitly assign type to (redundant) variables, otherwise javac complains
         final UniversalDeterministicAutomaton<?, I, ?, ?, ?> m1 = a1;
         final UniversalDeterministicAutomaton<?, I, ?, ?, ?> m2 = a2;
 

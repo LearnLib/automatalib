@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.ts.acceptor;
 
+@FunctionalInterface
 public interface AcceptanceCombiner {
 
     AcceptanceCombiner AND = (a1, a2) -> a1 && a2;

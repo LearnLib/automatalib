@@ -27,6 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <T>
  *         referent type
  */
+@FunctionalInterface
 public interface Ref<T> {
 
     /**

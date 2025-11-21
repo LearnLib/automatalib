@@ -112,18 +112,18 @@ final class WitnessTreeExtractor<L, AP> {
 
         FormulaNode<L, AP> visitedFormula = queueElement.subformula;
 
-        if (visitedFormula instanceof LfpNode) {
-            visitedFormula = ((LfpNode<L, AP>) visitedFormula).getChild();
+        if (visitedFormula instanceof LfpNode<L, AP> f) {
+            visitedFormula = f.getChild();
         }
         if (visitedFormula instanceof VariableNode) {
             // fetch fresh child formula because in case of a VariableNode we want the whole formula again
             visitedFormula = dg.getFormulaNodes().get(visitedFormula.getVarNumber());
         }
 
-        if (visitedFormula instanceof OrNode) {
-            return exploreOR((OrNode<L, AP>) visitedFormula, queueElement);
-        } else if (visitedFormula instanceof DiamondNode) {
-            return exploreDia((DiamondNode<L, AP>) visitedFormula, queueElement);
+        if (visitedFormula instanceof OrNode<L, AP> f) {
+            return exploreOR(f, queueElement);
+        } else if (visitedFormula instanceof DiamondNode<L, AP> f) {
+            return exploreDia(f, queueElement);
         } else if (visitedFormula instanceof TrueNode) {
             return Collections.emptyList();
         } else if (visitedFormula instanceof AtomicNode) {
@@ -141,8 +141,8 @@ final class WitnessTreeExtractor<L, AP> {
         final List<WitnessTreeState<?, L, ?, AP>> result = new ArrayList<>();
 
         if (queueElement.getSatisfiedSubformulae(dg, queueElement.state).get(leftFormula.getVarNumber())) {
-            result.add(new WitnessTreeState<>(queueElement.stack,
-                                              queueElement.unit,
+            result.add(new WitnessTreeState<>(queueElement.unit,
+                                              queueElement.stack,
                                               queueElement.state,
                                               leftFormula,
                                               queueElement.context,
@@ -151,8 +151,8 @@ final class WitnessTreeExtractor<L, AP> {
                                               wTree.size() - 1));
         }
         if (queueElement.getSatisfiedSubformulae(dg, queueElement.state).get(rightFormula.getVarNumber())) {
-            result.add(new WitnessTreeState<>(queueElement.stack,
-                                              queueElement.unit,
+            result.add(new WitnessTreeState<>(queueElement.unit,
+                                              queueElement.stack,
                                               queueElement.state,
                                               rightFormula,
                                               queueElement.context,
@@ -188,8 +188,8 @@ final class WitnessTreeExtractor<L, AP> {
 
             if (pmpg.getEdgeProperty(edge).isInternal()) {
                 if (queueElement.getSatisfiedSubformulae(dg, target).get(formula.getChild().getVarNumber())) {
-                    final WitnessTreeState<?, L, ?, AP> toAdd = new WitnessTreeState<>(queueElement.stack,
-                                                                                       queueElement.unit,
+                    final WitnessTreeState<?, L, ?, AP> toAdd = new WitnessTreeState<>(queueElement.unit,
+                                                                                       queueElement.stack,
                                                                                        target,
                                                                                        formula.getChild(),
                                                                                        queueElement.context,
@@ -234,8 +234,8 @@ final class WitnessTreeExtractor<L, AP> {
             if (pmpg.getEdgeProperty(edge).isInternal()) {
                 if (Objects.equals(label, moveLabel) &&
                     queueElement.getSatisfiedSubformulae(dg, target).get(formula.getChild().getVarNumber())) {
-                    final WitnessTreeState<?, L, ?, AP> toAdd = new WitnessTreeState<>(queueElement.stack,
-                                                                                       queueElement.unit,
+                    final WitnessTreeState<?, L, ?, AP> toAdd = new WitnessTreeState<>(queueElement.unit,
+                                                                                       queueElement.stack,
                                                                                        target,
                                                                                        formula.getChild(),
                                                                                        queueElement.context,
@@ -264,8 +264,8 @@ final class WitnessTreeExtractor<L, AP> {
                                                                                         L label,
                                                                                         N1 target,
                                                                                         DiamondNode<L, AP> formula) {
-        final WitnessTreeState<N1, L, ?, AP> succ = new WitnessTreeState<>(queueElement.stack,
-                                                                           queueElement.unit,
+        final WitnessTreeState<N1, L, ?, AP> succ = new WitnessTreeState<>(queueElement.unit,
+                                                                           queueElement.stack,
                                                                            target,
                                                                            queueElement.subformula,
                                                                            queueElement.context,
@@ -277,8 +277,8 @@ final class WitnessTreeExtractor<L, AP> {
         final @NonNull N2 initialNode = unit.pmpg.getInitialNode();
         final BitSet finalFormulae = queueElement.getSatisfiedSubformulae(dg, target);
 
-        WitnessTreeState<N2, L, E2, AP> result = new WitnessTreeState<>(succ,
-                                                                        unit,
+        WitnessTreeState<N2, L, E2, AP> result = new WitnessTreeState<>(unit,
+                                                                        succ,
                                                                         initialNode,
                                                                         formula,
                                                                         finalFormulae,
@@ -295,8 +295,8 @@ final class WitnessTreeExtractor<L, AP> {
 
     private <N1, N2, E1, E2> WitnessTreeState<N2, L, E2, AP> buildReturnNode(WitnessTreeState<N1, L, E1, AP> queueElement,
                                                                              WitnessTreeState<N2, L, E2, AP> prev) {
-        return new WitnessTreeState<>(prev.stack,
-                                      prev.unit,
+        return new WitnessTreeState<>(prev.unit,
+                                      prev.stack,
                                       prev.state,
                                       queueElement.subformula,
                                       prev.context,
@@ -309,6 +309,6 @@ final class WitnessTreeExtractor<L, AP> {
                                                                      FormulaNode<L, AP> formula) {
         @SuppressWarnings("nullness") // we have checked non-nullness of initial nodes in the model checker
         final @NonNull N initialNode = unit.pmpg.getInitialNode();
-        return new WitnessTreeState<>(null, unit, initialNode, formula, initialContext, "", null, -1);
+        return new WitnessTreeState<>(unit, null, initialNode, formula, initialContext, "", null, -1);
     }
 }

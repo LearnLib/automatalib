@@ -25,22 +25,14 @@ import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.visualization.VisualizationHelper;
 import org.testng.Assert;
-import org.testng.SkipException;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 /**
  * A small test for checking, if writing directly to files is working.
  */
+@Listeners(ActivationListener.class)
 public class FileVisualizationTest {
-
-    @BeforeClass
-    public void checkDOT() {
-        if (!DOT.checkUsable()) {
-            // Do not fail on platforms, where DOT is not installed
-            throw new SkipException("DOT is not installed");
-        }
-    }
 
     @Test
     public void testFileVisualization() throws IOException, InterruptedException {

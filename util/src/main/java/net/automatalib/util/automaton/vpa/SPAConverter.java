@@ -49,17 +49,17 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class SPAConverter {
+public final class SPAConverter {
 
     private SPAConverter() {
         // prevent initialization
     }
 
-    public static <L, AI, CI> ConversionResult<AI, CI> convert(OneSEVPA<L, AI> sevpa,
-                                                               VPAlphabet<AI> alphabet,
-                                                               CI mainProcedure,
-                                                               SymbolMapper<AI, CI> symbolMapper,
-                                                               boolean minimize) {
+    static <L, AI, CI> ConversionResult<AI, CI> convert(OneSEVPA<L, AI> sevpa,
+                                                        VPAlphabet<AI> alphabet,
+                                                        CI mainProcedure,
+                                                        SymbolMapper<AI, CI> symbolMapper,
+                                                        boolean minimize) {
         if (alphabet.getNumReturns() != 1) {
             throw new IllegalArgumentException("Currently only single return symbols are supported.");
         }

@@ -33,6 +33,7 @@ import net.automatalib.ts.simple.SimpleTS;
  * @param <M>
  *         the type of objects implementing classes can deserialize
  */
+@FunctionalInterface
 public interface InputModelSerializer<I, M extends SimpleTS<?, I>> extends ModelSerializer<InputModelData<I, M>> {
 
     /**

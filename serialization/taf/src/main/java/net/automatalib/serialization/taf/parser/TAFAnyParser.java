@@ -38,22 +38,20 @@ final class TAFAnyParser implements InputModelDeserializer<String, FiniteAlphabe
 
             try {
                 final Type type = parser.type();
-                switch (type) {
+                return switch (type) {
                     case DFA: {
                         final DefaultTAFBuilderDFA<CompactDFA<String>, Integer> builder =
                                 new DefaultTAFBuilderDFA<>(parser, new CompactDFA.Creator<>());
                         parser.dfaBody(builder);
-                        return new InputModelData<>(builder.finish(), builder.getAlphabet());
+                        yield new InputModelData<>(builder.finish(), builder.getAlphabet());
                     }
                     case MEALY: {
                         final DefaultTAFBuilderMealy<CompactMealy<String, String>, Integer, CompactTransition<String>>
                                 builder = new DefaultTAFBuilderMealy<>(parser, new CompactMealy.Creator<>());
                         parser.mealyBody(builder);
-                        return new InputModelData<>(builder.finish(), builder.getAlphabet());
+                        yield new InputModelData<>(builder.finish(), builder.getAlphabet());
                     }
-                    default:
-                        throw new IllegalStateException("Unknown type " + type);
-                }
+                };
             } catch (ParseException ex) {
                 throw new FormatException(ex);
             }

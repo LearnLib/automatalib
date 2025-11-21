@@ -23,6 +23,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <N>
  *         node class.
  */
+@FunctionalInterface
 public interface InitialNode<N> {
 
     /**

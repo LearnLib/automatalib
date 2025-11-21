@@ -24,6 +24,7 @@ import net.automatalib.exception.FormatException;
  * @param <F>
  *         formula type
  */
+@FunctionalInterface
 public interface M3CSolver<F> {
 
     /**
@@ -46,6 +47,7 @@ public interface M3CSolver<F> {
      * @param <F>
      *         formula type
      */
+    @FunctionalInterface
     interface TypedM3CSolver<F> extends M3CSolver<F> {
 
         /**

@@ -122,7 +122,7 @@ public class TraversalTest {
             for (TransitionEdge<Integer, Integer> e : path) {
                 Assert.assertTrue(nodeIter.hasNext());
 
-                final Integer i = e.getInput();
+                final Integer i = e.input();
                 sIter = automaton.getSuccessor(sIter, i);
                 nIter = nodeIter.next();
 
@@ -230,7 +230,7 @@ public class TraversalTest {
 
     private <S, I, T> List<Word<I>> collectPathInputs(Iterable<Path<S, TransitionEdge<I, T>>> paths) {
         return IterableUtil.stream(paths)
-                           .map(p -> p.stream().map(TransitionEdge::getInput).collect(Word.collector()))
+                           .map(p -> p.stream().map(TransitionEdge::input).collect(Word.collector()))
                            .collect(Collectors.toList());
     }
 

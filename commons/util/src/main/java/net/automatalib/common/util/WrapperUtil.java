@@ -31,7 +31,6 @@ public final class WrapperUtil {
         return (b != null) ? b : def;
     }
 
-    @SuppressWarnings("PMD.AvoidUsingShortType") // we don't perform arithmetic operations on Shorts, so usage is fine
     public static short shortValue(@Nullable Short s, short def) {
         return (s != null) ? s : def;
     }

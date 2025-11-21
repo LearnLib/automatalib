@@ -28,6 +28,7 @@ import net.automatalib.common.util.IOUtil;
  * @param <M>
  *         the type of objects implementing classes can serialize
  */
+@FunctionalInterface
 public interface ModelSerializer<M> {
 
     /**

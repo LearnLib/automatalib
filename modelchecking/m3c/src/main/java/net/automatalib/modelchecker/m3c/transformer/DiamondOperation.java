@@ -55,8 +55,7 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
                 result[currentVar] = result[currentVar] && right.data()[currentVar];
             } else if (node instanceof DiamondNode) {
                 result[currentVar] = result[currentVar] || right.data()[currentVar];
-            } else if (node instanceof AbstractBinaryFormulaNode) {
-                final AbstractBinaryFormulaNode<?, ?> binaryNode = (AbstractBinaryFormulaNode<?, ?>) node;
+            } else if (node instanceof AbstractBinaryFormulaNode<?, ?> binaryNode) {
                 final int xj1 = binaryNode.getVarNumberLeft();
                 final int xj2 = binaryNode.getVarNumberRight();
                 if (binaryNode instanceof AndNode) {
@@ -68,11 +67,10 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
                 result[currentVar] = true;
             } else if (node instanceof FalseNode) {
                 result[currentVar] = false;
-            } else if (node instanceof NotNode) {
-                final NotNode<?, ?> notNode = (NotNode<?, ?>) node;
+            } else if (node instanceof NotNode<?, ?> notNode) {
                 result[currentVar] = !result[notNode.getVarNumberChild()];
-            } else if (node instanceof AtomicNode) {
-                final AP prop = ((AtomicNode<?, AP>) node).getProposition();
+            } else if (node instanceof AtomicNode<?, AP> atomicNode) {
+                final AP prop = atomicNode.getProposition();
                 result[currentVar] = atomicPropositions.contains(prop);
             } else {
                 throw new IllegalArgumentException("The current equational block contains an unsupported formula type.");

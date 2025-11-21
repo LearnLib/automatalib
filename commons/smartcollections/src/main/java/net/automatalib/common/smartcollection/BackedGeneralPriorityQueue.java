@@ -177,6 +177,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
     /**
      * Note: this class has a natural ordering that is inconsistent with equals.
      */
+    @SuppressWarnings("PMD.OverrideBothEqualsAndHashCodeOnComparable")
     public static class Entry<E, K extends Comparable<K>> implements Comparable<Entry<E, K>> {
 
         public E element;

@@ -23,6 +23,7 @@ package net.automatalib.automaton.concept;
  * @param <O>
  *         output class.
  */
+@FunctionalInterface
 public interface StateOutput<S, O> {
 
     O getStateOutput(S state);

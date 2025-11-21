@@ -13,13 +13,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-* AutomataLib now requires Java 11 at runtime.
+* AutomataLib now requires Java 17 at runtime.
+* The following classes have been refactored to `record`s:
+  * `BricsTransitionProperty`
+  * `TransitionEdge{,.Property}`
+  * `ProbabilisticOutput`
+  * `LTSminVersion`
+* The following class hierarchies have been made `sealed`:
+  * `CommonAttrs`
+  * `CommonStyles`
 * `ProcessUtil#invokeProcess` now handles consumers for stdout and stderr separately.
 
 ### Removed
 
 * `IOUtil#copy(Reader, Writer)` has been removed. Use `Reader#transferTo(Writer)` instead.
 * `JVMUtil` has been removed. Use `Runtime.version().feature()` for its previously (only) provided method.
+
+### Fixed
+
+* `SPAConverter.ConversionResult` is now publicly accessible.
 
 
 ## [0.12.1] - 2025-03-11

@@ -157,9 +157,6 @@ public final class GraphTraversal {
                         bfsQueue.add(new BFRecord<>(init, dataHolder.value));
                         nodeCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown action " + act);
             }
         }
 
@@ -198,9 +195,6 @@ public final class GraphTraversal {
                             bfsQueue.offer(new BFRecord<>(tgtNode, dataHolder.value));
                             nodeCount++;
                         }
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unknown action " + act);
                 }
             }
 
@@ -366,9 +360,6 @@ public final class GraphTraversal {
                         dfsStack.push(new DFRecord<>(init, dataHolder.value));
                         nodeCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown action " + act);
             }
         }
 
@@ -416,9 +407,6 @@ public final class GraphTraversal {
                         dfsStack.push(new DFRecord<>(tgt, data));
                         nodeCount++;
                     }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown action " + act);
             }
         }
 
@@ -568,14 +556,10 @@ public final class GraphTraversal {
                                              int limit,
                                              Collection<? extends N> initialNodes,
                                              GraphTraversalVisitor<N, E, D> visitor) {
-        switch (order) {
-            case BREADTH_FIRST:
-                return breadthFirst(graph, limit, initialNodes, visitor);
-            case DEPTH_FIRST:
-                return depthFirst(graph, limit, initialNodes, visitor);
-            default:
-                throw new IllegalArgumentException("Unknown traversal order " + order);
-        }
+        return switch (order) {
+            case BREADTH_FIRST -> breadthFirst(graph, limit, initialNodes, visitor);
+            case DEPTH_FIRST -> depthFirst(graph, limit, initialNodes, visitor);
+        };
     }
 
 }
