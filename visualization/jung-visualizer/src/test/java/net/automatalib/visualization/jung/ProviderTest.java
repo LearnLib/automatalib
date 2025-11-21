@@ -31,19 +31,9 @@ import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationProvider;
 import org.testng.Assert;
 import org.testng.SkipException;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class ProviderTest {
-
-    @BeforeClass
-    public void setupCacio() throws InterruptedException, InvocationTargetException {
-        if (shouldRunGUITests()) {
-            // hack: the static initializer of this class does the magic we want, so only invoke it on compatible JVMs
-            // hack2: run on the EDT so that we get invoked before JUNG triggers conflicting AWT initializations
-            SwingUtilities.invokeAndWait(CacioExtension::new);
-        }
-    }
 
     @Test
     public void testProviderConfiguration() {
@@ -60,9 +50,7 @@ public class ProviderTest {
     @Test(dependsOnMethods = "testProviderConfiguration", timeOut = 30000)
     public void testDisplay() throws InterruptedException, InvocationTargetException {
 
-        if (!shouldRunGUITests()) {
-            throw new SkipException("The headless AWT environment is not supported on this platform");
-        }
+        checkExecution();
 
         final Random random = new Random(42);
         final CompactDFA<Integer> dfa = RandomAutomata.randomDFA(random, 10, Alphabets.integers(1, 6));
@@ -73,9 +61,14 @@ public class ProviderTest {
                                                                    new RandomEdgeStyler<>(random)));
     }
 
-    private static boolean shouldRunGUITests() {
+    private static void checkExecution() {
         final int feature = Runtime.version().feature();
-        return feature == 17 || feature == 21;
+        if (feature == 17 || feature == 21) {
+            // hack: the static initializer of this class does the magic we want, so only invoke it on compatible JVMs
+            new CacioExtension();
+        } else {
+            throw new SkipException("The headless AWT environment is not supported on this platform");
+        }
     }
 
     private static final class RandomEdgeStyler<N, E> implements VisualizationHelper<N, E> {
