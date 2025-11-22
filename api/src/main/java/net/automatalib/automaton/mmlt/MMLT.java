@@ -1,16 +1,28 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.automaton.mmlt;
 
 import java.util.List;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.common.util.Triple;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
-import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.SymbolicInput;
-import net.automatalib.symbol.time.TimerTimeoutSymbol;
 
 /**
  * Base type for a Mealy Machine with Local Timers (MMLT).
@@ -20,60 +32,50 @@ import net.automatalib.symbol.time.TimerTimeoutSymbol;
  * in case of the initial location, if the location is entered for the first time. There are periodic and one-shot
  * timers. Periodic timers reset themselves on timeout. They cannot cause a location change. One-shot timers can cause a
  * location change. They reset all timers of the target location at timeout. A location can have arbitrarily many
- * periodic timers and up to one one-shot timers. Timers are always reset to their initial value. The initial values
- * must be chosen so that a periodic timer never times out at the same time as a one-shot timer (to preserve
- * determinism). Multiple periodic timers may time out simultaneously. In this case, their outputs are combined using an
- * AbstractSymbolCombiner.
+ * periodic timers and up to one one-shot timer. Timers are always reset to their initial value. The initial values must
+ * be chosen so that a periodic timer never times out at the same time as a one-shot timer (to preserve determinism).
+ * Multiple periodic timers may time out simultaneously. In this case, their outputs are combined using an
+ * {@link SymbolCombiner}.
  * <p>
- * The timeout of a timer is modeled with a transition that has a {@link TimerTimeoutSymbol} as input. Other inputs are
- * {@link InputSymbol non-delaying}. A non-delaying input that causes a self-loop can cause a local reset. Then, all
- * timers of that location reset.
- * <p>
- * <b>Implementation note:</b> this class resembles a "structural" view on the MMLT. For a semantic view with
- * time-sensitive transductions, see the {@link #getSemantics()} method.
+ * <b>Implementation note:</b> This class resembles a "structural" view on the MMLT. Timeouts can also be interpreted
+ * as explicit transitions between locations. For this representation, use the {@link #graphView()} method. For a
+ * semantic view that supports time-sensitive transductions, see the {@link #getSemantics()} method.
  *
  * @param <S>
- *         Location type
+ *         location type
  * @param <I>
- *         Input type for non-delaying inputs
+ *         input symbol type (of non-delaying inputs)
+ * @param <T>
+ *         transition type
  * @param <O>
- *         Output symbol type
+ *         output symbol type
  */
-public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, T, Void, O>,
-                                          InputAlphabetHolder<I>,
-                                          GraphViewable {
+public interface MMLT<S, I, T, O>
+        extends UniversalDeterministicAutomaton<S, I, T, Void, O>, InputAlphabetHolder<I>, GraphViewable {
 
     /**
      * Returns the symbol used for silent outputs.
      *
-     * @return Silent output symbol
+     * @return the silent output symbol
      */
     O getSilentOutput();
 
     /**
-     * Multiple periodic timers may out simultaneously. Then, their outputs are combined using an SymbolCombiner. This
-     * method returns the combiner used for this model.
+     * Returns the output combiner used when multiple periodic timers time out simultaneously.
      *
-     * @return symbol combiner used for this model.
+     * @return the output combiner
      */
     SymbolCombiner<O> getOutputCombiner();
-
-    /**
-     * Retrieves the non-delaying inputs for this automaton. Excludes timer timeout symbols. May be empty.
-     *
-     * @return Input alphabet
-     */
-    Alphabet<I> getInputAlphabet();
 
     /**
      * Indicates if the provided input performs a local reset in the given location.
      *
      * @param location
-     *         Location
+     *         the location
      * @param input
-     *         Non-delaying input
+     *         the input
      *
-     * @return True if performing a local reset
+     * @return {@code true} if performing a local reset, {@code false} otherwise
      */
     boolean isLocalReset(S location, I input);
 
@@ -81,16 +83,16 @@ public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, 
      * Returns the timers of the specified location sorted ascendingly by their initial time.
      *
      * @param location
-     *         Location
+     *         location
      *
-     * @return Sorted list of local timers. Empty if location has no timers.
+     * @return sorted list of local timers. May be empty if the location has no timers.
      */
     List<MealyTimerInfo<S, O>> getSortedTimers(S location);
 
     /**
      * Returns the semantics automaton that describes the behavior of this MMLT.
      *
-     * @return Semantics automaton
+     * @return a semantic view of this MMLT
      */
     MMLTSemantics<S, I, ?, O> getSemantics();
 

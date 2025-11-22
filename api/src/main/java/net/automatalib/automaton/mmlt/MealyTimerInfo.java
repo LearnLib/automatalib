@@ -1,20 +1,41 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.automaton.mmlt;
 
 import java.util.Objects;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Provides information about a timer that is stored in an MMLT.
  *
- * @param <O> Output symbol type
+ * @param <S>
+ *         location type
+ * @param <O>
+ *         output symbol type
  */
-public class MealyTimerInfo<S, O> {
+public final class MealyTimerInfo<S, O> {
+
     /**
-     * Name of the timer
+     * Name of the timer.
      */
     private final String name;
 
     /**
-     * Initial value of the timer
+     * Initial value of the timer.
      */
     private final long initial;
 
@@ -71,14 +92,10 @@ public class MealyTimerInfo<S, O> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (MealyTimerInfo) obj;
-        return Objects.equals(this.name, that.name) &&
-                this.initial == that.initial &&
-                Objects.equals(this.output, that.output) &&
-                Objects.equals(this.target, that.target);
+    public boolean equals(@Nullable Object o) {
+        return this == o || o instanceof MealyTimerInfo<?, ?> that && Objects.equals(this.name, that.name) &&
+                            this.initial == that.initial && Objects.equals(this.output, that.output) &&
+                            Objects.equals(this.target, that.target);
     }
 
     @Override

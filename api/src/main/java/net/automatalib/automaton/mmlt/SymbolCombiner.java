@@ -1,43 +1,58 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.automaton.mmlt;
 
 import java.util.List;
 
 /**
- * In an MMLT, multiple timeouts may occur simultaneously. We use these symbol combiners to combine their outputs
- * deterministically.
+ * A symbol combiner deterministically maps between multiple output symbols and a single representative. This
+ * functionality is currently used by {@link MMLT}s when multiple timeouts occur simultaneously.
  *
- * @param <U>
- *         Symbol type
+ * @param <S>
+ *         symbol type
  */
-public interface SymbolCombiner<U> {
+public interface SymbolCombiner<S> {
 
     /**
-     * Indicates if the provided suffix is a combined suffix.
+     * Indicates if the provided symbol is a combined symbol.
      *
      * @param symbol
-     *         Symbol for testing
+     *         symbol for testing
      *
-     * @return True if combined suffix, false if not.
+     * @return {@code true} if combined suffix, {@code false} otherwise.
      */
-    boolean isCombinedSymbol(U symbol);
+    boolean isCombinedSymbol(S symbol);
 
     /**
-     * Combines the provided symbols to a single suffix of same data type. Must be deterministic.
+     * Combines the provided symbols to a single symbol of same data type. Must be deterministic.
      *
      * @param symbols
-     *         Provided symbols.
+     *         provided symbols
      *
-     * @return Combined suffix
+     * @return the combined suffix
      */
-    U combineSymbols(List<U> symbols);
+    S combineSymbols(List<S> symbols);
 
     /**
-     * Attempts to separate the provided combined suffix into individual symbols.
+     * Attempts to separate the provided combined symbol into individual symbols.
      *
      * @param symbol
-     *         Combined symbols
+     *         combined symbol
      *
-     * @return Individual symbols
+     * @return the individual symbols
      */
-    List<U> separateSymbols(U symbol);
+    List<S> separateSymbols(S symbol);
 }

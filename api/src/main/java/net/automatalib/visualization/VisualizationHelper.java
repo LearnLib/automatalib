@@ -75,6 +75,7 @@ public interface VisualizationHelper<N, E> {
 
         public static final String LABEL = "label";
         public static final String COLOR = "color";
+        public static final String FONTCOLOR = "fontcolor";
         public static final String TEXLBL = "texlbl";
         public static final String STYLE = "style";
 

@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.serialization.dot;
 
 import java.io.IOException;
@@ -15,10 +30,9 @@ import java.util.regex.Pattern;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.mmlt.MMLTCreator;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.MutableMMLT;
-import net.automatalib.automaton.mmlt.SymbolCombiner;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
@@ -28,7 +42,7 @@ import net.automatalib.visualization.VisualizationHelper.MMLTEdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
 
 /**
- * Parses a DOT file that defines an MMLT automaton.
+ * Parses a DOT file that defines an {@link MMLT}.
  * <p>Expected syntax:</p>
  * <ul>
  *   <li>Mealy labels: <code>input/output</code></li>
@@ -88,32 +102,25 @@ import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
  * }
  * }</pre>
  */
-
 public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
         implements DOTInputModelDeserializer<S, I, A> {
 
-    private static final Pattern assignPattern = Pattern.compile("(\\S+)=(\\d+)");
+    private static final Pattern ASSIGN_PATTERN = Pattern.compile("(\\S+)=(\\d+)");
 
-    private final MMLTCreator<A, I, O> creator;
+    private final AutomatonCreator<A, I> creator;
     private final Function<String, I> inputParser;
     private final Function<String, O> outputParser;
-    private final O silentSymbol;
-    private final SymbolCombiner<O> outputCombiner;
     private final Collection<String> initialNodeIds;
     private final boolean fakeInitialNodeIds;
 
-    public DOTMMLTParser(MMLTCreator<A, I, O> creator,
+    public DOTMMLTParser(AutomatonCreator<A, I> creator,
                          Function<String, I> inputParser,
                          Function<String, O> outputParser,
-                         O silentOutput,
-                         SymbolCombiner<O> outputCombiner,
                          Collection<String> initialNodeIds,
                          boolean fakeInitialNodeIds) {
         this.creator = creator;
         this.inputParser = inputParser;
         this.outputParser = outputParser;
-        this.silentSymbol = silentOutput;
-        this.outputCombiner = outputCombiner;
         this.initialNodeIds = initialNodeIds;
         this.fakeInitialNodeIds = fakeInitialNodeIds;
     }
@@ -139,7 +146,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
             }
 
             final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
-            final A automaton = creator.createMMLT(alphabet, parser.getNodes().size(), silentSymbol, outputCombiner);
+            final A automaton = creator.createAutomaton(alphabet, parser.getNodes().size());
 
             final Mapping<S, String> labels = parseNodesAndEdges(parser, automaton);
 
@@ -152,13 +159,13 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
         final Collection<Node> nodes = parser.getNodes();
         final Collection<Edge> edges = parser.getEdges();
 
-        final Map<String, Map<String, MealyTimerInfo<S, O>>> timers =
+        final Map<String, Map<String, TimerSpec>> timers =
                 new HashMap<>(nodes.size() - 1); // id in dot -> local timers
         final Map<String, S> stateMap = new HashMap<>(nodes.size() - 1); // name in dot -> new id
         final MutableMapping<S, String> mapping = result.createDynamicStateMapping();
 
         // Parse nodes:
-        for (var node : nodes) {
+        for (Node node : nodes) {
             final S n;
 
             if (fakeInitialNodeIds && initialNodeIds.contains(node.id)) {
@@ -177,12 +184,18 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
             if (timersAttr != null) {
                 String[] settings = timersAttr.split(",");
                 for (String setting : settings) {
-                    Matcher m = assignPattern.matcher(setting.trim()); // remove whitespace
+                    Matcher m = ASSIGN_PATTERN.matcher(setting.trim()); // remove whitespace
                     if (!m.matches()) {
                         continue;
                     }
-                    String timerName = m.group(1).trim();
-                    int value = Integer.parseInt(m.group(2));
+                    String g1 = m.group(1);
+                    String g2 = m.group(2);
+
+                    assert g1 != null && g2 != null;
+
+                    String timerName = g1.trim();
+                    int value = Integer.parseInt(g2);
+
                     if (value <= 0) {
                         throw new IllegalArgumentException(String.format(
                                 "Reset for timer %s in location %s must be greater zero.",
@@ -190,7 +203,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                                 node.id));
                     }
 
-                    Map<String, MealyTimerInfo<S, O>> timeInfo = timers.computeIfAbsent(node.id, k -> new HashMap<>());
+                    Map<String, TimerSpec> timeInfo = timers.computeIfAbsent(node.id, k -> new HashMap<>());
                     if (timeInfo.containsKey(timerName)) {
                         throw new IllegalArgumentException(String.format(
                                 "Timer %s in location %s must only be set once.",
@@ -199,7 +212,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                     }
 
                     // Add timer:
-                    timeInfo.put(timerName, new MealyTimerInfo<>(timerName, value, null, null));
+                    timeInfo.put(timerName, new TimerSpec(timerName, value));
                 }
             } else {
                 timers.put(node.id, Collections.emptyMap()); // no timers in this location
@@ -207,7 +220,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
         }
 
         // Parse edges:
-        for (var edge : edges) {
+        for (Edge edge : edges) {
 
             if (fakeInitialNodeIds && initialNodeIds.contains(edge.src)) {
                 result.setInitial(stateMap.get(edge.tgt), true);
@@ -231,7 +244,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
             if (input.startsWith("to[")) {
                 // Ensure that we defined the corresponding timer:
                 String timerName = input.substring(3, input.length() - 1);
-                if (!timers.get(edge.src).containsKey(timerName)) {
+                if (!timers.getOrDefault(edge.src, Collections.emptyMap()).containsKey(timerName)) {
                     throw new IllegalArgumentException(String.format(
                             "Defined %s in state %s, but timer value is not set.",
                             input,
@@ -239,7 +252,8 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                 }
 
                 // Add output to timer info:
-                final MealyTimerInfo<S, O> oldInfo = timers.get(edge.src).get(timerName);
+                final TimerSpec oldInfo = timers.getOrDefault(edge.src, Collections.emptyMap()).get(timerName);
+                assert oldInfo != null;
 
                 // Infer timer type:
                 final long initial = oldInfo.initial();
@@ -252,7 +266,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                         }
                     } else if (edgeResets.size() > 1) {
                         // Need to contain all local timers to be one-shot with loop:
-                        for (var locTimer : timers.get(edge.tgt).keySet()) {
+                        for (String locTimer : timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet()) {
                             if (!edgeResets.contains(locTimer)) {
                                 throw new IllegalArgumentException(String.format("Invalid reset at to[%s]", timerName));
                             }
@@ -282,7 +296,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                 // Parse resets of self-loops with untimed input:
                 if (edge.src.equals(edge.tgt) && !edgeResets.isEmpty()) {
                     // Reset list needs to contain all local timers:
-                    for (var locTimer : timers.get(edge.tgt).keySet()) {
+                    for (String locTimer : timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet()) {
                         if (!edgeResets.contains(locTimer)) {
                             throw new IllegalArgumentException(String.format("Invalid local reset at %s", i));
                         }
@@ -310,5 +324,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
 
         return tokens;
     }
+
+    private record TimerSpec(String name, long initial) {}
 
 }

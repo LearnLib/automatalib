@@ -1,10 +1,26 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.automaton.mmlt;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimeStepSequence;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.word.Word;
@@ -12,38 +28,34 @@ import net.automatalib.word.Word;
 /**
  * Defines the semantics of an MMLT.
  * <p>
- * The semantics of an MMLT are defined with an associated Mealy machine. The states of this machine are
- * LocalTimerMealyConfiguration objects. These represent tuples of an active location and the current timer values of
- * this location. The inputs of the machine are non-delaying inputs, discrete time steps, and the symbolic input
- * timeout, which causes a delay until the next timeout.
+ * The semantics of an MMLT are defined with an associated Mealy machine. The {@link State states} of this machine
+ * represent tuples of an active location and the current valuation of timers of this location. The inputs of the
+ * machine are {@link InputSymbol non-delaying inputs}, {@link TimeStepSequence discrete time steps}, and the
+ * {@link TimeoutSymbol symbolic input timeout}, which causes a delay until the next timeout.
+ * <p>
+ * The input alphabet of this machine consists of all non-delaying inputs of the associated MMLT, as well as a
+ * {@link TimeStepSequence time step symbol} and the {@link TimeoutSymbol symbolic input timeout}.
  * <p>
  * The outputs of this machine are the outputs of the MMLT, extended with a delay. This delay is zero for all
- * transitions, except for those with the input {@link TimeoutSymbol}.
+ * transitions, except for those with the {@link TimeoutSymbol} input.
  *
  * @param <S>
- *         Location type
+ *         location type
  * @param <I>
- *         Input type for non-delaying inputs
+ *         input symbol type (of non-delaying inputs)
+ * @param <T>
+ *         transition type
  * @param <O>
- *         Output type of the MMLT
+ *         output symbol type
  */
-public interface MMLTSemantics<S, I, T, O>
-        extends MealyTransitionSystem<State<S, O>, TimedInput<I>, T, TimedOutput<O>>,
-                SuffixOutput<TimedInput<I>, Word<TimedOutput<O>>>,
-                InputAlphabetHolder<TimedInput<I>> {
-
-    /**
-     * Returns the input alphabet of the semantics automaton. This consists of all non-delaying inputs of the associated
-     * MMLT, as well as the time step symbol and the symbolic timeout symbol.
-     *
-     * @return Input alphabet
-     */
-    Alphabet<TimedInput<I>> getInputAlphabet();
+public interface MMLTSemantics<S, I, T, O> extends MealyTransitionSystem<State<S, O>, TimedInput<I>, T, TimedOutput<O>>,
+                                                   SuffixOutput<TimedInput<I>, Word<TimedOutput<O>>>,
+                                                   InputAlphabetHolder<TimedInput<I>> {
 
     /**
      * Returns the symbol used for silent outputs.
      *
-     * @return Silent output symbol
+     * @return silent output symbol
      */
     TimedOutput<O> getSilentOutput();
 
@@ -56,13 +68,13 @@ public interface MMLTSemantics<S, I, T, O>
      * single time step only, the output is either that of a timeout or silence.
      *
      * @param source
-     *         Source configuration
+     *         source configuration
      * @param input
-     *         Input symbol
+     *         input symbol
      * @param maxWaitingTime
-     *         Maximum time steps to wait for a timeout
+     *         maximum time steps to wait for a timeout
      *
-     * @return Transition in semantics automaton
+     * @return the transition in semantics automaton
      */
     T getTransition(State<S, O> source, TimedInput<I> input, long maxWaitingTime);
 }

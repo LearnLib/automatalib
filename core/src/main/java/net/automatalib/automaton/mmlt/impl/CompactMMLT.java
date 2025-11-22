@@ -1,19 +1,32 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.automaton.mmlt.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.impl.CompactTransition;
-import net.automatalib.automaton.mmlt.MMLTGraphView;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
 import net.automatalib.automaton.mmlt.MealyTimerInfo;
 import net.automatalib.automaton.mmlt.MutableMMLT;
@@ -21,16 +34,15 @@ import net.automatalib.automaton.mmlt.SymbolCombiner;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Triple;
 import net.automatalib.graph.Graph;
-import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.SymbolicInput;
 
 /**
- * Implements a LocalTimerMealy that is mutable. The structure automaton is backed by a CompactMealy automaton.
+ * Implements a {@link MutableMMLT} by storing adjacency information in compact arrays.
  *
  * @param <I>
- *         Input type for non-delaying inputs
+ *         input symbol type (of non-delaying inputs)
  * @param <O>
- *         Output symbol type
+ *         output symbol type
  */
 public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT<Integer, I, CompactTransition<O>, O> {
 
@@ -41,21 +53,33 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
     private final SymbolCombiner<O> outputCombiner;
 
     /**
-     * Initializes a new CompactLocalTimerMealy.
+     * Initializes a new CompactMMLT.
      *
-     * @param nonDelayingInputs
-     *         Non-delaying inputs used by this MMLT.
+     * @param alphabet
+     *         alphabet of non-delaying inputs
      * @param silentOutput
      *         The silent output used by this MMLT.
      * @param outputCombiner
      *         The combiner function for simultaneous timeouts of periodic timers.
      */
-    public CompactMMLT(Alphabet<I> nonDelayingInputs, O silentOutput, SymbolCombiner<O> outputCombiner) {
-        this(nonDelayingInputs, DEFAULT_INIT_CAPACITY, silentOutput, outputCombiner);
+    public CompactMMLT(Alphabet<I> alphabet, O silentOutput, SymbolCombiner<O> outputCombiner) {
+        this(alphabet, DEFAULT_INIT_CAPACITY, silentOutput, outputCombiner);
     }
 
-    public CompactMMLT(Alphabet<I> nonDelayingInputs, int sizeHint, O silentOutput, SymbolCombiner<O> outputCombiner) {
-        super(nonDelayingInputs, sizeHint);
+    /**
+     * Initializes a new CompactMMLT.
+     *
+     * @param alphabet
+     *         alphabet of non-delaying inputs
+     * @param sizeHint
+     *         size hint to better allocate internal memory
+     * @param silentOutput
+     *         The silent output used by this MMLT.
+     * @param outputCombiner
+     *         The combiner function for simultaneous timeouts of periodic timers.
+     */
+    public CompactMMLT(Alphabet<I> alphabet, int sizeHint, O silentOutput, SymbolCombiner<O> outputCombiner) {
+        super(alphabet, sizeHint);
 
         this.sortedTimers = new HashMap<>();
         this.resets = new HashMap<>();
@@ -86,7 +110,7 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
 
     @Override
     public MMLTSemantics<Integer, I, ?, O> getSemantics() {
-        return new CompactMMLTSemantics<>(this);
+        return new DefaultMMLTSemantics<>(this);
     }
 
     private void ensureThatCanAddTimer(List<MealyTimerInfo<Integer, O>> timers,
@@ -94,37 +118,41 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
                                        long initial,
                                        O output,
                                        boolean periodic) {
-        if (output.equals(this.silentOutput)) {
+        if (Objects.equals(output, this.silentOutput)) {
             throw new IllegalArgumentException(String.format("Provided silent output for timer '%s'.", name));
         }
 
         // Verify that the timer name is unique:
-        if (timers.stream().anyMatch(t -> t.name().equals(name))) {
-            throw new IllegalArgumentException(String.format("Location already has a timer of the name '%s'.", name));
+        for (MealyTimerInfo<Integer, O> integerOMealyTimerInfo : timers) {
+            if (integerOMealyTimerInfo.name().equals(name)) {
+                throw new IllegalArgumentException(String.format("Location already has a timer of the name '%s'.",
+                                                                 name));
+            }
         }
 
         // Ensure that our new timer can time out AND that its timeouts do not coincide with that of an existing one-shot timer:
-        var oldOneShot = timers.stream().filter(t -> !t.periodic()).findFirst();
-        if (oldOneShot.isPresent()) {
-            if (initial > oldOneShot.get().initial()) {
-                throw new IllegalArgumentException(String.format(
-                        "The initial value %d of '%s' exceeds that of a one-shot timer; will never time out.",
-                        initial,
-                        name));
-            }
-            if (periodic && (oldOneShot.get().initial() % initial == 0)) {
-                // Our new periodic timer will time out at the same time as the existing one-shot timer.
-                // This makes the model non-deterministic and is not allowed:
-                throw new IllegalArgumentException(String.format(
-                        "The timer '%s' times out at the same time as a one-shot timer (%d).",
-                        name,
-                        initial));
+        for (MealyTimerInfo<Integer, O> t : timers) {
+            if (!t.periodic()) {
+                if (initial > t.initial()) {
+                    throw new IllegalArgumentException(String.format(
+                            "The initial value %d of '%s' exceeds that of a one-shot timer; will never time out.",
+                            initial,
+                            name));
+                }
+                if (periodic && t.initial() % initial == 0) {
+                    // Our new periodic timer will time out at the same time as the existing one-shot timer.
+                    // This makes the model non-deterministic and is not allowed:
+                    throw new IllegalArgumentException(String.format(
+                            "The timer '%s' times out at the same time as a one-shot timer (%d).",
+                            name,
+                            initial));
+                }
             }
         }
         if (!periodic) {
             // Our new one-shot timer is the one-shot timer with the highest initial value (or the only one).
             // Check that no timer with a lower initial value will time out at the same time:
-            for (var timer : timers) {
+            for (MealyTimerInfo<Integer, O> timer : timers) {
                 if (timer.initial() <= initial && initial % timer.initial() == 0) {
                     throw new IllegalArgumentException(String.format(
                             "The existing timer '%s' times out at the same time as the new one-shot timer (%d).",
@@ -137,32 +165,22 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
 
     @Override
     public void addPeriodicTimer(Integer location, String name, long initial, O output) {
-        this.sortedTimers.putIfAbsent(location, new ArrayList<>());
-        var localTimers = this.sortedTimers.get(location);
+        final List<MealyTimerInfo<Integer, O>> localTimers =
+                this.sortedTimers.computeIfAbsent(location, k -> new ArrayList<>());
 
         ensureThatCanAddTimer(localTimers, name, initial, output, true);
         localTimers.add(new MealyTimerInfo<>(name, initial, output, true, location));
         localTimers.sort(Comparator.comparingLong(MealyTimerInfo::initial));
-
-        // Add self-looping transition:
-//        TimerTimeoutSymbol<I> newTimerSymbol = new TimerTimeoutSymbol<>(name);
-//        this.automaton.addAlphabetSymbol(newTimerSymbol);
-//        automaton.addTransition(location, newTimerSymbol, location, output);
     }
 
     @Override
     public void addOneShotTimer(Integer location, String name, long initial, O output, Integer target) {
-        this.sortedTimers.putIfAbsent(location, new ArrayList<>());
-        var localTimers = this.sortedTimers.get(location);
+        final List<MealyTimerInfo<Integer, O>> localTimers =
+                this.sortedTimers.computeIfAbsent(location, k -> new ArrayList<>());
 
         ensureThatCanAddTimer(localTimers, name, initial, output, false);
         localTimers.add(new MealyTimerInfo<>(name, initial, output, false, target));
         localTimers.sort(Comparator.comparingLong(MealyTimerInfo::initial));
-
-        // Add transition with location change:
-//        TimerTimeoutSymbol<I> newTimerSymbol = new TimerTimeoutSymbol<>(name);
-//        this.automaton.addAlphabetSymbol(newTimerSymbol);
-//        automaton.addTransition(location, newTimerSymbol, target, output);
 
         // Remove all timers with higher initial value, as these can no longer time out:
         localTimers.removeIf(t -> t.initial() > initial);
@@ -170,35 +188,29 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
 
     @Override
     public void removeTimer(Integer location, String timerName) {
-        var localTimers = this.sortedTimers.get(location);
-        if (localTimers == null) {
-            return;
+        final List<MealyTimerInfo<Integer, O>> localTimers = this.sortedTimers.get(location);
+        if (localTimers != null) {
+            localTimers.removeIf(t -> t.name().equals(timerName));
         }
-
-        localTimers.removeIf(t -> t.name().equals(timerName));
-//        automaton.removeAllTransitions(location, new TimerTimeoutSymbol<>(timerName));
     }
 
     @Override
     public void addLocalReset(Integer location, I input) {
         // Ensure that input causes self-loop:
-        var target = this.getSuccessor(location, input);
+        final Integer target = this.getSuccessor(location, input);
         if (target == null || !target.equals(location)) {
             throw new IllegalArgumentException("Provided input is not defined or does not trigger a self-loop.");
         }
 
-        resets.putIfAbsent(location, new HashSet<>());
-        resets.get(location).add(input);
+        resets.computeIfAbsent(location, k -> new HashSet<>()).add(input);
     }
 
     @Override
     public void removeLocalReset(Integer location, I input) {
-        var localResets = resets.get(location);
-        if (localResets == null) {
-            return;
+        final Set<I> localResets = resets.get(location);
+        if (localResets != null) {
+            localResets.remove(input);
         }
-
-        localResets.remove(input);
     }
 
     @Override
@@ -210,6 +222,6 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
 
     @Override
     public Graph<Integer, Triple<SymbolicInput<I>, O, Integer>> graphView() {
-        return new MMLTGraphView<>(this);
+        return MutableMMLT.super.graphView();
     }
 }

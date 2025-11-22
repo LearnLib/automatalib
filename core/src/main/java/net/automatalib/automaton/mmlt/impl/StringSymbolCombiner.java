@@ -1,25 +1,42 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.automaton.mmlt.impl;
 
-import net.automatalib.automaton.mmlt.SymbolCombiner;
-
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.StringJoiner;
+
+import net.automatalib.automaton.mmlt.SymbolCombiner;
 
 /**
  * Combines multiple String outputs by concatenating them and using a pipe as separator.
  */
-public class StringSymbolCombiner implements SymbolCombiner<String> {
+public final class StringSymbolCombiner implements SymbolCombiner<String> {
 
-    private static final StringSymbolCombiner combiner = new StringSymbolCombiner();
+    private static final StringSymbolCombiner INSTANCE = new StringSymbolCombiner();
 
-    public static StringSymbolCombiner getInstance() {
-        return combiner;
+    private StringSymbolCombiner() {
+        // prevent instantiation
     }
 
-    private StringSymbolCombiner() {}
+    public static StringSymbolCombiner getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     public boolean isCombinedSymbol(String symbol) {
@@ -30,10 +47,10 @@ public class StringSymbolCombiner implements SymbolCombiner<String> {
     public String combineSymbols(List<String> symbols) {
 
         // Break all inputs (if needed) + put the results in a set:
-        Set<String> expandedSymbols = new HashSet<>();
-        for (var sym : symbols) {
-            if (sym.equals("|")) {
-                throw new IllegalArgumentException("The output | is reserved as delimiter.");
+        Set<String> expandedSymbols = new LinkedHashSet<>();
+        for (String sym : symbols) {
+            if ("|".equals(sym)) {
+                throw new IllegalArgumentException("The symbol | is reserved as delimiter");
             }
 
             if (this.isCombinedSymbol(sym)) {
@@ -43,8 +60,11 @@ public class StringSymbolCombiner implements SymbolCombiner<String> {
             }
         }
 
-        // Sort the symbols + separate with pipe:
-        return expandedSymbols.stream().sorted().collect(Collectors.joining("|"));
+        final StringJoiner sj = new StringJoiner("|");
+        for (String expandedSymbol : expandedSymbols) {
+            sj.add(expandedSymbol);
+        }
+        return sj.toString();
     }
 
     @Override
@@ -53,6 +73,6 @@ public class StringSymbolCombiner implements SymbolCombiner<String> {
             return List.of(symbol);
         }
 
-        return Arrays.stream(symbol.split("\\|")).distinct().sorted().toList();
+        return Arrays.asList(symbol.split("\\|"));
     }
 }

@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+* A new formalism for *Mealy machines with local timers* (MMLTs) including means for conformance testing and equivalence checking has been added (thanks to [Paul Kogel](https://github.com/pdev55)).
 * `automata-modelchecking-m3c` now supports ARM-based macOS systems.
 * `automata-modelchecking-m3c` can now be included in jlink images.
 

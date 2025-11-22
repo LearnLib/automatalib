@@ -30,7 +30,7 @@ import net.automatalib.automaton.fsa.MutableFSA;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
-import net.automatalib.automaton.mmlt.MMLTCreator;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.MutableMMLT;
 import net.automatalib.automaton.mmlt.SymbolCombiner;
 import net.automatalib.automaton.mmlt.impl.CompactMMLT;
@@ -44,6 +44,7 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.impl.CompactUniversalGraph;
+import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
@@ -699,46 +700,128 @@ public final class DOTParsers {
                                                true);
     }
 
+    /**
+     * Parser for {@link MMLT}s with {@link String}-based input and output symbols
+     * <p>
+     * Invokes {@link #mmlt(Function, Function, Object, SymbolCombiner)} with identity-based parsers and the given
+     * {@code silentOutput} and {@code outputCombiner}.
+     *
+     * @param silentOutput
+     *         the silent output symbol used for the {@link CompactMMLT} instance
+     * @param outputCombiner
+     *         the output combiner used for the {@link CompactMMLT} instance
+     *
+     * @return a DOT {@link InputModelDeserializer} for {@link CompactMMLT}s.
+     *
+     * @see DOTMMLTParser
+     */
     public static DOTInputModelDeserializer<Integer, String, CompactMMLT<String, String>> mmlt(String silentOutput,
                                                                                                SymbolCombiner<String> outputCombiner) {
         return mmlt(Function.identity(), Function.identity(), silentOutput, outputCombiner);
     }
 
+    /**
+     * Parser for {@link MMLT}s with custom.typed input and output symbols.
+     * <p>
+     * Invokes {@link #mmlt(AutomatonCreator, Function, Function)} with a creator for {@link CompactMMLT}s that uses the
+     * given {@code silentOutput} and {@code outputCombiner}.
+     *
+     * @param inputParser
+     *         a parser for transforming input labels to input symbols
+     * @param outputParser
+     *         a parser for transforming output labels to output symbols
+     * @param silentOutput
+     *         the silent output symbol used for the {@link CompactMMLT} instance
+     * @param outputCombiner
+     *         the output combiner used for the {@link CompactMMLT} instance
+     * @param <I>
+     *         the input symbol type
+     * @param <O>
+     *         the output symbol type
+     *
+     * @return a DOT {@link InputModelDeserializer} for {@link CompactMMLT}s.
+     *
+     * @see DOTMMLTParser
+     */
     public static <I, O> DOTInputModelDeserializer<Integer, I, CompactMMLT<I, O>> mmlt(Function<String, I> inputParser,
                                                                                        Function<String, O> outputParser,
                                                                                        O silentOutput,
                                                                                        SymbolCombiner<O> outputCombiner) {
-        return mmlt(CompactMMLT::new, inputParser, outputParser, silentOutput, outputCombiner);
+        final AutomatonCreator<CompactMMLT<I, O>, I> creator =
+                alphabet -> new CompactMMLT<>(alphabet, silentOutput, outputCombiner);
+
+        return mmlt(creator, inputParser, outputParser);
     }
 
-    public static <S, I, T, O, A extends MutableMMLT<S, I, T, O>> DOTInputModelDeserializer<S, I, A> mmlt(MMLTCreator<A, I, O> creator,
-                                                                                                          Function<String, I> inputParser,
-                                                                                                          Function<String, O> outputParser,
-                                                                                                          O silentOutput,
-                                                                                                          SymbolCombiner<O> outputCombiner) {
-        return mmlt(creator,
-                    inputParser,
-                    outputParser,
-                    silentOutput,
-                    outputCombiner,
-                    Collections.singletonList(GraphDOT.initialLabel(0)),
-                    true);
+    /**
+     * Parser for {@link MMLT}s with a custom MMLT instance and custom input and output types.
+     * <p>
+     * Invokes {@link #mmlt(AutomatonCreator, Function, Function, Collection, boolean)} with AutomataLib's default
+     * initial state label "{@code __start0}" as {@code initialNodeLabels} and uses {@code true} for
+     * {@code fakeInitialNodeIds}.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned MMLT
+     * @param inputParser
+     *         a parser for transforming input labels to input symbols
+     * @param outputParser
+     *         a parser for transforming output labels to output symbols
+     * @param <S>
+     *         the location type of the returned MMLT
+     * @param <I>
+     *         the input symbol type
+     * @param <O>
+     *         the output symbol type
+     * @param <A>
+     *         the type of the returned MMLT
+     *
+     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     *
+     * @see DOTMMLTParser
+     */
+    public static <S, I, O, A extends MutableMMLT<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> mmlt(AutomatonCreator<A, I> creator,
+                                                                                                       Function<String, I> inputParser,
+                                                                                                       Function<String, O> outputParser) {
+        return mmlt(creator, inputParser, outputParser, Collections.singletonList(GraphDOT.initialLabel(0)), true);
     }
 
-    public static <S, I, T, O, A extends MutableMMLT<S, I, T, O>> DOTInputModelDeserializer<S, I, A> mmlt(MMLTCreator<A, I, O> creator,
-                                                                                                          Function<String, I> inputParser,
-                                                                                                          Function<String, O> outputParser,
-                                                                                                          O silentOutput,
-                                                                                                          SymbolCombiner<O> outputCombiner,
-                                                                                                          Collection<String> initialNodeIds,
-                                                                                                          boolean fakeInitialNodeIds) {
-        return new DOTMMLTParser<>(creator,
-                                   inputParser,
-                                   outputParser,
-                                   silentOutput,
-                                   outputCombiner,
-                                   initialNodeIds,
-                                   fakeInitialNodeIds);
+    /**
+     * Parser for {@link MMLT}s with a custom MMLT instance, custom input and output types, and custom initial state
+     * labels.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned MMLT
+     * @param inputParser
+     *         a parser for transforming input labels to input symbols
+     * @param outputParser
+     *         a parser for transforming output labels to output symbols
+     * @param initialNodeIds
+     *         the ids of the initial nodes
+     * @param fakeInitialNodeIds
+     *         a flag indicating whether the {@code initialNodeIds} are artificial or not. If {@code true}, the nodes
+     *         matching the {@code initialNodeIds} will not be added to the automaton. Instead, their direct successors
+     *         will be initial states instead. This may be useful for instances where there are artificial nodes used to
+     *         display in incoming arrow for the actual initial states. If {@code false}, the nodes matching the
+     *         {@code initialNodeIds} will be used as initial nodes.
+     * @param <S>
+     *         the location type of the returned MMLT
+     * @param <I>
+     *         the input symbol type
+     * @param <O>
+     *         the output symbol type
+     * @param <A>
+     *         the type of the returned MMLT
+     *
+     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     *
+     * @see DOTMMLTParser
+     */
+    public static <S, I, O, A extends MutableMMLT<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> mmlt(AutomatonCreator<A, I> creator,
+                                                                                                       Function<String, I> inputParser,
+                                                                                                       Function<String, O> outputParser,
+                                                                                                       Collection<String> initialNodeIds,
+                                                                                                       boolean fakeInitialNodeIds) {
+        return new DOTMMLTParser<>(creator, inputParser, outputParser, initialNodeIds, fakeInitialNodeIds);
     }
 
     private static String getAndRequireNotNull(Map<String, String> map, String attribute) {

@@ -46,7 +46,6 @@ import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.exception.FormatException;
 import net.automatalib.graph.UniversalGraph;
 import net.automatalib.serialization.InputModelData;
-import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -382,7 +381,7 @@ public class DOTDeserializationTest {
         var trans = model.getTransition(state, input);
         Assert.assertNotNull(trans);
 
-        if ((model.getSuccessor(trans) != target) || !model.getTransitionProperty(trans).equals(output)) {
+        if (model.getSuccessor(trans) != target || !model.getTransitionProperty(trans).equals(output)) {
             throw new AssertionError();
         }
     }

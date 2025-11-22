@@ -1,17 +1,35 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.automaton.mmlt;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
-
 /**
- * A configuration, a.k.a., state of an MMLT. A configuration is a tuple of an active location and the values of its
- * timers.
+ * A state configuration of an MMLT. A configuration is a tuple of an active location and the valuation of its timers.
  *
  * @param <S>
- *         Location type
+ *         location type
  * @param <O>
- *         Output symbol type
+ *         output symbol type
  */
 public final class State<S, O> {
 
@@ -22,15 +40,15 @@ public final class State<S, O> {
     private final long[] initialValues;
     private final long minimumTimerValue;
 
-    private long entryDistance;
+    private final long entryDistance;
 
     /**
      * Initializes the entry configuration for the provided location, where all timers have their initial value.
      *
      * @param location
-     *         Location
+     *         location
      * @param sortedTimers
-     *         Timers of the location, sorted by initial value.
+     *         timers of the location, sorted by initial value
      */
     public State(S location, List<MealyTimerInfo<S, O>> sortedTimers) {
         this.location = location;
@@ -39,11 +57,12 @@ public final class State<S, O> {
 
         this.initialValues = new long[sortedTimers.size()];
         this.timerValues = new long[sortedTimers.size()];
-        this.minimumTimerValue = (sortedTimers.isEmpty()) ? 0 : sortedTimers.get(0).initial();
+        this.minimumTimerValue = sortedTimers.isEmpty() ? 0 : sortedTimers.get(0).initial();
 
         for (int i = 0; i < sortedTimers.size(); i++) {
-            initialValues[i] = sortedTimers.get(i).initial();
-            timerValues[i] = initialValues[i]; // reset
+            final long initial = sortedTimers.get(i).initial();
+            initialValues[i] = initial;
+            timerValues[i] = initial; // reset
         }
 
         this.entryDistance = 0;
@@ -60,19 +79,15 @@ public final class State<S, O> {
 
         this.initialValues = initialValues;
         this.minimumTimerValue = minimumTimerValue;
-        this.timerValues = Arrays.copyOf(timerValues, timerValues.length);
+        this.timerValues = timerValues;
         this.entryDistance = entryDistance;
     }
 
     /**
-     * Creates a copy of this configuration. The location, timers, prefix, and initialValue still point to the original
-     * instances. The current timer values are copied. Modifying these in the resulting object does not affect the
-     * original configuration.
+     * Returns the MMLT location of this state.
+     *
+     * @return the location
      */
-    public State<S, O> copy() {
-        return new State<>(location, sortedTimers, timerValues, initialValues, entryDistance, minimumTimerValue);
-    }
-
     public S getLocation() {
         return location;
     }
@@ -81,7 +96,7 @@ public final class State<S, O> {
      * Returns the entry distance. This is the minimal number of time steps required to reach this configuration from
      * the entry configuration.
      *
-     * @return Entry distance
+     * @return the entry distance
      */
     public long getEntryDistance() {
         return entryDistance;
@@ -91,7 +106,7 @@ public final class State<S, O> {
      * Indicates if this is the entry configuration of the location. A configuration is the entry configuration if all
      * timers have their initial value.
      *
-     * @return True if entry configuration.
+     * @return {@code true} if this is the entry configuration, {@code false} otherwise
      */
     public boolean isEntryConfig() {
         return this.entryDistance == 0;
@@ -109,18 +124,20 @@ public final class State<S, O> {
     }
 
     /**
-     * Resets all timers to their initial values.
+     * Returns a copy of {@code this} state with all timers reset to their initial values.
+     *
+     * @return the new state with all its timeres reset
      */
-    public void resetTimers() {
-        System.arraycopy(this.initialValues, 0, this.timerValues, 0, sortedTimers.size());
-        this.entryDistance = 0;
+    public State<S, O> resetTimers() {
+        return new State<>(location, sortedTimers, initialValues.clone(), initialValues, 0, minimumTimerValue);
     }
 
     /**
      * Returns all timers that time out in the least number of time steps.
+     *
+     * @return the timed out timers
      */
-    @Nullable
-    public TimeoutPair<S, O> getNextExpiringTimers() {
+    public @Nullable TimeoutPair<S, O> getNextExpiringTimers() {
         if (sortedTimers.isEmpty()) {
             return null;
         } else if (this.sortedTimers.size() == 1) {
@@ -154,17 +171,23 @@ public final class State<S, O> {
     }
 
     /**
-     * Decreases all timer values by the specified amount. This amount must be at most the time to the next timeout. If
-     * this sets a timer to zero, this timer is immediately reset. to its initial value.
+     * Returns a new state in which all timer values have been decreased by the specified amount. This amount must be at
+     * most the time to the next timeout. If this sets a timer to zero, this timer is immediately reset to its initial
+     * value.
      *
      * @param delay
-     *         Decrement
+     *         the value by which to decrement the current timers
+     *
+     * @return the new state with updated timers
      */
-    public void decrement(long delay) {
+    public State<S, O> decrement(long delay) {
         int timerResets = 0;
         int oneShotResets = 0;
+
+        final long[] newTimerValues = this.timerValues.clone();
+
         for (int i = 0; i < this.sortedTimers.size(); i++) {
-            long newValue = this.timerValues[i] - delay;
+            long newValue = newTimerValues[i] - delay;
 
             if (newValue < 0) {
                 throw new IllegalArgumentException("Can only advance to next timeout.");
@@ -173,28 +196,32 @@ public final class State<S, O> {
                     oneShotResets += 1;
                 }
 
-                newValue = this.initialValues[i];
+                newValue = initialValues[i];
                 timerResets += 1;
             }
-            this.timerValues[i] = newValue;
+            newTimerValues[i] = newValue;
         }
 
-        if (oneShotResets > 1) {throw new AssertionError();}
+        assert oneShotResets <= 1;
+        final long newEntryDistance;
+
         if (timerResets == this.sortedTimers.size() || oneShotResets == 1) {
             // reset all timers -> back at entry config:
-            this.entryDistance = 0;
+            newEntryDistance = 0;
         } else {
-            this.entryDistance += delay;
+            newEntryDistance = this.entryDistance + delay;
         }
+
+        return new State<>(location, sortedTimers, newTimerValues, initialValues, newEntryDistance, minimumTimerValue);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {return false;}
-        State<?, ?> that = (State<?, ?>) o;
-        return minimumTimerValue == that.minimumTimerValue && entryDistance == that.entryDistance &&
-               Objects.equals(location, that.location) && Objects.equals(sortedTimers, that.sortedTimers) &&
-               Arrays.equals(timerValues, that.timerValues) && Arrays.equals(initialValues, that.initialValues);
+    public boolean equals(@Nullable Object o) {
+        return this == o || o instanceof State<?, ?> that && this.minimumTimerValue == that.minimumTimerValue &&
+                            entryDistance == that.entryDistance && Objects.equals(location, that.location) &&
+                            Objects.equals(sortedTimers, that.sortedTimers) &&
+                            Arrays.equals(timerValues, that.timerValues) &&
+                            Arrays.equals(initialValues, that.initialValues);
     }
 
     @Override

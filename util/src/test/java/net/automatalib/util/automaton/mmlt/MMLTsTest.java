@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of AutomataLib <https://automatalib.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.util.automaton.mmlt;
 
 import java.util.HashSet;
@@ -11,18 +26,16 @@ import net.automatalib.symbol.time.TimedInput;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class MMLTUtilTest {
+public class MMLTsTest {
 
     public CompactMMLT<String, String> buildBaseModel() {
         var alphabet = Alphabets.fromArray("p1", "p2", "abort", "collect");
         var model = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
 
-        var s0 = model.addState();
+        var s0 = model.addInitialState();
         var s1 = model.addState();
         var s2 = model.addState();
         var s3 = model.addState();
-
-        model.setInitialState(s0);
 
         model.addTransition(s0, "p1", s1, "go");
         model.addTransition(s1, "abort", s1, "ok");
@@ -63,9 +76,9 @@ public class MMLTUtilTest {
 
         // Still needs to be equivalent to original:
         var originalModel = buildBaseModel();
-        Assert.assertNull(MMLTUtil.findSeparatingWord(model,
-                                                      originalModel,
-                                                      originalModel.getSemantics().getInputAlphabet()));
+        Assert.assertNull(MMLTs.findSeparatingWord(model,
+                                                   originalModel,
+                                                   originalModel.getSemantics().getInputAlphabet()));
     }
 
     @Test
@@ -86,14 +99,12 @@ public class MMLTUtilTest {
         modelB.addPeriodicTimer(s0B, "a", 3, "test");
         modelB.addTransition(s0B, "x", s0B, "ok");
 
-        Assert.assertNotNull(MMLTUtil.findSeparatingWord(modelA,
-                                                         modelB,
-                                                         modelA.getSemantics().getInputAlphabet()));
+        Assert.assertNotNull(MMLTs.findSeparatingWord(modelA, modelB, modelA.getSemantics().getInputAlphabet()));
 
         // If we remove the timestep, should not find a counterexample:
         Set<TimedInput<String>> reducedInputs = new HashSet<>(modelA.getSemantics().getInputAlphabet());
         reducedInputs.remove(TimedInput.step());
-        Assert.assertNull(MMLTUtil.findSeparatingWord(modelA, modelB, reducedInputs));
+        Assert.assertNull(MMLTs.findSeparatingWord(modelA, modelB, reducedInputs));
     }
 
     @Test
@@ -118,14 +129,12 @@ public class MMLTUtilTest {
         modelB.addTransition(s1B, "x", s1B, "void");
         modelB.addLocalReset(s1B, "x");
 
-        Assert.assertNotNull(MMLTUtil.findSeparatingWord(modelA,
-                                                         modelB,
-                                                         modelA.getSemantics().getInputAlphabet()));
+        Assert.assertNotNull(MMLTs.findSeparatingWord(modelA, modelB, modelA.getSemantics().getInputAlphabet()));
 
         // If we remove the timestep, should not find a counterexample:
         Set<TimedInput<String>> reducedInputs = new HashSet<>(modelA.getSemantics().getInputAlphabet());
         reducedInputs.remove(TimedInput.step());
-        Assert.assertNull(MMLTUtil.findSeparatingWord(modelA, modelB, reducedInputs));
+        Assert.assertNull(MMLTs.findSeparatingWord(modelA, modelB, reducedInputs));
     }
 
     @Test
