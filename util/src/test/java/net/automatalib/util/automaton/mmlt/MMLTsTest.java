@@ -76,9 +76,7 @@ public class MMLTsTest {
 
         // Still needs to be equivalent to original:
         var originalModel = buildBaseModel();
-        Assert.assertNull(MMLTs.findSeparatingWord(model,
-                                                   originalModel,
-                                                   originalModel.getSemantics().getInputAlphabet()));
+        Assert.assertTrue(MMLTs.testEquivalence(model, originalModel, originalModel.getSemantics().getInputAlphabet()));
     }
 
     @Test
@@ -99,12 +97,17 @@ public class MMLTsTest {
         modelB.addPeriodicTimer(s0B, "a", 3, "test");
         modelB.addTransition(s0B, "x", s0B, "ok");
 
-        Assert.assertNotNull(MMLTs.findSeparatingWord(modelA, modelB, modelA.getSemantics().getInputAlphabet()));
+        Assert.assertFalse(MMLTs.testEquivalence(modelA, modelB, modelA.getSemantics().getInputAlphabet()));
+
+        var sepWord = MMLTs.findSeparatingWord(modelA, modelB, modelA.getSemantics().getInputAlphabet());
+        Assert.assertNotNull(sepWord);
+        Assert.assertNotEquals(modelA.getSemantics().computeOutput(sepWord),
+                               modelB.getSemantics().computeOutput(sepWord));
 
         // If we remove the timestep, should not find a counterexample:
         Set<TimedInput<String>> reducedInputs = new HashSet<>(modelA.getSemantics().getInputAlphabet());
         reducedInputs.remove(TimedInput.step());
-        Assert.assertNull(MMLTs.findSeparatingWord(modelA, modelB, reducedInputs));
+        Assert.assertTrue(MMLTs.testEquivalence(modelA, modelB, reducedInputs));
     }
 
     @Test
@@ -129,36 +132,73 @@ public class MMLTsTest {
         modelB.addTransition(s1B, "x", s1B, "void");
         modelB.addLocalReset(s1B, "x");
 
-        Assert.assertNotNull(MMLTs.findSeparatingWord(modelA, modelB, modelA.getSemantics().getInputAlphabet()));
+        Assert.assertFalse(MMLTs.testEquivalence(modelA, modelB, modelA.getSemantics().getInputAlphabet()));
+
+        var sepWord = MMLTs.findSeparatingWord(modelA, modelB, modelA.getSemantics().getInputAlphabet());
+        Assert.assertNotNull(sepWord);
+        Assert.assertNotEquals(modelA.getSemantics().computeOutput(sepWord),
+                               modelB.getSemantics().computeOutput(sepWord));
 
         // If we remove the timestep, should not find a counterexample:
         Set<TimedInput<String>> reducedInputs = new HashSet<>(modelA.getSemantics().getInputAlphabet());
         reducedInputs.remove(TimedInput.step());
-        Assert.assertNull(MMLTs.findSeparatingWord(modelA, modelB, reducedInputs));
+        Assert.assertTrue(MMLTs.testEquivalence(modelA, modelB, reducedInputs));
     }
 
     @Test
-    public void testInvalidTimerChecks() {
+    public void testMaximumInitialTimer() {
         var automaton = buildBaseModel();
 
-        int s1 = 1;
+        Assert.assertEquals(MMLTs.getMaximumInitialTimerValue(automaton), 40);
 
-        // Duplicate timer name:
-        Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addPeriodicTimer(s1, "a", 3, "test"));
+        automaton.removeTimer(1, "c");
+        Assert.assertEquals(MMLTs.getMaximumInitialTimerValue(automaton), 6);
+    }
 
-        // Timer with silent output:
-        Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addPeriodicTimer(s1, "e", 3, "void"));
+    @Test
+    public void testConfigurationCounter() {
+        var automaton = buildBaseModel();
 
-        // Timer never expires:
-        Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addPeriodicTimer(s1, "e", 41, "test"));
+        var s1 = 1;
+        var s2 = 2;
 
-        // One-shot timer that times out at same time as periodic:
-        Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addOneShotTimer(s1, "e", 12, "test", 3));
+        Assert.assertEquals(MMLTs.getConfigurationCount(automaton, s1), 40);
+        Assert.assertEquals(MMLTs.getConfigurationCount(automaton, s2), 4);
 
-        // Periodic timer that times out at same time as one-shot:
-        Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addPeriodicTimer(s1, "e", 20, "test"));
+        // remove one-shots
+        automaton.removeTimer(s1, "c");
+        automaton.removeTimer(s2, "d");
+        Assert.assertEquals(MMLTs.getConfigurationCount(automaton, s1), 6);
+        Assert.assertEquals(MMLTs.getConfigurationCount(automaton, s2), 1);
 
-        // Duplicate one-shot timer:
-        Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addOneShotTimer(s1, "e", 12, "test", 3));
+        // use primes for lcm product
+        automaton.removeTimer(s1, "b");
+        automaton.addPeriodicTimer(s1, "b", 7, "noise");
+        automaton.addPeriodicTimer(s1, "c", 11, "done");
+        Assert.assertEquals(MMLTs.getConfigurationCount(automaton, s1), 231);
+
+        // check for overflow
+        automaton.removeTimer(s1, "b");
+        automaton.addPeriodicTimer(s1, "b", Long.MAX_VALUE, "noise");
+        Assert.assertEquals(MMLTs.getConfigurationCount(automaton, s1), Long.MAX_VALUE);
+    }
+
+    @Test
+    public void testMaximumTimeoutDelay() {
+        var automaton = buildBaseModel();
+
+        Assert.assertEquals(MMLTs.getMaximumTimeoutDelay(automaton), 4);
+
+        var s1 = 1;
+        var s2 = 2;
+        // remove one-shots
+        automaton.removeTimer(s1, "c");
+        automaton.removeTimer(s2, "d");
+
+        automaton.removeTimer(s1, "b");
+        automaton.addPeriodicTimer(s1, "b", 7, "noise");
+        automaton.addPeriodicTimer(s1, "c", 19, "done");
+
+        Assert.assertEquals(MMLTs.getMaximumTimeoutDelay(automaton), 3);
     }
 }

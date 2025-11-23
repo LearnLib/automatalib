@@ -22,12 +22,14 @@ import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -220,6 +222,22 @@ public class DOTDeserializationTest {
         Assert.assertEquals(firstTimerS2.initial(), 4);
         Assert.assertEquals(firstTimerS2.output(), "done");
         Assert.assertFalse(firstTimerS2.periodic());
+    }
+
+    @Test
+    public void testMMLTValidation() {
+        var parser = DOTParsers.mmlt(alph -> new CompactMMLT<>(alph, "void", StringSymbolCombiner.getInstance()),
+                                     Function.identity(),
+                                     Function.identity(),
+                                     Collections.singleton("s0"),
+                                     false);
+
+        for (int i = 0; i < 4; i++) {
+            final int id = i + 1;
+            Assert.assertThrows(Integer.toString(id),
+                                FormatException.class,
+                                () -> parser.readModel(DOTSerializationUtil.getResource("/mmlt_error" + id + ".dot")));
+        }
     }
 
     @Test(expectedExceptions = FormatException.class)

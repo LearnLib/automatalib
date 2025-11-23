@@ -162,13 +162,14 @@ public final class MMLTs {
      * @param <S>
      *         location type
      *
-     * @return maximum initial timer value. {@code 0} if no timers are used
+     * @return maximum initial timer value or {@code 0} if no timers are used
      */
     public static <S> long getMaximumInitialTimerValue(MMLT<S, ?, ?, ?> mmlt) {
         long maxValue = 0;
         for (S loc : mmlt) {
-            for (TimerInfo<S, ?> t : mmlt.getSortedTimers(loc)) {
-                maxValue = Math.max(maxValue, t.initial());
+            List<? extends TimerInfo<S, ?>> timers = mmlt.getSortedTimers(loc);
+            if (!timers.isEmpty()) {
+                maxValue = Math.max(maxValue, timers.get(timers.size() - 1).initial());
             }
         }
         return maxValue;

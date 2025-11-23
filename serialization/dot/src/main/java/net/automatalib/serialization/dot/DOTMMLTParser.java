@@ -102,8 +102,7 @@ import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
  * }
  * }</pre>
  */
-public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
-        implements DOTInputModelDeserializer<S, I, A> {
+public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implements DOTInputModelDeserializer<S, I, A> {
 
     private static final Pattern ASSIGN_PATTERN = Pattern.compile("(\\S+)=(\\d+)");
 
@@ -154,13 +153,13 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
         }
     }
 
-    private Mapping<S, String> parseNodesAndEdges(InternalDOTParser parser, MutableMMLT<S, I, ?, O> result) {
+    private Mapping<S, String> parseNodesAndEdges(InternalDOTParser parser, MutableMMLT<S, I, ?, O> result)
+            throws FormatException {
 
         final Collection<Node> nodes = parser.getNodes();
         final Collection<Edge> edges = parser.getEdges();
 
-        final Map<String, Map<String, TimerSpec>> timers =
-                new HashMap<>(nodes.size() - 1); // id in dot -> local timers
+        final Map<String, Map<String, TimerSpec>> timers = new HashMap<>(nodes.size() - 1); // id in dot -> local timers
         final Map<String, S> stateMap = new HashMap<>(nodes.size() - 1); // name in dot -> new id
         final MutableMapping<S, String> mapping = result.createDynamicStateMapping();
 
@@ -197,7 +196,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                     int value = Integer.parseInt(g2);
 
                     if (value <= 0) {
-                        throw new IllegalArgumentException(String.format(
+                        throw new FormatException(String.format(
                                 "Reset for timer %s in location %s must be greater zero.",
                                 timerName,
                                 node.id));
@@ -205,10 +204,9 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
 
                     Map<String, TimerSpec> timeInfo = timers.computeIfAbsent(node.id, k -> new HashMap<>());
                     if (timeInfo.containsKey(timerName)) {
-                        throw new IllegalArgumentException(String.format(
-                                "Timer %s in location %s must only be set once.",
-                                timerName,
-                                node.id));
+                        throw new FormatException(String.format("Timer %s in location %s must only be set once.",
+                                                                timerName,
+                                                                node.id));
                     }
 
                     // Add timer:
@@ -245,10 +243,9 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                 // Ensure that we defined the corresponding timer:
                 String timerName = input.substring(3, input.length() - 1);
                 if (!timers.getOrDefault(edge.src, Collections.emptyMap()).containsKey(timerName)) {
-                    throw new IllegalArgumentException(String.format(
-                            "Defined %s in state %s, but timer value is not set.",
-                            input,
-                            edge.src));
+                    throw new FormatException(String.format("Defined %s in state %s, but timer value is not set.",
+                                                            input,
+                                                            edge.src));
                 }
 
                 // Add output to timer info:
@@ -262,13 +259,13 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                     if (edgeResets.size() == 1) {
                         if (!edgeResets.contains(timerName)) {
                             // Invalid periodic timer:
-                            throw new IllegalArgumentException(String.format("Invalid reset at to[%s]", timerName));
+                            throw new FormatException(String.format("Invalid reset at to[%s]", timerName));
                         }
                     } else if (edgeResets.size() > 1) {
                         // Need to contain all local timers to be one-shot with loop:
                         for (String locTimer : timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet()) {
                             if (!edgeResets.contains(locTimer)) {
-                                throw new IllegalArgumentException(String.format("Invalid reset at to[%s]", timerName));
+                                throw new FormatException(String.format("Invalid reset at to[%s]", timerName));
                             }
                         }
                         periodic = false;
@@ -298,7 +295,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
                     // Reset list needs to contain all local timers:
                     for (String locTimer : timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet()) {
                         if (!edgeResets.contains(locTimer)) {
-                            throw new IllegalArgumentException(String.format("Invalid local reset at %s", i));
+                            throw new FormatException(String.format("Invalid local reset at %s", i));
                         }
                     }
                     result.addLocalReset(stateMap.get(edge.src), i);
@@ -309,17 +306,17 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>>
         return mapping;
     }
 
-    private static String[] tokenizeLabel(Edge edge) {
+    private static String[] tokenizeLabel(Edge edge) throws FormatException {
         final String label = edge.attributes.get(EdgeAttrs.LABEL);
 
         if (label == null) {
-            throw new IllegalArgumentException("All edges must have an input and an output.");
+            throw new FormatException("All edges must have an input and an output.");
         }
 
         final String[] tokens = label.split("/");
 
         if (tokens.length != 2) {
-            throw new IllegalArgumentException("All edges must have an input and an output.");
+            throw new FormatException("All edges must have an input and an output.");
         }
 
         return tokens;

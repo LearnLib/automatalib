@@ -41,16 +41,29 @@ public record TimerInfo<S, O>(String name, long initial, O output, S target, boo
         }
     }
 
+    /**
+     * Convenience constructor for creating a periodic timer. This constructor calls {@link TimerInfo} with
+     * {@code periodic} set to {@code true}.
+     *
+     * @param name
+     *         name of the timer
+     * @param initial
+     *         initial value of the timer
+     * @param output
+     *         symbol that the timer produces at timeout (must not be silent)
+     * @param target
+     *         the target state of this timer
+     */
     public TimerInfo(String name, long initial, O output, S target) {
         this(name, initial, output, target, true);
     }
 
+    /**
+     * Returns a copy of {@code this} timer info with {@link #periodic} set to {@code false}.
+     *
+     * @return this timer as a one-shot timer
+     */
     public TimerInfo<S, O> asOneShot() {
         return new TimerInfo<>(name, initial, output, target, false);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s=%d/%s", name, initial, output);
     }
 }

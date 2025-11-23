@@ -85,7 +85,7 @@ public interface MMLT<S, I, T, O>
      * @param location
      *         location
      *
-     * @return sorted list of local timers. May be empty if the location has no timers.
+     * @return sorted list of local timers (may be empty if the location has no timers)
      */
     List<TimerInfo<S, O>> getSortedTimers(S location);
 

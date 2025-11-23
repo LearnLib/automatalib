@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.automaton.cover;
 
+import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.alphabet.impl.Alphabets;
@@ -98,5 +99,28 @@ public class MMLTCoverTest {
                 Assert.assertFalse(cover.containsKey(state));
             }
         }
+    }
+
+    @Test
+    public void computeEmptyCover() {
+        var automaton = buildBaseModel();
+        automaton.setInitial(automaton.getInitialState(), false);
+
+        var alphabet = automaton.getSemantics().getInputAlphabet();
+
+        // Test if cover is empty
+        var cover = MMLTCover.getMMLTLocationCover(automaton, alphabet);
+        Assert.assertTrue(cover.isEmpty());
+
+        cover = MMLTCover.getMMLTLocationCover(automaton, Collections.emptyList());
+        Assert.assertTrue(cover.isEmpty());
+
+        // Test if detecting incomplete cover
+        Assert.assertThrows(IllegalStateException.class,
+                            () -> MMLTCover.getMMLTLocationCover(automaton, alphabet, false));
+
+        Assert.assertThrows(IllegalStateException.class,
+                            () -> MMLTCover.getMMLTLocationCover(automaton, Collections.emptyList(), false));
+
     }
 }
