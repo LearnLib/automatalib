@@ -87,7 +87,7 @@ public interface MMLT<S, I, T, O>
      *
      * @return sorted list of local timers. May be empty if the location has no timers.
      */
-    List<MealyTimerInfo<S, O>> getSortedTimers(S location);
+    List<TimerInfo<S, O>> getSortedTimers(S location);
 
     /**
      * Returns the semantics automaton that describes the behavior of this MMLT.

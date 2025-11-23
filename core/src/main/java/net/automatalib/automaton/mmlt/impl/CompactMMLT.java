@@ -28,9 +28,9 @@ import java.util.Set;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.impl.CompactTransition;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
 import net.automatalib.automaton.mmlt.MutableMMLT;
 import net.automatalib.automaton.mmlt.SymbolCombiner;
+import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Triple;
 import net.automatalib.graph.Graph;
@@ -46,7 +46,7 @@ import net.automatalib.symbol.time.SymbolicInput;
  */
 public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT<Integer, I, CompactTransition<O>, O> {
 
-    private final Map<Integer, List<MealyTimerInfo<Integer, O>>> sortedTimers; // location -> (sorted timers)
+    private final Map<Integer, List<TimerInfo<Integer, O>>> sortedTimers; // location -> (sorted timers)
     private final Map<Integer, Set<I>> resets; // location -> inputs (that reset all timers)
 
     private final O silentOutput;
@@ -104,7 +104,7 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
     }
 
     @Override
-    public List<MealyTimerInfo<Integer, O>> getSortedTimers(Integer location) {
+    public List<TimerInfo<Integer, O>> getSortedTimers(Integer location) {
         return Collections.unmodifiableList(this.sortedTimers.getOrDefault(location, Collections.emptyList()));
     }
 
@@ -113,7 +113,7 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
         return new DefaultMMLTSemantics<>(this);
     }
 
-    private void ensureThatCanAddTimer(List<MealyTimerInfo<Integer, O>> timers,
+    private void ensureThatCanAddTimer(List<TimerInfo<Integer, O>> timers,
                                        String name,
                                        long initial,
                                        O output,
@@ -123,15 +123,15 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
         }
 
         // Verify that the timer name is unique:
-        for (MealyTimerInfo<Integer, O> integerOMealyTimerInfo : timers) {
-            if (integerOMealyTimerInfo.name().equals(name)) {
+        for (TimerInfo<Integer, O> integerOTimerInfo : timers) {
+            if (integerOTimerInfo.name().equals(name)) {
                 throw new IllegalArgumentException(String.format("Location already has a timer of the name '%s'.",
                                                                  name));
             }
         }
 
         // Ensure that our new timer can time out AND that its timeouts do not coincide with that of an existing one-shot timer:
-        for (MealyTimerInfo<Integer, O> t : timers) {
+        for (TimerInfo<Integer, O> t : timers) {
             if (!t.periodic()) {
                 if (initial > t.initial()) {
                     throw new IllegalArgumentException(String.format(
@@ -152,7 +152,7 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
         if (!periodic) {
             // Our new one-shot timer is the one-shot timer with the highest initial value (or the only one).
             // Check that no timer with a lower initial value will time out at the same time:
-            for (MealyTimerInfo<Integer, O> timer : timers) {
+            for (TimerInfo<Integer, O> timer : timers) {
                 if (timer.initial() <= initial && initial % timer.initial() == 0) {
                     throw new IllegalArgumentException(String.format(
                             "The existing timer '%s' times out at the same time as the new one-shot timer (%d).",
@@ -165,22 +165,22 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
 
     @Override
     public void addPeriodicTimer(Integer location, String name, long initial, O output) {
-        final List<MealyTimerInfo<Integer, O>> localTimers =
+        final List<TimerInfo<Integer, O>> localTimers =
                 this.sortedTimers.computeIfAbsent(location, k -> new ArrayList<>());
 
         ensureThatCanAddTimer(localTimers, name, initial, output, true);
-        localTimers.add(new MealyTimerInfo<>(name, initial, output, true, location));
-        localTimers.sort(Comparator.comparingLong(MealyTimerInfo::initial));
+        localTimers.add(new TimerInfo<>(name, initial, output, location, true));
+        localTimers.sort(Comparator.comparingLong(TimerInfo::initial));
     }
 
     @Override
     public void addOneShotTimer(Integer location, String name, long initial, O output, Integer target) {
-        final List<MealyTimerInfo<Integer, O>> localTimers =
+        final List<TimerInfo<Integer, O>> localTimers =
                 this.sortedTimers.computeIfAbsent(location, k -> new ArrayList<>());
 
         ensureThatCanAddTimer(localTimers, name, initial, output, false);
-        localTimers.add(new MealyTimerInfo<>(name, initial, output, false, target));
-        localTimers.sort(Comparator.comparingLong(MealyTimerInfo::initial));
+        localTimers.add(new TimerInfo<>(name, initial, output, target, false));
+        localTimers.sort(Comparator.comparingLong(TimerInfo::initial));
 
         // Remove all timers with higher initial value, as these can no longer time out:
         localTimers.removeIf(t -> t.initial() > initial);
@@ -188,7 +188,7 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
 
     @Override
     public void removeTimer(Integer location, String timerName) {
-        final List<MealyTimerInfo<Integer, O>> localTimers = this.sortedTimers.get(location);
+        final List<TimerInfo<Integer, O>> localTimers = this.sortedTimers.get(location);
         if (localTimers != null) {
             localTimers.removeIf(t -> t.name().equals(timerName));
         }

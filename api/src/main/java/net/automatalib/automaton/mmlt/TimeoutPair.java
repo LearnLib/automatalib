@@ -29,10 +29,10 @@ import java.util.List;
  * @param <O>
  *         output symbol type
  */
-public record TimeoutPair<S, O>(long delay, List<MealyTimerInfo<S, O>> timers) {
+public record TimeoutPair<S, O>(long delay, List<TimerInfo<S, O>> timers) {
 
     public boolean allPeriodic() {
-        for (MealyTimerInfo<S, O> t : timers) {
+        for (TimerInfo<S, O> t : timers) {
             if (!t.periodic()) {
                 return false;
             }

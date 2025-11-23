@@ -23,7 +23,7 @@ import java.util.StringJoiner;
 import java.util.function.Function;
 
 import net.automatalib.automaton.mmlt.MMLT;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.common.util.Triple;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.SymbolicInput;
@@ -76,7 +76,7 @@ public class MMLTVisualizationHelper<S, I, O> extends DefaultVisualizationHelper
         }
 
         // Include timer assignments:
-        final List<MealyTimerInfo<S, O>> timers = mmlt.getSortedTimers(node);
+        final List<TimerInfo<S, O>> timers = mmlt.getSortedTimers(node);
 
         if (!timers.isEmpty()) {
             // Add local timer info:
@@ -95,18 +95,18 @@ public class MMLTVisualizationHelper<S, I, O> extends DefaultVisualizationHelper
         super.getEdgeProperties(src, edge, tgt, properties);
 
         final SymbolicInput<I> input = edge.getFirst();
-        final List<MealyTimerInfo<S, O>> timers = mmlt.getSortedTimers(tgt);
+        final List<TimerInfo<S, O>> timers = mmlt.getSortedTimers(tgt);
 
         final String label = String.format("%s / %s", input, edge.getSecond());
         final StringBuilder labelBuilder = new StringBuilder(label);
 
         if (input instanceof TimerTimeoutSymbol<I> ts) {
             // Get info for corresponding timer:
-            MealyTimerInfo<S, O> timer = mmlt.getSortedTimers(src)
-                                             .stream()
-                                             .filter(t -> t.name().equals(ts.timer()))
-                                             .findFirst()
-                                             .orElseThrow();
+            TimerInfo<S, O> timer = mmlt.getSortedTimers(src)
+                                        .stream()
+                                        .filter(t -> t.name().equals(ts.timer()))
+                                        .findFirst()
+                                        .orElseThrow();
 
             if (timer.periodic()) {
                 // Periodic -> resets itself:
@@ -118,7 +118,7 @@ public class MMLTVisualizationHelper<S, I, O> extends DefaultVisualizationHelper
                 if (Objects.equals(tgt, src)) {
                     // If the target is another location, reset info can always be inferred from context.
                     // --> Only include if self-loop:
-                    properties.put(MMLTEdgeAttrs.RESETS, renderTimers(timers, MealyTimerInfo::name));
+                    properties.put(MMLTEdgeAttrs.RESETS, renderTimers(timers, TimerInfo::name));
                 }
                 colorEdges(properties, "green");
             }
@@ -127,7 +127,7 @@ public class MMLTVisualizationHelper<S, I, O> extends DefaultVisualizationHelper
             // Self-loop + local reset -> resets all in target:
             appendResetInfo(labelBuilder, timers);
             colorEdges(properties, "orange");
-            properties.put(MMLTEdgeAttrs.RESETS, renderTimers(timers, MealyTimerInfo::name));
+            properties.put(MMLTEdgeAttrs.RESETS, renderTimers(timers, TimerInfo::name));
         }
 
         properties.put(EdgeAttrs.LABEL, labelBuilder.toString());
@@ -142,11 +142,11 @@ public class MMLTVisualizationHelper<S, I, O> extends DefaultVisualizationHelper
         }
     }
 
-    private void appendResetInfo(StringBuilder labelBuilder, MealyTimerInfo<S, O> timer) {
+    private void appendResetInfo(StringBuilder labelBuilder, TimerInfo<S, O> timer) {
         appendResetInfo(labelBuilder, Collections.singletonList(timer));
     }
 
-    private void appendResetInfo(StringBuilder labelBuilder, List<MealyTimerInfo<S, O>> timers) {
+    private void appendResetInfo(StringBuilder labelBuilder, List<TimerInfo<S, O>> timers) {
         if (includeResets && !timers.isEmpty()) {
             labelBuilder.append(" {")
                         .append(renderTimersInternal(timers, t -> String.format("%s↦%d", t.name(), t.initial())))
@@ -154,14 +154,14 @@ public class MMLTVisualizationHelper<S, I, O> extends DefaultVisualizationHelper
         }
     }
 
-    private String renderTimers(List<MealyTimerInfo<S, O>> timers, Function<MealyTimerInfo<S, O>, String> extractor) {
+    private String renderTimers(List<TimerInfo<S, O>> timers, Function<TimerInfo<S, O>, String> extractor) {
         return renderTimersInternal(timers, extractor).toString();
     }
 
-    private StringJoiner renderTimersInternal(List<MealyTimerInfo<S, O>> timers,
-                                              Function<MealyTimerInfo<S, O>, String> extractor) {
+    private StringJoiner renderTimersInternal(List<TimerInfo<S, O>> timers,
+                                              Function<TimerInfo<S, O>, String> extractor) {
         final StringJoiner sj = new StringJoiner(",");
-        for (MealyTimerInfo<S, O> t : timers) {
+        for (TimerInfo<S, O> t : timers) {
             sj.add(extractor.apply(t));
         }
         return sj;

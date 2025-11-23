@@ -35,7 +35,7 @@ public final class State<S, O> {
 
     private final S location;
 
-    private final List<MealyTimerInfo<S, O>> sortedTimers;
+    private final List<TimerInfo<S, O>> sortedTimers;
     private final long[] timerValues;
     private final long[] initialValues;
     private final long minimumTimerValue;
@@ -50,7 +50,7 @@ public final class State<S, O> {
      * @param sortedTimers
      *         timers of the location, sorted by initial value
      */
-    public State(S location, List<MealyTimerInfo<S, O>> sortedTimers) {
+    public State(S location, List<TimerInfo<S, O>> sortedTimers) {
         this.location = location;
 
         this.sortedTimers = sortedTimers;
@@ -69,7 +69,7 @@ public final class State<S, O> {
     }
 
     private State(S location,
-                  List<MealyTimerInfo<S, O>> sortedTimers,
+                  List<TimerInfo<S, O>> sortedTimers,
                   long[] timerValues,
                   long[] initialValues,
                   long entryDistance,
@@ -158,7 +158,7 @@ public final class State<S, O> {
             assert minValue != Long.MAX_VALUE;
 
             // Collect info of all timers that time out then:
-            List<MealyTimerInfo<S, O>> expiringTimers = new ArrayList<>();
+            List<TimerInfo<S, O>> expiringTimers = new ArrayList<>();
             for (int i = 0; i < sortedTimers.size(); i++) {
                 if (timerValues[i] == minValue) {
                     expiringTimers.add(this.sortedTimers.get(i));

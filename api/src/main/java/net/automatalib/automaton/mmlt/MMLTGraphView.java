@@ -54,7 +54,7 @@ public class MMLTGraphView<S, I, T, O> implements Graph<S, Triple<SymbolicInput<
     public Collection<Triple<SymbolicInput<I>, O, S>> getOutgoingEdges(S node) {
 
         Alphabet<I> alphabet = mmlt.getInputAlphabet();
-        List<MealyTimerInfo<S, O>> timers = mmlt.getSortedTimers(node);
+        List<TimerInfo<S, O>> timers = mmlt.getSortedTimers(node);
 
         List<Triple<SymbolicInput<I>, O, S>> result = new ArrayList<>(alphabet.size() + timers.size());
 
@@ -65,7 +65,7 @@ public class MMLTGraphView<S, I, T, O> implements Graph<S, Triple<SymbolicInput<
             }
         }
 
-        for (MealyTimerInfo<S, O> t : timers) {
+        for (TimerInfo<S, O> t : timers) {
             result.add(Triple.of(new TimerTimeoutSymbol<>(t.name()), t.output(), t.target()));
 
         }

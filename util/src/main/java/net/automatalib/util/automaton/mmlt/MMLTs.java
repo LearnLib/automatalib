@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.automaton.mmlt.MMLT;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.automaton.mmlt.impl.ReducedMMLTSemantics;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.util.automaton.Automata;
@@ -40,13 +40,13 @@ public final class MMLTs {
 
     public static <I, O> boolean testEquivalence(MMLT<?, I, ?, O> modelA,
                                                  MMLT<?, I, ?, O> modelB,
-                                                 Collection<TimedInput<I>> inputs) {
+                                                 Collection<? extends TimedInput<I>> inputs) {
         return findSeparatingWord(modelA, modelB, inputs) == null;
     }
 
     public static <I, O> @Nullable Word<TimedInput<I>> findSeparatingWord(MMLT<?, I, ?, O> modelA,
                                                                           MMLT<?, I, ?, O> modelB,
-                                                                          Collection<TimedInput<I>> inputs) {
+                                                                          Collection<? extends TimedInput<I>> inputs) {
         ReducedMMLTSemantics<?, I, O> expandedA = ReducedMMLTSemantics.forMMLT(modelA);
         ReducedMMLTSemantics<?, I, O> expandedB = ReducedMMLTSemantics.forMMLT(modelB);
 
@@ -78,7 +78,7 @@ public final class MMLTs {
      * @return maximum configuration time. {@link Long#MAX_VALUE}, if exceeding long maximum.
      */
     public static <S> long getConfigurationCount(MMLT<S, ?, ?, ?> mmlt, S location) {
-        final List<? extends MealyTimerInfo<S, ?>> timers = mmlt.getSortedTimers(location);
+        final List<? extends TimerInfo<S, ?>> timers = mmlt.getSortedTimers(location);
 
         if (timers.isEmpty()) {
             return 1;
@@ -89,7 +89,7 @@ public final class MMLTs {
             return timers.get(0).initial();
         }
 
-        for (MealyTimerInfo<S, ?> t : timers) {
+        for (TimerInfo<S, ?> t : timers) {
             if (!t.periodic()) {
                 return t.initial(); // leave location at latest when one-shot expires
             }
@@ -98,7 +98,7 @@ public final class MMLTs {
         // The lcm of multiple numbers is equal to the product of their multiple with their gcd.
         // Therefore: calculate gcd and multiple, then divide multiple by gcd.
         final List<BigInteger> bigTimeouts = new ArrayList<>(timers.size());
-        for (MealyTimerInfo<S, ?> t : timers) {
+        for (TimerInfo<S, ?> t : timers) {
             bigTimeouts.add(BigInteger.valueOf(t.initial()));
         }
 
@@ -131,7 +131,7 @@ public final class MMLTs {
     public static <S> long getMaximumInitialTimerValue(MMLT<S, ?, ?, ?> mmlt) {
         long maxValue = 0;
         for (S loc : mmlt) {
-            for (MealyTimerInfo<S, ?> t : mmlt.getSortedTimers(loc)) {
+            for (TimerInfo<S, ?> t : mmlt.getSortedTimers(loc)) {
                 maxValue = Math.max(maxValue, t.initial());
             }
         }
@@ -152,7 +152,7 @@ public final class MMLTs {
         long maxValue = 1;
 
         for (S loc : mmlt) {
-            List<? extends MealyTimerInfo<S, ?>> timers = mmlt.getSortedTimers(loc);
+            List<? extends TimerInfo<S, ?>> timers = mmlt.getSortedTimers(loc);
             if (timers.isEmpty()) {
                 continue;
             }
@@ -167,7 +167,7 @@ public final class MMLTs {
 
             // Calculate expiration times of all timers:
             List<Long> timeouts = new ArrayList<>();
-            for (MealyTimerInfo<S, ?> timer : mmlt.getSortedTimers(loc)) {
+            for (TimerInfo<S, ?> timer : mmlt.getSortedTimers(loc)) {
                 long currentValue = timer.initial();
                 while (currentValue < lcm) {
                     timeouts.add(currentValue);

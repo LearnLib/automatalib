@@ -24,9 +24,9 @@ import net.automatalib.alphabet.impl.MapAlphabet;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.automaton.mmlt.TimeoutPair;
+import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.automaton.transducer.impl.MealyTransition;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
@@ -230,7 +230,7 @@ public class DefaultMMLTSemantics<S, I, T, O>
             } else {
                 // query target + update configuration:
                 assert nextTimeouts.timers().size() == 1;
-                MealyTimerInfo<S, O> timer = nextTimeouts.timers().get(0);
+                TimerInfo<S, O> timer = nextTimeouts.timers().get(0);
                 S successor = timer.target();
 
                 target = new State<>(successor, model.getSortedTimers(successor));
@@ -240,7 +240,7 @@ public class DefaultMMLTSemantics<S, I, T, O>
             if (nextTimeouts.timers().size() == 1) {
                 output = new TimedOutput<>(nextTimeouts.timers().get(0).output(), nextTimeouts.delay());
             } else {
-                List<O> outputs = nextTimeouts.timers().stream().map(MealyTimerInfo::output).toList();
+                List<O> outputs = nextTimeouts.timers().stream().map(TimerInfo::output).toList();
                 O combinedOutput = model.getOutputCombiner().combineSymbols(outputs);
                 output = new TimedOutput<>(combinedOutput, nextTimeouts.delay());
             }
