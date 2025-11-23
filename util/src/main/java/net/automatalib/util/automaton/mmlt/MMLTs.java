@@ -38,12 +38,48 @@ public final class MMLTs {
         // prevent instantiation
     }
 
+    /**
+     * Tests whether two MMLTs are equivalent, i.e. whether there exists a
+     * {@link #findSeparatingWord(MMLT, MMLT, Collection)} separating word} for the two given automata.
+     *
+     * @param modelA
+     *         the one automaton to consider
+     * @param modelB
+     *         the other automaton to consider
+     * @param inputs
+     *         the input symbols to consider
+     * @param <I>
+     *         input symbol type (of non-delaying inputs)
+     * @param <O>
+     *         output symbol type
+     *
+     * @return {@code true} if the automata are equivalent, {@code false} otherwise.
+     *
+     * @see #findSeparatingWord(MMLT, MMLT, Collection)
+     */
     public static <I, O> boolean testEquivalence(MMLT<?, I, ?, O> modelA,
                                                  MMLT<?, I, ?, O> modelB,
                                                  Collection<? extends TimedInput<I>> inputs) {
         return findSeparatingWord(modelA, modelB, inputs) == null;
     }
 
+    /**
+     * Finds a separating word for two MMLTs. A separating word is a word that exposes a different output behavior in
+     * the respective {@link MMLT#getSemantics() semantic automata} of the two MMLTs.
+     *
+     * @param modelA
+     *         the one automaton to consider
+     * @param modelB
+     *         the other automaton to consider
+     * @param inputs
+     *         the input symbols to consider
+     * @param <I>
+     *         input symbol type (of non-delaying inputs)
+     * @param <O>
+     *         output symbol type
+     *
+     * @return a separating word, or {@code null} if no such word could be found.
+     */
     public static <I, O> @Nullable Word<TimedInput<I>> findSeparatingWord(MMLT<?, I, ?, O> modelA,
                                                                           MMLT<?, I, ?, O> modelB,
                                                                           Collection<? extends TimedInput<I>> inputs) {
