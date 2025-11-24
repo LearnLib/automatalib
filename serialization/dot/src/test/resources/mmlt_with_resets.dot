@@ -6,7 +6,7 @@ digraph g {
 	s0 -> s1 [color="green" fontcolor="green" label="to[a] / A {b↦4,c↦6}"];
 	s1 -> s2 [label="x / void"];
 	s1 -> s1 [color="orange" resets="b,c" fontcolor="orange" label="y / Y {b↦4,c↦6}"];
-	s1 -> s1 [color="blue" fontcolor="blue" label="to[b] / B {b↦4}"];
+	s1 -> s1 [color="blue" fontcolor="blue" label="to[b] / B|Z {b↦4}"];
 	s1 -> s1 [color="green" resets="b,c" fontcolor="green" label="to[c] / C {b↦4,c↦6}"];
 	s2 -> s2 [label="y / D"];
 	s2 -> s2 [color="blue" fontcolor="blue" label="to[d] / D {d↦2}"];

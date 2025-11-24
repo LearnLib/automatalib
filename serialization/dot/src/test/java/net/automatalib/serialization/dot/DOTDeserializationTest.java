@@ -160,6 +160,16 @@ public class DOTDeserializationTest {
     }
 
     @Test
+    public void testMMLTCombinedOutputs() throws IOException, FormatException {
+        var mmlt = DOTParsers.mmlt("void", StringSymbolCombiner.getInstance())
+                             .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MMLT_MULTI_OUTPUTS)).model;
+
+        var timers = mmlt.getSortedTimers(0);
+        Assert.assertEquals(timers.size(), 1);
+        Assert.assertEquals(timers.get(0).outputs(), List.of("X", "Y", "Z"));
+    }
+
+    @Test
     public void testMMLTSensorModel() throws IOException, FormatException {
         var mmlt = DOTParsers.mmlt("void", StringSymbolCombiner.getInstance())
                              .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MMLT_SENSOR)).model;
@@ -228,7 +238,7 @@ public class DOTDeserializationTest {
     public void testMMLTValidation() {
         var parser = DOTParsers.mmlt(alph -> new CompactMMLT<>(alph, "void", StringSymbolCombiner.getInstance()),
                                      Function.identity(),
-                                     Function.identity(),
+                                     s -> StringSymbolCombiner.getInstance().separateSymbols(s),
                                      Collections.singleton("s0"),
                                      false);
 

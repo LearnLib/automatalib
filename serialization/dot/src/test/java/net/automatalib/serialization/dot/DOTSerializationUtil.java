@@ -16,11 +16,7 @@
 package net.automatalib.serialization.dot;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
@@ -58,6 +54,7 @@ import net.automatalib.word.Word;
 
 final class DOTSerializationUtil {
 
+    public static final String MMLT_MULTI_OUTPUTS = "/mmlt_multi_output.dot";
     static final String ID_RESOURCE = "/id.dot";
     static final String EMPTY_RESOURCE = "/empty.dot";
     static final String DFA_RESOURCE = "/dfa.dot";
@@ -458,7 +455,7 @@ final class DOTSerializationUtil {
         mmlt.addLocalReset(s1, "y");
 
         mmlt.addOneShotTimer(s0, "a", 2, "A", s1);
-        mmlt.addPeriodicTimer(s1, "b", 4, "B");
+        mmlt.addPeriodicTimer(s1, "b", 4, List.of("B", "Z"));
         mmlt.addOneShotTimer(s1, "c", 6, "C", s1);
 
         mmlt.addPeriodicTimer(s2, "d", 2, "D");

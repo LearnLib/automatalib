@@ -15,10 +15,7 @@
  */
 package net.automatalib.serialization.dot;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -717,7 +714,7 @@ public final class DOTParsers {
      */
     public static DOTInputModelDeserializer<Integer, String, CompactMMLT<String, String>> mmlt(String silentOutput,
                                                                                                SymbolCombiner<String> outputCombiner) {
-        return mmlt(Function.identity(), Function.identity(), silentOutput, outputCombiner);
+        return mmlt(Function.identity(), outputCombiner::separateSymbols, silentOutput, outputCombiner);
     }
 
     /**
@@ -744,7 +741,7 @@ public final class DOTParsers {
      * @see DOTMMLTParser
      */
     public static <I, O> DOTInputModelDeserializer<Integer, I, CompactMMLT<I, O>> mmlt(Function<String, I> inputParser,
-                                                                                       Function<String, O> outputParser,
+                                                                                       Function<String, List<O>> outputParser,
                                                                                        O silentOutput,
                                                                                        SymbolCombiner<O> outputCombiner) {
         final AutomatonCreator<CompactMMLT<I, O>, I> creator =
@@ -781,7 +778,7 @@ public final class DOTParsers {
      */
     public static <S, I, O, A extends MutableMMLT<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> mmlt(AutomatonCreator<A, I> creator,
                                                                                                        Function<String, I> inputParser,
-                                                                                                       Function<String, O> outputParser) {
+                                                                                                       Function<String, List<O>> outputParser) {
         return mmlt(creator, inputParser, outputParser, Collections.singletonList(GraphDOT.initialLabel(0)), true);
     }
 
@@ -818,7 +815,7 @@ public final class DOTParsers {
      */
     public static <S, I, O, A extends MutableMMLT<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> mmlt(AutomatonCreator<A, I> creator,
                                                                                                        Function<String, I> inputParser,
-                                                                                                       Function<String, O> outputParser,
+                                                                                                       Function<String, List<O>> outputParser,
                                                                                                        Collection<String> initialNodeIds,
                                                                                                        boolean fakeInitialNodeIds) {
         return new DOTMMLTParser<>(creator, inputParser, outputParser, initialNodeIds, fakeInitialNodeIds);

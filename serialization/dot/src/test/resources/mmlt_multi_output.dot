@@ -1,0 +1,7 @@
+// Timers in an MMLT can have multiple outputs. These are combined to a single output
+// with a symbol combiner. This examples uses a periodic timer with multiple outputs.
+digraph g {
+
+	s0 [timers="a=2"]
+	s0 -> s0 [label="to[a] / X|Y|Z" ];
+}

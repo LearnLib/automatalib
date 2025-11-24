@@ -18,12 +18,7 @@ package net.automatalib.serialization.dot;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +28,7 @@ import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.MutableMMLT;
+import net.automatalib.automaton.mmlt.SymbolCombiner;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
@@ -52,6 +48,9 @@ import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
  *       Timer names must be unique per location. For one-shot timers choose values such that they never expire at the
  *       same time as another local timer.</li>
  *   <li>Reset behavior: edge attribute <code>resets</code> as specified below.</li>
+ *   <li>Timer outputs: a timer can produce multiple outputs at timeout. The output must be formatted according
+ *   to the {@link SymbolCombiner} used for parsing. These outputs must not be empty and must not contain
+ *   a silent output.</li>
  * </ul>
  * <p>Resets:</p>
  * <ul>
@@ -76,7 +75,7 @@ import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
  * <ul>
  *   <li>It is currently not possible to define a location with a single timer that is one-shot and whose timeout
  *       causes a self-loop. Such a timer is always considered periodic. This is semantically equivalent for learning,
- *       but hypotheses may still use the former variant; those timers may be highlighted specially for debugging.</li>
+ *       but hypotheses may still use the former variant; those timers may be highlighted for debugging.</li>
  *   <li>Edges with a timeout input must not be silent.</li>
  * </ul>
  * <p>Example DOT:</p>
@@ -87,7 +86,8 @@ import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
  *    s2 [label="L2" timers="d=2,e=3"]
  *
  *    s0 -> s1 [label="to[a] / A"] // one-shot with location change
- *    s1 -> s1 [label="to[b] / B"] // periodic
+ *    s1 -> s1 [label="to[b] / B|Z"] // periodic with multiple outputs, assuming a
+ *    {net.automatalib.automaton.mmlt.impl.StringSymbolCombiner} to separate outputs.
  *    s1 -> s1 [label="to[c] / C" resets="b,c"] // one-shot with loop
  *
  *    s2 -> s2 [label="to[d] / D" resets="d"] // periodic with explicit resets
@@ -108,13 +108,13 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
 
     private final AutomatonCreator<A, I> creator;
     private final Function<String, I> inputParser;
-    private final Function<String, O> outputParser;
+    private final Function<String, List<O>> outputParser;
     private final Collection<String> initialNodeIds;
     private final boolean fakeInitialNodeIds;
 
     public DOTMMLTParser(AutomatonCreator<A, I> creator,
                          Function<String, I> inputParser,
-                         Function<String, O> outputParser,
+                         Function<String, List<O>> outputParser,
                          Collection<String> initialNodeIds,
                          boolean fakeInitialNodeIds) {
         this.creator = creator;
@@ -274,20 +274,21 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
                     periodic = false;
                 }
 
-                final O o = outputParser.apply(output);
+                final List<O> outputs = outputParser.apply(output);
 
                 // Add timer to location:
                 if (periodic) {
-                    result.addPeriodicTimer(stateMap.get(edge.src), timerName, initial, o);
+                    result.addPeriodicTimer(stateMap.get(edge.src), timerName, initial, outputs);
                 } else {
-                    result.addOneShotTimer(stateMap.get(edge.src), timerName, initial, o, stateMap.get(edge.tgt));
+                    result.addOneShotTimer(stateMap.get(edge.src), timerName, initial, outputs, stateMap.get(edge.tgt));
                 }
             } else {
                 // Non-delaying input:
                 final I i = inputParser.apply(input);
-                final O o = outputParser.apply(output);
+                final List<O> outputs = outputParser.apply(output);
+                assert outputs.size() == 1;
 
-                result.addTransition(stateMap.get(edge.src), i, stateMap.get(edge.tgt), o);
+                result.addTransition(stateMap.get(edge.src), i, stateMap.get(edge.tgt), outputs.get(0));
 
                 // Parse resets of self-loops with untimed input:
                 if (edge.src.equals(edge.tgt) && !edgeResets.isEmpty()) {
