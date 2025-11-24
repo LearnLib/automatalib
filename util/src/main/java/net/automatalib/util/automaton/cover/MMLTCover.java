@@ -15,11 +15,7 @@
  */
 package net.automatalib.util.automaton.cover;
 
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
@@ -93,8 +89,8 @@ public final class MMLTCover {
                                                                                  Collection<TimedInput<I>> inputs,
                                                                                  boolean allowIncomplete) {
 
-        Map<S, Word<TimedInput<I>>> locPrefixes = new HashMap<>();
-        Map<State<S, O>, Word<TimedInput<I>>> cfgPrefixes = new HashMap<>();
+        Map<S, Word<TimedInput<I>>> locPrefixes = new LinkedHashMap<>();
+        Map<State<S, O>, Word<TimedInput<I>>> cfgPrefixes = new LinkedHashMap<>();
         Queue<State<S, O>> queue = new ArrayDeque<>();
 
         State<S, O> init = semantics.getInitialState();
