@@ -33,7 +33,7 @@ public class TimerInfoTest {
 
         Assert.assertEquals(oneShot.name(), timer.name());
         Assert.assertEquals(oneShot.initial(), timer.initial());
-        Assert.assertEquals(oneShot.output(), timer.output());
+        Assert.assertEquals(oneShot.outputs(), timer.outputs());
         Assert.assertEquals(oneShot.target(), timer.target());
         Assert.assertFalse(oneShot.periodic());
     }

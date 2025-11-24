@@ -15,6 +15,8 @@
  */
 package net.automatalib.automaton.mmlt;
 
+import java.util.List;
+
 /**
  * Provides information about a timer that is stored in an MMLT.
  *
@@ -22,8 +24,9 @@ package net.automatalib.automaton.mmlt;
  *         name of the timer
  * @param initial
  *         initial value of the timer
- * @param output
- *         symbol that the timer produces at timeout (must not be silent)
+ * @param outputs
+ *         symbols that the timer produces at timeout (must not be empty, must not include silence)
+ *         in the MMLT semantics, these are combined deterministically to a single output using a {@link SymbolCombiner}
  * @param target
  *         the target state of this timer
  * @param periodic
@@ -33,7 +36,7 @@ package net.automatalib.automaton.mmlt;
  * @param <O>
  *         output symbol type
  */
-public record TimerInfo<S, O>(String name, long initial, O output, S target, boolean periodic) {
+public record TimerInfo<S, O>(String name, long initial, List<O> outputs, S target, boolean periodic) {
 
     public TimerInfo {
         if (initial <= 0) {
@@ -55,7 +58,7 @@ public record TimerInfo<S, O>(String name, long initial, O output, S target, boo
      *         the target state of this timer
      */
     public TimerInfo(String name, long initial, O output, S target) {
-        this(name, initial, output, target, true);
+        this(name, initial, List.of(output), target, true);
     }
 
     /**
@@ -64,6 +67,6 @@ public record TimerInfo<S, O>(String name, long initial, O output, S target, boo
      * @return this timer as a one-shot timer
      */
     public TimerInfo<S, O> asOneShot() {
-        return new TimerInfo<>(name, initial, output, target, false);
+        return new TimerInfo<>(name, initial, outputs, target, false);
     }
 }

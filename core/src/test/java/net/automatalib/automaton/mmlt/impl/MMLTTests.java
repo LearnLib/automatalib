@@ -66,34 +66,7 @@ public class MMLTTests {
         }
         return words;
     }
-
-    @Test
-    public void testStringCombiner() {
-        var combiner = StringSymbolCombiner.getInstance();
-        var words = generateRandomWords(100, 10);
-
-        var combined = combiner.combineSymbols(words);
-        Assert.assertTrue(combiner.isCombinedSymbol(combined));
-        var separated = combiner.separateSymbols(combined);
-
-        Assert.assertEquals(words, separated);
-
-        // Tests words with an absent output:
-        Assert.assertThrows(IllegalArgumentException.class, () -> combiner.combineSymbols(List.of("|", "d|c")));
-
-        var combinedAbsent = combiner.combineSymbols(List.of("a|", "d|c"));
-        Assert.assertEquals(combinedAbsent, "a|d|c");
-
-        // Now test words that contain a pipe:
-        var combinedPipe = combiner.combineSymbols(List.of("b|a", "d|c"));
-        Assert.assertEquals(combinedPipe, "b|a|d|c");
-
-        // Test words with duplicate characters:
-        var combinedDupes = combiner.combineSymbols(List.of("b|a", "c|a"));
-        var separateDupes = combiner.separateSymbols(combinedDupes);
-        Assert.assertEquals(combinedDupes, "b|a|c");
-        Assert.assertEquals(List.of("b", "a", "c"), separateDupes);
-    }
+    
 
     @Test
     public void testConfigurationProperties() {
@@ -179,6 +152,13 @@ public class MMLTTests {
 
         // Timer with silent output:
         Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addPeriodicTimer(s1, "e", 3, "void"));
+
+        // Timer with combined output:
+        Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addPeriodicTimer(s1, "e", 3, "x|y"));
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addPeriodicTimer(s1, "e", 3, "|"));
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addPeriodicTimer(s1, "e", 3, "x|"));
 
         // Timer never expires:
         Assert.assertThrows(IllegalArgumentException.class, () -> automaton.addPeriodicTimer(s1, "e", 41, "test"));

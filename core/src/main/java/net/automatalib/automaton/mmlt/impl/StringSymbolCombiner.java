@@ -15,11 +15,8 @@
  */
 package net.automatalib.automaton.mmlt.impl;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import net.automatalib.automaton.mmlt.SymbolCombiner;
 
@@ -40,31 +37,12 @@ public final class StringSymbolCombiner implements SymbolCombiner<String> {
 
     @Override
     public boolean isCombinedSymbol(String symbol) {
-        return symbol.contains("|") && symbol.length() > 1;
+        return symbol.contains("|");
     }
 
     @Override
     public String combineSymbols(List<String> symbols) {
-
-        // Break all inputs (if needed) + put the results in a set:
-        Set<String> expandedSymbols = new LinkedHashSet<>();
-        for (String sym : symbols) {
-            if ("|".equals(sym)) {
-                throw new IllegalArgumentException("The symbol | is reserved as delimiter");
-            }
-
-            if (this.isCombinedSymbol(sym)) {
-                expandedSymbols.addAll(this.separateSymbols(sym));
-            } else {
-                expandedSymbols.add(sym);
-            }
-        }
-
-        final StringJoiner sj = new StringJoiner("|");
-        for (String expandedSymbol : expandedSymbols) {
-            sj.add(expandedSymbol);
-        }
-        return sj.toString();
+        return symbols.stream().sorted().collect(Collectors.joining("|"));
     }
 
     @Override

@@ -205,22 +205,22 @@ public class DOTDeserializationTest {
 
         var firstTimerS1 = mmlt.getSortedTimers(s1).get(0);
         Assert.assertEquals(firstTimerS1.initial(), 3);
-        Assert.assertEquals(firstTimerS1.output(), "part");
+        Assert.assertEquals(firstTimerS1.outputs(), List.of("part"));
         Assert.assertTrue(firstTimerS1.periodic());
 
         var secondTimerS1 = mmlt.getSortedTimers(s1).get(1);
         Assert.assertEquals(secondTimerS1.initial(), 6);
-        Assert.assertEquals(secondTimerS1.output(), "noise");
+        Assert.assertEquals(secondTimerS1.outputs(), List.of("noise"));
         Assert.assertTrue(secondTimerS1.periodic());
 
         var thirdTimerS1 = mmlt.getSortedTimers(s1).get(2);
         Assert.assertEquals(thirdTimerS1.initial(), 40);
-        Assert.assertEquals(thirdTimerS1.output(), "done");
+        Assert.assertEquals(thirdTimerS1.outputs(), List.of("done"));
         Assert.assertFalse(thirdTimerS1.periodic());
 
         var firstTimerS2 = mmlt.getSortedTimers(s2).get(0);
         Assert.assertEquals(firstTimerS2.initial(), 4);
-        Assert.assertEquals(firstTimerS2.output(), "done");
+        Assert.assertEquals(firstTimerS2.outputs(), List.of("done"));
         Assert.assertFalse(firstTimerS2.periodic());
     }
 

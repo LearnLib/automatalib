@@ -45,9 +45,11 @@ import net.automatalib.visualization.VisualizationHelper;
 public class MMLTGraphView<S, I, T, O> implements Graph<S, Triple<SymbolicInput<I>, O, S>> {
 
     private final MMLT<S, I, T, O> mmlt;
+    private final SymbolCombiner<O> outputCombiner;
 
-    public MMLTGraphView(MMLT<S, I, T, O> mmlt) {
+    public MMLTGraphView(MMLT<S, I, T, O> mmlt, SymbolCombiner<O> outputCombiner) {
         this.mmlt = mmlt;
+        this.outputCombiner = outputCombiner;
     }
 
     @Override
@@ -66,8 +68,8 @@ public class MMLTGraphView<S, I, T, O> implements Graph<S, Triple<SymbolicInput<
         }
 
         for (TimerInfo<S, O> t : timers) {
-            result.add(Triple.of(new TimerTimeoutSymbol<>(t.name()), t.output(), t.target()));
-
+            result.add(Triple.of(new TimerTimeoutSymbol<>(t.name()),
+                    outputCombiner.combineSymbols(t.outputs()), t.target()));
         }
 
         return result;

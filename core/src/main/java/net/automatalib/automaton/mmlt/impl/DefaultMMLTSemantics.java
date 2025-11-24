@@ -18,6 +18,7 @@ package net.automatalib.automaton.mmlt.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.MapAlphabet;
@@ -228,14 +229,15 @@ public class DefaultMMLTSemantics<S, I, T, O>
                 target = new State<>(successor, model.getSortedTimers(successor));
             }
 
-            // Create combined output:
+            // Combine all outputs at the next timeout:
+            List<O> outputs;
             if (nextTimeouts.timers().size() == 1) {
-                output = new TimedOutput<>(nextTimeouts.timers().get(0).output(), nextTimeouts.delay());
+                outputs = nextTimeouts.timers().get(0).outputs();
             } else {
-                List<O> outputs = nextTimeouts.timers().stream().map(TimerInfo::output).toList();
-                O combinedOutput = model.getOutputCombiner().combineSymbols(outputs);
-                output = new TimedOutput<>(combinedOutput, nextTimeouts.delay());
+                outputs = nextTimeouts.timers().stream().flatMap(t -> t.outputs().stream()).toList();
             }
+            O combinedOutput = model.getOutputCombiner().combineSymbols(outputs);
+            output = new TimedOutput<>(combinedOutput, nextTimeouts.delay());
         }
 
         return new MealyTransition<>(target, output);

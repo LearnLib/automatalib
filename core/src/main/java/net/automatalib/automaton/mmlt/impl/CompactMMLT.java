@@ -116,10 +116,17 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
     private void ensureThatCanAddTimer(List<TimerInfo<Integer, O>> timers,
                                        String name,
                                        long initial,
-                                       O output,
+                                       List<O> outputs,
                                        boolean periodic) {
-        if (Objects.equals(output, this.silentOutput)) {
-            throw new IllegalArgumentException(String.format("Provided silent output for timer '%s'.", name));
+        if(outputs.isEmpty() || outputs.contains(silentOutput)) {
+            throw new IllegalArgumentException(String.format("Timer '%s': outputs are empty or contain silent output.", name));
+        }
+
+        for(O output : outputs) {
+            if (getOutputCombiner().isCombinedSymbol(output)) {
+                throw new IllegalArgumentException(String.format("Timer '%s': output '%s' is a combined symbol. " +
+                        "You must only provide atomic outputs.", name, output));
+            }
         }
 
         // Verify that the timer name is unique:
@@ -164,22 +171,22 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
     }
 
     @Override
-    public void addPeriodicTimer(Integer location, String name, long initial, O output) {
+    public void addPeriodicTimer(Integer location, String name, long initial, List<O> outputs) {
         final List<TimerInfo<Integer, O>> localTimers =
                 this.sortedTimers.computeIfAbsent(location, k -> new ArrayList<>());
 
-        ensureThatCanAddTimer(localTimers, name, initial, output, true);
-        localTimers.add(new TimerInfo<>(name, initial, output, location, true));
+        ensureThatCanAddTimer(localTimers, name, initial, outputs, true);
+        localTimers.add(new TimerInfo<>(name, initial, outputs, location, true));
         localTimers.sort(Comparator.comparingLong(TimerInfo::initial));
     }
 
     @Override
-    public void addOneShotTimer(Integer location, String name, long initial, O output, Integer target) {
+    public void addOneShotTimer(Integer location, String name, long initial, List<O> outputs, Integer target) {
         final List<TimerInfo<Integer, O>> localTimers =
                 this.sortedTimers.computeIfAbsent(location, k -> new ArrayList<>());
 
-        ensureThatCanAddTimer(localTimers, name, initial, output, false);
-        localTimers.add(new TimerInfo<>(name, initial, output, target, false));
+        ensureThatCanAddTimer(localTimers, name, initial, outputs, false);
+        localTimers.add(new TimerInfo<>(name, initial, outputs, target, false));
         localTimers.sort(Comparator.comparingLong(TimerInfo::initial));
 
         // Remove all timers with higher initial value, as these can no longer time out:

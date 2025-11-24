@@ -17,6 +17,8 @@ package net.automatalib.automaton.mmlt;
 
 import net.automatalib.automaton.MutableDeterministic;
 
+import java.util.List;
+
 /**
  * A mutable extension of {@link MMLT} that allows for modifying transition structure and timers.
  *
@@ -34,7 +36,7 @@ public interface MutableMMLT<S, I, T, O> extends MMLT<S, I, T, O>, MutableDeterm
     /**
      * Adds a new periodic timer to the provided location. Throws an error if
      * <ul>
-     *     <li>the output is silent</li>
+     *     <li>the outputs are empty, contain silence, or combined output symbols</li>
      *     <li>the initial value is less zero or less</li>
      *     <li>the initial value exceeds that of a one-shot timer (-> timer never expires)</li>
      *     <li>the timer will time out at the same time as a one-shot timer</li>
@@ -46,16 +48,20 @@ public interface MutableMMLT<S, I, T, O> extends MMLT<S, I, T, O>, MutableDeterm
      *         timer name
      * @param initial
      *         initial value
-     * @param output
-     *         output at timeout
+     * @param outputs
+     *         outputs at timeout
      */
-    void addPeriodicTimer(S location, String name, long initial, O output);
+    void addPeriodicTimer(S location, String name, long initial, List<O> outputs);
+
+    default void addPeriodicTimer(S location, String name, long initial, O output){
+        addPeriodicTimer(location, name, initial, List.of(output));
+    }
 
     /**
      * Adds a new one-shot timer to the provided location. Removes all timers of that location with higher initial
      * value, as these can no longer time out. Throws an error if
      * <ul>
-     *     <li>the output is silent</li>
+     *     <li>the outputs are empty or contain silence, or combined output symbols</li>
      *     <li>the initial value is less zero or less</li>
      *     <li>the initial value exceeds that of a one-shot timer (-> timer never expires)</li>
      *     <li>the timer will time out at the same time as a periodic timer</li>
@@ -67,12 +73,16 @@ public interface MutableMMLT<S, I, T, O> extends MMLT<S, I, T, O>, MutableDeterm
      *         timer name
      * @param initial
      *         initial value
-     * @param output
-     *         output at timeout
+     * @param outputs
+     *         outputs at timeout
      * @param target
      *         target location when timing out
      */
-    void addOneShotTimer(S location, String name, long initial, O output, S target);
+    void addOneShotTimer(S location, String name, long initial, List<O> outputs, S target);
+
+    default void addOneShotTimer(S location, String name, long initial, O output, S target){
+        addOneShotTimer(location, name, initial, List.of(output), target);
+    }
 
     /**
      * Removes the timer with the provided name. No effect if the location has no such timer.

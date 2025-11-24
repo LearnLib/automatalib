@@ -98,6 +98,6 @@ public interface MMLT<S, I, T, O>
 
     @Override
     default Graph<S, Triple<SymbolicInput<I>, O, S>> graphView() {
-        return new MMLTGraphView<>(this);
+        return new MMLTGraphView<>(this, getOutputCombiner());
     }
 }
