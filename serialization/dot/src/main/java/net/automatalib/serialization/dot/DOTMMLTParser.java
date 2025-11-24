@@ -205,8 +205,8 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
                     Map<String, TimerSpec> timeInfo = timers.computeIfAbsent(node.id, k -> new HashMap<>());
                     if (timeInfo.containsKey(timerName)) {
                         throw new FormatException(String.format("Timer %s in location %s must only be set once.",
-                                                                timerName,
-                                                                node.id));
+                                timerName,
+                                node.id));
                     }
 
                     // Add timer:
@@ -244,8 +244,8 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
                 String timerName = input.substring(3, input.length() - 1);
                 if (!timers.getOrDefault(edge.src, Collections.emptyMap()).containsKey(timerName)) {
                     throw new FormatException(String.format("Defined %s in state %s, but timer value is not set.",
-                                                            input,
-                                                            edge.src));
+                            input,
+                            edge.src));
                 }
 
                 // Add output to timer info:
@@ -263,10 +263,9 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
                         }
                     } else if (edgeResets.size() > 1) {
                         // Need to contain all local timers to be one-shot with loop:
-                        for (String locTimer : timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet()) {
-                            if (!edgeResets.contains(locTimer)) {
-                                throw new FormatException(String.format("Invalid reset at to[%s]", timerName));
-                            }
+                        var targetTimers = timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet();
+                        if (!edgeResets.equals(targetTimers)) {
+                            throw new FormatException(String.format("Invalid reset at to[%s]", timerName));
                         }
                         periodic = false;
                     }
@@ -293,10 +292,9 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
                 // Parse resets of self-loops with untimed input:
                 if (edge.src.equals(edge.tgt) && !edgeResets.isEmpty()) {
                     // Reset list needs to contain all local timers:
-                    for (String locTimer : timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet()) {
-                        if (!edgeResets.contains(locTimer)) {
-                            throw new FormatException(String.format("Invalid local reset at %s", i));
-                        }
+                    var targetTimers = timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet();
+                    if (!edgeResets.equals(targetTimers)) {
+                        throw new FormatException(String.format("Invalid local reset at %s", i));
                     }
                     result.addLocalReset(stateMap.get(edge.src), i);
                 }
@@ -322,6 +320,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
         return tokens;
     }
 
-    private record TimerSpec(String name, long initial) {}
+    private record TimerSpec(String name, long initial) {
+    }
 
 }

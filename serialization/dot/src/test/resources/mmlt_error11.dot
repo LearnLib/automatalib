@@ -1,0 +1,10 @@
+// An MMLT with a local reset with explicitly-defined resets that miss a local timer.
+digraph g {
+
+	s0 [timers="a=2,b=2,c=3"]
+
+	s0 -> s0 [label="to[a] / X" resets="a"];
+	s0 -> s0 [label="to[b] / Y" resets="b"];
+	s0 -> s0 [label="to[c] / Z" resets="c"];
+	s0 -> s0 [label="reset / W" resets="a,b"];
+}

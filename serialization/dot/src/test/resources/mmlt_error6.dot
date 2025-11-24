@@ -1,0 +1,10 @@
+// An MMLT with a timeout transition of a timer that belongs to a different state.
+digraph g {
+
+	s0 [timers="a=2"]
+	s1 [timers="b=2"]
+
+	s0 -> s1 [label="to[b] / X"];
+	s1 -> s0 [label="to[a] / Y"];
+
+}

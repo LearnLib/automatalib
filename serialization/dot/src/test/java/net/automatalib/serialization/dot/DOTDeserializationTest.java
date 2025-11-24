@@ -232,7 +232,7 @@ public class DOTDeserializationTest {
                                      Collections.singleton("s0"),
                                      false);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 11; i++) {
             final int id = i + 1;
             Assert.assertThrows(Integer.toString(id),
                                 FormatException.class,
