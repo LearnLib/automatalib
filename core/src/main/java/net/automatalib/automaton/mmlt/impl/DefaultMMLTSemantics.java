@@ -36,21 +36,21 @@ import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation for a {@link MMLTSemantics} that wraps arbitrary {@link MMLT}s.
  *
- * @param <S>
- *         location type of the original MMLT
- * @param <I>
- *         input symbol of the original MMLT
- * @param <T>
- *         transition type of the original MMLT
- * @param <O>
- *         output symbol type of the original MMLT
+ * @param <S> location type of the original MMLT
+ * @param <I> input symbol of the original MMLT
+ * @param <T> transition type of the original MMLT
+ * @param <O> output symbol type of the original MMLT
  */
 public class DefaultMMLTSemantics<S, I, T, O>
         implements MMLTSemantics<S, I, MealyTransition<State<S, O>, @Nullable TimedOutput<O>>, O> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMMLTSemantics.class);
 
     private final MMLT<S, I, T, O> model;
     private final @Nullable State<S, O> initialConfiguration;
@@ -112,9 +112,9 @@ public class DefaultMMLTSemantics<S, I, T, O>
             }
 
             final TimedOutput<O> output = trans.getOutput();
-            if (output == null) {
-                throw new IllegalArgumentException(
-                        "Cannot use time step sequences in suffix that have more than one symbol.");
+            if (sym instanceof TimeStepSequence<?> ts && ts.timeSteps() > 1) {
+                LOGGER.warn("Computing output of time step sequence with more than one symbol." +
+                        "The computed output only contains the output for the sequence.");
             }
 
             wb.append(output);
@@ -132,8 +132,8 @@ public class DefaultMMLTSemantics<S, I, T, O>
     @Override
     @SuppressWarnings("PMD.UnnecessaryCast") // casts currently necessary for checkerframework
     public MealyTransition<State<S, O>, @Nullable TimedOutput<O>> getTransition(State<S, O> source,
-                                                                      TimedInput<I> input,
-                                                                      long maxWaitingTime) {
+                                                                                TimedInput<I> input,
+                                                                                long maxWaitingTime) {
         if (input instanceof InputSymbol<I> ndi) {
             return (MealyTransition<State<S, O>, @Nullable TimedOutput<O>>) getTransition(source, ndi);
         } else if (input instanceof TimeoutSymbol<I>) {
@@ -141,14 +141,14 @@ public class DefaultMMLTSemantics<S, I, T, O>
         } else if (input instanceof TimeStepSequence<I> ts) {
             // Per step, we can advance at most by the time to the next timeout:
             State<S, O> currentConfig = source;
-            TimedOutput<O> lastOutput = null;
+            O lastOutput = null;
             long remainingTime = ts.timeSteps();
             while (remainingTime > 0) {
                 MealyTransition<State<S, O>, TimedOutput<O>> nextTimeoutTrans =
                         getTimeoutTransition(currentConfig, remainingTime);
                 currentConfig = nextTimeoutTrans.getSuccessor();
-                lastOutput = nextTimeoutTrans.getOutput();
-                if (Objects.equals(lastOutput, this.getSilentOutput())) {
+                lastOutput = nextTimeoutTrans.getOutput().symbol();
+                if (Objects.equals(lastOutput, this.getSilentOutput().symbol())) {
                     // No timer will expire during remaining waiting time:
                     break;
                 } else {
@@ -156,16 +156,8 @@ public class DefaultMMLTSemantics<S, I, T, O>
                 }
             }
 
-            if (ts.timeSteps() > 1) {
-                lastOutput = null; // ignore multiple outputs
-            } else {
-                // Output for single time step includes no delay by definition:
-                assert lastOutput != null;
-                lastOutput = new TimedOutput<>(lastOutput.symbol());
-            }
-
-            // Return final target + output:
-            return new MealyTransition<>(currentConfig, lastOutput);
+            assert lastOutput != null;
+            return new MealyTransition<>(currentConfig, new TimedOutput<>(lastOutput));
         } else {
             throw new IllegalArgumentException("Unknown input symbol type");
         }
