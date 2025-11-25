@@ -15,9 +15,9 @@
  */
 package net.automatalib.automaton.mmlt;
 
-import net.automatalib.automaton.MutableDeterministic;
-
 import java.util.List;
+
+import net.automatalib.automaton.MutableDeterministic;
 
 /**
  * A mutable extension of {@link MMLT} that allows for modifying transition structure and timers.

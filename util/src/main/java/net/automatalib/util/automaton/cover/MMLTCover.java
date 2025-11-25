@@ -15,7 +15,11 @@
  */
 package net.automatalib.util.automaton.cover;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Queue;
 
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.MMLTSemantics;

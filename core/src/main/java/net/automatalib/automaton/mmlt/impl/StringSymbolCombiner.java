@@ -15,7 +15,9 @@
  */
 package net.automatalib.automaton.mmlt.impl;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import net.automatalib.automaton.mmlt.SymbolCombiner;
@@ -48,7 +50,7 @@ public final class StringSymbolCombiner implements SymbolCombiner<String> {
     @Override
     public List<String> separateSymbols(String symbol) {
         if (!this.isCombinedSymbol(symbol)) {
-            return List.of(symbol);
+            return Collections.singletonList(symbol);
         }
 
         return Arrays.asList(symbol.split("\\|"));

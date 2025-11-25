@@ -18,7 +18,13 @@ package net.automatalib.serialization.dot;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -263,7 +269,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
                         }
                     } else if (edgeResets.size() > 1) {
                         // Need to contain all local timers to be one-shot with loop:
-                        var targetTimers = timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet();
+                        Set<String> targetTimers = timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet();
                         if (!edgeResets.equals(targetTimers)) {
                             throw new FormatException(String.format("Invalid reset at to[%s]", timerName));
                         }
@@ -293,7 +299,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
                 // Parse resets of self-loops with untimed input:
                 if (edge.src.equals(edge.tgt) && !edgeResets.isEmpty()) {
                     // Reset list needs to contain all local timers:
-                    var targetTimers = timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet();
+                    Set<String> targetTimers = timers.getOrDefault(edge.tgt, Collections.emptyMap()).keySet();
                     if (!edgeResets.equals(targetTimers)) {
                         throw new FormatException(String.format("Invalid local reset at %s", i));
                     }

@@ -18,7 +18,6 @@ package net.automatalib.automaton.mmlt.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.MapAlphabet;
@@ -43,13 +42,17 @@ import org.slf4j.LoggerFactory;
 /**
  * Default implementation for a {@link MMLTSemantics} that wraps arbitrary {@link MMLT}s.
  *
- * @param <S> location type of the original MMLT
- * @param <I> input symbol of the original MMLT
- * @param <T> transition type of the original MMLT
- * @param <O> output symbol type of the original MMLT
+ * @param <S>
+ *         location type of the original MMLT
+ * @param <I>
+ *         input symbol of the original MMLT
+ * @param <T>
+ *         transition type of the original MMLT
+ * @param <O>
+ *         output symbol type of the original MMLT
  */
 public class DefaultMMLTSemantics<S, I, T, O>
-        implements MMLTSemantics<S, I, MealyTransition<State<S, O>, @Nullable TimedOutput<O>>, O> {
+        implements MMLTSemantics<S, I, MealyTransition<State<S, O>, TimedOutput<O>>, O> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMMLTSemantics.class);
 
@@ -106,7 +109,7 @@ public class DefaultMMLTSemantics<S, I, T, O>
         }
 
         for (TimedInput<I> sym : suffix) {
-            MealyTransition<State<S, O>, @Nullable TimedOutput<O>> trans = getTransition(currentConfiguration, sym);
+            MealyTransition<State<S, O>, TimedOutput<O>> trans = getTransition(currentConfiguration, sym);
 
             if (trans == null) {
                 break;
@@ -115,7 +118,7 @@ public class DefaultMMLTSemantics<S, I, T, O>
             final TimedOutput<O> output = trans.getOutput();
             if (sym instanceof TimeStepSequence<?> ts && ts.timeSteps() > 1) {
                 LOGGER.warn("Computing output of time step sequence with more than one symbol." +
-                        "The computed output only contains the output for the sequence.");
+                            "The computed output only contains the output for the sequence.");
             }
 
             wb.append(output);
@@ -126,19 +129,18 @@ public class DefaultMMLTSemantics<S, I, T, O>
     }
 
     @Override
-    public MealyTransition<State<S, O>, @Nullable TimedOutput<O>> getTransition(State<S, O> source, TimedInput<I> input) {
+    public MealyTransition<State<S, O>, TimedOutput<O>> getTransition(State<S, O> source, TimedInput<I> input) {
         return getTransition(source, input, Long.MAX_VALUE);
     }
 
     @Override
-    @SuppressWarnings("PMD.UnnecessaryCast") // casts currently necessary for checkerframework
-    public MealyTransition<State<S, O>, @Nullable TimedOutput<O>> getTransition(State<S, O> source,
-                                                                                TimedInput<I> input,
-                                                                                long maxWaitingTime) {
+    public MealyTransition<State<S, O>, TimedOutput<O>> getTransition(State<S, O> source,
+                                                                      TimedInput<I> input,
+                                                                      long maxWaitingTime) {
         if (input instanceof InputSymbol<I> ndi) {
-            return (MealyTransition<State<S, O>, @Nullable TimedOutput<O>>) getTransition(source, ndi);
+            return getTransition(source, ndi);
         } else if (input instanceof TimeoutSymbol<I>) {
-            return (MealyTransition<State<S, O>, @Nullable TimedOutput<O>>) getTimeoutTransition(source, maxWaitingTime);
+            return getTimeoutTransition(source, maxWaitingTime);
         } else if (input instanceof TimeStepSequence<I> ts) {
             // Per step, we can advance at most by the time to the next timeout:
             State<S, O> currentConfig = source;
@@ -191,16 +193,12 @@ public class DefaultMMLTSemantics<S, I, T, O>
     }
 
     @Override
-    public TimedOutput<O> getTransitionOutput(MealyTransition<State<S, O>, @Nullable TimedOutput<O>> transition) {
-        TimedOutput<O> output = transition.getOutput();
-        if (output == null) {
-            throw new IllegalArgumentException("transition has no non-null output");
-        }
-        return output;
+    public TimedOutput<O> getTransitionOutput(MealyTransition<State<S, O>, TimedOutput<O>> transition) {
+        return transition.getOutput();
     }
 
     @Override
-    public State<S, O> getSuccessor(MealyTransition<State<S, O>, @Nullable TimedOutput<O>> transition) {
+    public State<S, O> getSuccessor(MealyTransition<State<S, O>, TimedOutput<O>> transition) {
         return transition.getSuccessor();
     }
 

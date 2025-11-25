@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
@@ -118,14 +117,17 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
                                        long initial,
                                        List<O> outputs,
                                        boolean periodic) {
-        if(outputs.isEmpty() || outputs.contains(silentOutput)) {
-            throw new IllegalArgumentException(String.format("Timer '%s': outputs are empty or contain silent output.", name));
+        if (outputs.isEmpty() || outputs.contains(silentOutput)) {
+            throw new IllegalArgumentException(String.format("Timer '%s': outputs are empty or contain silent output.",
+                                                             name));
         }
 
-        for(O output : outputs) {
+        for (O output : outputs) {
             if (getOutputCombiner().isCombinedSymbol(output)) {
-                throw new IllegalArgumentException(String.format("Timer '%s': output '%s' is a combined symbol. " +
-                        "You must only provide atomic outputs.", name, output));
+                throw new IllegalArgumentException(String.format(
+                        "Timer '%s': output '%s' is a combined symbol. " + "You must only provide atomic outputs.",
+                        name,
+                        output));
             }
         }
 

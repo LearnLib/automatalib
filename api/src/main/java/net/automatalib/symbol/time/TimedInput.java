@@ -111,7 +111,7 @@ public sealed interface TimedInput<I> permits InputSymbol, TimeoutSymbol, TimeSt
      *
      * @return the timestep symbol
      */
-    static <I> TimeStepSequence<I> step(int i) {
+    static <I> TimeStepSequence<I> step(long i) {
         return new TimeStepSequence<>(i);
     }
 
