@@ -34,8 +34,8 @@ import net.automatalib.visualization.DefaultVisualizationHelper;
  * A visualization helper for MMLTs which Allows edge coloring and explicit resets in transition labels for easier
  * inspection.
  * <p>
- * If you want to serialize the resulting file to graphviz, disable explicit resets. The parser does not know how to
- * handle the reset information.
+ * If you want to serialize MMLTs using this visualization helper, you should consider disabling explicit resets as the
+ * additional markup may cause problems during parsing.
  *
  * @param <S>
  *         location type

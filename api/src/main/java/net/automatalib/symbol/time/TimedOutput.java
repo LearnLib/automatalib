@@ -35,10 +35,21 @@ public record TimedOutput<O>(O symbol, long delay) {
         }
     }
 
+    /**
+     * Convenience constructor for creating a timed output with no delay.
+     *
+     * @param symbol
+     *         the output symbol
+     */
     public TimedOutput(O symbol) {
         this(symbol, 0);
     }
 
+    /**
+     * Checks whether this timed output is delayed.
+     *
+     * @return {@code true}, if {@code delay > 0}, {@code false} otherwise
+     */
     public boolean isDelayed() {
         return this.delay > 0;
     }

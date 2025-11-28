@@ -19,10 +19,8 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.mmlt.impl.CompactMMLT;
 import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
-import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -82,8 +80,7 @@ public class MMLTCoverTest {
 
         // Create alphabet where state 3 is unreachable:
         var symbols = List.of("p1", "p2", "collect");
-        GrowingMapAlphabet<TimedInput<String>> partialAlphabet = new GrowingMapAlphabet<>();
-        symbols.forEach(s -> partialAlphabet.add(new InputSymbol<>(s)));
+        var partialAlphabet = symbols.stream().map(TimedInput::input).collect(Alphabets.collector());
 
         // Test if detecting incomplete cover:
         Assert.assertThrows(IllegalStateException.class,

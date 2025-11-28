@@ -35,6 +35,7 @@ import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.MutableMMLT;
 import net.automatalib.automaton.mmlt.SymbolCombiner;
+import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
@@ -47,13 +48,12 @@ import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
  * Parses a DOT file that defines an {@link MMLT}.
  * <p>Expected syntax:</p>
  * <ul>
- *   <li>Mealy labels: <code>input/output</code></li>
- *   <li>Initial node marker: <code>__start0</code></li>
- *   <li>Timeout input: <code>to[x]</code> where <code>x</code> is the name of a local timer</li>
- *   <li>Local timers: node attribute <code>timers</code> with comma-separated assignments <code>x=t</code> with <code>t &gt; 0</code>.
+ *   <li>Mealy labels: {@code input/output}</li>
+ *   <li>Timeout input: {@code to[x]} where {@code x} is the name of a local timer</li>
+ *   <li>Local timers: node attribute {@value MMLTNodeAttrs#TIMERS} with comma-separated assignments {@code x=t} with {@code t > 0}.
  *       Timer names must be unique per location. For one-shot timers choose values such that they never expire at the
  *       same time as another local timer.</li>
- *   <li>Reset behavior: edge attribute <code>resets</code> as specified below.</li>
+ *   <li>Reset behavior: edge attribute {@value MMLTEdgeAttrs#RESETS} as specified below.</li>
  *   <li>Timer outputs: a timer can produce multiple outputs at timeout. The output must be formatted according
  *   to the {@link SymbolCombiner} used for parsing. These outputs must not be empty and must not contain
  *   a silent output.</li>
@@ -85,15 +85,14 @@ import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
  *   <li>Edges with a timeout input must not be silent.</li>
  * </ul>
  * <p>Example DOT:</p>
- * <pre>{@code
+ * <pre><code>
  * digraph g {
  *    s0 [label="L0" timers="a=2"]
  *    s1 [label="L1" timers="b=4,c=6"]
  *    s2 [label="L2" timers="d=2,e=3"]
  *
  *    s0 -> s1 [label="to[a] / A"] // one-shot with location change
- *    s1 -> s1 [label="to[b] / B|Z"] // periodic with multiple outputs, assuming a
- *    {net.automatalib.automaton.mmlt.impl.StringSymbolCombiner} to separate outputs.
+ *    s1 -> s1 [label="to[b] / B|Z"] // periodic with multiple outputs (assuming a {@link StringSymbolCombiner} to separate outputs)
  *    s1 -> s1 [label="to[c] / C" resets="b,c"] // one-shot with loop
  *
  *    s2 -> s2 [label="to[d] / D" resets="d"] // periodic with explicit resets
@@ -106,7 +105,7 @@ import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
  *    __start0 [label="" shape="none" width="0" height="0"];
  *    __start0 -> s0;
  * }
- * }</pre>
+ * </code></pre>
  */
 public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implements DOTInputModelDeserializer<S, I, A> {
 
@@ -211,8 +210,8 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
                     Map<String, TimerSpec> timeInfo = timers.computeIfAbsent(node.id, k -> new HashMap<>());
                     if (timeInfo.containsKey(timerName)) {
                         throw new FormatException(String.format("Timer %s in location %s must only be set once.",
-                                timerName,
-                                node.id));
+                                                                timerName,
+                                                                node.id));
                     }
 
                     // Add timer:
@@ -250,8 +249,8 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
                 String timerName = input.substring(3, input.length() - 1);
                 if (!timers.getOrDefault(edge.src, Collections.emptyMap()).containsKey(timerName)) {
                     throw new FormatException(String.format("Defined %s in state %s, but timer value is not set.",
-                            input,
-                            edge.src));
+                                                            input,
+                                                            edge.src));
                 }
 
                 // Add output to timer info:
@@ -327,7 +326,6 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
         return tokens;
     }
 
-    private record TimerSpec(String name, long initial) {
-    }
+    private record TimerSpec(String name, long initial) {}
 
 }

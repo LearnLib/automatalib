@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Default implementation for a {@link MMLTSemantics} that wraps arbitrary {@link MMLT}s.
+ * Default implementation for an {@link MMLTSemantics} that wraps arbitrary {@link MMLT}s.
  *
  * @param <S>
  *         location type of the original MMLT
@@ -232,7 +232,10 @@ public class DefaultMMLTSemantics<S, I, T, O>
             if (nextTimeouts.timers().size() == 1) {
                 outputs = nextTimeouts.timers().get(0).outputs();
             } else {
-                outputs = nextTimeouts.timers().stream().flatMap(t -> t.outputs().stream()).toList();
+                outputs = new ArrayList<>();
+                for (TimerInfo<S, O> timer : nextTimeouts.timers()) {
+                    outputs.addAll(timer.outputs());
+                }
             }
             O combinedOutput = model.getOutputCombiner().combineSymbols(outputs);
             output = new TimedOutput<>(combinedOutput, nextTimeouts.delay());

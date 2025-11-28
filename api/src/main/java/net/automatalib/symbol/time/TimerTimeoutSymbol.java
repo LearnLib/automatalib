@@ -15,10 +15,8 @@
  */
 package net.automatalib.symbol.time;
 
-import net.automatalib.automaton.mmlt.MMLTGraphView;
-
 /**
- * The timeout symbol of a timer currently used by {@link MMLTGraphView}s.
+ * The timeout symbol of a timer.
  *
  * @param timer
  *         the name of the timer

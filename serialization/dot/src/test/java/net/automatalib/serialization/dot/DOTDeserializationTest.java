@@ -242,8 +242,8 @@ public class DOTDeserializationTest {
                                      Collections.singleton("s0"),
                                      false);
 
-        for (int i = 0; i < 11; i++) {
-            final int id = i + 1;
+        for (int i = 1; i <= 11; i++) {
+            final int id = i;
             Assert.assertThrows(Integer.toString(id),
                                 FormatException.class,
                                 () -> parser.readModel(DOTSerializationUtil.getResource("/mmlt_error" + id + ".dot")));
@@ -263,15 +263,19 @@ public class DOTDeserializationTest {
     @Test
     public void doNotCloseInputStreamTest() throws IOException, FormatException {
         try (InputStream dfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.DFA_RESOURCE);
-             InputStream nfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.NFA_RESOURCE);
              InputStream graph = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.GRAPH_RESOURCE);
              InputStream mealy = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MEALY_RESOURCE);
-             InputStream moore = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MOORE_RESOURCE)) {
+             InputStream moore = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MOORE_RESOURCE);
+             InputStream mmlt = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MMLT_RESOURCE);
+             InputStream mts = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MTS_RESOURCE);
+             InputStream nfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.NFA_RESOURCE)) {
             DOTParsers.dfa().readModel(new UnclosableInputStream(dfa));
-            DOTParsers.nfa().readModel(new UnclosableInputStream(nfa));
             DOTParsers.graph().readModel(new UnclosableInputStream(graph));
             DOTParsers.mealy().readModel(new UnclosableInputStream(mealy));
             DOTParsers.moore().readModel(new UnclosableInputStream(moore));
+            DOTParsers.mmlt("void", StringSymbolCombiner.getInstance()).readModel(new UnclosableInputStream(mmlt));
+            DOTParsers.mts().readModel(new UnclosableInputStream(mts));
+            DOTParsers.nfa().readModel(new UnclosableInputStream(nfa));
         }
     }
 

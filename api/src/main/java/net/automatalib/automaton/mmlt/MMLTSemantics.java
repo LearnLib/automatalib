@@ -39,14 +39,18 @@ import net.automatalib.word.Word;
  * The outputs of this machine are the outputs of the MMLT, extended with a delay. This delay is zero for all
  * transitions, except for those with the {@link TimeoutSymbol} input.
  *
- * @param <S> location type
- * @param <I> input symbol type (of non-delaying inputs)
- * @param <T> transition type
- * @param <O> output symbol type
+ * @param <S>
+ *         location type
+ * @param <I>
+ *         input symbol type (of non-delaying inputs)
+ * @param <T>
+ *         transition type
+ * @param <O>
+ *         output symbol type
  */
 public interface MMLTSemantics<S, I, T, O> extends MealyTransitionSystem<State<S, O>, TimedInput<I>, T, TimedOutput<O>>,
-        SuffixOutput<TimedInput<I>, Word<TimedOutput<O>>>,
-        InputAlphabetHolder<TimedInput<I>> {
+                                                   SuffixOutput<TimedInput<I>, Word<TimedOutput<O>>>,
+                                                   InputAlphabetHolder<TimedInput<I>> {
 
     /**
      * Returns the symbol used for silent outputs.
@@ -62,12 +66,16 @@ public interface MMLTSemantics<S, I, T, O> extends MealyTransitionSystem<State<S
      * executing all time steps. The output of the transition is the output of the time step that was executed last.
      * This output might belong to a timeout or be silence. The delay of this output is set to zero.
      * <p>
-     * Please note that a sequence with more than one time step may trigger multiple timeouts.
-     * Regardless of that, only the output at the last time step is returned.
+     * Please note that a sequence with more than one time step may trigger multiple timeouts. Regardless of that, only
+     * the output at the last time step is returned.
      *
-     * @param source         source configuration
-     * @param input          input symbol
-     * @param maxWaitingTime maximum time steps to wait for a timeout
+     * @param source
+     *         source configuration
+     * @param input
+     *         input symbol
+     * @param maxWaitingTime
+     *         maximum time steps to wait for a timeout
+     *
      * @return the transition in semantics automaton
      */
     T getTransition(State<S, O> source, TimedInput<I> input, long maxWaitingTime);

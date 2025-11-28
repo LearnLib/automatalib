@@ -724,7 +724,7 @@ public final class DOTParsers {
     /**
      * Parser for {@link MMLT}s with custom.typed input and output symbols.
      * <p>
-     * Invokes {@link #mmlt(AutomatonCreator, Function, Function)} with a creator for {@link CompactMMLT}s that uses the
+     * Invokes {@link #mmlt(AutomatonCreator, Function, Function)} with {@link CompactMMLT.Creator} as creator using the
      * given {@code silentOutput} and {@code outputCombiner}.
      *
      * @param inputParser
@@ -748,10 +748,7 @@ public final class DOTParsers {
                                                                                        Function<String, List<O>> outputParser,
                                                                                        O silentOutput,
                                                                                        SymbolCombiner<O> outputCombiner) {
-        final AutomatonCreator<CompactMMLT<I, O>, I> creator =
-                alphabet -> new CompactMMLT<>(alphabet, silentOutput, outputCombiner);
-
-        return mmlt(creator, inputParser, outputParser);
+        return mmlt(new CompactMMLT.Creator<>(silentOutput, outputCombiner), inputParser, outputParser);
     }
 
     /**

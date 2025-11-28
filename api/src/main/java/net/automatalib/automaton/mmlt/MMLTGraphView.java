@@ -47,9 +47,9 @@ public class MMLTGraphView<S, I, T, O> implements Graph<S, Triple<SymbolicInput<
     private final MMLT<S, I, T, O> mmlt;
     private final SymbolCombiner<O> outputCombiner;
 
-    public MMLTGraphView(MMLT<S, I, T, O> mmlt, SymbolCombiner<O> outputCombiner) {
+    public MMLTGraphView(MMLT<S, I, T, O> mmlt) {
         this.mmlt = mmlt;
-        this.outputCombiner = outputCombiner;
+        this.outputCombiner = mmlt.getOutputCombiner();
     }
 
     @Override
@@ -69,7 +69,8 @@ public class MMLTGraphView<S, I, T, O> implements Graph<S, Triple<SymbolicInput<
 
         for (TimerInfo<S, O> t : timers) {
             result.add(Triple.of(new TimerTimeoutSymbol<>(t.name()),
-                    outputCombiner.combineSymbols(t.outputs()), t.target()));
+                                 outputCombiner.combineSymbols(t.outputs()),
+                                 t.target()));
         }
 
         return result;

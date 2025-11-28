@@ -16,8 +16,6 @@
 package net.automatalib.automaton.mmlt.impl;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.symbol.time.TimedInput;
@@ -52,21 +50,6 @@ public class MMLTTests {
 
         return model;
     }
-
-    private static List<String> generateRandomWords(int count, int wordLength) {
-        Random r = new Random(100);
-        List<String> words = new ArrayList<>(count);
-        for (int j = 0; j < count; j++) {
-            StringBuilder sb = new StringBuilder(wordLength);
-            for (int i = 0; i < wordLength; i++) {
-                char tmp = (char) ('a' + r.nextInt('z' - 'a'));
-                sb.append(tmp);
-            }
-            words.add(sb.toString());
-        }
-        return words;
-    }
-
 
     @Test
     public void testConfigurationProperties() {
@@ -139,6 +122,23 @@ public class MMLTTests {
 
         Assert.assertEquals(approxConfig.getLocation(), omittedConfig.getLocation());
         Assert.assertEquals(approxConfig.getEntryDistance(), 7);
+    }
+
+    @Test
+    public void testClear() {
+        var automaton = buildBaseModel();
+        var oldStates = new ArrayList<>(automaton.getStates());
+
+        automaton.clear();
+
+        Assert.assertFalse(automaton.getInputAlphabet().isEmpty());
+
+        for (Integer s : oldStates) {
+            Assert.assertTrue(automaton.getSortedTimers(s).isEmpty());
+            for (String i : automaton.getInputAlphabet()) {
+                Assert.assertFalse(automaton.isLocalReset(s, i));
+            }
+        }
     }
 
     @Test

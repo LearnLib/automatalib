@@ -126,18 +126,20 @@ public final class ReducedMMLTSemantics<S, I, O> extends CompactMealy<TimedInput
      *         output symbol type of the original MMLT
      * @param location
      *         considered location
-     * @param automaton
+     * @param mmlt
      *         MMLT
+     * @param semantics
+     *         the semantics automaton of {@code mmlt}
      *
      * @return list of the relevant configurations of the location
      */
     private static <S, I, T, O> List<State<S, O>> getRelevantConfigurations(S location,
-                                                                            MMLT<S, I, ?, O> automaton,
+                                                                            MMLT<S, I, ?, O> mmlt,
                                                                             MMLTSemantics<S, I, T, O> semantics) {
 
         List<State<S, O>> configurations = new ArrayList<>();
 
-        State<S, O> currentConfiguration = new State<>(location, automaton.getSortedTimers(location));
+        State<S, O> currentConfiguration = new State<>(location, mmlt.getSortedTimers(location));
         configurations.add(currentConfiguration);
 
         // Enumerate all timeouts, until we change to a different location or re-enter the entry configuration

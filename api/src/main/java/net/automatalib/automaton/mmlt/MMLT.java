@@ -34,8 +34,8 @@ import net.automatalib.symbol.time.SymbolicInput;
  * location change. They reset all timers of the target location at timeout. A location can have arbitrarily many
  * periodic timers and up to one one-shot timer. Timers are always reset to their initial value. The initial values must
  * be chosen so that a periodic timer never times out at the same time as a one-shot timer (to preserve determinism).
- * Multiple periodic timers may time out simultaneously. In this case, their outputs are combined using an
- * {@link SymbolCombiner}.
+ * Multiple periodic timers may time out simultaneously. In this case, their outputs are combined using the provided
+ * {@link #getOutputCombiner()}.
  * <p>
  * <b>Implementation note:</b> This class resembles a "structural" view on the MMLT. Timeouts can also be interpreted
  * as explicit transitions between locations. For this representation, use the {@link #graphView()} method. For a
@@ -98,6 +98,6 @@ public interface MMLT<S, I, T, O>
 
     @Override
     default Graph<S, Triple<SymbolicInput<I>, O, S>> graphView() {
-        return new MMLTGraphView<>(this, getOutputCombiner());
+        return new MMLTGraphView<>(this);
     }
 }

@@ -18,9 +18,11 @@ package net.automatalib.symbol.time;
 import net.automatalib.automaton.mmlt.MMLTGraphView;
 
 /**
- * Markup-interface for symbolic inputs currently used in {@link MMLTGraphView}s.
+ * Markup-interface for symbolic timed inputs.
  *
  * @param <I>
  *         input symbol type
+ *
+ * @see MMLTGraphView
  */
 public sealed interface SymbolicInput<I> permits InputSymbol, TimerTimeoutSymbol {}

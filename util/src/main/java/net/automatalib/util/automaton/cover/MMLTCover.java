@@ -53,7 +53,7 @@ public final class MMLTCover {
      * @return a location cover as mapping from location to prefix
      */
     public static <S, I, O> Map<S, Word<TimedInput<I>>> getMMLTLocationCover(MMLT<S, I, ?, O> mmlt,
-                                                                             Collection<TimedInput<I>> inputs) {
+                                                                             Collection<? extends TimedInput<I>> inputs) {
         return getMMLTLocationCover(mmlt, inputs, true);
     }
 
@@ -83,14 +83,14 @@ public final class MMLTCover {
      * @return a location cover as mapping from location to prefix
      */
     public static <S, I, O> Map<S, Word<TimedInput<I>>> getMMLTLocationCover(MMLT<S, I, ?, O> mmlt,
-                                                                             Collection<TimedInput<I>> inputs,
+                                                                             Collection<? extends TimedInput<I>> inputs,
                                                                              boolean allowIncomplete) {
         return getMMLTLocationCover(mmlt, mmlt.getSemantics(), inputs, allowIncomplete);
     }
 
     private static <S, I, T, O> Map<S, Word<TimedInput<I>>> getMMLTLocationCover(MMLT<S, I, ?, O> automaton,
                                                                                  MMLTSemantics<S, I, T, O> semantics,
-                                                                                 Collection<TimedInput<I>> inputs,
+                                                                                 Collection<? extends TimedInput<I>> inputs,
                                                                                  boolean allowIncomplete) {
 
         Map<S, Word<TimedInput<I>>> locPrefixes = new LinkedHashMap<>();

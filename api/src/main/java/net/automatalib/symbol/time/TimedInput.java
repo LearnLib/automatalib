@@ -22,11 +22,13 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 /**
- * Markup-interface for time-sensitive inputs currently used in {@link MMLTSemantics}s. Contains utility methods for
- * conveniently constructing instances of timed symbols.
+ * Markup-interface for concrete, time-sensitive inputs. Contains utility methods for conveniently constructing
+ * instances of timed symbols.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)
+ *
+ * @see MMLTSemantics
  */
 public sealed interface TimedInput<I> permits InputSymbol, TimeoutSymbol, TimeStepSequence {
 

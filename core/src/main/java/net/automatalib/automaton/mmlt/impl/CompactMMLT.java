@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.impl.CompactTransition;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
 import net.automatalib.automaton.mmlt.MutableMMLT;
@@ -57,9 +58,9 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
      * @param alphabet
      *         alphabet of non-delaying inputs
      * @param silentOutput
-     *         The silent output used by this MMLT.
+     *         the silent output used by this MMLT
      * @param outputCombiner
-     *         The combiner function for simultaneous timeouts of periodic timers.
+     *         the combiner function for simultaneous timeouts of periodic timers
      */
     public CompactMMLT(Alphabet<I> alphabet, O silentOutput, SymbolCombiner<O> outputCombiner) {
         this(alphabet, DEFAULT_INIT_CAPACITY, silentOutput, outputCombiner);
@@ -73,9 +74,9 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
      * @param sizeHint
      *         size hint to better allocate internal memory
      * @param silentOutput
-     *         The silent output used by this MMLT.
+     *         the silent output used by this MMLT
      * @param outputCombiner
-     *         The combiner function for simultaneous timeouts of periodic timers.
+     *         the combiner function for simultaneous timeouts of periodic timers
      */
     public CompactMMLT(Alphabet<I> alphabet, int sizeHint, O silentOutput, SymbolCombiner<O> outputCombiner) {
         super(alphabet, sizeHint);
@@ -125,7 +126,7 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
         for (O output : outputs) {
             if (getOutputCombiner().isCombinedSymbol(output)) {
                 throw new IllegalArgumentException(String.format(
-                        "Timer '%s': output '%s' is a combined symbol. " + "You must only provide atomic outputs.",
+                        "Timer '%s': output '%s' is a combined symbol. You must only provide atomic outputs.",
                         name,
                         output));
             }
@@ -232,5 +233,26 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
     @Override
     public Graph<Integer, Triple<SymbolicInput<I>, O, Integer>> graphView() {
         return MutableMMLT.super.graphView();
+    }
+
+    public static class Creator<I, O> implements AutomatonCreator<CompactMMLT<I, O>, I> {
+
+        private final O silentOutput;
+        private final SymbolCombiner<O> outputCombiner;
+
+        public Creator(O silentOutput, SymbolCombiner<O> outputCombiner) {
+            this.silentOutput = silentOutput;
+            this.outputCombiner = outputCombiner;
+        }
+
+        @Override
+        public CompactMMLT<I, O> createAutomaton(Alphabet<I> alphabet, int numStatesHint) {
+            return new CompactMMLT<>(alphabet, numStatesHint, silentOutput, outputCombiner);
+        }
+
+        @Override
+        public CompactMMLT<I, O> createAutomaton(Alphabet<I> alphabet) {
+            return new CompactMMLT<>(alphabet, silentOutput, outputCombiner);
+        }
     }
 }

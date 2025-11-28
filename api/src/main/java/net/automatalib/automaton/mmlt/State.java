@@ -117,7 +117,7 @@ public final class State<S, O> {
      * initial value of the timer with the lowest initial value of the location. If the location has no timers, its only
      * configuration is its entry configuration, which is always stable.
      *
-     * @return True if stable
+     * @return {@code true} if stable, {@code false} otherwise
      */
     public boolean isStableConfig() {
         return this.entryDistance == 0 || this.entryDistance < minimumTimerValue;
@@ -126,7 +126,7 @@ public final class State<S, O> {
     /**
      * Returns a copy of {@code this} state with all timers reset to their initial values.
      *
-     * @return the new state with all its timeres reset
+     * @return the new state with all its timers reset
      */
     public State<S, O> resetTimers() {
         return new State<>(location, sortedTimers, initialValues.clone(), initialValues, 0, minimumTimerValue);

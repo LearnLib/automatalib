@@ -15,15 +15,17 @@
  */
 package net.automatalib.automaton.mmlt.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.StringJoiner;
 
 import net.automatalib.automaton.mmlt.SymbolCombiner;
 
 /**
- * Combines multiple String outputs by concatenating them and using a pipe as separator.
+ * Combines multiple string outputs by concatenating them and using {@code |} as separator.
  */
 public final class StringSymbolCombiner implements SymbolCombiner<String> {
 
@@ -44,7 +46,14 @@ public final class StringSymbolCombiner implements SymbolCombiner<String> {
 
     @Override
     public String combineSymbols(List<String> symbols) {
-        return symbols.stream().sorted().collect(Collectors.joining("|"));
+        final List<String> sorted = new ArrayList<>(symbols);
+        sorted.sort(Comparator.naturalOrder());
+
+        final StringJoiner sj = new StringJoiner("|");
+        for (String s : sorted) {
+            sj.add(s);
+        }
+        return sj.toString();
     }
 
     @Override
