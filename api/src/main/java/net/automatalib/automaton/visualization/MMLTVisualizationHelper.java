@@ -102,11 +102,17 @@ public class MMLTVisualizationHelper<S, I, O> extends DefaultVisualizationHelper
 
         if (input instanceof TimerTimeoutSymbol<I> ts) {
             // Get info for corresponding timer:
-            TimerInfo<S, O> timer = mmlt.getSortedTimers(src)
-                                        .stream()
-                                        .filter(t -> t.name().equals(ts.timer()))
-                                        .findFirst()
-                                        .orElseThrow();
+            TimerInfo<S, O> timer = null;
+            for (TimerInfo<S, O> t : mmlt.getSortedTimers(src)) {
+                if (t.name().equals(ts.timer())) {
+                    timer = t;
+                    break;
+                }
+            }
+
+            if (timer == null) {
+                throw new IllegalArgumentException("timeout symbol references unknown timer");
+            }
 
             if (timer.periodic()) {
                 // Periodic -> resets itself:
