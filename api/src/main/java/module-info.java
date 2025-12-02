@@ -47,6 +47,7 @@ open module net.automatalib.api {
     exports net.automatalib.automaton.fsa;
     exports net.automatalib.automaton.graph;
     exports net.automatalib.automaton.helper;
+    exports net.automatalib.automaton.mmlt;
     exports net.automatalib.automaton.procedural;
     exports net.automatalib.automaton.simple;
     exports net.automatalib.automaton.transducer;
@@ -61,6 +62,7 @@ open module net.automatalib.api {
     exports net.automatalib.graph.visualization;
     exports net.automatalib.modelchecking;
     exports net.automatalib.serialization;
+    exports net.automatalib.symbol.time;
     exports net.automatalib.ts;
     exports net.automatalib.ts.acceptor;
     exports net.automatalib.ts.modal;

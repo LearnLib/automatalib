@@ -1,0 +1,8 @@
+// An MMLT with a timeout transition, but no corresponding timer definition.
+digraph g {
+
+	s0;
+
+	s0 -> s0 [label="to[a] / X"];
+
+}

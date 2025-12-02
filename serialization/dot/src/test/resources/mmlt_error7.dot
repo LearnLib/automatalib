@@ -1,0 +1,9 @@
+// An MMLT with a periodic timer with explicitly-defined reset of a timer that is not the periodic timer.
+digraph g {
+
+	s0 [timers="a=2,b=3"]
+
+	s0 -> s0 [label="to[a] / X"];
+	s0 -> s0 [label="to[b] / Y" resets="a"];
+
+}

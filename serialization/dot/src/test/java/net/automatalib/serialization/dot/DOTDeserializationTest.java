@@ -22,12 +22,14 @@ import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -35,6 +37,9 @@ import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.mmlt.impl.CompactMMLT;
+import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
@@ -56,8 +61,7 @@ public class DOTDeserializationTest {
         final CompactDFA<String> dfa = DOTSerializationUtil.DFA;
 
         final DFA<?, String> parsed =
-                DOTParsers.dfa().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.DFA_RESOURCE)).
-                        model;
+                DOTParsers.dfa().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.DFA_RESOURCE)).model;
 
         checkIsomorphism(dfa, parsed, dfa.getInputAlphabet());
     }
@@ -68,8 +72,7 @@ public class DOTDeserializationTest {
         final CompactNFA<String> nfa = DOTSerializationUtil.NFA;
 
         final CompactNFA<String> parsed =
-                DOTParsers.nfa().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.NFA_RESOURCE)).
-                        model;
+                DOTParsers.nfa().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.NFA_RESOURCE)).model;
 
         checkIsomorphism(nfa, parsed, nfa.getInputAlphabet());
     }
@@ -82,8 +85,7 @@ public class DOTDeserializationTest {
                                                          DOTParsers.DEFAULT_EDGE_PARSER,
                                                          Arrays.asList("s0", "s1", "s2"),
                                                          false)
-                                                    .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.NFA2_RESOURCE)).
-                model;
+                                                    .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.NFA2_RESOURCE)).model;
 
         Assert.assertEquals(parsed.size(), 3);
         Assert.assertEquals(parsed.getInitialStates().size(), 3);
@@ -103,9 +105,9 @@ public class DOTDeserializationTest {
 
         final CompactMealy<String, String> mealy = DOTSerializationUtil.MEALY;
 
-        final MealyMachine<?, String, ?, String> parsed =
-                DOTParsers.mealy().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MEALY_RESOURCE)).
-                        model;
+        final MealyMachine<?, String, ?, String> parsed = DOTParsers.mealy()
+                                                                    .readModel(DOTSerializationUtil.getResource(
+                                                                            DOTSerializationUtil.MEALY_RESOURCE)).model;
 
         checkIsomorphism(mealy, parsed, mealy.getInputAlphabet());
     }
@@ -114,9 +116,9 @@ public class DOTDeserializationTest {
     public void testRegularMooreDeserialization() throws IOException, FormatException {
         final CompactMoore<String, String> moore = DOTSerializationUtil.MOORE;
 
-        final MooreMachine<?, String, ?, String> parsed =
-                DOTParsers.moore().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MOORE_RESOURCE)).
-                        model;
+        final MooreMachine<?, String, ?, String> parsed = DOTParsers.moore()
+                                                                    .readModel(DOTSerializationUtil.getResource(
+                                                                            DOTSerializationUtil.MOORE_RESOURCE)).model;
 
         checkIsomorphism(moore, parsed, moore.getInputAlphabet());
     }
@@ -144,6 +146,110 @@ public class DOTDeserializationTest {
         checkIsomorphism(mts, parsed, alphabet);
     }
 
+    @Test
+    public void testRegularMMLTDeserialization() throws IOException, FormatException {
+        final CompactMMLT<String, String> mts = DOTSerializationUtil.MMLT;
+
+        var model = DOTParsers.mmlt("void", StringSymbolCombiner.getInstance())
+                              .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MMLT_RESOURCE));
+
+        var alphabet = model.alphabet;
+        var parsed = model.model;
+
+        checkIsomorphism(mts, parsed, alphabet);
+    }
+
+    @Test
+    public void testMMLTCombinedOutputs() throws IOException, FormatException {
+        var mmlt = DOTParsers.mmlt("void", StringSymbolCombiner.getInstance())
+                             .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MMLT_MULTI_OUTPUTS)).model;
+
+        var timers = mmlt.getSortedTimers(0);
+        Assert.assertEquals(timers.size(), 1);
+        Assert.assertEquals(timers.get(0).outputs(), List.of("X", "Y", "Z"));
+    }
+
+    @Test
+    public void testMMLTSensorModel() throws IOException, FormatException {
+        var mmlt = DOTParsers.mmlt("void", StringSymbolCombiner.getInstance())
+                             .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MMLT_SENSOR)).model;
+
+        // Compare to reference:
+        var p1 = "p1";
+        var p2 = "p2";
+        var abort = "abort";
+        var collect = "collect";
+
+        int s0 = 0;
+        int s1 = 1;
+        int s2 = 2;
+        int s3 = 3;
+
+        // Check non-delaying transitions:
+        assertSilentLoop(mmlt, s0, abort);
+        assertSilentLoop(mmlt, s0, collect);
+        assertTransition(mmlt, s0, s1, p1, "go");
+        assertTransition(mmlt, s0, s2, p2, "go");
+
+        assertTransition(mmlt, s1, s1, abort, "ok");
+        Assert.assertTrue(mmlt.isLocalReset(s1, abort));
+        assertSilentLoop(mmlt, s1, p1);
+        assertSilentLoop(mmlt, s1, p2);
+        assertSilentLoop(mmlt, s1, collect);
+
+        assertTransition(mmlt, s2, s3, abort, "void");
+        assertSilentLoop(mmlt, s2, p1);
+        assertSilentLoop(mmlt, s2, p2);
+        assertSilentLoop(mmlt, s2, collect);
+
+        assertSilentLoop(mmlt, s3, abort);
+        assertSilentLoop(mmlt, s3, p1);
+        assertSilentLoop(mmlt, s3, p2);
+        assertTransition(mmlt, s3, s0, collect, "void");
+
+        // Check timers:
+        Assert.assertTrue(mmlt.getSortedTimers(s0).isEmpty());
+        Assert.assertTrue(mmlt.getSortedTimers(s3).isEmpty());
+        Assert.assertEquals(mmlt.getSortedTimers(s1).size(), 3);
+        Assert.assertEquals(mmlt.getSortedTimers(s2).size(), 1);
+
+        var firstTimerS1 = mmlt.getSortedTimers(s1).get(0);
+        Assert.assertEquals(firstTimerS1.initial(), 3);
+        Assert.assertEquals(firstTimerS1.outputs(), List.of("part"));
+        Assert.assertTrue(firstTimerS1.periodic());
+
+        var secondTimerS1 = mmlt.getSortedTimers(s1).get(1);
+        Assert.assertEquals(secondTimerS1.initial(), 6);
+        Assert.assertEquals(secondTimerS1.outputs(), List.of("noise"));
+        Assert.assertTrue(secondTimerS1.periodic());
+
+        var thirdTimerS1 = mmlt.getSortedTimers(s1).get(2);
+        Assert.assertEquals(thirdTimerS1.initial(), 40);
+        Assert.assertEquals(thirdTimerS1.outputs(), List.of("done"));
+        Assert.assertFalse(thirdTimerS1.periodic());
+
+        var firstTimerS2 = mmlt.getSortedTimers(s2).get(0);
+        Assert.assertEquals(firstTimerS2.initial(), 4);
+        Assert.assertEquals(firstTimerS2.outputs(), List.of("done"));
+        Assert.assertFalse(firstTimerS2.periodic());
+    }
+
+    @Test
+    public void testMMLTValidation() {
+        var parser = DOTParsers.mmlt(alph -> new CompactMMLT<>(alph, "void", StringSymbolCombiner.getInstance()),
+                                     Function.identity(),
+                                     s -> StringSymbolCombiner.getInstance().separateSymbols(s),
+                                     Collections.singleton("s0"),
+                                     false);
+
+        for (int i = 1; i <= 11; i++) {
+            final int id = i;
+            Assert.assertThrows(Integer.toString(id),
+                                FormatException.class,
+                                () -> parser.readModel(DOTSerializationUtil.getResource("/mmlt_error" + id + ".dot")));
+        }
+    }
+
     @Test(expectedExceptions = FormatException.class)
     public void testFaultyAutomatonDeserialization() throws IOException, FormatException {
         DOTParsers.dfa().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.FAULTY_AUTOMATON_RESOURCE));
@@ -157,15 +263,19 @@ public class DOTDeserializationTest {
     @Test
     public void doNotCloseInputStreamTest() throws IOException, FormatException {
         try (InputStream dfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.DFA_RESOURCE);
-             InputStream nfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.NFA_RESOURCE);
              InputStream graph = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.GRAPH_RESOURCE);
              InputStream mealy = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MEALY_RESOURCE);
-             InputStream moore = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MOORE_RESOURCE)) {
+             InputStream moore = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MOORE_RESOURCE);
+             InputStream mmlt = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MMLT_RESOURCE);
+             InputStream mts = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MTS_RESOURCE);
+             InputStream nfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.NFA_RESOURCE)) {
             DOTParsers.dfa().readModel(new UnclosableInputStream(dfa));
-            DOTParsers.nfa().readModel(new UnclosableInputStream(nfa));
             DOTParsers.graph().readModel(new UnclosableInputStream(graph));
             DOTParsers.mealy().readModel(new UnclosableInputStream(mealy));
             DOTParsers.moore().readModel(new UnclosableInputStream(moore));
+            DOTParsers.mmlt("void", StringSymbolCombiner.getInstance()).readModel(new UnclosableInputStream(mmlt));
+            DOTParsers.mts().readModel(new UnclosableInputStream(mts));
+            DOTParsers.nfa().readModel(new UnclosableInputStream(nfa));
         }
     }
 
@@ -293,5 +403,27 @@ public class DOTDeserializationTest {
         }
 
         Assert.assertEquals(sourceQueue.isEmpty(), targetQueue.isEmpty());
+    }
+
+    private <T> void assertTransition(MMLT<Integer, String, T, String> model,
+                                      int state,
+                                      int target,
+                                      String input,
+                                      String output) {
+        var trans = model.getTransition(state, input);
+        Assert.assertNotNull(trans);
+
+        if (model.getSuccessor(trans) != target || !model.getTransitionProperty(trans).equals(output)) {
+            throw new AssertionError();
+        }
+    }
+
+    private <T> void assertSilentLoop(MMLT<Integer, String, T, String> model, int state, String input) {
+        var trans = model.getTransition(state, input);
+        if (trans != null &&
+            (model.getSuccessor(trans) != state || !"void".equals(model.getTransitionProperty(trans)))) {
+            throw new AssertionError();
+        }
+        Assert.assertFalse(model.isLocalReset(state, input));
     }
 }

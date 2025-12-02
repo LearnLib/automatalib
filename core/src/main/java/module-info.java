@@ -32,6 +32,7 @@ open module net.automatalib.core {
 
     requires net.automatalib.api;
     requires net.automatalib.common.util;
+    requires org.slf4j;
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
@@ -40,6 +41,7 @@ open module net.automatalib.core {
     exports net.automatalib.automaton.base;
     exports net.automatalib.automaton.fsa.impl;
     exports net.automatalib.automaton.impl;
+    exports net.automatalib.automaton.mmlt.impl;
     exports net.automatalib.automaton.procedural.impl;
     exports net.automatalib.automaton.transducer.impl;
     exports net.automatalib.automaton.transducer.probabilistic.impl;

@@ -1,0 +1,18 @@
+digraph g {
+
+	s0 [timers="a=2" shape="circle" label="0"];
+	s1 [timers="b=4,c=6" shape="circle" label="1"];
+	s2 [timers="d=2,e=3" shape="circle" label="2"];
+	s0 -> s1 [color="green" fontcolor="green" label="to[a] / A {b↦4,c↦6}"];
+	s1 -> s2 [label="x / void"];
+	s1 -> s1 [color="orange" resets="b,c" fontcolor="orange" label="y / Y {b↦4,c↦6}"];
+	s1 -> s1 [color="blue" fontcolor="blue" label="to[b] / B|Z {b↦4}"];
+	s1 -> s1 [color="green" resets="b,c" fontcolor="green" label="to[c] / C {b↦4,c↦6}"];
+	s2 -> s2 [label="y / D"];
+	s2 -> s2 [color="blue" fontcolor="blue" label="to[d] / D {d↦2}"];
+	s2 -> s2 [color="blue" fontcolor="blue" label="to[e] / E {e↦3}"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+
+}

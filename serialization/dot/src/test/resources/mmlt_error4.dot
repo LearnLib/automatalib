@@ -1,0 +1,7 @@
+// An MMLT with an empty and duplicate timer definitions
+digraph g {
+
+	s0;
+	s1 [timers="a=2,a=3"];
+
+}

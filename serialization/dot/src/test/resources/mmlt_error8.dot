@@ -1,0 +1,9 @@
+// An MMLT with a one-shot timer with explicitly-defined resets that do not cover all timers of the target location.
+digraph g {
+
+	s0 [timers="a=2,b=2,c=3"]
+
+	s0 -> s0 [label="to[a] / X" resets="a,b"];
+	s0 -> s0 [label="to[b] / Y" resets="b"];
+	s0 -> s0 [label="to[c] / Z" resets="c"];
+}

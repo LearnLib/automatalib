@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import net.automatalib.alphabet.Alphabet;
@@ -31,6 +32,8 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.automaton.fsa.impl.FastDFAState;
+import net.automatalib.automaton.mmlt.impl.CompactMMLT;
+import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.SPMM;
@@ -56,6 +59,7 @@ import net.automatalib.word.Word;
 
 final class DOTSerializationUtil {
 
+    public static final String MMLT_MULTI_OUTPUTS = "/mmlt_multi_output.dot";
     static final String ID_RESOURCE = "/id.dot";
     static final String EMPTY_RESOURCE = "/empty.dot";
     static final String DFA_RESOURCE = "/dfa.dot";
@@ -74,6 +78,9 @@ final class DOTSerializationUtil {
     static final String SPA_RESOURCE = "/spa.dot";
     static final String SBA_RESOURCE = "/sba.dot";
     static final String SPMM_RESOURCE = "/spmm.dot";
+    static final String MMLT_RESOURCE = "/mmlt.dot";
+    static final String MMLT_WITH_RESETS_RESOURCE = "/mmlt_with_resets.dot";
+    static final String MMLT_SENSOR = "/mmlt_sensor.dot";
 
     static final String FAULTY_AUTOMATON_RESOURCE = "/faulty_automaton.dot";
     static final String FAULTY_GRAPH_RESOURCE = "/faulty_graph.dot";
@@ -94,6 +101,7 @@ final class DOTSerializationUtil {
     static final SPA<?, Character> SPA;
     static final SBA<?, Character> SBA;
     static final SPMM<?, Character, ?, Character> SPMM;
+    static final CompactMMLT<String, String> MMLT;
 
     static {
         STRING_ALPHABET = Alphabets.closedCharStringRange('a', 'c');
@@ -110,6 +118,7 @@ final class DOTSerializationUtil {
         SPA = buildSPA();
         SBA = buildSBA();
         SPMM = buildSPMM();
+        MMLT = buildMMLT();
     }
 
     private DOTSerializationUtil() {}
@@ -433,5 +442,30 @@ final class DOTSerializationUtil {
         procedures.put('F', pF);
         procedures.put('G', pG);
         return new StackSPMM<>(alphabet, 'F', '+', '-', procedures);
+    }
+
+    private static CompactMMLT<String, String> buildMMLT() {
+        Alphabet<String> alphabet = Alphabets.closedCharStringRange('x', 'y');
+
+        final CompactMMLT<String, String> mmlt =
+                new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
+        var s0 = mmlt.addInitialState();
+        var s1 = mmlt.addState();
+        var s2 = mmlt.addState();
+
+        mmlt.addTransition(s1, "x", s2, "void");
+        mmlt.addTransition(s1, "y", s1, "Y");
+        mmlt.addTransition(s2, "y", s2, "D");
+
+        mmlt.addLocalReset(s1, "y");
+
+        mmlt.addOneShotTimer(s0, "a", 2, "A", s1);
+        mmlt.addPeriodicTimer(s1, "b", 4, List.of("B", "Z"));
+        mmlt.addOneShotTimer(s1, "c", 6, "C", s1);
+
+        mmlt.addPeriodicTimer(s2, "d", 2, "D");
+        mmlt.addPeriodicTimer(s2, "e", 3, "E");
+
+        return mmlt;
     }
 }

@@ -34,6 +34,8 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.automaton.fsa.impl.FastNFA;
+import net.automatalib.automaton.mmlt.impl.CompactMMLT;
+import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.automaton.transducer.impl.CompactSST;
@@ -116,6 +118,14 @@ public class MutableAutomatonTest {
     @Test
     public void testCompactMTS() {
         this.checkAutomaton(CompactMTS::new, ALPHABET, EMPTY_PROPS, MTS_TRANS_PROPS);
+    }
+
+    @Test
+    public void testCompactMMLT() {
+        this.checkAutomaton(new CompactMMLT.Creator<>("void", StringSymbolCombiner.getInstance()),
+                            ALPHABET,
+                            EMPTY_PROPS,
+                            Arrays.asList("a", "b", "c"));
     }
 
     @Test

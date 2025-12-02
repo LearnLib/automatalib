@@ -75,6 +75,7 @@ public interface VisualizationHelper<N, E> {
 
         public static final String LABEL = "label";
         public static final String COLOR = "color";
+        public static final String FONTCOLOR = "fontcolor";
         public static final String TEXLBL = "texlbl";
         public static final String STYLE = "style";
 
@@ -83,7 +84,7 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    final class NodeAttrs extends CommonAttrs {
+    sealed class NodeAttrs extends CommonAttrs permits MMLTNodeAttrs {
 
         public static final String SHAPE = "shape";
         public static final String WIDTH = "width";
@@ -97,7 +98,16 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    sealed class EdgeAttrs extends CommonAttrs permits MTSEdgeAttrs {
+    final class MMLTNodeAttrs extends NodeAttrs {
+
+        public static final String TIMERS = "timers";
+
+        private MMLTNodeAttrs() {
+            // prevent instantiation
+        }
+    }
+
+    sealed class EdgeAttrs extends CommonAttrs permits MTSEdgeAttrs, MMLTEdgeAttrs {
 
         public static final String PENWIDTH = "penwidth";
         public static final String ARROWHEAD = "arrowhead";
@@ -112,6 +122,15 @@ public interface VisualizationHelper<N, E> {
         public static final String MODALITY = "modality";
 
         private MTSEdgeAttrs() {
+            // prevent instantiation
+        }
+    }
+
+    final class MMLTEdgeAttrs extends EdgeAttrs {
+
+        public static final String RESETS = "resets";
+
+        private MMLTEdgeAttrs() {
             // prevent instantiation
         }
     }

@@ -1,0 +1,6 @@
+// An MMLT with missing edge labels
+digraph g {
+
+	s0 -> s1;
+
+}

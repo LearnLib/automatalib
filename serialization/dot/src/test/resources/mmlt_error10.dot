@@ -1,0 +1,14 @@
+// An MMLT with a local reset with explicitly-defined resets that cover all timers of the target location,
+// but also include a timer of a different location.
+digraph g {
+
+	s0 [timers="a=2,b=2,c=3"]
+	s1 [timers="d=4"]
+
+	s0 -> s0 [label="to[a] / X" resets="a"];
+	s0 -> s0 [label="to[b] / Y" resets="b"];
+	s0 -> s0 [label="to[c] / Z" resets="c"];
+	s0 -> s0 [label="reset / W" resets="a,b,c,d"];
+
+	s1 -> s1 [label="to[d] / W" resets="d"];
+}

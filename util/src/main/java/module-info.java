@@ -70,4 +70,5 @@ open module net.automatalib.util {
     exports net.automatalib.util.ts.modal;
     exports net.automatalib.util.ts.transducer;
     exports net.automatalib.util.ts.traversal;
+    exports net.automatalib.util.automaton.mmlt;
 }

@@ -1,0 +1,7 @@
+// An MMLT with an empty and a 0-timer
+digraph g {
+
+	s0;
+	s1 [timers="a=0"];
+
+}
