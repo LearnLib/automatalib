@@ -125,13 +125,13 @@ public final class ReducedMMLTSemantics<S, I, O> extends CompactMealy<TimedInput
      * @param <O>
      *         output symbol type of the original MMLT
      * @param location
-     *         considered location
+     *         the considered location
      * @param mmlt
-     *         MMLT
+     *         the MMLT
      * @param semantics
      *         the semantics automaton of {@code mmlt}
      *
-     * @return list of the relevant configurations of the location
+     * @return the list of the relevant configurations of the location
      */
     private static <S, I, T, O> List<State<S, O>> getRelevantConfigurations(S location,
                                                                             MMLT<S, I, ?, O> mmlt,
@@ -179,12 +179,12 @@ public final class ReducedMMLTSemantics<S, I, O> extends CompactMealy<TimedInput
      * returned. If {@code allowApproximate} is not set, an error is thrown.
      *
      * @param configuration
-     *         provided configuration
+     *         the provided configuration
      * @param allowApproximate
      *         a flag to indicate whether the closest matching state is returned if the configuration is not part of the
      *         reduced automaton
      *
-     * @return corresponding state in the reduced automaton
+     * @return the corresponding state in the reduced automaton
      */
     public Integer getStateForConfiguration(State<S, O> configuration, boolean allowApproximate) {
 

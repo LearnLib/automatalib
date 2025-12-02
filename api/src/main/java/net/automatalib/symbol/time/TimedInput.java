@@ -38,7 +38,7 @@ public sealed interface TimedInput<I> permits InputSymbol, TimeoutSymbol, TimeSt
      * @param symbol
      *         the symbol to wrap
      * @param <I>
-     *         input symbol type
+     *         input symbol type (of non-delaying inputs)
      *
      * @return the non-delaying timed input
      */
@@ -52,7 +52,7 @@ public sealed interface TimedInput<I> permits InputSymbol, TimeoutSymbol, TimeSt
      * @param symbols
      *         the symbols to wrap
      * @param <I>
-     *         input symbol type
+     *         input symbol type (of non-delaying inputs)
      *
      * @return the non-delaying timed input word
      */

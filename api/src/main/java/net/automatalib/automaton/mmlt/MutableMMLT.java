@@ -44,17 +44,30 @@ public interface MutableMMLT<S, I, T, O> extends MMLT<S, I, T, O>, MutableDeterm
      * </ul>
      *
      * @param location
-     *         location of the timer
+     *         the location of the timer
      * @param name
-     *         timer name
+     *         the timer name
      * @param initial
-     *         initial value
+     *         the initial value
      * @param outputs
-     *         outputs at timeout
+     *         the outputs at timeout
      */
     void addPeriodicTimer(S location, String name, long initial, List<O> outputs);
 
-    default void addPeriodicTimer(S location, String name, long initial, O output){
+    /**
+     * Convenience method for {@link #addPeriodicTimer(Object, String, long, List)} that wraps {@code output} in a
+     * {@link Collections#singletonList(Object)}.
+     *
+     * @param location
+     *         the location of the timer
+     * @param name
+     *         the timer name
+     * @param initial
+     *         the initial value
+     * @param output
+     *         the output at timeout
+     */
+    default void addPeriodicTimer(S location, String name, long initial, O output) {
         addPeriodicTimer(location, name, initial, Collections.singletonList(output));
     }
 
@@ -69,19 +82,34 @@ public interface MutableMMLT<S, I, T, O> extends MMLT<S, I, T, O>, MutableDeterm
      * </ul>
      *
      * @param location
-     *         location of the timer
+     *         the location of the timer
      * @param name
-     *         timer name
+     *         the timer name
      * @param initial
-     *         initial value
+     *         the initial value
      * @param outputs
-     *         outputs at timeout
+     *         the outputs at timeout
      * @param target
-     *         target location when timing out
+     *         the target location when timing out
      */
     void addOneShotTimer(S location, String name, long initial, List<O> outputs, S target);
 
-    default void addOneShotTimer(S location, String name, long initial, O output, S target){
+    /**
+     * Convenience method for {@link #addOneShotTimer(Object, String, long, List, Object)} that wraps {@code output} in
+     * a {@link Collections#singletonList(Object)}.
+     *
+     * @param location
+     *         the location of the timer
+     * @param name
+     *         the timer name
+     * @param initial
+     *         the initial value
+     * @param output
+     *         the output at timeout
+     * @param target
+     *         the target location when timing out
+     */
+    default void addOneShotTimer(S location, String name, long initial, O output, S target) {
         addOneShotTimer(location, name, initial, Collections.singletonList(output), target);
     }
 
@@ -89,9 +117,9 @@ public interface MutableMMLT<S, I, T, O> extends MMLT<S, I, T, O>, MutableDeterm
      * Removes the timer with the provided name. No effect if the location has no such timer.
      *
      * @param location
-     *         location of the timer
+     *         the location of the timer
      * @param timerName
-     *         name of the timer
+     *         the name of the timer
      */
     void removeTimer(S location, String timerName);
 
@@ -100,9 +128,9 @@ public interface MutableMMLT<S, I, T, O> extends MMLT<S, I, T, O>, MutableDeterm
      * self-loop.
      *
      * @param location
-     *         source location
+     *         the source location
      * @param input
-     *         input of the transition that should perform a local reset
+     *         the input of the transition that should perform a local reset
      */
     void addLocalReset(S location, I input);
 
@@ -111,9 +139,9 @@ public interface MutableMMLT<S, I, T, O> extends MMLT<S, I, T, O>, MutableDeterm
      * local reset.
      *
      * @param location
-     *         source location
+     *         the source location
      * @param input
-     *         input of the transition that performs a local reset.
+     *         the input of the transition that performs a local reset.
      */
     void removeLocalReset(S location, I input);
 }

@@ -21,7 +21,7 @@ package net.automatalib.symbol.time;
  * @param timer
  *         the name of the timer
  * @param <I>
- *         input symbol type (of other timed symbols)
+ *         input symbol type (of non-delaying inputs)
  */
 public record TimerTimeoutSymbol<I>(String timer) implements SymbolicInput<I> {
 

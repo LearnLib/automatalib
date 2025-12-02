@@ -30,7 +30,7 @@ public interface SymbolCombiner<S> {
      * Indicates if the provided symbol is a combined symbol.
      *
      * @param symbol
-     *         symbol for testing
+     *         the symbol for testing
      *
      * @return {@code true} if combined suffix, {@code false} otherwise.
      */
@@ -40,7 +40,7 @@ public interface SymbolCombiner<S> {
      * Combines the provided symbols to a single symbol of same data type. Must be deterministic.
      *
      * @param symbols
-     *         provided symbols
+     *         the provided symbols
      *
      * @return the combined suffix
      */
@@ -50,7 +50,7 @@ public interface SymbolCombiner<S> {
      * Attempts to separate the provided combined symbol into individual symbols.
      *
      * @param symbol
-     *         combined symbol
+     *         the combined symbol
      *
      * @return the individual symbols
      */

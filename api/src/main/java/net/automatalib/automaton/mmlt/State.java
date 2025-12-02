@@ -46,9 +46,9 @@ public final class State<S, O> {
      * Initializes the entry configuration for the provided location, where all timers have their initial value.
      *
      * @param location
-     *         location
+     *         the location
      * @param sortedTimers
-     *         timers of the location, sorted by initial value
+     *         the timers of the location, sorted by initial value
      */
     public State(S location, List<TimerInfo<S, O>> sortedTimers) {
         this.location = location;

@@ -107,11 +107,11 @@ public final class MMLTs {
      * @param mmlt
      *         the MMLT
      * @param location
-     *         considered location
+     *         the considered location
      * @param <S>
      *         location type
      *
-     * @return maximum configuration time. {@link Long#MAX_VALUE}, if exceeding long maximum.
+     * @return the maximum configuration time, {@link Long#MAX_VALUE} if exceeding long maximum
      */
     public static <S> long getConfigurationCount(MMLT<S, ?, ?, ?> mmlt, S location) {
         final List<? extends TimerInfo<S, ?>> timers = mmlt.getSortedTimers(location);

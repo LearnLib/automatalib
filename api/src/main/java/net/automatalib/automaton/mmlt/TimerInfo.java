@@ -21,11 +21,11 @@ import java.util.List;
  * Provides information about a timer that is stored in an MMLT.
  *
  * @param name
- *         name of the timer
+ *         the name of the timer
  * @param initial
- *         initial value of the timer
+ *         the initial value of the timer
  * @param outputs
- *         symbols that the timer produces at timeout (must not be empty, must not include silence)
+ *         the symbols that the timer produces at timeout (must not be empty, must not include silence)
  *         in the MMLT semantics, these are combined deterministically to a single output using a {@link SymbolCombiner}
  * @param target
  *         the target state of this timer
@@ -49,11 +49,11 @@ public record TimerInfo<S, O>(String name, long initial, List<O> outputs, S targ
      * {@code periodic} set to {@code true}.
      *
      * @param name
-     *         name of the timer
+     *         the name of the timer
      * @param initial
-     *         initial value of the timer
+     *         the initial value of the timer
      * @param output
-     *         symbol that the timer produces at timeout (must not be silent)
+     *         the symbol that the timer produces at timeout (must not be silent)
      * @param target
      *         the target state of this timer
      */

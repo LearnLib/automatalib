@@ -56,7 +56,7 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
      * Initializes a new CompactMMLT.
      *
      * @param alphabet
-     *         alphabet of non-delaying inputs
+     *         the alphabet of non-delaying inputs
      * @param silentOutput
      *         the silent output used by this MMLT
      * @param outputCombiner
@@ -70,9 +70,9 @@ public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT
      * Initializes a new CompactMMLT.
      *
      * @param alphabet
-     *         alphabet of non-delaying inputs
+     *         the alphabet of non-delaying inputs
      * @param sizeHint
-     *         size hint to better allocate internal memory
+     *         a size hint to better allocate internal memory
      * @param silentOutput
      *         the silent output used by this MMLT
      * @param outputCombiner

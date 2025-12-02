@@ -21,7 +21,7 @@ import net.automatalib.automaton.mmlt.MMLTGraphView;
  * Markup-interface for symbolic timed inputs.
  *
  * @param <I>
- *         input symbol type
+ *         input symbol type (of non-delaying inputs)
  *
  * @see MMLTGraphView
  */

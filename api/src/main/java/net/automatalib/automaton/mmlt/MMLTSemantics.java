@@ -55,7 +55,7 @@ public interface MMLTSemantics<S, I, T, O> extends MealyTransitionSystem<State<S
     /**
      * Returns the symbol used for silent outputs.
      *
-     * @return silent output symbol
+     * @return the silent output symbol
      */
     TimedOutput<O> getSilentOutput();
 
@@ -70,11 +70,11 @@ public interface MMLTSemantics<S, I, T, O> extends MealyTransitionSystem<State<S
      * the output at the last time step is returned.
      *
      * @param source
-     *         source configuration
+     *         the source configuration
      * @param input
-     *         input symbol
+     *         the input symbol
      * @param maxWaitingTime
-     *         maximum time steps to wait for a timeout
+     *         the maximum time steps to wait for a timeout
      *
      * @return the transition in semantics automaton
      */

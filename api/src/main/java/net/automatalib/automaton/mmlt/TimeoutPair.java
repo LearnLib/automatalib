@@ -21,9 +21,9 @@ import java.util.List;
  * Stores information about timers that expire after a given time from now.
  *
  * @param delay
- *         offset to the next timeout
+ *         the offset to the next timeout
  * @param timers
- *         timers expiring simultaneously at next timeout
+ *         the timers expiring simultaneously at next timeout
  * @param <S>
  *         location type
  * @param <O>

@@ -21,7 +21,7 @@ package net.automatalib.symbol.time;
  * @param timeSteps
  *         the number of time steps this symbol should elapse
  * @param <I>
- *         input symbol type (of other timed symbols)
+ *         input symbol type (of non-delaying inputs)
  */
 public record TimeStepSequence<I>(long timeSteps) implements TimedInput<I> {
 

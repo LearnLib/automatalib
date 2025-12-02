@@ -83,7 +83,7 @@ public interface MMLT<S, I, T, O>
      * Returns the timers of the specified location sorted ascendingly by their initial time.
      *
      * @param location
-     *         location
+     *         the location
      *
      * @return sorted list of local timers (may be empty if the location has no timers)
      */

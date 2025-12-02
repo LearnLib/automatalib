@@ -23,7 +23,7 @@ import java.util.Objects;
  * @param symbol
  *         the symbolic action
  * @param <I>
- *         input symbol type
+ *         input symbol type (of non-delaying inputs)
  */
 public record InputSymbol<I>(I symbol) implements TimedInput<I>, SymbolicInput<I> {
 
