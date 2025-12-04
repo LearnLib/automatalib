@@ -86,6 +86,14 @@ limitations under the License.
             <Class name="net.automatalib.serialization.dot.Token"/>
             <Class name="net.automatalib.serialization.dot.TokenMgrError"/>
 
+            <Class name="net.automatalib.serialization.mata.parser.ExplicitMataParser"/>
+            <Class name="net.automatalib.serialization.mata.parser.ExplicitMataParserConstants"/>
+            <Class name="net.automatalib.serialization.mata.parser.ExplicitMataParserTokenManager"/>
+            <Class name="net.automatalib.serialization.mata.parser.ParseException"/>
+            <Class name="net.automatalib.serialization.mata.parser.SimpleCharStream"/>
+            <Class name="net.automatalib.serialization.mata.parser.Token"/>
+            <Class name="net.automatalib.serialization.mata.parser.TokenMgrError"/>
+
             <Class name="net.automatalib.serialization.taf.parser.InternalTAFParser"/>
             <Class name="net.automatalib.serialization.taf.parser.InternalTAFParserConstants"/>
             <Class name="net.automatalib.serialization.taf.parser.InternalTAFParserTokenManager"/>
