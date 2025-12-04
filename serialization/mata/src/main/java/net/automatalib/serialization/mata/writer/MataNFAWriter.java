@@ -63,13 +63,14 @@ public class MataNFAWriter<I> implements InputModelSerializer<I, NFA<?, I>> {
      */
     public static <S, I> void write(Writer w, NFA<S, I> model, Alphabet<I> alphabet) throws IOException {
 
-        w.write("@NFA-explicit\n");
+        w.write("@NFA-explicit");
+        w.write(System.lineSeparator());
         w.write("%Alphabet");
         for (int i = 0; i < alphabet.size(); i++) {
             w.write(' ');
             w.write(Integer.toString(i));
         }
-        w.write('\n');
+        w.write(System.lineSeparator());
 
         final StateIDs<S> stateIDs = model.stateIDs();
         final List<Integer> finals = new ArrayList<>(model.size());
@@ -84,7 +85,7 @@ public class MataNFAWriter<I> implements InputModelSerializer<I, NFA<?, I>> {
                 finals.add(id);
             }
         }
-        w.write('\n');
+        w.write(System.lineSeparator());
 
         w.write("%Initial");
         for (S init : model.getInitialStates()) {
@@ -92,7 +93,7 @@ public class MataNFAWriter<I> implements InputModelSerializer<I, NFA<?, I>> {
             w.write('q');
             w.write(Integer.toString(stateIDs.getStateId(init)));
         }
-        w.write('\n');
+        w.write(System.lineSeparator());
 
         w.write("%Final");
         for (Integer s : finals) {
@@ -100,7 +101,7 @@ public class MataNFAWriter<I> implements InputModelSerializer<I, NFA<?, I>> {
             w.write('q');
             w.write(Integer.toString(s));
         }
-        w.write('\n');
+        w.write(System.lineSeparator());
 
         for (S s : model) {
             for (int i = 0; i < alphabet.size(); i++) {
@@ -112,7 +113,7 @@ public class MataNFAWriter<I> implements InputModelSerializer<I, NFA<?, I>> {
                     w.write(' ');
                     w.write('q');
                     w.write(Integer.toString(stateIDs.getStateId(t)));
-                    w.write('\n');
+                    w.write(System.lineSeparator());
                 }
             }
         }
