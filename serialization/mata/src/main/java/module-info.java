@@ -15,7 +15,7 @@
  */
 
 /**
- * This module contains (de-) serializers for the Mata Automaton Format. Mata is a format used by the <a
+ * This module contains (de-) serializers for the Mata automaton format. This format is used by the <a
  * href="https://doi.org/10.1007/978-3-031-57249-4_7">Mata Automata Library</a>.
  * <p>
  * This module is provided by the following Maven dependency:
