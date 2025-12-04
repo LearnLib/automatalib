@@ -29,7 +29,7 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: Serialization :: Mata</name>
-    <description>(De-)Serializers for the Mata Automaton Format</description>
+    <description>(De-)Serializers for the Mata automaton format</description>
 
     <dependencies>
         <!-- internal -->
@@ -44,12 +44,6 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
-        </dependency>
-
-        <!-- external -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <!-- build -->

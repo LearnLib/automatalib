@@ -27,6 +27,14 @@ import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelSerializer;
 
+/**
+ * Writer for serializing {@link NFA}s into the <a
+ * href="https://github.com/VeriFIT/mata/blob/devel/AUTOMATAFORMAT.md">NFA-explicit</a> format. States and inputs are
+ * typically represented by their respective index.
+ *
+ * @param <I>
+ *         input symbol type
+ */
 public class MataNFAWriter<I> implements InputModelSerializer<I, NFA<?, I>> {
 
     @Override
@@ -36,7 +44,24 @@ public class MataNFAWriter<I> implements InputModelSerializer<I, NFA<?, I>> {
         }
     }
 
-    private <S> void write(Writer w, NFA<S, I> model, Alphabet<I> alphabet) throws IOException {
+    /**
+     * Writes the given NFA to the given writer.
+     *
+     * @param w
+     *         the writer to write to
+     * @param model
+     *         the model to write
+     * @param alphabet
+     *         the inputs of the model to which serialization should be limited
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     *
+     * @throws IOException
+     *         when writing to the output stream fails.
+     */
+    public static <S, I> void write(Writer w, NFA<S, I> model, Alphabet<I> alphabet) throws IOException {
 
         w.write("@NFA-explicit\n");
         w.write("%Alphabet");

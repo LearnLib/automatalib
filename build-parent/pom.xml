@@ -68,11 +68,11 @@ limitations under the License.
                             <exclude>net/automatalib/serialization/dot/TokenMgrError.class</exclude>
 
                             <!-- generated parser for Mata serialization -->
-                            <exclude>net/automatalib/serialization/mata/ExplicitMataParser*.class</exclude>
-                            <exclude>net/automatalib/serialization/mata/ParseException.class</exclude>
-                            <exclude>net/automatalib/serialization/mata/SimpleCharStream.class</exclude>
-                            <exclude>net/automatalib/serialization/mata/Token.class</exclude>
-                            <exclude>net/automatalib/serialization/mata/TokenMgrError.class</exclude>
+                            <exclude>net/automatalib/serialization/mata/parser/ExplicitMataParser*.class</exclude>
+                            <exclude>net/automatalib/serialization/mata/parser/ParseException.class</exclude>
+                            <exclude>net/automatalib/serialization/mata/parser/SimpleCharStream.class</exclude>
+                            <exclude>net/automatalib/serialization/mata/parser/Token.class</exclude>
+                            <exclude>net/automatalib/serialization/mata/parser/TokenMgrError.class</exclude>
 
                             <!-- generated parser for TAF serialization -->
                             <exclude>net/automatalib/serialization/taf/parser/InternalTAFParser*.class</exclude>
@@ -267,6 +267,7 @@ limitations under the License.
                                         <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
                                         <arg>-AskipDefs=^net.automatalib.serialization.taf.parser.(Internal.*|Token.*|SimpleCharStream)|\
                                                         ^net.automatalib.serialization.dot.(Internal.*|Token.*|SimpleCharStream)|\
+                                                        ^net.automatalib.serialization.mata.parser.(Explicit.*|Token.*|SimpleCharStream)|\
                                                         ^net.automatalib.modelchecker.ltsmin.(Internal.*|Token.*|SimpleCharStream)|\
                                                         ^net.automatalib.modelchecker.m3c.formula.parser.(Internal.*|Token.*|SimpleCharStream)|\
                                         </arg>

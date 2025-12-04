@@ -45,10 +45,7 @@ import net.automatalib.common.util.Triple;
 import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
 
-public class ExplicitMataParser {
-
-	private NFA<?, Integer> nfa;
-	private Alphabet<Integer> alphabet;
+class ExplicitMataParser {
 
 	private Set<String> labels;
 	private Set<String> states;
@@ -56,7 +53,6 @@ public class ExplicitMataParser {
 	private Set<String> finals;
 	private List<Triple<String, String, String>> transitions;
 	private boolean parsed;
-
 
 	public void parse() throws ParseException {
 		if (!this.parsed) {
@@ -71,9 +67,11 @@ public class ExplicitMataParser {
 		Map<String, I> label2Input = new HashMap<String, I>(HashUtil.capacity(this.labels.size()));
 
 		final List<I> inputs = new ArrayList<I>(this.labels.size());
-        for (String l : this.labels) {
-			inputs.add(symbolParser.apply(l));
-        }
+		for (String l : this.labels) {
+			I i = symbolParser.apply(l);
+			inputs.add(i);
+			label2Input.put(l, i);
+		}
 		final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
 
 		final A nfa = creator.createAutomaton(alphabet, this.states.size());
@@ -95,7 +93,6 @@ public class ExplicitMataParser {
     }
 }
 
-
 PARSER_END(ExplicitMataParser)
 
 SKIP :
@@ -112,6 +109,7 @@ TOKEN:
 |	< INITIAL: "%Initial" >
 |	< FINAL: "%Final" >
 |	< DASH: "-" >
+|	< EXPLICIT: "explicit" >
 |	< NEWLINE : "\r" | "\n" | "\r\n">
 |	< STRING : (<LETTER> | <NUMBER>)+>
 |	< #LETTER: ["a"-"z","A"-"Z"] >
@@ -151,7 +149,7 @@ private void file():
 private void section():
 {}
 {
-	<SECTION>(<DASH><STRING>)?
+	<SECTION>(<DASH><EXPLICIT>)?
 }
 
 private void alphabet():
