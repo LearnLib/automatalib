@@ -17,7 +17,6 @@ package net.automatalib.modelchecking.impl;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.concept.DetOutputAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 
@@ -29,9 +28,7 @@ import net.automatalib.modelchecking.Lasso.DFALasso;
  */
 public class DFALassoImpl<I> extends AbstractLasso<I, Boolean> implements DFALasso<I> {
 
-    public DFALassoImpl(DetOutputAutomaton<?, I, ?, Boolean> automaton,
-                        Collection<? extends I> inputs,
-                        int unfoldTimes) {
+    public DFALassoImpl(DFA<?, I> automaton, Collection<? extends I> inputs, int unfoldTimes) {
         super(automaton, inputs, unfoldTimes);
     }
 

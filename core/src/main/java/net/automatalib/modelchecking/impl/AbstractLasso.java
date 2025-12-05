@@ -30,7 +30,6 @@ import net.automatalib.modelchecking.Lasso;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
@@ -62,13 +61,12 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
     public <S> AbstractLasso(DetOutputAutomaton<S, I, ?, D> automaton,
                              Collection<? extends I> inputs,
                              int unfoldTimes) {
-        this(validateLassoShape(automaton, inputs, unfoldTimes), automaton, inputs, unfoldTimes);
+        this(automaton, validateLassoShape(automaton, inputs, unfoldTimes), inputs, unfoldTimes);
     }
 
     // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    private <S> AbstractLasso(boolean valid,
-                              DetOutputAutomaton<S, I, ?, D> automaton,
+    private <S> AbstractLasso(DetOutputAutomaton<S, I, ?, D> automaton,
+                              S init,
                               Collection<? extends I> inputs,
                               int unfoldTimes) {
         // save the original automaton
@@ -86,8 +84,7 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
         final WordBuilder<I> wb = new WordBuilder<>();
 
         // start visiting the initial state
-        @SuppressWarnings("nullness") // we have checked non-nullness of the initial state
-        @NonNull S current = automaton.getInitialState();
+        S current = init;
 
         // index for the current state
         int i = 0;
@@ -212,14 +209,15 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
         return getSuccessor(state, input);
     }
 
-    private static <S, I, D> boolean validateLassoShape(DetOutputAutomaton<S, I, ?, D> automaton,
-                                                        Collection<? extends I> inputs,
-                                                        int unfoldTimes) {
+    private static <S, I, D> S validateLassoShape(DetOutputAutomaton<S, I, ?, D> automaton,
+                                                  Collection<? extends I> inputs,
+                                                  int unfoldTimes) {
         if (unfoldTimes <= 0) {
             throw new AssertionError();
         }
 
-        if (automaton.getInitialState() == null) {
+        final S init = automaton.getInitialState();
+        if (init == null) {
             throw new IllegalArgumentException(NO_LASSO);
         }
 
@@ -233,6 +231,6 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
             throw new IllegalArgumentException(NO_LASSO);
         }
 
-        return true;
+        return init;
     }
 }

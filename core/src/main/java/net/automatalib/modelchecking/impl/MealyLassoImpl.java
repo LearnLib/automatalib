@@ -17,7 +17,6 @@ package net.automatalib.modelchecking.impl;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.concept.DetOutputAutomaton;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.word.Word;
@@ -32,9 +31,7 @@ import net.automatalib.word.Word;
  */
 public class MealyLassoImpl<I, O> extends AbstractLasso<I, Word<O>> implements MealyLasso<I, O> {
 
-    public MealyLassoImpl(DetOutputAutomaton<?, I, ?, Word<O>> automaton,
-                          Collection<? extends I> inputs,
-                          int unfoldTimes) {
+    public MealyLassoImpl(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, int unfoldTimes) {
         super(automaton, inputs, unfoldTimes);
     }
 
