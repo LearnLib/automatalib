@@ -17,11 +17,13 @@ package net.automatalib.automaton.concept;
 
 import java.util.Collection;
 
+import net.automatalib.exception.UndefinedPropertyAccessException;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
 /**
- * Feature for automata that compute an output.
+ * Feature for transition systems that compute an output. Here, output refers to the <i>complete</i> output that is made
+ * when an input word is read, not a single symbol.
  *
  * @param <I>
  *         input symbol type
@@ -31,13 +33,53 @@ import net.automatalib.word.WordBuilder;
 @FunctionalInterface
 public interface Output<I, D> {
 
+    /**
+     * Computes the output for the given sequence of input symbols.
+     *
+     * @param input
+     *         the sequence of input symbols
+     *
+     * @return the computed output
+     *
+     * @throws UndefinedPropertyAccessException
+     *         if the computation encountered undefined transitions that would have been required for computing the
+     *         output
+     */
     D computeOutput(Iterable<? extends I> input);
 
+    /**
+     * Convenience method for {@link #getBuilderFor(Iterable, int)} which uses {@code 0} for
+     * {@code additionalElements}.
+     *
+     * @param iterable
+     *         the sequence of input symbols
+     * @param <T>
+     *         symbol type
+     *
+     * @return a pre-sized builder (may use the default size if no information could be extracted from the iterable)
+     */
     static <T> WordBuilder<T> getBuilderFor(Iterable<?> iterable) {
+        return getBuilderFor(iterable, 0);
+    }
+
+    /**
+     * Utility method for constructing a pre-sized builder (if possible) for storing responses generated when applying
+     * the provided sequence of input symbols.
+     *
+     * @param iterable
+     *         the sequence of input symbols
+     * @param additionalElements
+     *         number of elements that is added to the size of the iterable
+     * @param <T>
+     *         symbol type
+     *
+     * @return a pre-sized builder (may use the default size if no information could be extracted from the iterable)
+     */
+    static <T> WordBuilder<T> getBuilderFor(Iterable<?> iterable, int additionalElements) {
         if (iterable instanceof Word<?> w) {
-            return new WordBuilder<>(w.length());
+            return new WordBuilder<>(w.length() + additionalElements);
         } else if (iterable instanceof Collection<?> c) {
-            return new WordBuilder<>(c.size());
+            return new WordBuilder<>(c.size() + additionalElements);
         } else {
             return new WordBuilder<>();
         }

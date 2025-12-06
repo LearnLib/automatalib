@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.transducer;
+package net.automatalib.ts.concept;
 
-import net.automatalib.automaton.concept.DeterministicSuffixOutputAutomaton;
-import net.automatalib.ts.output.DeterministicTransitionOutputTS;
-import net.automatalib.word.Word;
+import net.automatalib.ts.DeterministicTransitionSystem;
 
 /**
- * A state output automaton is a {@link DeterministicSuffixOutputAutomaton deterministic suffix output automaton} that
- * produces outputs based on its {@link DeterministicTransitionOutputTS transition outputs}.
+ * A deterministic output transition system is a {@link DeterministicTransitionSystem determinisitc transition system}
+ * that can produce {@link OutputTS outputs}.
  *
  * @param <S>
  *         state type
@@ -29,9 +27,8 @@ import net.automatalib.word.Word;
  *         input symbol type
  * @param <T>
  *         transition type
- * @param <O>
- *         output symbol type
+ * @param <D>
+ *         output domain type
  */
-public interface TransitionOutputAutomaton<S, I, T, O>
-        extends DeterministicSuffixOutputAutomaton<S, I, T, Word<O>>, DeterministicTransitionOutputTS<S, I, T, O> {}
-
+public interface DeterministicOutputTS<S, I, T, D>
+        extends OutputTS<S, I, T, D>, DeterministicTransitionSystem<S, I, T> {}

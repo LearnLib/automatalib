@@ -15,21 +15,22 @@
  */
 package net.automatalib.automaton.transducer;
 
-import net.automatalib.automaton.concept.DetSuffixOutputAutomaton;
-import net.automatalib.automaton.concept.Output;
+import net.automatalib.automaton.concept.DeterministicSuffixOutputAutomaton;
 import net.automatalib.ts.output.DeterministicStateOutputTS;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 
+/**
+ * A state output automaton is a {@link DeterministicSuffixOutputAutomaton deterministic suffix output automaton} that
+ * produces outputs based on its {@link DeterministicStateOutputTS state outputs}.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <O>
+ *         output symbol type
+ */
 public interface StateOutputAutomaton<S, I, T, O>
-        extends DetSuffixOutputAutomaton<S, I, T, Word<O>>, DeterministicStateOutputTS<S, I, T, O> {
-
-    @Override
-    default Word<O> computeStateOutput(S state, Iterable<? extends I> input) {
-        final WordBuilder<O> result = Output.getBuilderFor(input);
-
-        trace(state, input, result);
-
-        return result.toWord();
-    }
-}
+        extends DeterministicSuffixOutputAutomaton<S, I, T, Word<O>>, DeterministicStateOutputTS<S, I, T, O> {}

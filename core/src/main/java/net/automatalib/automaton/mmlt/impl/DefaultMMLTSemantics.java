@@ -21,7 +21,6 @@ import java.util.Objects;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.MapAlphabet;
-import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
 import net.automatalib.automaton.mmlt.State;
@@ -33,8 +32,6 @@ import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
-import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,36 +96,6 @@ public class DefaultMMLTSemantics<S, I, T, O>
     }
 
     @Override
-    public Word<TimedOutput<O>> computeSuffixOutput(Iterable<? extends TimedInput<I>> prefix,
-                                                    Iterable<? extends TimedInput<I>> suffix) {
-        WordBuilder<TimedOutput<O>> wb = Output.getBuilderFor(suffix);
-        State<S, O> currentConfiguration = getState(prefix);
-
-        if (currentConfiguration == null) {
-            return Word.epsilon();
-        }
-
-        for (TimedInput<I> sym : suffix) {
-            MealyTransition<State<S, O>, TimedOutput<O>> trans = getTransition(currentConfiguration, sym);
-
-            if (trans == null) {
-                break;
-            }
-
-            final TimedOutput<O> output = trans.getOutput();
-            if (sym instanceof TimeStepSequence<?> ts && ts.timeSteps() > 1) {
-                LOGGER.warn("Computing output of time step sequence with more than one symbol." +
-                            "The computed output only contains the output for the sequence.");
-            }
-
-            wb.append(output);
-            currentConfiguration = trans.getSuccessor();
-        }
-
-        return wb.toWord();
-    }
-
-    @Override
     public MealyTransition<State<S, O>, TimedOutput<O>> getTransition(State<S, O> source, TimedInput<I> input) {
         return getTransition(source, input, Long.MAX_VALUE);
     }
@@ -146,6 +113,12 @@ public class DefaultMMLTSemantics<S, I, T, O>
             State<S, O> currentConfig = source;
             O lastOutput = null;
             long remainingTime = ts.timeSteps();
+
+            if (remainingTime > 1) {
+                LOGGER.warn(
+                        "The transition output of a time step sequence with more than one symbol only contains the output for the sequence");
+            }
+
             while (remainingTime > 0) {
                 MealyTransition<State<S, O>, TimedOutput<O>> nextTimeoutTrans =
                         getTimeoutTransition(currentConfig, remainingTime);

@@ -23,11 +23,12 @@ import java.util.Objects;
 
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.concept.Output;
-import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.ts.concept.DeterministicSuffixOutputTS;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A system of procedural Mealy machines. {@link SPMM}s extend the idea of {@link SBA}s by supporting deterministic
@@ -44,9 +45,8 @@ import net.automatalib.word.WordBuilder;
  * @param <O>
  *         output symbol type
  */
-public interface SPMM<S, I, T, O> extends ProceduralSystem<I, MealyMachine<?, I, ?, O>>,
-                                          MealyTransitionSystem<S, I, T, O>,
-                                          SuffixOutput<I, Word<O>> {
+public interface SPMM<S, I, T, O>
+        extends ProceduralSystem<I, MealyMachine<?, I, ?, O>>, MealyTransitionSystem<S, I, T, O> {
 
     /**
      * Returns the output symbol that identifies erroneous transitions. Note that for the validity of this {@link SPMM},
@@ -87,20 +87,41 @@ public interface SPMM<S, I, T, O> extends ProceduralSystem<I, MealyMachine<?, I,
         return result;
     }
 
+    /**
+     * This implementation differs from the
+     * {@link DeterministicSuffixOutputTS#computeStateOutput(Object, Iterable) default implementation} in that it always
+     * computes the full output word  because the outputs of missing transitions can be replaced by this {@link SPMM}'s
+     * {@link #getErrorOutput() error output}.
+     *
+     * @param state
+     *         the start from which the output computation should start
+     * @param input
+     *         the sequence of input symbols
+     *
+     * @return the computed output
+     */
     @Override
-    default Word<O> computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
+    default Word<O> computeStateOutput(@Nullable S state, Iterable<? extends I> input) {
+        final WordBuilder<O> output = Output.getBuilderFor(input);
 
-        final S state = this.getState(prefix);
-
-        if (state == null) {
-            return Word.epsilon();
+        S iter = state;
+        for (I i : input) {
+            if (iter == null) {
+                output.add(getErrorOutput());
+            } else {
+                T trans = getTransition(iter, i);
+                if (trans == null) {
+                    output.add(getErrorOutput());
+                    iter = null;
+                } else {
+                    O out = getTransitionOutput(trans);
+                    output.add(out);
+                    iter = getSuccessor(trans);
+                }
+            }
         }
 
-        final WordBuilder<O> result = Output.getBuilderFor(suffix);
-
-        this.trace(state, suffix, result);
-
-        return result.toWord();
+        return output.toWord();
     }
 
 }

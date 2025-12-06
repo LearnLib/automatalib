@@ -17,7 +17,7 @@ package net.automatalib.modelchecking;
 
 import java.util.SortedSet;
 
-import net.automatalib.automaton.concept.DetOutputAutomaton;
+import net.automatalib.automaton.concept.DeterministicOutputAutomaton;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -35,7 +35,7 @@ import net.automatalib.word.Word;
  * @param <D>
  *         the output type
  */
-public interface Lasso<I, D> extends DetOutputAutomaton<Integer, I, Integer, D>, InputAlphabetHolder<I> {
+public interface Lasso<I, D> extends DeterministicOutputAutomaton<Integer, I, Integer, D>, InputAlphabetHolder<I> {
 
     /**
      * Gets the finite representation of the lasso.
@@ -86,7 +86,7 @@ public interface Lasso<I, D> extends DetOutputAutomaton<Integer, I, Integer, D>,
      *
      * @return the original automaton.
      */
-    DetOutputAutomaton<?, I, ?, D> getAutomaton();
+    DeterministicOutputAutomaton<?, I, ?, D> getAutomaton();
 
     /**
      * A DFALasso is a lasso for {@link DFA}s.

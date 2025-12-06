@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.ts.output;
+package net.automatalib.automaton.concept;
 
-import java.util.List;
+import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.ts.concept.DeterministicOutputTS;
 
-import net.automatalib.ts.DeterministicTransitionSystem;
-
-public interface DeterministicOutputTS<S, I, T, O> extends DeterministicTransitionSystem<S, I, T> {
-
-    default boolean trace(Iterable<? extends I> input, List<? super O> output) {
-        final S init = getInitialState();
-
-        return init != null && trace(init, input, output);
-    }
-
-    boolean trace(S state, Iterable<? extends I> input, List<? super O> output);
-}
+/**
+ * A deterministic output automaton is a {@link DeterministicAutomaton deterministic automaton} that can produce
+ * {@link OutputAutomaton outputs}.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <D>
+ *         output domain type
+ */
+public interface DeterministicOutputAutomaton<S, I, T, D>
+        extends OutputAutomaton<S, I, T, D>, DeterministicAutomaton<S, I, T>, DeterministicOutputTS<S, I, T, D> {}

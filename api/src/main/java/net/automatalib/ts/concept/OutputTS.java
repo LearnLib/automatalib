@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.concept;
+package net.automatalib.ts.concept;
 
-import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.automaton.concept.Output;
+import net.automatalib.ts.TransitionSystem;
 
 /**
- * An automaton which deterministically produces an output for an input word. Here, output refers to the <i>complete</i>
- * output that is made when an input word is read, not a single symbol.
+ * An output transition system is a {@link TransitionSystem transition system} that can produce {@link Output outputs}.
  *
  * @param <S>
- *         state class
+ *         state type
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <T>
- *         transition class
+ *         transition type
  * @param <D>
- *         output domain class
+ *         output domain type
  */
-public interface DetOutputAutomaton<S, I, T, D> extends OutputAutomaton<S, I, T, D>, DeterministicAutomaton<S, I, T> {}
+public interface OutputTS<S, I, T, D> extends TransitionSystem<S, I, T>, Output<I, D> {}

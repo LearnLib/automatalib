@@ -17,8 +17,10 @@ package net.automatalib.ts.acceptor;
 
 import java.util.Collection;
 
+import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.UniversalTransitionSystem;
+import net.automatalib.ts.concept.OutputTS;
 import net.automatalib.ts.powerset.AcceptorPowersetView;
 
 /**
@@ -29,7 +31,9 @@ import net.automatalib.ts.powerset.AcceptorPowersetView;
  * @param <I>
  *         input symbol class
  */
-public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boolean, Void> {
+public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boolean, Void>,
+                                          OutputTS<S, I, S, Boolean>,
+                                          SuffixOutput<I, Boolean> {
 
     /**
      * Determines whether the given input word is accepted by this acceptor.
@@ -56,6 +60,16 @@ public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boo
     boolean isAccepting(S state);
 
     boolean isAccepting(Collection<? extends S> states);
+
+    @Override
+    default Boolean computeOutput(Iterable<? extends I> input) {
+        return accepts(input);
+    }
+
+    @Override
+    default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
+        return isAccepting(getSuccessors(getStates(prefix), suffix));
+    }
 
     @Override
     default Boolean getStateProperty(S state) {

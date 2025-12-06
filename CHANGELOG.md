@@ -24,6 +24,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The following class hierarchies have been made `sealed`:
   * `CommonAttrs`
   * `CommonStyles`
+* The `compute{State,Suffix,}Output` concepts from `Det{Suffix,}OutputAutomaton` have been lifted to infinite-state transition systems. As part of this refactoring, some inconsistencies have been addressed. Previously, for `Word`-output systems, `computeSuffixOutput` threw an `UndefinedPropertyAccessException` if the prefix traversed an undefined transition but not if the suffix did (here, the output would only be cut short). Now, both methods simply early-exit output computation. Furthermore, these changes also include the following renamings:
+  * `DetOutputAutomaton` -> `DeterministicOutputAutomaton`
+  * `DetSuffixOutputAutomaton` -> `DeterministicSuffixOutputAutomaton`
+  * `DeterministicOutputTS` -> `DeterministicTraceableTS`
 * `ProcessUtil#invokeProcess` now handles consumers for stdout and stderr separately.
 
 ### Removed

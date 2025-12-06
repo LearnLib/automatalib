@@ -17,7 +17,7 @@ package net.automatalib.modelchecker.ltsmin;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.concept.DetOutputAutomaton;
+import net.automatalib.automaton.concept.DeterministicOutputAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -33,7 +33,7 @@ public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
 
     private final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'b');
 
-    private DetOutputAutomaton<?, String, ?, ?> counterExample;
+    private DeterministicOutputAutomaton<?, String, ?, ?> counterExample;
 
     private A automaton;
 
@@ -45,7 +45,7 @@ public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
         return alphabet;
     }
 
-    protected abstract DetOutputAutomaton<?, String, ?, ?> createCounterExample();
+    protected abstract DeterministicOutputAutomaton<?, String, ?, ?> createCounterExample();
 
     protected abstract A createAutomaton();
 

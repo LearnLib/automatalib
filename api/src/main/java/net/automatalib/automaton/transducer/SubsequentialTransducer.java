@@ -19,17 +19,17 @@ import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.concept.DetSuffixOutputAutomaton;
+import net.automatalib.automaton.concept.DeterministicSuffixOutputAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.SSTVisualizationHelper;
 import net.automatalib.graph.UniversalGraph;
-import net.automatalib.ts.output.DeterministicOutputTS;
+import net.automatalib.ts.concept.DeterministicOutputTS;
+import net.automatalib.ts.output.DeterministicTraceableTS;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 
 /**
  * A subsequential transducer (or SST) is an {@link DeterministicOutputTS} whose state and transition properties are
@@ -51,19 +51,9 @@ import net.automatalib.word.WordBuilder;
  * @param <O>
  *         output symbol type
  */
-public interface SubsequentialTransducer<S, I, T, O> extends DeterministicOutputTS<S, I, T, O>,
-                                                             DetSuffixOutputAutomaton<S, I, T, Word<O>>,
+public interface SubsequentialTransducer<S, I, T, O> extends DeterministicTraceableTS<S, I, T, O>,
+                                                             DeterministicSuffixOutputAutomaton<S, I, T, Word<O>>,
                                                              UniversalDeterministicAutomaton<S, I, T, Word<O>, Word<O>> {
-
-    @Override
-    default Word<O> computeStateOutput(S state, Iterable<? extends I> input) {
-        // since the outputs are words of unknown length, we can't really pre-compute a sensible builder size
-        final WordBuilder<O> result = new WordBuilder<>();
-
-        trace(state, input, result);
-
-        return result.toWord();
-    }
 
     @Override
     default boolean trace(S state, Iterable<? extends I> input, List<? super O> output) {

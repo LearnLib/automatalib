@@ -13,21 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.concept;
+package net.automatalib.common.util.collection;
 
-import net.automatalib.automaton.Automaton;
-import net.automatalib.ts.concept.OutputTS;
+import java.util.Arrays;
+import java.util.List;
 
-/**
- * An output automaton is a {@link Automaton finite state} {@link OutputTS output transition system}.
- *
- * @param <S>
- *         state type
- * @param <I>
- *         input symbol type
- * @param <T>
- *         transition type
- * @param <D>
- *         output domain type
- */
-public interface OutputAutomaton<S, I, T, D> extends Automaton<S, I, T>, OutputTS<S, I, T, D> {}
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class IteratableUtilTest {
+
+    @Test
+    public void testConcat() {
+        final List<Integer> iter1 = Arrays.asList(1, 2);
+        final List<Integer> iter2 = Arrays.asList(4, 3);
+
+        Iterable<Integer> concat1 = IterableUtil.concat(iter1, iter2);
+        Iterable<Integer> concat2 = IterableUtil.concat(iter2, iter1);
+
+        Assert.assertEquals(concat1, Arrays.asList(1, 2, 4, 3));
+        Assert.assertEquals(concat2, Arrays.asList(4, 3, 1, 2));
+    }
+}

@@ -18,10 +18,10 @@ package net.automatalib.ts.acceptor;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.ts.AcceptorPowersetViewTS;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.UniversalDTS;
+import net.automatalib.ts.concept.DeterministicSuffixOutputTS;
 import net.automatalib.ts.powerset.DeterministicAcceptorPowersetView;
 
 /**
@@ -31,21 +31,18 @@ import net.automatalib.ts.powerset.DeterministicAcceptorPowersetView;
  * @see DeterministicTransitionSystem
  */
 public interface DeterministicAcceptorTS<S, I>
-        extends AcceptorTS<S, I>, UniversalDTS<S, I, S, Boolean, Void>, SuffixOutput<I, Boolean> {
+        extends AcceptorTS<S, I>, UniversalDTS<S, I, S, Boolean, Void>, DeterministicSuffixOutputTS<S, I, S, Boolean> {
 
     @Override
-    default Boolean computeOutput(Iterable<? extends I> input) {
-        return accepts(input);
+    default Boolean computeStateOutput(S state, Iterable<? extends I> input) {
+        final S tgt = getSuccessor(state, input);
+        return tgt != null && isAccepting(tgt);
     }
 
     @Override
     default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        S tgt = getState(prefix);
-        if (tgt != null) {
-            S succ = getSuccessor(tgt, suffix);
-            return succ != null && isAccepting(succ);
-        }
-        return false;
+        final S tgt = getState(prefix);
+        return tgt != null && computeStateOutput(tgt, suffix);
     }
 
     @Override

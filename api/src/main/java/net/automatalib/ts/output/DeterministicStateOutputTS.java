@@ -18,8 +18,25 @@ package net.automatalib.ts.output;
 import java.util.List;
 
 import net.automatalib.automaton.concept.StateOutput;
+import net.automatalib.ts.concept.DeterministicSuffixOutputTS;
+import net.automatalib.word.Word;
 
-public interface DeterministicStateOutputTS<S, I, T, O> extends DeterministicOutputTS<S, I, T, O>, StateOutput<S, O> {
+/**
+ * A deterministic state output transition system is a
+ * {@link DeterministicSuffixOutputTS deterministic output transition system} that produces outputs based on its
+ * {@link StateOutput state outputs}.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <O>
+ *         output symbol type
+ */
+public interface DeterministicStateOutputTS<S, I, T, O>
+        extends DeterministicTraceableTS<S, I, T, O>, DeterministicSuffixOutputTS<S, I, T, Word<O>>, StateOutput<S, O> {
 
     @Override
     default boolean trace(S state, Iterable<? extends I> input, List<? super O> output) {

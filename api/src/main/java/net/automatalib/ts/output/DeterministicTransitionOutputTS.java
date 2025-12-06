@@ -18,10 +18,27 @@ package net.automatalib.ts.output;
 import java.util.List;
 
 import net.automatalib.automaton.concept.TransitionOutput;
+import net.automatalib.ts.concept.DeterministicSuffixOutputTS;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public interface DeterministicTransitionOutputTS<S, I, T, O>
-        extends DeterministicOutputTS<S, I, T, O>, TransitionOutput<T, O> {
+/**
+ * A deterministic transition output transition system is a
+ * {@link DeterministicSuffixOutputTS deterministic output transition system} that produces outputs based on its
+ * {@link TransitionOutput transition outputs}.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <O>
+ *         output symbol type
+ */
+public interface DeterministicTransitionOutputTS<S, I, T, O> extends DeterministicTraceableTS<S, I, T, O>,
+                                                                     DeterministicSuffixOutputTS<S, I, T, Word<O>>,
+                                                                     TransitionOutput<T, O> {
 
     /**
      * Retrieves the output for the given input symbol in the given state. This is roughly equivalent to calling

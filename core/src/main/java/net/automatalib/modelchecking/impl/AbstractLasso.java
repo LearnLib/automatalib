@@ -24,7 +24,7 @@ import java.util.TreeSet;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.concept.DetOutputAutomaton;
+import net.automatalib.automaton.concept.DeterministicOutputAutomaton;
 import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.ts.simple.SimpleDTS;
@@ -43,7 +43,7 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
     private final Alphabet<I> inputAlphabet;
     private final int unfolds;
     private final SortedSet<Integer> loopBeginIndices = new TreeSet<>();
-    private final DetOutputAutomaton<?, I, ?, D> automaton;
+    private final DeterministicOutputAutomaton<?, I, ?, D> automaton;
 
     /**
      * Constructs a finite representation of a given automaton (that contains a lasso), by unrolling the loop
@@ -58,14 +58,14 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
      * @param <S>
      *         the state type
      */
-    public <S> AbstractLasso(DetOutputAutomaton<S, I, ?, D> automaton,
+    public <S> AbstractLasso(DeterministicOutputAutomaton<S, I, ?, D> automaton,
                              Collection<? extends I> inputs,
                              int unfoldTimes) {
         this(automaton, validateLassoShape(automaton, inputs, unfoldTimes), inputs, unfoldTimes);
     }
 
     // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
-    private <S> AbstractLasso(DetOutputAutomaton<S, I, ?, D> automaton,
+    private <S> AbstractLasso(DeterministicOutputAutomaton<S, I, ?, D> automaton,
                               S init,
                               Collection<? extends I> inputs,
                               int unfoldTimes) {
@@ -133,7 +133,7 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
     }
 
     @Override
-    public DetOutputAutomaton<?, I, ?, D> getAutomaton() {
+    public DeterministicOutputAutomaton<?, I, ?, D> getAutomaton() {
         return automaton;
     }
 
@@ -209,7 +209,7 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
         return getSuccessor(state, input);
     }
 
-    private static <S, I, D> S validateLassoShape(DetOutputAutomaton<S, I, ?, D> automaton,
+    private static <S, I, D> S validateLassoShape(DeterministicOutputAutomaton<S, I, ?, D> automaton,
                                                   Collection<? extends I> inputs,
                                                   int unfoldTimes) {
         if (unfoldTimes <= 0) {

@@ -23,7 +23,7 @@ import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.concept.DetSuffixOutputAutomaton;
+import net.automatalib.automaton.concept.DeterministicSuffixOutputAutomaton;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.transducer.impl.CompactMoore;
@@ -155,14 +155,14 @@ public class CharacterizingSetsTest {
         checkCharacterizingSet(dfa, characterizingSet);
     }
 
-    private <S, I> void checkCharacterizingSet(DetSuffixOutputAutomaton<S, I, ?, ?> automaton,
+    private <S, I> void checkCharacterizingSet(DeterministicSuffixOutputAutomaton<S, I, ?, ?> automaton,
                                                Collection<Word<I>> characterizingSet) {
         for (S s : automaton) {
             checkCharacterizingSet(automaton, s, characterizingSet);
         }
     }
 
-    private <S, I, D> void checkCharacterizingSet(DetSuffixOutputAutomaton<S, I, ?, D> automaton,
+    private <S, I, D> void checkCharacterizingSet(DeterministicSuffixOutputAutomaton<S, I, ?, D> automaton,
                                                   S state,
                                                   Collection<Word<I>> characterizingSet) {
 

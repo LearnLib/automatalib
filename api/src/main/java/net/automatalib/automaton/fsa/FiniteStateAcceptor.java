@@ -26,7 +26,6 @@ import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.FSAVisualizationHelper;
-import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.graph.UniversalGraph;
 import net.automatalib.ts.acceptor.AcceptorTS;
 import net.automatalib.visualization.VisualizationHelper;
@@ -41,17 +40,6 @@ public interface FiniteStateAcceptor<S, I> extends AcceptorTS<S, I>,
 
     List<Boolean> STATE_PROPERTIES = Arrays.asList(Boolean.FALSE, Boolean.TRUE);
     List<Void> TRANSITION_PROPERTIES = Collections.singletonList(null);
-
-    @Override
-    default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        Iterable<I> input = IterableUtil.concat(prefix, suffix);
-        return computeOutput(input);
-    }
-
-    @Override
-    default Boolean computeOutput(Iterable<? extends I> input) {
-        return accepts(input);
-    }
 
     @Override
     default UniversalGraph<S, TransitionEdge<I, S>, Boolean, TransitionEdge.Property<I, Void>> transitionGraphView(

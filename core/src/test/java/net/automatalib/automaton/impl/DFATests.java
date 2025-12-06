@@ -15,11 +15,15 @@
  */
 package net.automatalib.automaton.impl;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.util.TestUtil;
 import net.automatalib.word.Word;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class DFATests {
@@ -38,5 +42,19 @@ public class DFATests {
         TestUtil.checkOutput(dfa, Word.fromString("ababab"), true);
         TestUtil.checkOutput(dfa, Word.fromString("aabb"), false);
         TestUtil.checkOutput(dfa, Word.fromString("baba"), false);
+    }
+
+    @Test
+    public void testAcceptingCollections() {
+        final Alphabet<Character> sigma = Alphabets.fromArray();
+        final CompactDFA<Character> dfa = new CompactDFA<>(sigma);
+
+        final int q0 = dfa.addIntInitialState(false);
+        final int q1 = dfa.addIntState(true);
+
+        Assert.assertFalse(dfa.isAccepting(Collections.emptyList()));
+        Assert.assertFalse(dfa.isAccepting(Collections.singleton(q0)));
+        Assert.assertTrue(dfa.isAccepting(Collections.singleton(q1)));
+        Assert.assertThrows(IllegalArgumentException.class, () -> dfa.isAccepting(Arrays.asList(q0, q1)));
     }
 }

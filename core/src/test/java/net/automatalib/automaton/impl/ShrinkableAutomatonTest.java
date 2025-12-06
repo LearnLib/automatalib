@@ -42,7 +42,8 @@ public class ShrinkableAutomatonTest {
 
         mealy.removeState(s2);
 
-        final Word<Symbol<Character>> input1 = Word.fromSymbols(TestUtil.IN_B, TestUtil.IN_A, TestUtil.IN_A);
+        final Word<Symbol<Character>> input1 =
+                Word.fromSymbols(TestUtil.IN_B, TestUtil.IN_A, TestUtil.IN_A, TestUtil.IN_B);
         final Word<Symbol<Character>> input2 =
                 Word.fromSymbols(TestUtil.IN_B, TestUtil.IN_A, TestUtil.IN_B, TestUtil.IN_B);
 
@@ -51,7 +52,9 @@ public class ShrinkableAutomatonTest {
                 Word.fromSymbols(TestUtil.OUT_ERROR, TestUtil.OUT_OK, TestUtil.OUT_OK, TestUtil.OUT_ERROR);
 
         Assert.assertEquals(mealy.computeOutput(input1), expectedOutput1);
+        Assert.assertEquals(mealy.computeSuffixOutput(input1.prefix(-1), input1.suffix(1)), Word.epsilon());
         Assert.assertEquals(mealy.computeOutput(input2), expectedOutput2);
+        Assert.assertEquals(mealy.computeSuffixOutput(input2.prefix(-1), input2.suffix(1)), expectedOutput2.suffix(1));
 
         final FastMealyState<String> s3 = mealy.addState();
         mealy.setTransition(s3, TestUtil.IN_A, s1, TestUtil.OUT_OK);
@@ -61,7 +64,9 @@ public class ShrinkableAutomatonTest {
 
         Assert.assertEquals(mealy.getInitialState(), s3);
         Assert.assertEquals(mealy.computeOutput(input1), expectedOutput1);
+        Assert.assertEquals(mealy.computeSuffixOutput(input1.prefix(-1), input1.suffix(1)), Word.epsilon());
         Assert.assertEquals(mealy.computeOutput(input2), expectedOutput2);
+        Assert.assertEquals(mealy.computeSuffixOutput(input2.prefix(-1), input2.suffix(1)), expectedOutput2.suffix(1));
     }
 
     @Test

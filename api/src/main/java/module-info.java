@@ -65,6 +65,7 @@ open module net.automatalib.api {
     exports net.automatalib.symbol.time;
     exports net.automatalib.ts;
     exports net.automatalib.ts.acceptor;
+    exports net.automatalib.ts.concept;
     exports net.automatalib.ts.modal;
     exports net.automatalib.ts.modal.transition;
     exports net.automatalib.ts.output;
