@@ -61,13 +61,13 @@ public class StackSPMM<S, I, T, O>
     }
 
     @Override
-    public MealyTransition<StackState<S, I, MealyMachine<S, I, T, O>>, O> getTransition(StackState<S, I, MealyMachine<S, I, T, O>> state,
-                                                                                        I input) {
-        if (state.isSink() || state.isTerm()) {
-            return sink();
+    public @Nullable MealyTransition<StackState<S, I, MealyMachine<S, I, T, O>>, O> getTransition(StackState<S, I, MealyMachine<S, I, T, O>> state,
+                                                                                                  I input) {
+        if (state.isTerm()) {
+            return null;
         } else if (alphabet.isInternalSymbol(input)) {
             if (state.isInit()) {
-                return sink();
+                return null;
             }
 
             final MealyMachine<S, I, T, O> model = state.getProcedure();
@@ -75,25 +75,25 @@ public class StackSPMM<S, I, T, O>
 
             // undefined internal transition
             if (t == null || isErrorOutput(model.getTransitionOutput(t))) {
-                return sink();
+                return null;
             }
 
             return new MealyTransition<>(state.updateState(model.getSuccessor(t)), model.getTransitionOutput(t));
         } else if (alphabet.isCallSymbol(input)) {
             if (state.isInit() && !Objects.equals(this.initialCall, input)) {
-                return sink();
+                return null;
             }
 
             final MealyMachine<S, I, T, O> model = this.procedures.get(input);
 
             if (model == null) {
-                return sink();
+                return null;
             }
 
             final S next = model.getInitialState();
 
             if (next == null) {
-                return sink();
+                return null;
             }
 
             // store the procedural successor in the stack so that we don't need to look it up on return symbols
@@ -107,7 +107,7 @@ public class StackSPMM<S, I, T, O>
                 final T t = p.getTransition(state.getCurrentState(), input);
 
                 if (t == null || isErrorOutput(p.getTransitionOutput(t))) {
-                    return sink();
+                    return null;
                 }
                 returnState = state.updateState(p.getSuccessor(t));
                 output = p.getTransitionOutput(t);
@@ -116,7 +116,7 @@ public class StackSPMM<S, I, T, O>
             return new MealyTransition<>(returnState.push(model, next), output);
         } else if (alphabet.isReturnSymbol(input)) {
             if (state.isInit()) {
-                return sink();
+                return null;
             }
 
             // if we returned the state before, we checked that a procedure is available
@@ -124,12 +124,12 @@ public class StackSPMM<S, I, T, O>
             final T t = model.getTransition(state.getCurrentState(), input);
 
             if (t == null || isErrorOutput(model.getTransitionOutput(t))) {
-                return sink();
+                return null;
             }
 
             return new MealyTransition<>(state.pop(), model.getTransitionOutput(t));
         } else {
-            return sink();
+            return null;
         }
     }
 
@@ -166,10 +166,6 @@ public class StackSPMM<S, I, T, O>
     @Override
     public StackState<S, I, MealyMachine<S, I, T, O>> getSuccessor(MealyTransition<StackState<S, I, MealyMachine<S, I, T, O>>, O> transition) {
         return transition.getSuccessor();
-    }
-
-    private MealyTransition<StackState<S, I, MealyMachine<S, I, T, O>>, O> sink() {
-        return new MealyTransition<>(StackState.sink(), errorOutput);
     }
 
 }

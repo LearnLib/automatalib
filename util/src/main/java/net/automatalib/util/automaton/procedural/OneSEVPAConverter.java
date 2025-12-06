@@ -173,20 +173,20 @@ final class OneSEVPAConverter {
     }
 
     private static <S, I> boolean accepts(SPA<S, I> spa, Word<I> w1, Word<I> w2, Word<I> w3) {
-        S iter = spa.getInitialState();
+        S init = spa.getInitialState();
 
-        for (int i = 0; i < w1.length(); i++) {
-            iter = spa.getTransition(iter, w1.getSymbol(i));
+        if (init != null) {
+            S s1 = spa.getSuccessor(init, w1);
+            if (s1 != null) {
+                S s2 = spa.getSuccessor(s1, w2);
+                if (s2 != null) {
+                    S s3 = spa.getSuccessor(s2, w3);
+                    if (s3 != null) {
+                        return spa.isAccepting(s3);
+                    }
+                }
+            }
         }
-
-        for (int i = 0; i < w2.length(); i++) {
-            iter = spa.getTransition(iter, w2.getSymbol(i));
-        }
-
-        for (int i = 0; i < w3.length(); i++) {
-            iter = spa.getTransition(iter, w3.getSymbol(i));
-        }
-
-        return spa.isAccepting(iter);
+        return false;
     }
 }

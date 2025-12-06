@@ -51,11 +51,11 @@ public class StackSPA<S, I> implements SPA<StackState<S, I, DFA<S, I>>, I>, Simp
 
     @Override
     public StackState<S, I, DFA<S, I>> getTransition(StackState<S, I, DFA<S, I>> state, I input) {
-        if (state.isSink() || state.isTerm()) {
-            return StackState.sink();
+        if (state.isTerm()) {
+            return null;
         } else if (alphabet.isInternalSymbol(input)) {
             if (state.isInit()) {
-                return StackState.sink();
+                return null;
             }
 
             final DFA<S, I> model = state.getProcedure();
@@ -63,25 +63,25 @@ public class StackSPA<S, I> implements SPA<StackState<S, I, DFA<S, I>>, I>, Simp
 
             // undefined internal transition
             if (next == null) {
-                return StackState.sink();
+                return null;
             }
 
             return state.updateState(next);
         } else if (alphabet.isCallSymbol(input)) {
             if (state.isInit() && !Objects.equals(this.initialCall, input)) {
-                return StackState.sink();
+                return null;
             }
 
             final DFA<S, I> model = this.procedures.get(input);
 
             if (model == null) {
-                return StackState.sink();
+                return null;
             }
 
             final S next = model.getInitialState();
 
             if (next == null) {
-                return StackState.sink();
+                return null;
             }
 
             // store the procedural successor in the stack so that we don't need to look it up on return symbols
@@ -91,7 +91,7 @@ public class StackSPA<S, I> implements SPA<StackState<S, I, DFA<S, I>>, I>, Simp
             } else {
                 final S succ = state.getProcedure().getSuccessor(state.getCurrentState(), input);
                 if (succ == null) {
-                    return StackState.sink();
+                    return null;
                 }
                 returnState = state.updateState(succ);
             }
@@ -99,7 +99,7 @@ public class StackSPA<S, I> implements SPA<StackState<S, I, DFA<S, I>>, I>, Simp
             return returnState.push(model, next);
         } else if (alphabet.isReturnSymbol(input)) {
             if (state.isInit()) {
-                return StackState.sink();
+                return null;
             }
 
             // if we returned the state before, we checked that a procedure is available
@@ -107,12 +107,12 @@ public class StackSPA<S, I> implements SPA<StackState<S, I, DFA<S, I>>, I>, Simp
 
             // cannot return, reject word
             if (!model.isAccepting(state.getCurrentState())) {
-                return StackState.sink();
+                return null;
             }
 
             return state.pop();
         } else {
-            return StackState.sink();
+            return null;
         }
     }
 

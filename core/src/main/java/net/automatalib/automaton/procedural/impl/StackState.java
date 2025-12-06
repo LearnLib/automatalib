@@ -32,7 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class StackState<S, I, P> {
 
     private static final StackState<?, ?, ?> INIT = new StackState<>();
-    private static final StackState<?, ?, ?> SINK = new StackState<>();
     private static final StackState<?, ?, ?> TERM = new StackState<>();
 
     private final @Nullable StackState<S, I, P> prev;
@@ -76,15 +75,6 @@ public final class StackState<S, I, P> {
     }
 
     @SuppressWarnings("unchecked")
-    static <I, S, P> StackState<S, I, P> sink() {
-        return (StackState<S, I, P>) SINK;
-    }
-
-    boolean isSink() {
-        return this == SINK;
-    }
-
-    @SuppressWarnings("unchecked")
     static <I, S, P> StackState<S, I, P> init() {
         return (StackState<S, I, P>) INIT;
     }
@@ -106,7 +96,7 @@ public final class StackState<S, I, P> {
     @SuppressWarnings("contracts.conditional.postcondition")
     @EnsuresNonNullIf(expression = {"this.prev", "this.procedure", "this.procedureState"}, result = false)
     private boolean isStatic() {
-        return isInit() || isTerm() || isSink();
+        return isInit() || isTerm();
     }
 
 }

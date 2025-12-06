@@ -102,46 +102,57 @@ public class SPMMTest {
         final Word<Character> i1 = Word.fromString("SaSTcRRaR");
         final Word<Character> o1 = Word.fromString("✓x✓✓z✓✓x✓");
         Assert.assertEquals(spmm.computeOutput(i1), o1);
+        Assert.assertEquals(spmm.computeSuffixOutput(i1.prefix(5), i1.suffix(-5)), o1.suffix(-5));
 
         final Word<Character> i2 = Word.fromString("SaSbRaR");
         final Word<Character> o2 = Word.fromString("✓x✓y✓x✓");
         Assert.assertEquals(spmm.computeOutput(i2), o2);
+        Assert.assertEquals(spmm.computeSuffixOutput(i2.prefix(5), i2.suffix(-5)), o2.suffix(-5));
 
         final Word<Character> i3 = Word.fromString("SaSbaRcRabc");
         final Word<Character> o3 = Word.fromString("✓x✓y-------");
         Assert.assertEquals(spmm.computeOutput(i3), o3);
+        Assert.assertEquals(spmm.computeSuffixOutput(i3.prefix(5), i3.suffix(-5)), o3.suffix(-5));
 
         final Word<Character> i4 = Word.fromString("SaUcR");
         final Word<Character> o4 = Word.fromString("✓x---");
         Assert.assertEquals(spmm.computeOutput(i4), o4);
+        Assert.assertEquals(spmm.computeSuffixOutput(i4.prefix(5), i4.suffix(-5)), i4.suffix(-5));
 
         final Word<Character> i5 = Word.fromString("TcR");
         final Word<Character> o5 = Word.fromString("---");
         Assert.assertEquals(spmm.computeOutput(i5), o5);
+        Assert.assertEquals(spmm.computeSuffixOutput(i5.prefix(2), i5.suffix(-2)), o5.suffix(-2));
 
         final Word<Character> i6 = Word.fromString("Sd");
         final Word<Character> o6 = Word.fromString("✓-");
         Assert.assertEquals(spmm.computeOutput(i6), o6);
+        Assert.assertEquals(spmm.computeSuffixOutput(i6.prefix(2), i6.suffix(-2)), o6.suffix(-2));
 
         final Word<Character> i7 = Word.fromString("aca");
         final Word<Character> o7 = Word.fromString("---");
         Assert.assertEquals(spmm.computeOutput(i7), o7);
+        Assert.assertEquals(spmm.computeSuffixOutput(i7.prefix(2), i7.suffix(-2)), o7.suffix(-2));
 
         final Word<Character> i8 = Word.fromString("SacTcR");
         final Word<Character> o8 = Word.fromString("✓x----");
         Assert.assertEquals(spmm.computeOutput(i8), o8);
+        Assert.assertEquals(spmm.computeSuffixOutput(i8.prefix(5), i8.suffix(-5)), o8.suffix(-5));
 
         final Word<Character> i9 = Word.fromString("R");
         final Word<Character> o9 = Word.fromString("-");
         Assert.assertEquals(spmm.computeOutput(i9), o9);
+        Assert.assertEquals(spmm.computeSuffixOutput(i9.prefix(1), i9.suffix(-1)), o9.suffix(-1));
 
         final Word<Character> i10 = Word.fromString("STTc");
         final Word<Character> o10 = Word.fromString("✓✓--");
         Assert.assertEquals(spmm.computeOutput(i10), o10);
+        Assert.assertEquals(spmm.computeSuffixOutput(i10.prefix(2), i10.suffix(-2)), o10.suffix(-2));
 
         final Word<Character> i11 = Word.fromString("SaSRR");
         final Word<Character> o11 = Word.fromString("✓x✓✓-");
         Assert.assertEquals(spmm.computeOutput(i11), o11);
+        Assert.assertEquals(spmm.computeSuffixOutput(i11.prefix(2), i11.suffix(-2)), o11.suffix(-2));
 
         final Word<Character> i12 = Word.epsilon();
         final Word<Character> o12 = Word.epsilon();
@@ -153,49 +164,60 @@ public class SPMMTest {
         final Word<Character> i1 = Word.fromString("SaSTcRRaR");
         final Word<Character> o1 = Word.fromString("---------");
         Assert.assertEquals(emptySpmm.computeOutput(i1), o1);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i1.prefix(5), i1.suffix(-5)), o1.suffix(-5));
 
         final Word<Character> i2 = Word.fromString("SaSbRaR");
         final Word<Character> o2 = Word.fromString("-------");
         Assert.assertEquals(emptySpmm.computeOutput(i2), o2);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i2.prefix(5), i2.suffix(-5)), o2.suffix(-5));
 
         final Word<Character> i3 = Word.fromString("SaSbaRcRabc");
         final Word<Character> o3 = Word.fromString("-----------");
         Assert.assertEquals(emptySpmm.computeOutput(i3), o3);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i3.prefix(5), i3.suffix(-5)), o3.suffix(-5));
 
         final Word<Character> i4 = Word.fromString("SaUcR");
         final Word<Character> o4 = Word.fromString("-----");
         Assert.assertEquals(emptySpmm.computeOutput(i4), o4);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i4.prefix(5), i4.suffix(-5)), i4.suffix(-5));
 
         final Word<Character> i5 = Word.fromString("TcR");
         final Word<Character> o5 = Word.fromString("---");
         Assert.assertEquals(emptySpmm.computeOutput(i5), o5);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i5.prefix(2), i5.suffix(-2)), o5.suffix(-2));
 
         final Word<Character> i6 = Word.fromString("Sd");
         final Word<Character> o6 = Word.fromString("--");
         Assert.assertEquals(emptySpmm.computeOutput(i6), o6);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i6.prefix(2), i6.suffix(-2)), o6.suffix(-2));
 
         final Word<Character> i7 = Word.fromString("aca");
         final Word<Character> o7 = Word.fromString("---");
         Assert.assertEquals(emptySpmm.computeOutput(i7), o7);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i7.prefix(2), i7.suffix(-2)), o7.suffix(-2));
 
         final Word<Character> i8 = Word.fromString("SacTcR");
         final Word<Character> o8 = Word.fromString("------");
         Assert.assertEquals(emptySpmm.computeOutput(i8), o8);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i8.prefix(5), i8.suffix(-5)), o8.suffix(-5));
 
         final Word<Character> i9 = Word.fromString("R");
         final Word<Character> o9 = Word.fromString("-");
         Assert.assertEquals(emptySpmm.computeOutput(i9), o9);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i9.prefix(1), i9.suffix(-1)), o9.suffix(-1));
 
         final Word<Character> i10 = Word.fromString("STTc");
         final Word<Character> o10 = Word.fromString("----");
         Assert.assertEquals(emptySpmm.computeOutput(i10), o10);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i10.prefix(2), i10.suffix(-2)), o10.suffix(-2));
 
         final Word<Character> i11 = Word.fromString("SaSRR");
         final Word<Character> o11 = Word.fromString("-----");
         Assert.assertEquals(emptySpmm.computeOutput(i11), o11);
+        Assert.assertEquals(emptySpmm.computeSuffixOutput(i11.prefix(2), i11.suffix(-2)), o11.suffix(-2));
 
         final Word<Character> i12 = Word.epsilon();
         final Word<Character> o12 = Word.epsilon();
-        Assert.assertEquals(spmm.computeOutput(i12), o12);
+        Assert.assertEquals(emptySpmm.computeOutput(i12), o12);
     }
 }

@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * `IOUtil#copy(Reader, Writer)` has been removed. Use `Reader#transferTo(Writer)` instead.
 * `JVMUtil` has been removed. Use `Runtime.version().feature()` for its previously (only) provided method.
+* `StackState#SINK` has been removed as procedural systems now better handle undefined transitions.
 
 ### Fixed
 

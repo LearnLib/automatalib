@@ -50,12 +50,12 @@ public class StackSBA<S, I> implements SBA<StackState<S, I, DFA<S, I>>, I>, Simp
     }
 
     @Override
-    public StackState<S, I, DFA<S, I>> getTransition(StackState<S, I, DFA<S, I>> state, I input) {
-        if (state.isSink() || state.isTerm()) {
-            return StackState.sink();
+    public @Nullable StackState<S, I, DFA<S, I>> getTransition(StackState<S, I, DFA<S, I>> state, I input) {
+        if (state.isTerm()) {
+            return null;
         } else if (alphabet.isInternalSymbol(input)) {
             if (state.isInit()) {
-                return StackState.sink();
+                return null;
             }
 
             final DFA<S, I> model = state.getProcedure();
@@ -63,25 +63,25 @@ public class StackSBA<S, I> implements SBA<StackState<S, I, DFA<S, I>>, I>, Simp
 
             // undefined internal transition
             if (next == null || !model.isAccepting(next)) {
-                return StackState.sink();
+                return null;
             }
 
             return state.updateState(next);
         } else if (alphabet.isCallSymbol(input)) {
             if (state.isInit() && !Objects.equals(this.initialCall, input)) {
-                return StackState.sink();
+                return null;
             }
 
             final DFA<S, I> model = this.procedures.get(input);
 
             if (model == null) {
-                return StackState.sink();
+                return null;
             }
 
             final S next = model.getInitialState();
 
             if (next == null) {
-                return StackState.sink();
+                return null;
             }
 
             // store the procedural successor in the stack so that we don't need to look it up on return symbols
@@ -92,7 +92,7 @@ public class StackSBA<S, I> implements SBA<StackState<S, I, DFA<S, I>>, I>, Simp
                 final DFA<S, I> p = state.getProcedure();
                 final S succ = p.getSuccessor(state.getCurrentState(), input);
                 if (succ == null || !p.isAccepting(succ)) {
-                    return StackState.sink();
+                    return null;
                 }
                 returnState = state.updateState(succ);
             }
@@ -100,7 +100,7 @@ public class StackSBA<S, I> implements SBA<StackState<S, I, DFA<S, I>>, I>, Simp
             return returnState.push(model, next);
         } else if (alphabet.isReturnSymbol(input)) {
             if (state.isInit()) {
-                return StackState.sink();
+                return null;
             }
 
             // if we returned the state before, we checked that a procedure is available
@@ -109,19 +109,18 @@ public class StackSBA<S, I> implements SBA<StackState<S, I, DFA<S, I>>, I>, Simp
 
             // cannot return, reject word
             if (succ == null || !model.isAccepting(succ)) {
-                return StackState.sink();
+                return null;
             }
 
             return state.pop();
         } else {
-            return StackState.sink();
+            return null;
         }
     }
 
     @Override
     public boolean isAccepting(StackState<S, I, DFA<S, I>> state) {
-        return !state.isSink() &&
-               (state.isInit() || state.isTerm() || state.getProcedure().isAccepting(state.getCurrentState()));
+        return state.isInit() || state.isTerm() || state.getProcedure().isAccepting(state.getCurrentState());
     }
 
     @Override
