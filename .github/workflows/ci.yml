@@ -46,7 +46,7 @@ jobs:
     strategy:
       matrix:
         jdk: [ 17, 21, 25 ]
-        os: [ ubuntu-latest, windows-latest, macos-13, macos-latest ]
+        os: [ ubuntu-latest, windows-latest, macos-15-intel, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
