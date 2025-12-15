@@ -18,21 +18,24 @@ package net.automatalib.util.automaton.conformance;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Stream;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.common.util.mapping.Mappings;
 import net.automatalib.common.util.random.RandomUtil;
-import net.automatalib.util.graph.Graphs;
-import net.automatalib.util.graph.apsp.APSPResult;
+import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -48,31 +51,37 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <b>Implementation detail:</b> Note that this test generator heavily relies on the sampling of states. If the given
  * automaton has very few or very many states, the number of generated test cases may be very low or high, respectively.
  * As a result, it may be advisable to {@link IteratorUtil#concat(Iterator[]) combine} this generator with other
- * generators or limit the number of generated test cases.
+ * generators or {@link Stream#limit(long) limit} the number of generated test cases.
  *
  * @param <S>
  *         automaton state type
  * @param <I>
  *         input symbol type
- * @param <T>
- *         transition type
  * @param <A>
  *         automaton type
  */
-public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?>>
+public class KWayStateCoverTestsIterator<S, I, A extends DeterministicAutomaton<S, I, ?>>
         extends AbstractSimplifiedIterator<Word<I>> {
 
-    public static final int DEFAULT_R_WALK_LEN = 20;
+    /**
+     * The default value of k used in the k-way combinations/permutations.
+     */
     public static final int DEFAULT_K = 2;
 
+    /**
+     * The default length of random walks performed at the end of each combination/permutation.
+     */
+    public static final int DEFAULT_R_WALK_LEN = 20;
+
+    private final A automaton;
     private final List<? extends I> alphabet;
     private final Random random;
     private final int randomWalkLen;
 
     private final Iterator<List<S>> combIter;
-    private final Set<Set<List<TransitionEdge<I, T>>>> cache;
+    private final Set<Set<Word<I>>> cache;
     private final @Nullable S initial;
-    private final APSPResult<S, TransitionEdge<I, T>> apsp;
+    private final Map<S, Mapping<S, @Nullable Word<I>>> apsp;
 
     /**
      * Convenience constructor which uses a fresh {@code random} object.
@@ -82,15 +91,16 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
      * @param inputs
      *         the inputs to consider for test case generation
      *
-     * @see #KWayStateCoverTestsIterator(UniversalDeterministicAutomaton, Collection, Random)
+     * @see #KWayStateCoverTestsIterator(DeterministicAutomaton, Collection, Random)
      */
     public KWayStateCoverTestsIterator(A automaton, Collection<? extends I> inputs) {
         this(automaton, inputs, new Random());
     }
 
     /**
-     * Convenience constructor. Uses {@code k=2}, {@code randomWalkLen = 20}, and
-     * {@code method = CombinationMethod.PERMUTATIONS}.
+     * Convenience constructor. Uses <code>k = {@value #DEFAULT_K}</code>, <code>randomWalkLen =
+     * {@value #DEFAULT_R_WALK_LEN}</code>, and
+     * <code>method = {@link CombinationMethod#PERMUTATIONS}</code>.
      *
      * @param automaton
      *         the automaton for which to generate test cases
@@ -99,8 +109,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
      * @param random
      *         the random number generator to use
      *
-     * @see #KWayStateCoverTestsIterator(UniversalDeterministicAutomaton, Collection, Random, int, int,
-     * CombinationMethod)
+     * @see #KWayStateCoverTestsIterator(DeterministicAutomaton, Collection, Random, int, int, CombinationMethod)
      */
     public KWayStateCoverTestsIterator(A automaton, Collection<? extends I> inputs, Random random) {
         this(automaton, inputs, random, DEFAULT_R_WALK_LEN, DEFAULT_K, CombinationMethod.PERMUTATIONS);
@@ -116,9 +125,9 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
      * @param random
      *         the random number generator to use
      * @param randomWalkLen
-     *         length of random walk performed at the end of each combination/permutation
+     *         length of random walks performed at the end of each combination/permutation
      * @param k
-     *         k value used for k-wise combinations/permutations of states
+     *         k value used for k-way combinations/permutations of states
      * @param method
      *         the method for computing combinations
      */
@@ -128,20 +137,23 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
                                        int randomWalkLen,
                                        int k,
                                        CombinationMethod method) {
+        this.automaton = automaton;
         this.alphabet = CollectionUtil.randomAccessList(inputs);
         this.random = random;
         this.randomWalkLen = randomWalkLen;
 
         this.cache = new HashSet<>();
-        this.apsp = Graphs.findAPSP(automaton.transitionGraphView(alphabet));
         this.initial = automaton.getInitialState();
 
         if (this.initial == null) {
             this.combIter = Collections.emptyIterator();
+            this.apsp = Collections.emptyMap();
         } else {
             final List<S> states = new ArrayList<>(automaton.getStates());
             Collections.shuffle(states, random);
             this.combIter = method.getCombinations(states, Math.min(k, automaton.size()));
+            this.apsp = new HashMap<>(HashUtil.capacity(automaton.size()));
+            this.apsp.put(this.initial, Covers.cover(automaton, inputs, this.initial, w -> {}, w -> {}));
         }
 
     }
@@ -151,13 +163,13 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
 
         while (combIter.hasNext()) {
             final List<S> comb = combIter.next();
-            final Set<List<TransitionEdge<I, T>>> prefixes = new HashSet<>(HashUtil.capacity(comb.size()));
+            final Set<Word<I>> prefixes = new HashSet<>(HashUtil.capacity(comb.size()));
 
-            List<TransitionEdge<I, T>> path = null;
+            Word<I> path = null;
             assert initial != null;
 
             for (S c : comb) {
-                List<TransitionEdge<I, T>> sp = apsp.getShortestPath(initial, c);
+                Word<I> sp = apsp.getOrDefault(initial, Mappings.nullMapping()).get(c);
                 if (sp != null) {
                     prefixes.add(sp);
                     if (path == null) {
@@ -170,10 +182,7 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
                 continue;
             }
 
-            final WordBuilder<I> pathBuilder = new WordBuilder<>();
-            for (TransitionEdge<I, T> e : path) {
-                pathBuilder.append(e.getInput());
-            }
+            final WordBuilder<I> pathBuilder = new WordBuilder<>(path);
 
             /*
              * in case of non-strongly connected automata test case might not be possible as a path between 2 states
@@ -181,17 +190,20 @@ public class KWayStateCoverTestsIterator<S, I, T, A extends UniversalDeterminist
              */
             boolean possibleTestCase = true;
             for (int index = 0; index < comb.size() - 1; index++) {
-                final List<TransitionEdge<I, T>> pathBetweenStates =
-                        apsp.getShortestPath(comb.get(index), comb.get(index + 1));
+                final Word<I> pathBetweenStates = apsp.computeIfAbsent(comb.get(index),
+                                                                       k -> Covers.cover(automaton,
+                                                                                         alphabet,
+                                                                                         k,
+                                                                                         w -> {},
+                                                                                         w -> {}))
+                                                      .get(comb.get(index + 1));
 
                 if (pathBetweenStates == null || pathBetweenStates.isEmpty()) {
                     possibleTestCase = false;
                     break;
                 }
 
-                for (TransitionEdge<I, ?> t : pathBetweenStates) {
-                    pathBuilder.append(t.getInput());
-                }
+                pathBuilder.append(pathBetweenStates);
             }
 
             if (possibleTestCase) {
