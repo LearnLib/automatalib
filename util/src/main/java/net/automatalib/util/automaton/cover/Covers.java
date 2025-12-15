@@ -26,8 +26,10 @@ import java.util.function.Consumer;
 
 import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.common.util.HashUtil;
+import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Covers {
 
@@ -48,13 +50,15 @@ public final class Covers {
      *         the set of input symbols allowed in the cover sequences
      * @param states
      *         the collection in which the sequences will be stored
+     * @param <S>
+     *         automaton state type
      * @param <I>
      *         input symbol type
      */
-    public static <I> void stateCover(DeterministicAutomaton<?, I, ?> automaton,
-                                      Collection<? extends I> inputs,
-                                      Collection<? super Word<I>> states) {
-        cover(automaton, inputs, states::add, w -> {});
+    public static <S, I> void stateCover(DeterministicAutomaton<S, I, ?> automaton,
+                                         Collection<? extends I> inputs,
+                                         Collection<? super Word<I>> states) {
+        cover(automaton, inputs, automaton.getInitialState(), states::add, w -> {});
     }
 
     /**
@@ -93,13 +97,15 @@ public final class Covers {
      *         the set of input symbols allowed in the cover sequences
      * @param transitions
      *         the collection in which the sequences will be stored
+     * @param <S>
+     *         automaton state type
      * @param <I>
      *         input symbol type
      */
-    public static <I> void transitionCover(DeterministicAutomaton<?, I, ?> automaton,
-                                           Collection<? extends I> inputs,
-                                           Collection<? super Word<I>> transitions) {
-        cover(automaton, inputs, w -> {}, transitions::add);
+    public static <S, I> void transitionCover(DeterministicAutomaton<S, I, ?> automaton,
+                                              Collection<? extends I> inputs,
+                                              Collection<? super Word<I>> transitions) {
+        cover(automaton, inputs, automaton.getInitialState(), w -> {}, transitions::add);
     }
 
     /**
@@ -133,16 +139,18 @@ public final class Covers {
      *         the set of input symbols allowed in the cover sequences
      * @param cover
      *         the collection in which the sequences will be stored
+     * @param <S>
+     *         automaton state type
      * @param <I>
      *         input symbol type
      *
      * @see #stateCover(DeterministicAutomaton, Collection, Collection)
      * @see #transitionCover(DeterministicAutomaton, Collection, Collection)
      */
-    public static <I> void structuralCover(DeterministicAutomaton<?, I, ?> automaton,
-                                           Collection<? extends I> inputs,
-                                           Collection<? super Word<I>> cover) {
-        cover(automaton, inputs, cover::add, cover::add);
+    public static <S, I> void structuralCover(DeterministicAutomaton<S, I, ?> automaton,
+                                              Collection<? extends I> inputs,
+                                              Collection<? super Word<I>> cover) {
+        cover(automaton, inputs, automaton.getInitialState(), cover::add, cover::add);
     }
 
     /**
@@ -156,35 +164,67 @@ public final class Covers {
      *         the collection in which the state cover sequences will be stored
      * @param transitions
      *         the collection in which the transition cover sequences will be stored
+     * @param <S>
+     *         automaton state type
      * @param <I>
      *         input symbol type
      *
      * @see #stateCover(DeterministicAutomaton, Collection, Collection)
      * @see #transitionCover(DeterministicAutomaton, Collection, Collection)
      */
-    public static <I> void cover(DeterministicAutomaton<?, I, ?> automaton,
-                                 Collection<? extends I> inputs,
-                                 Collection<? super Word<I>> states,
-                                 Collection<? super Word<I>> transitions) {
-        cover(automaton, inputs, states::add, transitions::add);
+    public static <S, I> void cover(DeterministicAutomaton<S, I, ?> automaton,
+                                    Collection<? extends I> inputs,
+                                    Collection<? super Word<I>> states,
+                                    Collection<? super Word<I>> transitions) {
+        cover(automaton, inputs, automaton.getInitialState(), states::add, transitions::add);
     }
 
-    private static <S, I> void cover(DeterministicAutomaton<S, I, ?> automaton,
-                                     Collection<? extends I> inputs,
-                                     Consumer<? super Word<I>> states,
-                                     Consumer<? super Word<I>> transitions) {
+    /**
+     * Computes the state and transition covers for a given automaton beginning in the given state.
+     * <p>
+     * A state cover is a set <i>C</i> of input sequences, such that for each state <i>s</i> of an automaton, there
+     * exists an input sequence in <i>C</i> that transitions the automaton from its initial state to state s.
+     * <p>
+     * A transition cover is a set <i>C</i> of input sequences, such that for each state <i>s</i> and each input symbol
+     * <i>i</i> of an automaton, there exists an input sequence in <i>C</i> that starts from the initial state of the
+     * automaton and ends with the transition that applies <i>i</i> to state <i>s</i>.
+     * <p>
+     * Note: if restrictions on the {@code inputs} parameter do not allow to reach certain states or transitions, the
+     * computed covers are not complete.
+     *
+     * @param automaton
+     *         the automaton for which the covers should be computed
+     * @param inputs
+     *         the set of input symbols allowed in the cover sequences
+     * @param start
+     *         the state from which to begin the computation of overs
+     * @param states
+     *         a consumer that accepts the state cover sequences
+     * @param transitions
+     *         a consumer that accepts the transition cover sequences
+     * @param <S>
+     *         automaton state type
+     * @param <I>
+     *         input symbol type
+     *
+     * @return a mapping from automaton states to their access sequences
+     */
+    public static <S, I> Mapping<S, @Nullable Word<I>> cover(DeterministicAutomaton<S, I, ?> automaton,
+                                                             Collection<? extends I> inputs,
+                                                             @Nullable S start,
+                                                             Consumer<? super Word<I>> states,
+                                                             Consumer<? super Word<I>> transitions) {
 
-        S init = automaton.getInitialState();
+        MutableMapping<S, @Nullable Word<I>> reach = automaton.createStaticStateMapping();
 
-        if (init == null) {
-            return;
+        if (start == null) {
+            return reach;
         }
 
-        MutableMapping<S, Word<I>> reach = automaton.createStaticStateMapping();
-        reach.put(init, Word.epsilon());
+        reach.put(start, Word.epsilon());
 
         Queue<S> bfsQueue = new ArrayDeque<>();
-        bfsQueue.add(init);
+        bfsQueue.add(start);
 
         states.accept(Word.epsilon());
 
@@ -210,6 +250,8 @@ public final class Covers {
                 transitions.accept(succAs);
             }
         }
+
+        return reach;
     }
 
     /**

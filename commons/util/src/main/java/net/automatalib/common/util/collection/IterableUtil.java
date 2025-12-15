@@ -31,6 +31,22 @@ public final class IterableUtil {
         // prevent instantiation
     }
 
+    /**
+     * Convenience method for {@link #allTuples(Iterable, int, int)} that uses {@code length} for both {@code minLength}
+     * and {@code maxLength}.
+     *
+     * @param domain
+     *         the iterables for the source domain
+     * @param length
+     *         the minimal length of the tuple
+     * @param <T>
+     *         type of elements
+     *
+     * @return an iterator that iterates over all tuples of the given source domain whose length (dimension) is the
+     * given parameter
+     *
+     * @see #allTuples(Iterable, int, int)
+     */
     public static <T> Iterable<List<T>> allTuples(Iterable<? extends T> domain, int length) {
         return allTuples(domain, length, length);
     }
@@ -44,7 +60,7 @@ public final class IterableUtil {
      * you'll need to explicitly copy them.
      *
      * @param domain
-     *         the iterables for the source domains
+     *         the iterables for the source domain
      * @param minLength
      *         the minimal length of the tuple
      * @param maxLength
@@ -90,7 +106,7 @@ public final class IterableUtil {
             return Collections.singletonList(Collections.emptyList());
         }
 
-        return () -> new AllCombinationsIterator<>(iterables);
+        return () -> new CartesianProductIterator<>(iterables);
     }
 
     /**

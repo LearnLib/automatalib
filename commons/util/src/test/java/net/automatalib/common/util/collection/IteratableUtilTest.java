@@ -16,7 +16,11 @@
 package net.automatalib.common.util.collection;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,5 +37,23 @@ public class IteratableUtilTest {
 
         Assert.assertEquals(concat1, Arrays.asList(1, 2, 4, 3));
         Assert.assertEquals(concat2, Arrays.asList(4, 3, 1, 2));
+    }
+
+    @Test
+    public void testExhaustiveness() {
+
+        Set<Integer> iterable = Collections.singleton(1);
+        Iterator<List<Integer>> iter1 = IterableUtil.cartesianProduct(iterable).iterator();
+        Iterator<List<Integer>> iter2 = IterableUtil.allTuples(iterable, 1, 1).iterator();
+
+        // consume iterators
+        IteratorUtil.size(iter1);
+        IteratorUtil.size(iter2);
+
+        Assert.assertFalse(iter1.hasNext());
+        Assert.assertThrows(NoSuchElementException.class, iter1::next);
+
+        Assert.assertFalse(iter2.hasNext());
+        Assert.assertThrows(NoSuchElementException.class, iter2::next);
     }
 }

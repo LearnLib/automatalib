@@ -96,6 +96,25 @@ public final class Graphs {
 
     /**
      * Computes the shortest paths between all pairs of nodes in a graph, using the Floyd-Warshall dynamic programming
+     * algorithm. This method assumes no edge weights.
+     *
+     * @param graph
+     *         the graph
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     *
+     * @return the all pairs shortest paths result
+     *
+     * @see FloydWarshallAPSP
+     */
+    public static <N, E> APSPResult<N, E> findAPSP(Graph<N, E> graph) {
+        return findAPSP(graph, e -> 0F);
+    }
+
+    /**
+     * Computes the shortest paths between all pairs of nodes in a graph, using the Floyd-Warshall dynamic programming
      * algorithm. Note that the result is only correct if the graph contains no cycles with negative edge weight sums.
      *
      * @param graph

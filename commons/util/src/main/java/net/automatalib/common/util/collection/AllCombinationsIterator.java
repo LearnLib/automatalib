@@ -15,84 +15,85 @@
  */
 package net.automatalib.common.util.collection;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.AbstractList;
+import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
- * An iterator that iterates over the cartesian product of its given source domains. Each intermediate combination of
- * elements is computed lazily.
- * <p>
- * <b>Note:</b> Subsequent calls to the {@link #next()} method return a reference to the same list, and only update the
- * contents of the list. If you plan to reuse intermediate results, you'll need to explicitly copy them.
+ * Iterator for computing all k-combinations of a given collection. Implementation is based on <a
+ * href="https://hmkcode.com/calculate-find-all-possible-combinations-of-an-array-using-java/">https://hmkcode.com/calculate-find-all-possible-combinations-of-an-array-using-java/</a>.
  *
  * @param <T>
- *         type of elements
+ *         element type
  */
-final class AllCombinationsIterator<T> implements Iterator<List<T>> {
+final class AllCombinationsIterator<T> extends AbstractSimplifiedIterator<List<T>> {
 
-    private final Iterable<? extends T>[] iterables;
-    private final Iterator<? extends T>[] iterators;
-    private final List<T> current;
-    private boolean first = true;
-    private boolean empty;
+    private final int[] pointers;
+    private final int n;
+    private final int k;
 
-    @SuppressWarnings("unchecked")
-    @SafeVarargs
-    AllCombinationsIterator(Iterable<? extends T>... iterables) {
-        this.iterables = iterables;
-        this.iterators = new Iterator[iterables.length];
-        this.current = new ArrayList<>(iterables.length);
-        for (int i = 0; i < iterators.length; i++) {
-            Iterator<? extends T> it = iterables[i].iterator();
-            if (!it.hasNext()) {
-                empty = true;
-                break;
-            }
-            this.iterators[i] = it;
-            this.current.add(it.next());
+    private int r; // index for combination array
+    private int i; // index for elements array
+
+    AllCombinationsIterator(Collection<? extends T> elements, int k) {
+        if (k < 0 || k > elements.size()) {
+            throw new IllegalArgumentException("k is not within its expected bounds of 0 and " + elements.size());
         }
+
+        this.n = elements.size();
+        this.k = k;
+
+        // we only read this array
+        @SuppressWarnings({"unchecked", "PMD.ClassCastExceptionWithToArray"})
+        final T[] pool = (T[]) elements.toArray();
+        this.pointers = new int[k];
+
+        // always use same instance which is modified in-place
+        super.nextValue = new MappedList<>(pool, this.pointers, this.k);
     }
 
     @Override
-    public boolean hasNext() {
-        if (empty) {
-            return false;
-        }
-
-        for (Iterator<? extends T> it : iterators) {
-            if (it.hasNext()) {
-                return true;
+    protected boolean calculateNext() {
+        while (r >= 0) {
+            if (i <= n + r - k) { // forward step if i < (n + (r-K))
+                pointers[r] = i;
+                if (r == k - 1) { // if combination array is full print and increment i;
+                    i++;
+                    return true;
+                } else { // if combination is not full yet, select next element
+                    i = pointers[r] + 1;
+                    r++;
+                }
+            } else { // backward step
+                r--;
+                if (r >= 0) {
+                    i = pointers[r] + 1;
+                }
             }
         }
-
-        return first;
+        return false;
     }
 
-    @Override
-    public List<T> next() {
-        if (empty) {
-            throw new NoSuchElementException();
-        } else if (first) {
-            first = false;
-            return current;
+    static class MappedList<T> extends AbstractList<T> {
+
+        private final T[] pool;
+        private final int[] pointers;
+        private final int k;
+
+        MappedList(T[] pool, int[] pointers, int k) {
+            this.pool = pool;
+            this.pointers = pointers;
+            this.k = k;
         }
 
-        for (int i = 0; i < iterators.length; i++) {
-            Iterator<? extends T> it = iterators[i];
-
-            if (iterators[i].hasNext()) {
-                current.set(i, it.next());
-                return current;
-            }
-
-            it = iterables[i].iterator();
-            iterators[i] = it;
-            current.set(i, it.next());
+        @Override
+        public T get(int index) {
+            return pool[pointers[index]];
         }
 
-        throw new NoSuchElementException();
+        @Override
+        public int size() {
+            return k;
+        }
     }
-
 }

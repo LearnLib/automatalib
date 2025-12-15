@@ -163,7 +163,17 @@ public final class ArrayUtil {
         }
     }
 
-    private static void swap(int[] arr, int i, int j) {
+    /**
+     * Swaps the two elements at the given position in-place.
+     *
+     * @param arr
+     *         the array
+     * @param i
+     *         the first index
+     * @param j
+     *         the second index
+     */
+    public static void swap(int[] arr, int i, int j) {
         int tmp = arr[i];
         arr[i] = arr[j];
         arr[j] = tmp;

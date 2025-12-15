@@ -56,6 +56,67 @@ public final class CollectionUtil {
     }
 
     /**
+     * Return {@code k}-length subsequences of elements from the input collection.
+     * <p>
+     * <b>Note:</b>
+     * Elements are treated as unique based on their position, not on their value. If the input elements are unique,
+     * there will be no repeated values within each combination. Subsequent calls to the returned iterator's
+     * {@link Iterator#next() next()} method return a reference to the same list, and only update the contents of the
+     * list. If you plan to reuse intermediate results, you'll need to explicitly copy them.
+     *
+     * @param elements
+     *         the collection for the source elements
+     * @param k
+     *         the length of the (partial) combination
+     * @param <T>
+     *         type of elements
+     *
+     * @return an iterator iterating over all k-combinations
+     */
+    public static <T> Iterator<List<T>> allCombintationsIterator(Collection<? extends T> elements, int k) {
+        return new AllCombinationsIterator<>(elements, k);
+    }
+
+    /**
+     * Convenience method for {@link #allPermutationsIterator(Collection, int)} which uses the number of elements as
+     * {@code k}.
+     *
+     * @param elements
+     *         the collection for the source elements
+     * @param <T>
+     *         type of elements
+     *
+     * @return an iterator iterating over all k-permutations
+     *
+     * @see #allPermutationsIterator(Collection, int)
+     */
+    public static <T> Iterator<List<T>> allPermutationsIterator(Collection<? extends T> elements) {
+        return allPermutationsIterator(elements, elements.size());
+    }
+
+    /**
+     * Return {@code k}-length permutations of elements from the input collection.
+     * <p>
+     * <b>Note:</b>
+     * Elements are treated as unique based on their position, not on their value. If the input elements are unique,
+     * there will be no repeated values within each permutation. Subsequent calls to the returned iterator's
+     * {@link Iterator#next() next()} method return a reference to the same list, and only update the contents of the
+     * list. If you plan to reuse intermediate results, you'll need to explicitly copy them.
+     *
+     * @param elements
+     *         the collection for the source elements
+     * @param k
+     *         the length of the (partial) permutation
+     * @param <T>
+     *         type of elements
+     *
+     * @return an iterator iterating over all k-permutations
+     */
+    public static <T> Iterator<List<T>> allPermutationsIterator(Collection<? extends T> elements, int k) {
+        return new AllPermutationsIterator<>(elements, k);
+    }
+
+    /**
      * Returns a (mutable) view on the given collection that transforms its elements as specified by the given mapping.
      *
      * @param collection
