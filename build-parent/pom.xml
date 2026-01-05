@@ -273,7 +273,6 @@ limitations under the License.
                                         </arg>
                                         <arg>-AskipUses=^java.(awt.*|util.(Arrays|Map|ArrayDeque)|io.StreamTokenizer)|^javax.swing.*</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
-                                        <arg>-AassumeAssertionsAreEnabled</arg>
                                         <arg>-Astubs=collection-object-parameters-may-be-null.astub</arg>
                                     </compilerArgs>
                                 </configuration>
@@ -311,7 +310,6 @@ limitations under the License.
                                         <arg>-AonlyDefs=^net\.automatalib</arg>
                                         <arg>-AskipUses=.*</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
-                                        <arg>-AassumeAssertionsAreEnabled</arg>
                                         <arg>-Astubs=collection-object-parameters-may-be-null.astub</arg>
                                     </compilerArgs>
                                 </configuration>

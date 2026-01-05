@@ -186,36 +186,37 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
                                               EquationalBlock<L, AP> currentBlock) {
         XDD<BooleanVector> updatedADD;
         final DiamondOperation<AP> diamondOp = new DiamondOperation<>(atomicPropositions, currentBlock);
+
         if (compositions.isEmpty()) {
-            assert this.add != null : "The identity function should never be updated";
+            if (this.add == null) {
+                throw new IllegalArgumentException("The identity function should never be updated");
+            }
             updatedADD = this.add.monadicApply(new DiamondOperationDeadlock<>(atomicPropositions, currentBlock));
         } else {
             final XDD<BooleanVector> firstAdd = compositions.get(0).add;
-            assert firstAdd != null : "The identity function should never be updated";
-            updatedADD = preserveUpdatedTransformer(firstAdd, currentBlock);
+
+            if (this.add == null || firstAdd == null) {
+                throw new IllegalArgumentException("The identity function should never be updated");
+            }
+
+            updatedADD = this.add.apply((booleanVectorBeforeUpdate, booleanVectorRight) -> {
+                boolean[] result = booleanVectorBeforeUpdate.data().clone();
+                for (FormulaNode<?, AP> node : currentBlock.getNodes()) {
+                    result[node.getVarNumber()] = booleanVectorRight.data()[node.getVarNumber()];
+                }
+                return new BooleanVector(result);
+            }, firstAdd);
 
             for (ADDTransformer<L, AP> composition : compositions) {
-                assert composition.add != null : "The identity function should never be updated";
-                updatedADD = updatedADD.apply(diamondOp, composition.add);
+                XDD<BooleanVector> nextAdd = composition.add;
+                if (nextAdd == null) {
+                    throw new IllegalArgumentException("The identity function should never be updated");
+                }
+                updatedADD = updatedADD.apply(diamondOp, nextAdd);
             }
         }
 
         return new ADDTransformer<>(xddManager, updatedADD);
-    }
-
-    private XDD<BooleanVector> preserveUpdatedTransformer(XDD<BooleanVector> rightDD,
-                                                          EquationalBlock<L, AP> currentBlock) {
-        assert this.add != null : "The identity function should never be updated";
-        /* We create a new XDD where the information of this.add (the add before the update) is 'injected'
-        into rightDD, the first composition DD, such that the bits corresponding to subformulas outside the current
-        block are preserved */
-        return this.add.apply((booleanVectorBeforeUpdate, booleanVectorRight) -> {
-            boolean[] result = booleanVectorBeforeUpdate.data().clone();
-            for (FormulaNode<?, AP> node : currentBlock.getNodes()) {
-                result[node.getVarNumber()] = booleanVectorRight.data()[node.getVarNumber()];
-            }
-            return new BooleanVector(result);
-        }, rightDD);
     }
 
     /**

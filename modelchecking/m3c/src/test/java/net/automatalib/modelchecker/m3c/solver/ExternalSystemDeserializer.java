@@ -35,6 +35,7 @@ import net.automatalib.modelchecker.m3c.util.Examples;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -91,8 +92,8 @@ final class ExternalSystemDeserializer {
     }
 
     private static Element getFirstElementByTagName(Element elem, String tagName) {
-        final Node node = elem.getElementsByTagName(tagName).item(0);
-        assert node != null;
+        @SuppressWarnings("nullness")
+        final @NonNull Node node = elem.getElementsByTagName(tagName).item(0);
         return (Element) node;
     }
 

@@ -50,7 +50,7 @@ public class StackSPA<S, I> implements SPA<StackState<S, I, DFA<S, I>>, I>, Simp
     }
 
     @Override
-    public StackState<S, I, DFA<S, I>> getTransition(StackState<S, I, DFA<S, I>> state, I input) {
+    public @Nullable StackState<S, I, DFA<S, I>> getTransition(StackState<S, I, DFA<S, I>> state, I input) {
         if (state.isTerm()) {
             return null;
         } else if (alphabet.isInternalSymbol(input)) {

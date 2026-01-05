@@ -44,6 +44,7 @@ import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -201,8 +202,9 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
             }
             last = hiddenClone(last);
             if (conf == null) {
-                Transition<O> peek = path.peek();
-                assert peek != null;
+                // the root node is never confluent so in this context, the path always contains at least one node
+                @SuppressWarnings("nullness")
+                @NonNull Transition<O> peek = path.peek();
                 State<O> prev = peek.state;
                 if (prev == init) {
                     updateInitSignature(peek.transIdx, last);
@@ -342,7 +344,8 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
      *         the new successor state
      */
     private void updateInitSignature(int idx, State<O> succ) {
-        assert init != null;
+        @SuppressWarnings("nullness") // this internal method is only called after the root node has been initialized
+        @NonNull State<O> init = this.init;
         StateSignature<O> sig = init.getSignature();
         State<O> oldSucc = sig.successors.get(idx);
         if (oldSucc == succ) {
@@ -366,7 +369,8 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
      *         the output symbol
      */
     private void updateInitSignature(int idx, State<O> succ, O out) {
-        assert init != null;
+        @SuppressWarnings("nullness") // this internal method is only called after the root node has been initialized
+        @NonNull State<O> init = this.init;
         StateSignature<O> sig = init.getSignature();
         State<O> oldSucc = sig.successors.get(idx);
         if (oldSucc == succ && Objects.equals(out, succ.getOutput())) {

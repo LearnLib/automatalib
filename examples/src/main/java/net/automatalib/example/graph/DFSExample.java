@@ -30,6 +30,7 @@ import net.automatalib.util.graph.traversal.GraphTraversalVisitor;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper.EdgeStyles;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A small example of a {@link GraphTraversal graph traversal} that uses a custom {@link GraphTraversalVisitor} to
@@ -168,16 +169,16 @@ public final class DFSExample {
         @Override
         public boolean getNodeProperties(N node, Map<String, String> properties) {
             String lbl = properties.get(NodeAttrs.LABEL);
-            DFSData record = records.get(node);
-            assert record != null;
+            @SuppressWarnings("nullness")
+            @NonNull DFSData record = records.get(node);
             properties.put(NodeAttrs.LABEL, lbl + " [#" + record.dfsNumber + "]");
             return true;
         }
 
         @Override
         public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
-            EdgeType et = edgeTypes.get(edge);
-            assert et != null;
+            @SuppressWarnings("nullness")
+            @NonNull EdgeType et = edgeTypes.get(edge);
             properties.put(EdgeAttrs.STYLE, et.getStyle());
             properties.remove(EdgeAttrs.LABEL);
             return true;

@@ -34,6 +34,7 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.util.ts.traversal.TSTraversalAction;
 import net.automatalib.util.ts.traversal.TSTraversalVisitor;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 final class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0, S1, I, T, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
         implements WorksetMappingAlgorithm<Pair<S0, S1>, S, A> {
@@ -84,9 +85,9 @@ final class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>,
 
     @Override
     public Collection<Pair<S0, S1>> update(Map<Pair<S0, S1>, S> mapping, Pair<S0, S1> currentStatePair) {
-        S mappedState = mapping.get(currentStatePair);
-        assert mappedState != null;
-
+        // workset is explored in breadth-first style and we update the fringe states as necessary
+        @SuppressWarnings("nullness")
+        @NonNull S mappedState = mapping.get(currentStatePair);
         ArrayList<Pair<S0, S1>> discovered = new ArrayList<>();
 
         for (I sym : mts0.getInputAlphabet()) {

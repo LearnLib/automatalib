@@ -23,6 +23,7 @@ import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 class SimpleDFRecord<S, I, T> {
 
@@ -50,6 +51,7 @@ class SimpleDFRecord<S, I, T> {
         return true;
     }
 
+    @SideEffectFree // while fields are updated, they never change regarding nullability
     private void findNext(TransitionSystem<S, ? super I, T> ts) {
         if (transitionIterator != null && transitionIterator.hasNext()) {
             return;
@@ -72,7 +74,6 @@ class SimpleDFRecord<S, I, T> {
         if (!transitionIterator.hasNext()) {
             findNext(ts);
         }
-        assert transitionIterator != null;
         return transitionIterator.hasNext();
     }
 
@@ -94,8 +95,8 @@ class SimpleDFRecord<S, I, T> {
         return input;
     }
 
-    @Pure
     @RequiresNonNull("transitionIterator")
+    @SideEffectFree // while state changes, never does nullability
     public T transition() {
         return transitionIterator.next();
     }

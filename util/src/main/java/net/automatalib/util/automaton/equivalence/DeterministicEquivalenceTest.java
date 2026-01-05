@@ -26,6 +26,7 @@ import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 @SuppressWarnings("PMD.TestClassWithoutTestCases") // not a traditional test class
@@ -87,8 +88,9 @@ public final class DeterministicEquivalenceTest {
             S refState = currPair.ref;
             S2 otherState = currPair.other;
 
-            lastPred = reg.getPred(refStateIds.getStateId(refState), otherStateIds.getStateId(otherState));
-            assert lastPred != null;
+            @SuppressWarnings("nullness") // in a breadth-first traversal the predecessors are always defined
+            @NonNull Pred<I> pred = reg.getPred(refStateIds.getStateId(refState), otherStateIds.getStateId(otherState));
+            lastPred = pred;
 
             for (I in : inputs) {
                 lastSym = in;

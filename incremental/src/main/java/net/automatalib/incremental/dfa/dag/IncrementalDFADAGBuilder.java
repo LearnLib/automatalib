@@ -23,6 +23,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -74,7 +75,6 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
      */
     @Override
     public void insert(Word<? extends I> word, boolean accepting) {
-        int len = word.length();
         Acceptance acc = Acceptance.fromBoolean(accepting);
 
         State curr = init;
@@ -99,6 +99,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
             curr = succ;
         }
 
+        int len = word.length();
         int prefixLen = path.size();
 
         State last = curr;
@@ -139,8 +140,9 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
                 // confluence always requires cloning, to separate this path from other paths
                 last = hiddenClone(last);
                 if (conf == null) {
-                    Transition peek = path.peek();
-                    assert peek != null;
+                    // the root node is never confluent so in this context, the path always contains at least one node
+                    @SuppressWarnings("nullness")
+                    @NonNull Transition peek = path.peek();
                     State prev = peek.state;
                     if (prev == init) {
                         updateInitSignature(peek.transIdx, last);

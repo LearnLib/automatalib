@@ -42,6 +42,7 @@ import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -181,8 +182,9 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
             }
             last = hiddenClone(last);
             if (conf == null) {
-                Transition<O> peek = path.peek();
-                assert peek != null;
+                // the root node is never confluent so in this context, the path always contains at least one node
+                @SuppressWarnings("nullness")
+                @NonNull Transition<O> peek = path.peek();
                 State<O> prev = peek.state;
                 if (prev == init) {
                     updateInitSignature(peek.transIdx, last);

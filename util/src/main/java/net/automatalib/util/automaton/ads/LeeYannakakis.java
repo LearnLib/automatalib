@@ -38,6 +38,7 @@ import net.automatalib.util.graph.Path;
 import net.automatalib.util.graph.ShortestPaths;
 import net.automatalib.util.graph.traversal.GraphTraversal;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Algorithm of Lee and Yannakakis for computing adaptive distinguishing sequences (of length at most n^2) in O(n^2)
@@ -400,11 +401,11 @@ public final class LeeYannakakis {
                 final Integer successor = iter.next();
                 final Validity successorValidity = partitionToClassificationMap.get(successor);
                 if (successorValidity == Validity.A_VALID || successorValidity == Validity.B_VALID) {
-                    final Path<Integer, CompactEdge<I>> path = ShortestPaths.shortestPath(implicationGraph,
-                                                                                          pendingPartition,
-                                                                                          implicationGraph.size(),
-                                                                                          successor);
-                    assert path != null; // by construction should never be null
+                    @SuppressWarnings("nullness") // by construction should never be null
+                    final @NonNull Path<Integer, CompactEdge<I>> path = ShortestPaths.shortestPath(implicationGraph,
+                                                                                                   pendingPartition,
+                                                                                                   implicationGraph.size(),
+                                                                                                   successor);
                     final Word<I> word = path.stream().map(CompactEdge::getProperty).collect(Word.collector());
 
                     result.get(Validity.C_VALID).add(Pair.of(word, pendingC));

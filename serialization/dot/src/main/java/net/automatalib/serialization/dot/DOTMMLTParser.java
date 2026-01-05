@@ -43,6 +43,7 @@ import net.automatalib.exception.FormatException;
 import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.MMLTEdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.MMLTNodeAttrs;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Parses a DOT file that defines an {@link MMLT}.
@@ -192,10 +193,11 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
                     if (!m.matches()) {
                         continue;
                     }
-                    String g1 = m.group(1);
-                    String g2 = m.group(2);
 
-                    assert g1 != null && g2 != null;
+                    @SuppressWarnings("nullness") // if the pattern matches, we have two groups
+                    @NonNull String g1 = m.group(1);
+                    @SuppressWarnings("nullness")
+                    @NonNull String g2 = m.group(2);
 
                     String timerName = g1.trim();
                     int value = Integer.parseInt(g2);

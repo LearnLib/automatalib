@@ -26,6 +26,7 @@ import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.EdgeWeights;
 import net.automatalib.util.graph.Graphs;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 
@@ -160,8 +161,9 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
         E edge;
         while ((edge = rec.reach) != null) {
             result.add(edge);
-            rec = rec.parent;
-            assert rec != null;
+            @SuppressWarnings("nullness") // reach is null iff parent is null
+            @NonNull Record<N, E> tmp = rec.parent;
+            rec = tmp;
         }
 
         Collections.reverse(result);

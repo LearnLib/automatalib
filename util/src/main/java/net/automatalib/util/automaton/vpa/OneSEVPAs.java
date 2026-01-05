@@ -473,7 +473,7 @@ public final class OneSEVPAs {
      * @param alphabet
      *         the input symbols to consider
      *
-     * @return a separating word for the two locations, or {@code null} if no such word could be found.
+     * @return a separating word for the two locations, or {@code null} if no such word could be found
      */
     public static <L, I> @Nullable Pair<Word<I>, Word<I>> findSeparatingWord(OneSEVPA<L, I> sevpa,
                                                                              L init1,
@@ -504,7 +504,9 @@ public final class OneSEVPAs {
                 final L succ1 = sevpa.getInternalSuccessor(l1, i);
                 final L succ2 = sevpa.getInternalSuccessor(l2, i);
 
-                assert succ1 != null && succ2 != null;
+                if (succ1 == null || succ2 == null) {
+                    throw new IllegalArgumentException("Only total models are supported");
+                }
 
                 if (sevpa.isAcceptingLocation(succ1) != sevpa.isAcceptingLocation(succ2)) {
                     lastPair = pair;
@@ -534,7 +536,9 @@ public final class OneSEVPAs {
                         final L rSucc1 = sevpa.getReturnSuccessor(l1, r, sym);
                         final L rSucc2 = sevpa.getReturnSuccessor(l2, r, sym);
 
-                        assert rSucc1 != null && rSucc2 != null;
+                        if (rSucc1 == null || rSucc2 == null) {
+                            throw new IllegalArgumentException("Only total models are supported");
+                        }
 
                         final Pair<Word<I>, Word<I>> pair =
                                 Pair.of(Word.fromWords(as.get(sevpa.getLocationId(l)), cWord), rWord);
@@ -562,7 +566,9 @@ public final class OneSEVPAs {
                         final L rSucc1 = sevpa.getReturnSuccessor(l, r, sym1);
                         final L rSucc2 = sevpa.getReturnSuccessor(l, r, sym2);
 
-                        assert rSucc1 != null && rSucc2 != null;
+                        if (rSucc1 == null || rSucc2 == null) {
+                            throw new IllegalArgumentException("Only total models are supported");
+                        }
 
                         final Pair<Word<I>, Word<I>> pair =
                                 Pair.of(Word.epsilon(), Word.fromWords(cWord, as.get(sevpa.getLocationId(l)), rWord));
@@ -608,7 +614,7 @@ public final class OneSEVPAs {
 
     /**
      * Computes a characterizing set for the given SEVPA. Note that the characterizing words consist of a prefix and a
-     * suffix since locations are typically distinguished in regard to the syntactical
+     * suffix since locations are typically distinguished in regard to the syntactical congruence.
      *
      * @param <L>
      *         location type
@@ -656,7 +662,10 @@ public final class OneSEVPAs {
             final L l2 = blockIter.next();
 
             final Pair<Word<I>, Word<I>> sepWord = findSeparatingWord(sevpa, l1, l2, alphabet);
-            assert sepWord != null;
+
+            if (sepWord == null) {
+                throw new IllegalArgumentException("Equivalent states detected, model must be minimal");
+            }
 
             result.add(sepWord);
 

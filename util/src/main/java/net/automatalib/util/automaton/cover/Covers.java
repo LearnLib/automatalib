@@ -29,6 +29,7 @@ import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Covers {
@@ -231,8 +232,8 @@ public final class Covers {
         S curr;
 
         while ((curr = bfsQueue.poll()) != null) {
-            Word<I> as = reach.get(curr);
-            assert as != null;
+            @SuppressWarnings("nullness") // in a breadth-first traversal the predecessors are always defined
+            @NonNull Word<I> as = reach.get(curr);
 
             for (I in : inputs) {
                 S succ = automaton.getSuccessor(curr, in);

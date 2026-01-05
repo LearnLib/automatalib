@@ -65,8 +65,9 @@ public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHel
 
         for (Entry<I, UniversalDeterministicAutomaton<S, I, ?, ?, ?>> e : subModels.entrySet()) {
             final S init = e.getValue().getInitialState();
-            assert init != null;
-            initialNodes.add(Pair.of(e.getKey(), init));
+            if (init != null) {
+                initialNodes.add(Pair.of(e.getKey(), init));
+            }
         }
 
         return initialNodes;
