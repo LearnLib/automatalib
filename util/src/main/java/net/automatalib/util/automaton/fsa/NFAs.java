@@ -25,6 +25,7 @@ import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.MapAlphabet;
+import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.MutableNFA;
@@ -357,7 +358,118 @@ public final class NFAs {
     }
 
     /**
-     * Determinizes the given NFA, and returns the result as a new complete DFA.
+     * Canonizes the given NFA using <a
+     * href="https://en.wikipedia.org/wiki/DFA_minimization#Brzozowski's_algorithm">Brzozowski's algorithm</a>.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the canonized NFA
+     *
+     * @see #determinize(NFA)
+     */
+    public static <I, A extends NFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> canonize(A nfa) {
+        return canonize(nfa, nfa.getInputAlphabet());
+    }
+
+    /**
+     * Canonizes the given NFA using <a
+     * href="https://en.wikipedia.org/wiki/DFA_minimization#Brzozowski's_algorithm">Brzozowski's algorithm</a>.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param alphabet
+     *         the input alphabet
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the canonized NFA
+     *
+     * @see #determinize(NFA, Alphabet)
+     */
+    public static <I> CompactDFA<I> canonize(NFA<?, I> nfa, Alphabet<I> alphabet) {
+        return canonize(nfa, alphabet, new CompactDFA.Creator<>());
+    }
+
+    /**
+     * Canonizes the given NFA using <a
+     * href="https://en.wikipedia.org/wiki/DFA_minimization#Brzozowski's_algorithm">Brzozowski's algorithm</a>.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param alphabet
+     *         the input alphabet
+     * @param creator
+     *         the creator for the intermediate and final DFAs
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the canonized NFA
+     *
+     * @see #determinize(NFA, Alphabet)
+     */
+    public static <S, I, A extends MutableDFA<S, I>> A canonize(NFA<?, I> nfa,
+                                                                Alphabet<I> alphabet,
+                                                                AutomatonCreator<A, I> creator) {
+        return canonize(nfa, alphabet, creator.createAutomaton(alphabet), new CompactNFA<>(alphabet));
+    }
+
+    /**
+     * Canonizes the given NFA using <a
+     * href="https://en.wikipedia.org/wiki/DFA_minimization#Brzozowski's_algorithm">Brzozowski's algorithm</a>.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param dfaOut
+     *         the instance to write intermediate and final DFAs to
+     * @param nfaOut
+     *         the instance to write intermediate NFAs to
+     * @param <S1>
+     *         DFA state type
+     * @param <S2>
+     *         NFA state type
+     * @param <I>
+     *         input symbol type
+     * @param <A1>
+     *         DFA automaton type
+     * @param <A2>
+     *         NFA automaton type
+     *
+     * @return the canonized NFA
+     *
+     * @see #determinize(NFA, Alphabet)
+     */
+    public static <S1, S2, I, A1 extends MutableDFA<S1, I>, A2 extends MutableNFA<S2, I>> A1 canonize(NFA<?, I> nfa,
+                                                                                                      Collection<? extends I> inputs,
+                                                                                                      A1 dfaOut,
+                                                                                                      A2 nfaOut) {
+        reverse(nfa, inputs, nfaOut);
+        determinize(nfaOut, inputs, dfaOut, false, false);
+
+        nfaOut.clear();
+
+        reverse(dfaOut, inputs, nfaOut);
+
+        dfaOut.clear();
+
+        determinize(nfaOut, inputs, dfaOut, false, false);
+
+        return dfaOut;
+    }
+
+    /**
+     * Determinizes the given NFA using <a href="https://doi.org/10.1147/rd.32.0114">subset construction</a> and
+     * minimizes the result afterward.
      *
      * @param nfa
      *         the original NFA
@@ -367,13 +479,16 @@ public final class NFAs {
      *         input symbol type
      *
      * @return the determinized NFA
+     *
+     * @see #canonize(NFA, Alphabet)
      */
     public static <I> CompactDFA<I> determinize(NFA<?, I> nfa, Alphabet<I> inputAlphabet) {
         return determinize(nfa, inputAlphabet, false, true);
     }
 
     /**
-     * Determinizes the given NFA, and returns the result as a new DFA.
+     * Determinizes the given NFA using <a href="https://doi.org/10.1147/rd.32.0114">subset construction</a>, optionally
+     * minimizing the result afterward.
      *
      * @param nfa
      *         the original NFA
@@ -387,6 +502,8 @@ public final class NFAs {
      *         input symbol type
      *
      * @return the determinized NFA
+     *
+     * @see #canonize(NFA, Alphabet)
      */
     public static <I> CompactDFA<I> determinize(NFA<?, I> nfa,
                                                 Alphabet<I> inputAlphabet,
@@ -398,7 +515,8 @@ public final class NFAs {
     }
 
     /**
-     * Determinizes the given NFA, and stores the result in a given mutable DFA.
+     * Determinizes the given NFA using <a href="https://doi.org/10.1147/rd.32.0114">subset construction</a>, optionally
+     * minimizing the result afterward.
      *
      * @param nfa
      *         the original NFA
@@ -412,6 +530,8 @@ public final class NFAs {
      *         whether to minimize the DFA
      * @param <I>
      *         input symbol type
+     *
+     * @see #canonize(NFA, Alphabet, AutomatonCreator)
      */
     public static <I> void determinize(NFA<?, I> nfa,
                                        Collection<? extends I> inputs,
@@ -425,7 +545,8 @@ public final class NFAs {
     }
 
     /**
-     * Determinizes the given NFA, and returns the result as a new DFA.
+     * Determinizes the given NFA using <a href="https://doi.org/10.1147/rd.32.0114">subset construction</a> and
+     * minimizes the result afterward.
      *
      * @param nfa
      *         the original NFA
@@ -435,13 +556,35 @@ public final class NFAs {
      *         automaton type
      *
      * @return the determinized NFA
+     *
+     * @see #canonize(NFA)
      */
     public static <I, A extends NFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> determinize(A nfa) {
         return determinize(nfa, false, true);
     }
 
     /**
-     * Determinizes the given NFA, and returns the result as a new DFA.
+     * Determinizes the given NFA using <a href="https://doi.org/10.1147/rd.32.0114">subset construction</a> and
+     * minimizes the result afterward.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         a mutable DFA for storing the result
+     * @param <I>
+     *         input symbol type
+     *
+     * @see #canonize(NFA, Alphabet, AutomatonCreator)
+     */
+    public static <I> void determinize(NFA<?, I> nfa, Collection<? extends I> inputs, MutableDFA<?, I> out) {
+        determinize(nfa, inputs, out, false, true);
+    }
+
+    /**
+     * Determinizes the given NFA using <a href="https://doi.org/10.1147/rd.32.0114">subset construction</a>, optionally
+     * minimizing the result afterward.
      *
      * @param nfa
      *         the original NFA
@@ -455,27 +598,13 @@ public final class NFAs {
      *         automaton type
      *
      * @return the determinized NFA
+     *
+     * @see #canonize(NFA)
      */
     public static <I, A extends NFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> determinize(A nfa,
                                                                                               boolean partial,
                                                                                               boolean minimize) {
         return determinize(nfa, nfa.getInputAlphabet(), partial, minimize);
-    }
-
-    /**
-     * Determinizes the given NFA, and stores the result in a given mutable DFA.
-     *
-     * @param nfa
-     *         the original NFA
-     * @param inputs
-     *         the input symbols to consider
-     * @param out
-     *         a mutable DFA for storing the result
-     * @param <I>
-     *         input symbol type
-     */
-    public static <I> void determinize(NFA<?, I> nfa, Collection<? extends I> inputs, MutableDFA<?, I> out) {
-        determinize(nfa, inputs, out, false, true);
     }
 
     private static <I, SI, SO> void doDeterminize(AcceptorPowersetViewTS<SI, I, ?> powerset,

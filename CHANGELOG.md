@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `automata-modelchecking-m3c` can now be included in jlink images.
 * Added `KWay{State,Transition}CoverTestsIterator`s to `automata-util` as a new means for conformance testing.
 * Added `CollectionUtil#allCombintationsIterator` and `CollectionUtil#allPermutationsIterator` for computing k-combinations and k-permutations.
+* Added `NFAs#canonize` to canonize NFAs via [Brzozowski's algorithm](https://en.wikipedia.org/wiki/DFA_minimization#Brzozowski's_algorithm).
 
 ### Changed
 

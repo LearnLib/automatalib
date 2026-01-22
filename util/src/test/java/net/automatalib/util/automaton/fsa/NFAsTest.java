@@ -150,6 +150,18 @@ public class NFAsTest {
         determinizeNFA(FastNFA::new);
     }
 
+    @Test
+    public void testCanonizeNFA() {
+        Alphabet<Integer> alphabet = Alphabets.integers(0, 2);
+        CompactNFA<Integer> nfa = TabakovVardiRandomAutomata.generateNFA(new Random(42), 10, 25, 5, alphabet);
+
+        CompactDFA<Integer> det1 = NFAs.determinize(nfa);
+        CompactDFA<Integer> det2 = NFAs.canonize(nfa);
+
+        Assert.assertEquals(det1.size(), det2.size());
+        Assert.assertTrue(Automata.testEquivalence(det1, det2, alphabet));
+    }
+
     /*
      * Check that determinization is idempotent.
      */
