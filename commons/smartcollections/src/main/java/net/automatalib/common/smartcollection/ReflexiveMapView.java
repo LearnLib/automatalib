@@ -36,6 +36,7 @@ public class ReflexiveMapView<T> extends AbstractMap<T, T> {
 
     private final Set<@KeyFor("this") T> domain;
 
+    @SuppressWarnings("type") // the provided items become keys for this map view
     public ReflexiveMapView(Set<T> domain) {
         this.domain = Collections.unmodifiableSet(domain);
     }
@@ -68,6 +69,7 @@ public class ReflexiveMapView<T> extends AbstractMap<T, T> {
     }
 
     @Override
+    @SuppressWarnings("return") // it is okay that values are also keys for this map
     public Set<T> values() {
         return this.domain;
     }

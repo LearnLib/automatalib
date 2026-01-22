@@ -15,7 +15,6 @@
  */
 package net.automatalib.automaton.procedural.impl;
 
-import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -54,21 +53,25 @@ public final class StackState<S, I, P> {
         return new StackState<>(this, newProcedure, newState);
     }
 
+    @SuppressWarnings("return") // since this method is package-private, we are happy to only assert nullability
     StackState<S, I, P> pop() {
         assert !isStatic() : "This method should never be called on static states";
         return prev;
     }
 
+    @SuppressWarnings("type") // since this method is package-private, we are happy to only assert nullability
     StackState<S, I, P> updateState(S state) {
         assert !isStatic() : "This method should never be called on static states";
         return new StackState<>(prev, procedure, state);
     }
 
+    @SuppressWarnings("return") // since this method is package-private, we are happy to only assert nullability
     P getProcedure() {
         assert !isStatic() : "This method should never be called on static states";
         return procedure;
     }
 
+    @SuppressWarnings("return") // since this method is package-private, we are happy to only assert nullability
     S getCurrentState() {
         assert !isStatic() : "This method should never be called on static states";
         return procedureState;
@@ -92,9 +95,6 @@ public final class StackState<S, I, P> {
         return this == TERM;
     }
 
-    // contract is satisfied by definition of constructors
-    @SuppressWarnings("contracts.conditional.postcondition")
-    @EnsuresNonNullIf(expression = {"this.prev", "this.procedure", "this.procedureState"}, result = false)
     private boolean isStatic() {
         return isInit() || isTerm();
     }
