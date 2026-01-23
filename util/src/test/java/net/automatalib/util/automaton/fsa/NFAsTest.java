@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2025 TU Dortmund University
+/* Copyright (C) 2013-2026 TU Dortmund University
  * This file is part of AutomataLib <https://automatalib.net>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -148,6 +148,18 @@ public class NFAsTest {
     public void testDeterminizeNFA() {
         determinizeNFA(new CompactNFA.Creator<>());
         determinizeNFA(FastNFA::new);
+    }
+
+    @Test
+    public void testCanonizeNFA() {
+        Alphabet<Integer> alphabet = Alphabets.integers(0, 2);
+        CompactNFA<Integer> nfa = TabakovVardiRandomAutomata.generateNFA(new Random(42), 10, 25, 5, alphabet);
+
+        CompactDFA<Integer> det1 = NFAs.determinize(nfa);
+        CompactDFA<Integer> det2 = NFAs.canonize(nfa);
+
+        Assert.assertEquals(det1.size(), det2.size());
+        Assert.assertTrue(Automata.testEquivalence(det1, det2, alphabet));
     }
 
     /*
