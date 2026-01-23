@@ -243,7 +243,7 @@ limitations under the License.
         <graphviz-awt-shapes.version>0.0.1</graphviz-awt-shapes.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <jung.version>2.1.1</jung.version>
-        <logback.version>1.5.15</logback.version>
+        <logback.version>1.5.25</logback.version>
         <metainf-services.version>1.11</metainf-services.version>
         <mockito.version>5.20.0</mockito.version>
         <slf4j.version>2.0.16</slf4j.version>
