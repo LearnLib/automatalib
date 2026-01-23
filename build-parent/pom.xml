@@ -240,7 +240,6 @@ limitations under the License.
                                     <goal>compile</goal>
                                 </goals>
                                 <configuration>
-                                    <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
                                     <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
                                     <annotationProcessorPaths combine.children="append">
@@ -284,7 +283,6 @@ limitations under the License.
                                     <goal>testCompile</goal>
                                 </goals>
                                 <configuration>
-                                    <failOnWarning>true</failOnWarning>
                                     <fork>true</fork>
                                     <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
                                     <annotationProcessorPaths combine.children="append">

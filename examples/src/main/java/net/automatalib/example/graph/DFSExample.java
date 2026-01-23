@@ -169,7 +169,7 @@ public final class DFSExample {
         @Override
         public boolean getNodeProperties(N node, Map<String, String> properties) {
             String lbl = properties.get(NodeAttrs.LABEL);
-            @SuppressWarnings("nullness")
+            @SuppressWarnings("nullness") // we have traversed all nodes before
             @NonNull DFSData record = records.get(node);
             properties.put(NodeAttrs.LABEL, lbl + " [#" + record.dfsNumber + "]");
             return true;
@@ -177,7 +177,7 @@ public final class DFSExample {
 
         @Override
         public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
-            @SuppressWarnings("nullness")
+            @SuppressWarnings("nullness") // we have traversed all nodes before
             @NonNull EdgeType et = edgeTypes.get(edge);
             properties.put(EdgeAttrs.STYLE, et.getStyle());
             properties.remove(EdgeAttrs.LABEL);
