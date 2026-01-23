@@ -81,8 +81,8 @@ final class WitnessTreeExtractor<L, AP> {
                                                   FormulaNode<L, AP> formula) {
 
         final Deque<WitnessTreeState<?, L, ?, AP>> queue = new ArrayDeque<>();
-        final AbstractDDSolver<?, L, AP>.WorkUnit<?, ?> mainUnit = units.get(cfmps.getMainProcess());
-        assert mainUnit != null;
+        @SuppressWarnings("nullness") // we constructed work units based on all labels
+        final AbstractDDSolver<?, L, AP>.@NonNull WorkUnit<?, ?> mainUnit = units.get(cfmps.getMainProcess());
         final WitnessTreeState<?, L, ?, AP> init = getInitialTreeState(mainUnit, formula);
 
         queue.add(init);
@@ -167,7 +167,6 @@ final class WitnessTreeExtractor<L, AP> {
     private <N> List<WitnessTreeState<?, L, ?, AP>> exploreDia(DiamondNode<L, AP> formula,
                                                                WitnessTreeState<N, L, ?, AP> queueElement) {
         if (Objects.equals(queueElement.state, queueElement.pmpg.getFinalNode())) {
-            assert queueElement.stack != null;
             return findDiaMoveEndNodeReturn(queueElement);
         } else if (formula.getAction() == null) {
             return findDiaMoveWithEmpty(queueElement, formula);
@@ -199,8 +198,8 @@ final class WitnessTreeExtractor<L, AP> {
                     result.add(toAdd);
                 }
             } else {
-                final AbstractDDSolver<?, L, AP>.WorkUnit<?, ?> unit = units.get(label);
-                assert unit != null;
+                @SuppressWarnings("nullness") // we constructed work units based on all labels
+                final AbstractDDSolver<?, L, AP>.@NonNull WorkUnit<?, ?> unit = units.get(label);
                 final WitnessTreeState<?, L, ?, AP> toAdd =
                         buildProcessNode(queueElement, unit, label, target, formula);
 
@@ -215,8 +214,9 @@ final class WitnessTreeExtractor<L, AP> {
 
     private <N, E> List<WitnessTreeState<?, L, ?, AP>> findDiaMoveEndNodeReturn(WitnessTreeState<N, L, E, AP> queueElement) {
 
-        assert queueElement.stack != null;
-        final WitnessTreeState<?, L, ?, AP> toAdd = buildReturnNode(queueElement, queueElement.stack);
+        @SuppressWarnings("nullness") // only the root node has no stack and it will never be mapped to a final/end node
+        @NonNull WitnessTreeState<?, L, ?, AP> prev = queueElement.stack;
+        final WitnessTreeState<?, L, ?, AP> toAdd = buildReturnNode(queueElement, prev);
 
         return Collections.singletonList(toAdd);
     }
@@ -245,8 +245,8 @@ final class WitnessTreeExtractor<L, AP> {
                     result.add(toAdd);
                 }
             } else {
-                final AbstractDDSolver<?, L, AP>.WorkUnit<?, ?> unit = units.get(label);
-                assert unit != null;
+                @SuppressWarnings("nullness") // we constructed work units based on all labels
+                final AbstractDDSolver<?, L, AP>.@NonNull WorkUnit<?, ?> unit = units.get(label);
                 final WitnessTreeState<?, L, ?, AP> toAdd =
                         buildProcessNode(queueElement, unit, label, target, formula);
 

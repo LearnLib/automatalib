@@ -50,7 +50,8 @@ public class WitnessTreeState<N, L, E, AP> {
     public boolean isPartOfResult;
 
     WitnessTreeState(AbstractDDSolver<?, L, AP>.WorkUnit<N, E> unit,
-                     @Nullable WitnessTreeState<?, L, ?, AP> stack, N state,
+                     @Nullable WitnessTreeState<?, L, ?, AP> stack,
+                     N state,
                      FormulaNode<L, AP> subformula,
                      BitSet context,
                      String displayLabel,

@@ -38,9 +38,9 @@ public class WitnessTree<L, AP> extends CompactUniversalGraph<WitnessTreeState<?
 
     private @MonotonicNonNull Word<L> result;
 
+    @SuppressWarnings("nullness") // the witness tree is returned only after the path has been computed
     public Word<L> getWitness() {
-        assert result != null;
-        return result;
+        return this.result;
     }
 
     void computePath(int finishingNode) {
@@ -50,7 +50,6 @@ public class WitnessTree<L, AP> extends CompactUniversalGraph<WitnessTreeState<?
 
         while (currentNode >= 0) {
             final WitnessTreeState<?, L, ?, AP> prop = super.getNodeProperty(currentNode);
-            assert prop != null;
 
             final L label = prop.edgeLabel;
             prop.isPartOfResult = true;

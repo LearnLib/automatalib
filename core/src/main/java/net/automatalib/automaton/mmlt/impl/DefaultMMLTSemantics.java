@@ -32,6 +32,7 @@ import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,8 +133,9 @@ public class DefaultMMLTSemantics<S, I, T, O>
                 }
             }
 
-            assert lastOutput != null;
-            return new MealyTransition<>(currentConfig, new TimedOutput<>(lastOutput));
+            @SuppressWarnings("nullness") // since remainingTime must be > 0, the while loop iterates at least once
+            final @NonNull O output = lastOutput;
+            return new MealyTransition<>(currentConfig, new TimedOutput<>(output));
         } else {
             throw new IllegalArgumentException("Unknown input symbol type");
         }

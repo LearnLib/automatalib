@@ -155,14 +155,15 @@ public final class SubsequentialTransducers {
                 for (Pair<S, I> trans : incomingTransitions.get(s)) {
                     final S src = trans.getFirst();
                     final T t = out.getTransition(src, trans.getSecond());
-                    assert t != null;
 
-                    final Word<O> oldTransitionProperty = out.getTransitionProperty(t);
-                    final Word<O> newTransitionProperty = oldTransitionProperty.concat(lcp);
+                    if (t != null) {
+                        final Word<O> oldTransitionProperty = out.getTransitionProperty(t);
+                        final Word<O> newTransitionProperty = oldTransitionProperty.concat(lcp);
 
-                    out.setTransitionProperty(t, newTransitionProperty);
-                    if (!queue.contains(src)) {
-                        queue.add(src);
+                        out.setTransitionProperty(t, newTransitionProperty);
+                        if (!queue.contains(src)) {
+                            queue.add(src);
+                        }
                     }
                 }
             }

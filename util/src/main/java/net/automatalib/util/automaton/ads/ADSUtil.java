@@ -86,7 +86,11 @@ public final class ADSUtil {
             final N nextNode = creator.apply(tempADS, nextInput);
 
             final T trans = automaton.getTransition(tempState, tempInput);
-            assert trans != null;
+
+            if (trans == null) {
+                break;
+            }
+
             final O oldOutput = automaton.getTransitionOutput(trans);
 
             tempADS.getChildren().put(oldOutput, nextNode);

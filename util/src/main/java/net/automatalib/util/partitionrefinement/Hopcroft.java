@@ -21,6 +21,7 @@ import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -222,8 +223,9 @@ public class Hopcroft {
         if (worklistHead == null) {
             worklistHead = b;
         } else {
-            assert worklistTail != null;
-            worklistTail.nextInWorklist = b;
+            @SuppressWarnings("nullness") // worklistTail is null iff worklistHead is null
+            @NonNull Block tail = worklistTail;
+            tail.nextInWorklist = b;
         }
         worklistTail = b;
     }

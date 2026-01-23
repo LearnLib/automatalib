@@ -418,8 +418,8 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         final ProceduralModalProcessGraph<?, L, E, AP, ?> pmpg = unit.pmpg;
         final L label = pmpg.getEdgeLabel(edge);
         if (isProcessEdge(pmpg, edge)) {
-            final WorkUnit<?, ?> edgeUnit = workUnits.get(label);
-            assert edgeUnit != null;
+            @SuppressWarnings("nullness") // we constructed work units based on labels
+            final @NonNull WorkUnit<?, ?> edgeUnit = workUnits.get(label);
             edgeTransformer = getInitialEdgeTransformer(edgeUnit);
         } else {
             if (isMustEdge(pmpg, edge)) {

@@ -420,8 +420,9 @@ public final class BacktrackingSearch {
 
         for (Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
             final S current = entry.getKey();
-            final T trans = automaton.getTransition(current, i);
-            assert trans != null;
+            @SuppressWarnings("nullness") // we only construct ADSs from valid search states
+            final @NonNull T trans = automaton.getTransition(current, i);
+
             final S nextState = automaton.getSuccessor(trans);
             final O nextOutput = automaton.getTransitionOutput(trans);
 

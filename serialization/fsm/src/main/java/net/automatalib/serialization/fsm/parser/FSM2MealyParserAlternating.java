@@ -38,6 +38,7 @@ import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -186,8 +187,8 @@ public final class FSM2MealyParserAlternating<I, O, A extends MutableMealyMachin
         // check if we need to compute an undefined output.
         if (inputTrans != null && targets.isEmpty()) {
             if (wb != null) {
-                assert output != null;
-
+                @SuppressWarnings("nullness") // wb is null iff output is null
+                @NonNull Output<I, Word<O>> output = this.output;
                 final O o = output.computeOutput(wb).lastSymbol();
 
                 // create an actual Mealy machine transition

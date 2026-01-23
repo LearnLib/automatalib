@@ -35,14 +35,21 @@ limitations under the License.
     </Match>
     <Match>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
-        <And>
-            <!-- Fine according to JavaDoc -->
-            <Class name="net.automatalib.common.smartcollection.AbstractLinkedList"/>
-            <Or>
-                <Method name="popBack" returns="java.lang.Object"/>
-                <Method name="popFront" returns="java.lang.Object"/>
-            </Or>
-        </And>
+        <Or>
+            <And>
+                <!-- Fine according to data-flow -->
+                <Class name="net.automatalib.util.automaton.ads.LeeYannakakis"/>
+                <Method name="computeValidities"/>
+            </And>
+            <And>
+                <!-- Fine according to JavaDoc -->
+                <Class name="net.automatalib.common.smartcollection.AbstractLinkedList"/>
+                <Or>
+                    <Method name="popBack" returns="java.lang.Object"/>
+                    <Method name="popFront" returns="java.lang.Object"/>
+                </Or>
+            </And>
+        </Or>
     </Match>
     <Match>
         <!-- Passing references is mostly fine for performance reasons. Since we do not deal with security-related code,

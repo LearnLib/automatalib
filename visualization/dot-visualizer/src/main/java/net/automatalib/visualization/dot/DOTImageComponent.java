@@ -36,6 +36,7 @@ import javax.swing.JViewport;
 import javax.swing.event.MouseInputAdapter;
 
 import net.automatalib.common.util.IOUtil;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,9 +196,8 @@ final class DOTImageComponent extends JComponent {
         @Override
         public void mouseDragged(MouseEvent e) {
             final Point dragEventPoint = e.getPoint();
-            final JViewport viewport = (JViewport) cmp.getParent();
-
-            assert viewport != null;
+            @SuppressWarnings("nullness") // the DOTImageComponent is always embedded in a parent frame
+            final @NonNull JViewport viewport = (JViewport) cmp.getParent();
 
             final Point viewPos = viewport.getViewPosition();
 

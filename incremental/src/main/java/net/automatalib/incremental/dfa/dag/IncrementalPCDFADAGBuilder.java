@@ -23,6 +23,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The prefix-closed version of {@link IncrementalDFADAGBuilder}. Contrary to the regular lookup semantics, where an
@@ -145,8 +146,9 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                 }
                 last = hiddenClone(last);
                 if (conf == null) {
-                    Transition peek = path.peek();
-                    assert peek != null;
+                    // the root node is never confluent so in this context, the path always contains at least one node
+                    @SuppressWarnings("nullness")
+                    @NonNull Transition peek = path.peek();
                     State prev = peek.state;
                     if (prev == init) {
                         updateInitSignature(peek.transIdx, last);

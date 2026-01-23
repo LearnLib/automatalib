@@ -124,7 +124,7 @@ public final class CharacterizingSets {
             }
 
             if (suffix == null) {
-                return;
+                throw new IllegalArgumentException("equivalent states detected, model must be minimal");
             }
 
             result.add(suffix);

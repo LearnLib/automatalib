@@ -15,6 +15,7 @@
  */
 package net.automatalib.modelchecker.m3c.transformer;
 
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashSet;
@@ -260,6 +261,29 @@ public class ADDTransformerTest {
         EquationalBlock<String, String> block = new EquationalBlock<>(false);
         block.addNode(new AGNode<>(new TrueNode<>()));
         transformer.createUpdate(atomicPropositions, Collections.singletonList(transformer), block);
+    }
+
+    @Test
+    void testUpdateIdentityException() throws FormatException {
+        final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
+        DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
+        ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dependencyGraph);
+        ADDTransformer<String, String> id = new ADDTransformer<>(xddManager);
+        Set<String> atomicPropositions = new HashSet<>();
+        atomicPropositions.add("a");
+
+        Assert.assertThrows(IllegalArgumentException.class,
+                            () -> id.createUpdate(atomicPropositions,
+                                                  Collections.emptyList(),
+                                                  dependencyGraph.getBlock(0)));
+        Assert.assertThrows(IllegalArgumentException.class,
+                            () -> transformer.createUpdate(atomicPropositions,
+                                                           Collections.singletonList(id),
+                                                           dependencyGraph.getBlock(0)));
+        Assert.assertThrows(IllegalArgumentException.class,
+                            () -> transformer.createUpdate(atomicPropositions,
+                                                           Arrays.asList(transformer, id),
+                                                           dependencyGraph.getBlock(0)));
     }
 
 }
