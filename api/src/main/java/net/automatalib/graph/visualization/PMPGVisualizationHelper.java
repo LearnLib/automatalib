@@ -25,12 +25,21 @@ import java.util.StringJoiner;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 import net.automatalib.visualization.DefaultVisualizationHelper;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class PMPGVisualizationHelper<N, E, AP> extends DefaultVisualizationHelper<N, E> {
+public class PMPGVisualizationHelper<N, L, E, AP> extends DefaultVisualizationHelper<N, E> {
 
+    private final @Nullable L label;
+    private final boolean isMain;
     private final ProceduralModalProcessGraph<N, ?, E, AP, ?> pmpg;
 
     public PMPGVisualizationHelper(ProceduralModalProcessGraph<N, ?, E, AP, ?> pmpg) {
+        this(null, false, pmpg);
+    }
+
+    public PMPGVisualizationHelper(@Nullable L label, boolean isMain, ProceduralModalProcessGraph<N, ?, E, AP, ?> pmpg) {
+        this.label = label;
+        this.isMain = isMain;
         this.pmpg = pmpg;
     }
 
@@ -52,17 +61,26 @@ public class PMPGVisualizationHelper<N, E, AP> extends DefaultVisualizationHelpe
         final Set<AP> aps = pmpg.getNodeProperty(node);
 
         if (aps.isEmpty()) {
-            properties.put(NodeAttrs.LABEL, "");
+            properties.put(PMPGNodeAttrs.LABEL, "");
         } else {
-            properties.put(NodeAttrs.LABEL, aps.toString());
+            properties.put(PMPGNodeAttrs.LABEL, aps.toString());
+        }
+
+        if (label != null) {
+            properties.put(PMPGNodeAttrs.PROCEDURE, label.toString());
+            if (isMain) {
+                properties.put(PMPGNodeAttrs.MAIN, "true");
+            }
         }
 
         if (Objects.equals(pmpg.getInitialNode(), node)) {
-            properties.put(NodeAttrs.SHAPE, NodeShapes.OCTAGON);
+            properties.put(PMPGNodeAttrs.SHAPE, NodeShapes.OCTAGON);
+            properties.put(PMPGNodeAttrs.INITIAL, "true");
         } else if (Objects.equals(pmpg.getFinalNode(), node)) {
-            properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
+            properties.put(PMPGNodeAttrs.SHAPE, NodeShapes.BOX);
+            properties.put(PMPGNodeAttrs.FINAL, "true");
         } else {
-            properties.put(NodeAttrs.SHAPE, NodeShapes.CIRCLE);
+            properties.put(PMPGNodeAttrs.SHAPE, NodeShapes.CIRCLE);
         }
 
         return true;
@@ -83,8 +101,10 @@ public class PMPGVisualizationHelper<N, E, AP> extends DefaultVisualizationHelpe
             styleJoiner.add(EdgeStyles.BOLD);
         }
 
-        properties.put(EdgeAttrs.LABEL, String.valueOf(pmpg.getEdgeLabel(edge)));
-        properties.put(EdgeAttrs.STYLE, styleJoiner.toString());
+        properties.put(PMPGEdgeAttrs.LABEL, String.valueOf(pmpg.getEdgeLabel(edge)));
+        properties.put(PMPGEdgeAttrs.MODALITY, prop.getModalType().toString());
+        properties.put(PMPGEdgeAttrs.PROCEDURALITY, prop.getProceduralType().toString());
+        properties.put(PMPGEdgeAttrs.STYLE, styleJoiner.toString());
 
         return true;
     }

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -42,8 +43,11 @@ import net.automatalib.automaton.transducer.MutableMooreMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.common.util.Pair;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.MutableGraph;
+import net.automatalib.graph.MutableProceduralModalProcessGraph;
+import net.automatalib.graph.impl.CompactPMPG;
 import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.ModelDeserializer;
@@ -52,11 +56,16 @@ import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
 import net.automatalib.ts.modal.transition.impl.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.impl.ProceduralModalEdgePropertyImpl;
 import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.MTSEdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeShapes;
+import net.automatalib.visualization.VisualizationHelper.PMPGEdgeAttrs;
+import net.automatalib.visualization.VisualizationHelper.PMPGNodeAttrs;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -96,6 +105,21 @@ public final class DOTParsers {
         }
 
         return tokens[1].trim();
+    };
+
+    public static final Function<Map<String, String>, String> DEFAULT_CFMPS_PROCEDURE_PARSER =
+            attr -> getAndRequireNotNull(attr, PMPGNodeAttrs.PROCEDURE);
+
+    public static final Function<Map<String, String>, Set<String>> DEFAULT_CFMPS_NODE_PROPERTY_PARSER =
+            attr -> DOTCFMPSParser.parseNodeProperties(attr, Function.identity());
+
+    public static final Function<Map<String, String>, MutableProceduralModalEdgeProperty>
+            DEFAULT_CFMPS_TRANSITION_PROPERTY_PARSER = attr -> {
+        final String modal = getAndRequireNotNull(attr, PMPGEdgeAttrs.MODALITY);
+        final String proc = getAndRequireNotNull(attr, PMPGEdgeAttrs.PROCEDURALITY);
+
+        return new ProceduralModalEdgePropertyImpl(ProceduralType.valueOf(proc.toUpperCase(Locale.ROOT)),
+                                                   ModalType.valueOf(modal.toUpperCase(Locale.ROOT)));
     };
 
     /**
@@ -820,6 +844,47 @@ public final class DOTParsers {
                                                                                                        Collection<String> initialNodeIds,
                                                                                                        boolean fakeInitialNodeIds) {
         return new DOTMMLTParser<>(creator, inputParser, outputParser, initialNodeIds, fakeInitialNodeIds);
+    }
+
+    public static ModelDeserializer<ContextFreeModalProcessSystem<String, String>> cfmps() {
+        return cfmps("?", DEFAULT_CFMPS_NODE_PROPERTY_PARSER, DEFAULT_EDGE_PARSER, DEFAULT_CFMPS_PROCEDURE_PARSER);
+    }
+
+    public static <L, AP> ModelDeserializer<ContextFreeModalProcessSystem<L, AP>> cfmps(L defaultLabel,
+                                                                                        Function<Map<String, String>, Set<AP>> apParser,
+                                                                                        Function<Map<String, String>, @Nullable L> labelParser,
+                                                                                        Function<Map<String, String>, L> procedureParser) {
+        return cfmps(l -> new CompactPMPG<>(defaultLabel),
+                     apParser,
+                     labelParser,
+                     procedureParser,
+                     DEFAULT_CFMPS_TRANSITION_PROPERTY_PARSER);
+    }
+
+    public static <N, L, E, AP, TP extends MutableProceduralModalEdgeProperty, P extends MutableProceduralModalProcessGraph<N, L, E, AP, TP>> ModelDeserializer<ContextFreeModalProcessSystem<L, AP>> cfmps(
+            Function<L, P> creator,
+            Function<Map<String, String>, Set<AP>> apParser,
+            Function<Map<String, String>, @Nullable L> labelParser,
+            Function<Map<String, String>, L> procedureParser,
+            Function<Map<String, String>, TP> tpParser) {
+        return cfmps(creator, apParser, labelParser, procedureParser, tpParser, GraphDOT.INITIAL_LABEL, true);
+    }
+
+    public static <N, L, E, AP, TP extends MutableProceduralModalEdgeProperty, P extends MutableProceduralModalProcessGraph<N, L, E, AP, TP>> ModelDeserializer<ContextFreeModalProcessSystem<L, AP>> cfmps(
+            Function<L, P> creator,
+            Function<Map<String, String>, Set<AP>> apParser,
+            Function<Map<String, String>, @Nullable L> labelParser,
+            Function<Map<String, String>, L> procedureParser,
+            Function<Map<String, String>, TP> tpParser,
+            String initialNodePrefix,
+            boolean fakeInitialNodeIds) {
+        return new DOTCFMPSParser<>(creator,
+                                    apParser,
+                                    labelParser,
+                                    procedureParser,
+                                    tpParser,
+                                    initialNodePrefix,
+                                    fakeInitialNodeIds);
     }
 
     private static String getAndRequireNotNull(Map<String, String> map, String attribute) {

@@ -1,18 +1,18 @@
 digraph g {
 
-	s0 [shape="circle" label=""];
-	s1 [shape="box" label="[d]"];
-	s2 [shape="octagon" label=""];
-	s3 [shape="circle" label="[a, b]"];
-	s4 [shape="circle" label="[c]"];
-	s0 -> s1 [style="" label="?"];
-	s0 -> s1 [style="dashed" label="?"];
-	s1 -> s1 [style="bold" label="?"];
-	s1 -> s0 [style="dashed,bold" label="?"];
-	s2 -> s3 [style="" label="1"];
-	s2 -> s3 [style="dashed" label="2"];
-	s3 -> s4 [style="bold" label="3"];
-	s4 -> s2 [style="dashed,bold" label="4"];
+	s0 [shape="circle" label="" procedure="t"];
+	s1 [shape="box" final="true" label="[d]" procedure="t"];
+	s2 [shape="octagon" main="true" label="" procedure="s"];
+	s3 [shape="circle" main="true" label="[a, b]" procedure="s"];
+	s4 [shape="circle" main="true" label="[c]" procedure="s"];
+	s0 -> s1 [modality="MUST" style="" label="?" procedurality="INTERNAL"];
+	s0 -> s1 [modality="MAY" style="dashed" label="?" procedurality="INTERNAL"];
+	s1 -> s1 [modality="MUST" style="bold" label="?" procedurality="PROCESS"];
+	s1 -> s0 [modality="MAY" style="dashed,bold" label="?" procedurality="PROCESS"];
+	s2 -> s3 [modality="MUST" style="" label="1" procedurality="INTERNAL"];
+	s2 -> s3 [modality="MAY" style="dashed" label="2" procedurality="INTERNAL"];
+	s3 -> s4 [modality="MUST" style="bold" label="3" procedurality="PROCESS"];
+	s4 -> s2 [modality="MAY" style="dashed,bold" label="4" procedurality="PROCESS"];
 
 __start0 [label="" shape="none" width="0" height="0"];
 __start0 -> s2;

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
@@ -30,25 +31,26 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class CFMPSVisualizationHelper<N, L, E> extends DefaultVisualizationHelper<Pair<L, N>, Pair<L, E>> {
 
-    private final Map<L, PMPGVisualizationHelper<N, E, ?>> visualizers;
+    private final Map<L, PMPGVisualizationHelper<N, L, E, ?>> visualizers;
     private final List<Pair<L, N>> initialNodes;
 
     // cast is fine, because we make sure to only query nodes/edges belonging to the respective procedures
     @SuppressWarnings("unchecked")
-    public CFMPSVisualizationHelper(Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, ?, ?>> pmpgs) {
-
+    public CFMPSVisualizationHelper(L mainProcedure,
+                                    Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, ?, ?>> pmpgs) {
         this.visualizers = new HashMap<>(HashUtil.capacity(pmpgs.size()));
         this.initialNodes = new ArrayList<>(pmpgs.size());
 
         for (Entry<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, ?, ?>> e : pmpgs.entrySet()) {
             final ProceduralModalProcessGraph<N, L, E, ?, ?> value =
                     (ProceduralModalProcessGraph<N, L, E, ?, ?>) e.getValue();
+            final L key = e.getKey();
             final N initialNode = value.getInitialNode();
 
-            this.visualizers.put(e.getKey(), new PMPGVisualizationHelper<>(value));
+            this.visualizers.put(key, new PMPGVisualizationHelper<>(key, Objects.equals(key, mainProcedure), value));
 
             if (initialNode != null) {
-                this.initialNodes.add(Pair.of(e.getKey(), initialNode));
+                this.initialNodes.add(Pair.of(key, initialNode));
             }
         }
     }
@@ -63,7 +65,7 @@ public class CFMPSVisualizationHelper<N, L, E> extends DefaultVisualizationHelpe
 
         final L process = node.getFirst();
         @SuppressWarnings("assignment") // we only use identifier for which procedures exist
-        final @NonNull PMPGVisualizationHelper<N, E, ?> visualizer = this.visualizers.get(process);
+        final @NonNull PMPGVisualizationHelper<N, L, E, ?> visualizer = this.visualizers.get(process);
 
         return visualizer.getNodeProperties(node.getSecond(), properties);
     }
@@ -73,7 +75,7 @@ public class CFMPSVisualizationHelper<N, L, E> extends DefaultVisualizationHelpe
 
         final L process = edge.getFirst();
         @SuppressWarnings("assignment") // we only use identifier for which procedures exist
-        final @NonNull PMPGVisualizationHelper<N, E, ?> visualizer = this.visualizers.get(process);
+        final @NonNull PMPGVisualizationHelper<N, L, E, ?> visualizer = this.visualizers.get(process);
 
         return visualizer.getEdgeProperties(src.getSecond(), edge.getSecond(), tgt.getSecond(), properties);
     }

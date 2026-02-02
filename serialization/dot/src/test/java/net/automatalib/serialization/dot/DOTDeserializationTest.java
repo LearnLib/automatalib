@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
@@ -46,9 +47,14 @@ import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.exception.FormatException;
+import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.graph.UniversalGraph;
+import net.automatalib.graph.impl.DefaultCFMPS;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.ts.modal.impl.CompactMTS;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
+import net.automatalib.visualization.VisualizationHelper.PMPGEdgeAttrs;
+import net.automatalib.visualization.VisualizationHelper.PMPGNodeAttrs;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -250,6 +256,34 @@ public class DOTDeserializationTest {
         }
     }
 
+    @Test
+    public void testCFMPSDeserialization() throws IOException, FormatException {
+
+        final DefaultCFMPS<Character, Character> cfmps = DOTSerializationUtil.CFMPS;
+
+        Function<Map<String, String>, Set<Character>> apParser =
+                attr -> DOTCFMPSParser.parseNodeProperties(attr, s -> s.charAt(0));
+        Function<Map<String, String>, Character> labelParser = attr -> attr.get(PMPGEdgeAttrs.LABEL).charAt(0);
+        Function<Map<String, String>, Character> procedureParser = attr -> attr.get(PMPGNodeAttrs.PROCEDURE).charAt(0);
+
+        var model = DOTParsers.cfmps('?', apParser, labelParser, procedureParser)
+                              .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.CFMPS_RESOURCE));
+
+        Assert.assertEquals(model.getMainProcess(), cfmps.getMainProcess());
+        Assert.assertEquals(model.getPMPGs().keySet(), cfmps.getPMPGs().keySet());
+
+        for (var e : model.getPMPGs().entrySet()) {
+            @SuppressWarnings("unchecked")
+            var actual =
+                    (ProceduralModalProcessGraph<?, Character, ?, Character, ProceduralModalEdgeProperty>) e.getValue();
+            @SuppressWarnings("unchecked")
+            var expected =
+                    (ProceduralModalProcessGraph<?, Character, ?, Character, ProceduralModalEdgeProperty>) cfmps.getPMPGs()
+                                                                                                                .get(e.getKey());
+            checkGraphEquivalence(expected, actual, (s1, s2) -> 0);
+        }
+    }
+
     @Test(expectedExceptions = FormatException.class)
     public void testFaultyAutomatonDeserialization() throws IOException, FormatException {
         DOTParsers.dfa().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.FAULTY_AUTOMATON_RESOURCE));
@@ -335,13 +369,13 @@ public class DOTDeserializationTest {
 
             for (I i : alphabet) {
                 final List<T1> sourceTransitions = new ArrayList<>(source.getTransitions(sourceState, i));
-                final List<T2> targetTransistions = new ArrayList<>(target.getTransitions(targetState, i));
+                final List<T2> targetTransitions = new ArrayList<>(target.getTransitions(targetState, i));
 
-                Assert.assertEquals(sourceTransitions.size(), targetTransistions.size());
+                Assert.assertEquals(sourceTransitions.size(), targetTransitions.size());
 
                 for (int j = 0; j < sourceTransitions.size(); j++) {
                     final T1 sourceTrans = sourceTransitions.get(j);
-                    final T2 targetTrans = targetTransistions.get(j);
+                    final T2 targetTrans = targetTransitions.get(j);
 
                     Assert.assertEquals(source.getTransitionProperty(sourceTrans),
                                         target.getTransitionProperty(targetTrans));
@@ -364,9 +398,14 @@ public class DOTDeserializationTest {
         Assert.assertEquals(sourceQueue.isEmpty(), targetQueue.isEmpty());
     }
 
-    private static <N1, E1, NP extends Comparable<NP>, EP extends Comparable<EP>, N2, E2> void checkGraphEquivalence(
-            UniversalGraph<N1, E1, NP, EP> source,
-            UniversalGraph<N2, E2, NP, EP> target) {
+    private static <N1, E1, NP extends Comparable<NP>, EP, N2, E2> void checkGraphEquivalence(UniversalGraph<N1, E1, NP, EP> source,
+                                                                                              UniversalGraph<N2, E2, NP, EP> target) {
+        checkGraphEquivalence(source, target, Comparator.naturalOrder());
+    }
+
+    private static <N1, E1, NP, EP, N2, E2> void checkGraphEquivalence(UniversalGraph<N1, E1, NP, EP> source,
+                                                                       UniversalGraph<N2, E2, NP, EP> target,
+                                                                       Comparator<NP> comparator) {
 
         Assert.assertEquals(source.size(), target.size());
 
@@ -389,8 +428,8 @@ public class DOTDeserializationTest {
             Assert.assertEquals(sourceEdges.size(), targetEdges.size());
 
             // since we have unique node properties, these uniquely identify states
-            sourceEdges.sort(Comparator.comparing(e -> source.getNodeProperty(source.getTarget(e))));
-            targetEdges.sort(Comparator.comparing(e -> target.getNodeProperty(target.getTarget(e))));
+            sourceEdges.sort(Comparator.comparing(e -> source.getNodeProperty(source.getTarget(e)), comparator));
+            targetEdges.sort(Comparator.comparing(e -> target.getNodeProperty(target.getTarget(e)), comparator));
 
             for (int j = 0; j < sourceEdges.size(); j++) {
                 final E1 sourceEdge = sourceEdges.get(j);

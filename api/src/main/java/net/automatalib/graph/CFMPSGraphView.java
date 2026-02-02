@@ -41,11 +41,13 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public class CFMPSGraphView<N, L, E, AP> implements Graph<Pair<L, N>, Pair<L, E>> {
 
+    private final L mainProcedure;
     private final Map<L, ProceduralModalProcessGraph<N, L, E, AP, ?>> pmpgs;
 
     // cast is fine, because we make sure to only query nodes/edges belonging to the respective procedures
     @SuppressWarnings("unchecked")
-    public CFMPSGraphView(Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, AP, ?>> pmpgs) {
+    public CFMPSGraphView(L mainProcedure, Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, AP, ?>> pmpgs) {
+        this.mainProcedure = mainProcedure;
         this.pmpgs = (Map<L, ProceduralModalProcessGraph<N, L, E, AP, ?>>) pmpgs;
     }
 
@@ -91,6 +93,6 @@ public class CFMPSGraphView<N, L, E, AP> implements Graph<Pair<L, N>, Pair<L, E>
 
     @Override
     public VisualizationHelper<Pair<L, N>, Pair<L, E>> getVisualizationHelper() {
-        return new CFMPSVisualizationHelper<>(this.pmpgs);
+        return new CFMPSVisualizationHelper<>(this.mainProcedure, this.pmpgs);
     }
 }
