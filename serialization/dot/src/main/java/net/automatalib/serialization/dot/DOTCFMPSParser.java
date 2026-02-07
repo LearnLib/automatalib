@@ -32,19 +32,50 @@ import net.automatalib.common.util.IOUtil;
 import net.automatalib.exception.FormatException;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
+import net.automatalib.graph.ProceduralModalProcessGraph;
+import net.automatalib.graph.concept.FinalNode;
 import net.automatalib.graph.impl.DefaultCFMPS;
 import net.automatalib.serialization.ModelDeserializer;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
+import net.automatalib.visualization.VisualizationHelper.PMPGEdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.PMPGNodeAttrs;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Parses a DOT file that defines an {@link ContextFreeModalProcessSystem}.
+ * <p>
+ * Besides the typical structure of DOT files, this parser expects/supports the following attributes present in order to
+ * correctly parse the semantics of {@link ContextFreeModalProcessSystem}s:
+ * <ul>
+ *     <li>nodes must provide a {@value PMPGNodeAttrs#PROCESS} attribute that denotes the process the node belongs to</li>
+ *     <li>nodes may provide a {@value PMPGNodeAttrs#MAIN} attribute that denotes whether their respective process is the {@link ContextFreeModalProcessSystem#getMainProcess() main process}</li>
+ *     <li>nodes may provide a {@value PMPGNodeAttrs#FINAL} attribute to denote their {@link FinalNode final} state</li>
+ *     <li>edges must provide {@value PMPGEdgeAttrs#MODALITY} and {@value PMPGEdgeAttrs#PROCEDURALITY} attributes to denote their {@link ModalType} and {@link ProceduralType}</li>
+ * </ul>
+ *
+ * @param <N>
+ *         the node type
+ * @param <L>
+ *         the label type
+ * @param <E>
+ *         the edge type
+ * @param <AP>
+ *         the atomic proposition type
+ * @param <TP>
+ *         the transition property type
+ * @param <P>
+ *         the type of internal {@link ProceduralModalProcessGraph}s
+ */
 public class DOTCFMPSParser<N, L, E, AP, TP extends MutableProceduralModalEdgeProperty, P extends MutableProceduralModalProcessGraph<N, L, E, AP, TP>>
         implements ModelDeserializer<ContextFreeModalProcessSystem<L, AP>> {
 
     private final Function<L, P> creator;
     private final Function<Map<String, String>, Set<AP>> apParser;
-    private final Function<Map<String, String>, L> labelParser;
-    private final Function<Map<String, String>, L> procedureParser;
+    private final Function<Map<String, String>, @Nullable L> labelParser;
+    private final Function<Map<String, String>, L> processParser;
     private final Function<Map<String, String>, TP> tpParser;
     private final String initialNodePrefix;
     private final boolean fakeInitialNodeIds;
@@ -52,14 +83,14 @@ public class DOTCFMPSParser<N, L, E, AP, TP extends MutableProceduralModalEdgePr
     public DOTCFMPSParser(Function<L, P> creator,
                           Function<Map<String, String>, Set<AP>> apParser,
                           Function<Map<String, String>, @Nullable L> labelParser,
-                          Function<Map<String, String>, L> procedureParser,
+                          Function<Map<String, String>, L> processParser,
                           Function<Map<String, String>, TP> tpParser,
                           String initialNodePrefix,
                           boolean fakeInitialNodeIds) {
         this.creator = creator;
         this.apParser = apParser;
         this.labelParser = labelParser;
-        this.procedureParser = procedureParser;
+        this.processParser = processParser;
         this.tpParser = tpParser;
         this.initialNodePrefix = initialNodePrefix;
         this.fakeInitialNodeIds = fakeInitialNodeIds;
@@ -89,11 +120,11 @@ public class DOTCFMPSParser<N, L, E, AP, TP extends MutableProceduralModalEdgePr
 
         for (Node node : nodes) {
             if (!fakeInitialNodeIds || !node.id.startsWith(initialNodePrefix)) {
-                L label = procedureParser.apply(node.attributes);
+                L label = processParser.apply(node.attributes);
                 P pmpg = out.computeIfAbsent(label, creator);
                 N n = pmpg.addNode(apParser.apply(node.attributes));
 
-                if (node.attributes.containsKey(PMPGNodeAttrs.INITIAL)) {
+                if (!fakeInitialNodeIds && node.id.startsWith(initialNodePrefix)) {
                     pmpg.setInitialNode(n);
                 }
                 if (node.attributes.containsKey(PMPGNodeAttrs.FINAL)) {
@@ -103,7 +134,7 @@ public class DOTCFMPSParser<N, L, E, AP, TP extends MutableProceduralModalEdgePr
                     if (mainLabel == null) {
                         mainLabel = label;
                     } else if (!Objects.equals(mainLabel, label)) {
-                        throw new FormatException("Multiple main labels are not allowed");
+                        throw new FormatException("multiple main labels are not allowed");
                     }
                 }
 
@@ -113,17 +144,36 @@ public class DOTCFMPSParser<N, L, E, AP, TP extends MutableProceduralModalEdgePr
         }
 
         for (Edge edge : edges) {
-            if (!fakeInitialNodeIds || !edge.src.startsWith(initialNodePrefix)) {
-                final L srcLabel = labelMap.get(edge.src);
-                final L tgtLabel = labelMap.get(edge.tgt);
+            final L srcLabel = labelMap.get(edge.src);
+            final L tgtLabel = labelMap.get(edge.tgt);
 
+            if (fakeInitialNodeIds && edge.src.startsWith(initialNodePrefix)) {
+                final P pmpg = out.get(tgtLabel);
+
+                if (pmpg == null) {
+                    throw new FormatException("label references unknown process");
+                }
+
+                @SuppressWarnings("nullness") // we iterated over all nodes
+                @NonNull N node = stateMap.get(edge.tgt);
+                pmpg.setInitialNode(node);
+            } else {
                 if (!Objects.equals(srcLabel, tgtLabel)) {
-                    throw new FormatException("Edges connect nodes across different procedures");
+                    throw new FormatException("edges connect nodes across different processes");
                 }
 
                 final P pmpg = out.get(srcLabel);
+
+                if (pmpg == null) {
+                    throw new FormatException("label references unknown process");
+                }
+
+                @SuppressWarnings("nullness") // we iterated over all nodes
+                @NonNull N src = stateMap.get(edge.src);
+                @SuppressWarnings("nullness") // we iterated over all nodes
+                @NonNull N tgt = stateMap.get(edge.tgt);
                 final E e =
-                        pmpg.connect(stateMap.get(edge.src), stateMap.get(edge.tgt), tpParser.apply(edge.attributes));
+                        pmpg.connect(src, tgt, tpParser.apply(edge.attributes));
                 final L l = labelParser.apply(edge.attributes);
                 if (l != null) {
                     pmpg.setEdgeLabel(e, l);
@@ -132,14 +182,27 @@ public class DOTCFMPSParser<N, L, E, AP, TP extends MutableProceduralModalEdgePr
         }
 
         if (mainLabel == null) {
-            throw new FormatException("Main label missing");
+            throw new FormatException("main label missing");
         }
 
         return mainLabel;
 
     }
 
-    public static <L> Set<L> parseNodeProperties(Map<String, String> attr, Function<String, L> parser){
+    /**
+     * Reads the {@value PMPGNodeAttrs#LABEL} attribute from the given map, splits the string at {@code ,} and applies
+     * the given parser to each element individually.
+     *
+     * @param attr
+     *         the attribute map (of a node)
+     * @param parser
+     *         the parser of individual elements
+     * @param <L>
+     *         label type
+     *
+     * @return the union of all parsed labels
+     */
+    public static <L> Set<L> parseLabelAsProperties(Map<String, String> attr, Function<String, L> parser) {
         String aps = attr.get(PMPGNodeAttrs.LABEL);
 
         if (aps == null || aps.isEmpty()) {
@@ -150,13 +213,13 @@ public class DOTCFMPSParser<N, L, E, AP, TP extends MutableProceduralModalEdgePr
             aps = aps.substring(1, aps.length() - 1);
         }
 
-        final String[] tokens = aps.split(", ");
+        final String[] tokens = aps.split(",");
         final Set<L> result = new HashSet<>(HashUtil.capacity(tokens.length));
 
         for (String t : tokens) {
-            result.add(parser.apply(t));
+            result.add(parser.apply(t.trim()));
         }
 
         return result;
-    };
+    }
 }

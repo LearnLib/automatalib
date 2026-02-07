@@ -53,7 +53,7 @@ class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
         this.pmpgs = new HashMap<>(HashUtil.capacity(procedures.size()));
 
         for (Entry<I, DFA<?, I>> e : procedures.entrySet()) {
-            this.pmpgs.put(e.getKey(), new MPGView<>(spa, e.getKey(), e.getValue()));
+            this.pmpgs.put(e.getKey(), new PMPGView<>(spa, e.getKey(), e.getValue()));
         }
     }
 
@@ -67,7 +67,7 @@ class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
         return this.spa.getInitialProcedure();
     }
 
-    private static final class MPGView<S, I>
+    private static final class PMPGView<S, I>
             implements ProceduralModalProcessGraph<S, I, PMPGEdge<I, S>, Void, ProceduralModalEdgeProperty> {
 
         private static final Object INITIAL = new Object();
@@ -84,7 +84,7 @@ class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
 
         // we make sure to handle 'init' and 'end' correctly
         @SuppressWarnings("unchecked")
-        MPGView(SPA<?, I> spa, I procedure, DFA<S, I> dfa) {
+        PMPGView(SPA<?, I> spa, I procedure, DFA<S, I> dfa) {
 
             final S dfaInit = dfa.getInitialState();
 

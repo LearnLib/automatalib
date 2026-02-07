@@ -115,18 +115,18 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
     private final AutomatonCreator<A, I> creator;
     private final Function<String, I> inputParser;
     private final Function<String, List<O>> outputParser;
-    private final Collection<String> initialNodeIds;
+    private final String initialNodeId;
     private final boolean fakeInitialNodeIds;
 
     public DOTMMLTParser(AutomatonCreator<A, I> creator,
                          Function<String, I> inputParser,
                          Function<String, List<O>> outputParser,
-                         Collection<String> initialNodeIds,
+                         String initialNodeId,
                          boolean fakeInitialNodeIds) {
         this.creator = creator;
         this.inputParser = inputParser;
         this.outputParser = outputParser;
-        this.initialNodeIds = initialNodeIds;
+        this.initialNodeId = initialNodeId;
         this.fakeInitialNodeIds = fakeInitialNodeIds;
     }
 
@@ -142,7 +142,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
             final Set<I> inputs = new HashSet<>();
 
             for (Edge edge : parser.getEdges()) {
-                if (!fakeInitialNodeIds || !initialNodeIds.contains(edge.src)) {
+                if (!fakeInitialNodeIds || !initialNodeId.equals(edge.src)) {
                     final String input = tokenizeLabel(edge)[0].trim();
                     if (!input.startsWith("to[")) {
                         inputs.add(inputParser.apply(input));
@@ -173,9 +173,9 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
         for (Node node : nodes) {
             final S n;
 
-            if (fakeInitialNodeIds && initialNodeIds.contains(node.id)) {
+            if (fakeInitialNodeIds && initialNodeId.equals(node.id)) {
                 continue;
-            } else if (!fakeInitialNodeIds && initialNodeIds.contains(node.id)) {
+            } else if (!fakeInitialNodeIds && initialNodeId.equals(node.id)) {
                 n = result.addInitialState();
             } else {
                 n = result.addState();
@@ -227,7 +227,7 @@ public class DOTMMLTParser<S, I, O, A extends MutableMMLT<S, I, ?, O>> implement
         // Parse edges:
         for (Edge edge : edges) {
 
-            if (fakeInitialNodeIds && initialNodeIds.contains(edge.src)) {
+            if (fakeInitialNodeIds && initialNodeId.contains(edge.src)) {
                 result.setInitial(stateMap.get(edge.tgt), true);
                 continue;
             }

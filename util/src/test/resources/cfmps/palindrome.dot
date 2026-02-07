@@ -1,21 +1,21 @@
 digraph g {
 
-	s0 [shape="octagon" label="" procedure="T"];
-	s1 [shape="box" final="true" label="" procedure="T"];
-	s2 [shape="circle" label="" procedure="T"];
-	s3 [shape="circle" label="" procedure="T"];
-	s4 [shape="circle" label="" procedure="T"];
-	s5 [shape="circle" label="" procedure="T"];
-	s6 [shape="circle" label="" procedure="T"];
-	s7 [shape="octagon" main="true" label="" procedure="S"];
-	s8 [shape="box" final="true" main="true" label="" procedure="S"];
-	s9 [shape="circle" main="true" label="" procedure="S"];
-	s10 [shape="circle" main="true" label="" procedure="S"];
-	s11 [shape="circle" main="true" label="" procedure="S"];
-	s12 [shape="circle" main="true" label="" procedure="S"];
-	s13 [shape="circle" main="true" label="" procedure="S"];
-	s14 [shape="circle" main="true" label="" procedure="S"];
-	s15 [shape="circle" main="true" label="" procedure="S"];
+	s0 [process="T" shape="octagon" label=""];
+	s1 [process="T" shape="box" final="true" label=""];
+	s2 [process="T" shape="circle" label=""];
+	s3 [process="T" shape="circle" label=""];
+	s4 [process="T" shape="circle" label=""];
+	s5 [process="T" shape="circle" label=""];
+	s6 [process="T" shape="circle" label=""];
+	s7 [process="S" shape="octagon" main="true" label=""];
+	s8 [process="S" shape="box" final="true" main="true" label=""];
+	s9 [process="S" shape="circle" main="true" label=""];
+	s10 [process="S" shape="circle" main="true" label=""];
+	s11 [process="S" shape="circle" main="true" label=""];
+	s12 [process="S" shape="circle" main="true" label=""];
+	s13 [process="S" shape="circle" main="true" label=""];
+	s14 [process="S" shape="circle" main="true" label=""];
+	s15 [process="S" shape="circle" main="true" label=""];
 	s0 -> s2 [modality="MUST" style="" label="T" procedurality="INTERNAL"];
 	s2 -> s6 [modality="MUST" style="" label="a" procedurality="INTERNAL"];
 	s2 -> s6 [modality="MUST" style="" label="b" procedurality="INTERNAL"];

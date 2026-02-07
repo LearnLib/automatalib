@@ -47,6 +47,7 @@ import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
+import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.graph.impl.CompactPMPG;
 import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.serialization.InputModelDeserializer;
@@ -74,21 +75,21 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class DOTParsers {
 
     /**
-     * Node property parser that parses a node's "{@link NodeAttrs#LABEL label}" attribute and returns its {@link
-     * Object#toString() string} representation. Returns {@code null} if the attribute is not specified.
+     * Node property parser that parses a node's {@value NodeAttrs#LABEL} attribute and returns its
+     * {@link Object#toString() string} representation. Returns {@code null} if the attribute is not specified.
      */
     public static final Function<Map<String, String>, @Nullable String> DEFAULT_NODE_PARSER =
             attr -> attr.get(NodeAttrs.LABEL);
 
     /**
-     * Node property parser that returns {@code true} if a node's "{@link NodeAttrs#SHAPE shape}" attribute is specified
-     * and equals "{@link NodeShapes#DOUBLECIRCLE doublecircle}". Returns {@code false} otherwise.
+     * Node property parser that returns {@code true} if a node's {@value NodeAttrs#SHAPE} attribute is specified and
+     * equals {@value NodeShapes#DOUBLECIRCLE}. Returns {@code false} otherwise.
      */
     public static final Function<Map<String, String>, Boolean> DEFAULT_FSA_NODE_PARSER =
             attr -> NodeShapes.DOUBLECIRCLE.equals(attr.get(NodeAttrs.SHAPE));
 
     /**
-     * Node property parser that expects a node's "{@link NodeAttrs#LABEL label}" attribute to be of the form {@code
+     * Node property parser that expects a node's {@value NodeAttrs#LABEL} attribute to be of the form {@code
      * <id>/<property>}. Returns the string representation of {@code <property>} as-is. Returns {@code null} if the
      * attribute does not exist or does not match the expected format.
      */
@@ -107,12 +108,26 @@ public final class DOTParsers {
         return tokens[1].trim();
     };
 
-    public static final Function<Map<String, String>, String> DEFAULT_CFMPS_PROCEDURE_PARSER =
-            attr -> getAndRequireNotNull(attr, PMPGNodeAttrs.PROCEDURE);
+    /**
+     * Parser that extracts the process for a {@link ContextFreeModalProcessSystem} node by reading the value of the
+     * {@value PMPGNodeAttrs#PROCESS} attribute.
+     */
+    public static final Function<Map<String, String>, String> DEFAULT_CFMPS_PROCESS_PARSER =
+            attr -> getAndRequireNotNull(attr, PMPGNodeAttrs.PROCESS);
 
+    /**
+     * Parser that extracts the atomic properties for a {@link ContextFreeModalProcessSystem} by interpreting the value
+     * of the {@value PMPGNodeAttrs#LABEL} attribute as a list of comma-separated values.
+     *
+     * @see DOTCFMPSParser#parseLabelAsProperties(Map, Function)
+     */
     public static final Function<Map<String, String>, Set<String>> DEFAULT_CFMPS_NODE_PROPERTY_PARSER =
-            attr -> DOTCFMPSParser.parseNodeProperties(attr, Function.identity());
+            attr -> DOTCFMPSParser.parseLabelAsProperties(attr, Function.identity());
 
+    /**
+     * Parser that extracts the transition properties of a {@link ContextFreeModalProcessSystem} by reading the values
+     * of the {@value PMPGEdgeAttrs#MODALITY} and {@value PMPGEdgeAttrs#PROCEDURALITY} attributes.
+     */
     public static final Function<Map<String, String>, MutableProceduralModalEdgeProperty>
             DEFAULT_CFMPS_TRANSITION_PROPERTY_PARSER = attr -> {
         final String modal = getAndRequireNotNull(attr, PMPGEdgeAttrs.MODALITY);
@@ -123,8 +138,8 @@ public final class DOTParsers {
     };
 
     /**
-     * Edge input parser that parses an edge's "{@link EdgeAttrs#LABEL label}" attribute and returns its {@link
-     * Object#toString() string} representation. Returns {@code null} if the attribute is not specified.
+     * Edge input parser that parses an edge's "{@link EdgeAttrs#LABEL label}" attribute and returns its
+     * {@link Object#toString() string} representation. Returns {@code null} if the attribute is not specified.
      */
     public static final Function<Map<String, String>, @Nullable String> DEFAULT_EDGE_PARSER =
             attr -> attr.get(EdgeAttrs.LABEL);
@@ -166,8 +181,8 @@ public final class DOTParsers {
     /**
      * Default parser for {@link DFA}s serialized by AutomataLib.
      * <p>
-     * Invokes {@link #dfa(Function, Function)} with {@link #DEFAULT_FSA_NODE_PARSER} as {@code nodeParser} and {@link
-     * #DEFAULT_EDGE_PARSER} as {@code edgeParser}.
+     * Invokes {@link #dfa(Function, Function)} with {@link #DEFAULT_FSA_NODE_PARSER} as {@code nodeParser} and
+     * {@link #DEFAULT_EDGE_PARSER} as {@code edgeParser}.
      *
      * @return a {@link DOTInputModelDeserializer} for {@link CompactDFA}s.
      */
@@ -197,8 +212,8 @@ public final class DOTParsers {
     /**
      * Default parser for {@link NFA}s serialized by AutomataLib.
      * <p>
-     * Invokes {@link #nfa(Function, Function)} with {@link #DEFAULT_FSA_NODE_PARSER} as {@code nodeParser} and {@link
-     * #DEFAULT_EDGE_PARSER} as {@code edgeParser}.
+     * Invokes {@link #nfa(Function, Function)} with {@link #DEFAULT_FSA_NODE_PARSER} as {@code nodeParser} and
+     * {@link #DEFAULT_EDGE_PARSER} as {@code edgeParser}.
      *
      * @return a {@link DOTInputModelDeserializer} for {@link CompactNFA}s.
      */
@@ -256,8 +271,8 @@ public final class DOTParsers {
      * Parser for {@link FiniteStateAcceptor}s with a custom automaton instance, custom node and edge attributes and
      * custom labels for the initial nodes.
      * <p>
-     * Invokes {@link #fsa(AutomatonCreator, Function, Function, Collection, boolean)} with {@code true} as {@code
-     * fakeInitialNodeLabels}.
+     * Invokes {@link #fsa(AutomatonCreator, Function, Function, Collection, boolean)} with {@code true} as
+     * {@code fakeInitialNodeLabels}.
      *
      * @param creator
      *         a creator that is used to instantiate the returned automaton
@@ -281,6 +296,37 @@ public final class DOTParsers {
                                                                                             Function<Map<String, String>, I> edgeParser,
                                                                                             Collection<String> initialNodeIds) {
         return fsa(creator, nodeParser, edgeParser, initialNodeIds, true);
+    }
+
+    /**
+     * Parser for {@link FiniteStateAcceptor}s with a custom automaton instance, custom node and edge attributes, and a
+     * custom label prefix for the initial nodes.
+     * <p>
+     * Invokes {@link #fsa(AutomatonCreator, Function, Function, String, boolean)} with {@code true} as
+     * {@code fakeInitialNodeLabels}.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned automaton
+     * @param nodeParser
+     *         a node parser that decides for a property map of a node whether it is accepting or not
+     * @param edgeParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param initialNodeIdPrefix
+     *         the prefix to match the ids of the initial nodes
+     * @param <S>
+     *         the state type of the returned automaton
+     * @param <I>
+     *         the input symbol type
+     * @param <A>
+     *         the type of the returned automaton
+     *
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
+     */
+    public static <S, I, A extends MutableFSA<S, I>> DOTInputModelDeserializer<S, I, A> fsa(AutomatonCreator<A, I> creator,
+                                                                                            Function<Map<String, String>, Boolean> nodeParser,
+                                                                                            Function<Map<String, String>, I> edgeParser,
+                                                                                            String initialNodeIdPrefix) {
+        return fsa(creator, nodeParser, edgeParser, initialNodeIdPrefix, true);
     }
 
     /**
@@ -323,6 +369,45 @@ public final class DOTParsers {
     }
 
     /**
+     * Parser for {@link FiniteStateAcceptor}s with a custom automaton instance, custom node and edge attributes, custom
+     * label prefix for initial nodes and a flag whether the initial nodes are artificial.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned automaton
+     * @param nodeParser
+     *         a node parser that decides for a property map of a node whether it is accepting or not
+     * @param edgeParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param initialNodeIdPrefix
+     *         the prefix to match the ids of the initial nodes
+     * @param fakeInitialNodeIds
+     *         a flag indicating whether the {@code initialNodeIds} are artificial or not. If {@code true}, the nodes
+     *         matching the {@code initialNodeIds} will not be added to the automaton. Instead, their direct successors
+     *         will be initial states instead. This may be useful for instances where there are artificial nodes used to
+     *         display in incoming arrow for the actual initial states. If {@code false}, the nodes matching the
+     *         {@code initialNodeIds} will be used as initial nodes.
+     * @param <S>
+     *         the state type of the returned automaton
+     * @param <I>
+     *         the input symbol type
+     * @param <A>
+     *         the type of the returned automaton
+     *
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
+     */
+    public static <S, I, A extends MutableFSA<S, I>> DOTInputModelDeserializer<S, I, A> fsa(AutomatonCreator<A, I> creator,
+                                                                                            Function<Map<String, String>, Boolean> nodeParser,
+                                                                                            Function<Map<String, String>, I> edgeParser,
+                                                                                            String initialNodeIdPrefix,
+                                                                                            boolean fakeInitialNodeIds) {
+        return new DOTMutableAutomatonParser<>(creator,
+                                               nodeParser,
+                                               edge -> Pair.of(edgeParser.apply(edge), null),
+                                               initialNodeIdPrefix,
+                                               fakeInitialNodeIds);
+    }
+
+    /**
      * Default parser for {@link MealyMachine}s serialized by AutomataLib.
      * <p>
      * Invokes {@link #mealy(Function)} with {@link #DEFAULT_MEALY_EDGE_PARSER} as {@code edgeParser}.
@@ -354,8 +439,8 @@ public final class DOTParsers {
     /**
      * Parser for {@link MealyMachine}s with a custom automaton instance and custom edge attributes.
      * <p>
-     * Invokes {@link #mealy(AutomatonCreator, Function, String)} with AutomataLib's default initial state label "{@code
-     * __start0}" as {@code initialNodeLabel}.
+     * Invokes {@link #mealy(AutomatonCreator, Function, String)} with AutomataLib's default initial state label
+     * "{@code __start0}" as {@code initialNodeLabel}.
      *
      * @param creator
      *         a creator that is used to instantiate the returned automaton
@@ -382,8 +467,8 @@ public final class DOTParsers {
      * Parser for {@link MealyMachine}s with a custom automaton instance, custom edge attributes and a custom label for
      * the initial node.
      * <p>
-     * Invokes {@link #fsa(AutomatonCreator, Function, Function, Collection, boolean)} with {@code true} as {@code
-     * fakeInitialNodeLabels}.
+     * Invokes {@link #fsa(AutomatonCreator, Function, Function, Collection, boolean)} with {@code true} as
+     * {@code fakeInitialNodeLabels}.
      *
      * @param creator
      *         a creator that is used to instantiate the returned automaton
@@ -463,8 +548,8 @@ public final class DOTParsers {
     /**
      * Parser for {@link MooreMachine}s with custom node and edge attributes.
      * <p>
-     * Invokes {@link #moore(AutomatonCreator, Function, Function)} with {@link CompactMoore.Creator} as {@code
-     * creator}.
+     * Invokes {@link #moore(AutomatonCreator, Function, Function)} with {@link CompactMoore.Creator} as
+     * {@code creator}.
      *
      * @param nodeParser
      *         a node parser that extracts from a property map of a node the state property
@@ -517,8 +602,8 @@ public final class DOTParsers {
      * Parser for {@link MooreMachine}s with a custom automaton instance, custom node and edge attributes and a custom
      * label for the initial node.
      * <p>
-     * Invokes {@link #moore(AutomatonCreator, Function, Function, String, boolean)} with {@code true} as {@code
-     * fakeInitialNodeLabel}.
+     * Invokes {@link #moore(AutomatonCreator, Function, Function, String, boolean)} with {@code true} as
+     * {@code fakeInitialNodeLabel}.
      *
      * @param creator
      *         a creator that is used to instantiate the returned automaton
@@ -592,8 +677,8 @@ public final class DOTParsers {
     /**
      * Default parser for (directed) {@link Graph}s serialized by AutomataLib.
      * <p>
-     * Invokes {@link #graph(Function, Function)} with {@link #DEFAULT_NODE_PARSER} as {@code nodeParser} and {@link
-     * #DEFAULT_EDGE_PARSER} as {@code edgeParser}.
+     * Invokes {@link #graph(Function, Function)} with {@link #DEFAULT_NODE_PARSER} as {@code nodeParser} and
+     * {@link #DEFAULT_EDGE_PARSER} as {@code edgeParser}.
      *
      * @return a DOT {@link ModelDeserializer} for {@link CompactUniversalGraph}s.
      */
@@ -650,8 +735,9 @@ public final class DOTParsers {
     /**
      * Default parser for {@link ModalTransitionSystem}s serialized by AutomataLib.
      * <p>
-     * Invokes {@link #mts(AutomatonCreator, Function, Function)} with {@link CompactMTS#CompactMTS(Alphabet)} as {@code creator},
-     * {@link #DEFAULT_EDGE_PARSER} as {@code inputParser} and {@link #DEFAULT_EDGE_PARSER} as {@code propertyParser}.
+     * Invokes {@link #mts(AutomatonCreator, Function, Function)} with {@link CompactMTS#CompactMTS(Alphabet)} as
+     * {@code creator}, {@link #DEFAULT_EDGE_PARSER} as {@code inputParser} and {@link #DEFAULT_EDGE_PARSER} as
+     * {@code propertyParser}.
      *
      * @return a {@link DOTInputModelDeserializer} for {@link CompactMTS}s.
      */
@@ -692,7 +778,7 @@ public final class DOTParsers {
 
     /**
      * Parser for {@link ModalTransitionSystem}s with a custom MTS instance, custom input type and edge attributes
-     * parsers and custom initial state labels.
+     * parsers and custom initial node labels.
      *
      * @param creator
      *         a creator that is used to instantiate the returned graph
@@ -722,6 +808,41 @@ public final class DOTParsers {
                                                node -> null,
                                                edge -> Pair.of(inputParser.apply(edge), propertyParser.apply(edge)),
                                                initialNodeIds,
+                                               true);
+    }
+
+    /**
+     * Parser for {@link ModalTransitionSystem}s with a custom MTS instance, custom input type and edge attributes
+     * parsers and custom prefix for initial node labels.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned graph
+     * @param inputParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param propertyParser
+     *         an edge parser that extracts from a property map of an edge the modal transition property
+     * @param initialNodeIdPrefix
+     *         the prefix to match the ids of the initial nodes
+     * @param <S>
+     *         the state type of the returned MTS
+     * @param <I>
+     *         the input symbol type
+     * @param <TP>
+     *         the modal transition property
+     * @param <M>
+     *         the type of the returned MTS
+     *
+     * @return a DOT {@link ModelDeserializer} for {@code M}s.
+     */
+    public static <S, I, TP extends MutableModalEdgeProperty, M extends MutableModalTransitionSystem<S, I, ?, TP>> DOTInputModelDeserializer<S, I, M> mts(
+            AutomatonCreator<M, I> creator,
+            Function<Map<String, String>, I> inputParser,
+            Function<Map<String, String>, TP> propertyParser,
+            String initialNodeIdPrefix) {
+        return new DOTMutableAutomatonParser<>(creator,
+                                               node -> null,
+                                               edge -> Pair.of(inputParser.apply(edge), propertyParser.apply(edge)),
+                                               initialNodeIdPrefix,
                                                true);
     }
 
@@ -778,8 +899,8 @@ public final class DOTParsers {
     /**
      * Parser for {@link MMLT}s with a custom MMLT instance and custom input and output types.
      * <p>
-     * Invokes {@link #mmlt(AutomatonCreator, Function, Function, Collection, boolean)} with AutomataLib's default
-     * initial state label "{@code __start0}" as {@code initialNodeLabels} and uses {@code true} for
+     * Invokes {@link #mmlt(AutomatonCreator, Function, Function, String, boolean)} with AutomataLib's default initial
+     * state label "{@code __start0}" as {@code initialNodeLabels} and uses {@code true} for
      * {@code fakeInitialNodeIds}.
      *
      * @param creator
@@ -804,7 +925,7 @@ public final class DOTParsers {
     public static <S, I, O, A extends MutableMMLT<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> mmlt(AutomatonCreator<A, I> creator,
                                                                                                        Function<String, I> inputParser,
                                                                                                        Function<String, List<O>> outputParser) {
-        return mmlt(creator, inputParser, outputParser, Collections.singletonList(GraphDOT.initialLabel(0)), true);
+        return mmlt(creator, inputParser, outputParser, GraphDOT.initialLabel(0), true);
     }
 
     /**
@@ -817,8 +938,8 @@ public final class DOTParsers {
      *         a parser for transforming input labels to input symbols
      * @param outputParser
      *         a parser for transforming output labels to output symbols
-     * @param initialNodeIds
-     *         the ids of the initial nodes
+     * @param initialNodeId
+     *         the id of the initial node
      * @param fakeInitialNodeIds
      *         a flag indicating whether the {@code initialNodeIds} are artificial or not. If {@code true}, the nodes
      *         matching the {@code initialNodeIds} will not be added to the automaton. Instead, their direct successors
@@ -841,49 +962,158 @@ public final class DOTParsers {
     public static <S, I, O, A extends MutableMMLT<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> mmlt(AutomatonCreator<A, I> creator,
                                                                                                        Function<String, I> inputParser,
                                                                                                        Function<String, List<O>> outputParser,
-                                                                                                       Collection<String> initialNodeIds,
+                                                                                                       String initialNodeId,
                                                                                                        boolean fakeInitialNodeIds) {
-        return new DOTMMLTParser<>(creator, inputParser, outputParser, initialNodeIds, fakeInitialNodeIds);
+        return new DOTMMLTParser<>(creator, inputParser, outputParser, initialNodeId, fakeInitialNodeIds);
     }
 
+    /**
+     * Parser for {@link ContextFreeModalProcessSystem}s.
+     * <p>
+     * Invokes {@link #cfmps(Object, Function, Function, Function)} using {@code "?"} as default label,
+     * {@link #DEFAULT_CFMPS_NODE_PROPERTY_PARSER} as {@code apParser}, {@link #DEFAULT_EDGE_PARSER} as
+     * {@code edgeParser}, and {@link #DEFAULT_CFMPS_PROCESS_PARSER} as {@code processParser}.
+     *
+     * @return a DOT {@link ModelDeserializer} for {@link ContextFreeModalProcessSystem}s.
+     *
+     * @see DOTCFMPSParser
+     */
     public static ModelDeserializer<ContextFreeModalProcessSystem<String, String>> cfmps() {
-        return cfmps("?", DEFAULT_CFMPS_NODE_PROPERTY_PARSER, DEFAULT_EDGE_PARSER, DEFAULT_CFMPS_PROCEDURE_PARSER);
+        return cfmps("?", DEFAULT_CFMPS_NODE_PROPERTY_PARSER, DEFAULT_EDGE_PARSER, DEFAULT_CFMPS_PROCESS_PARSER);
     }
 
+    /**
+     * Parser for {@link ContextFreeModalProcessSystem}s with custom label types and custom atomic propositions.
+     * <p>
+     * Invokes {@link #cfmps(Function, Function, Function, Function, Function)} using {@link CompactPMPG}s to create
+     * internal processs and {@link #DEFAULT_CFMPS_TRANSITION_PROPERTY_PARSER} to parse transition properties.
+     *
+     * @param defaultLabel
+     *         a creator that is used to instantiate the returned MMLT
+     * @param apParser
+     *         a parser for transforming node attributes to atomic propositions
+     * @param labelParser
+     *         a parser for transforming transition attributes to edge symbols
+     * @param processParser
+     *         a parser for extracting the process that a node belongs to
+     * @param <L>
+     *         the label type
+     * @param <AP>
+     *         the atomic proposition type
+     *
+     * @return a DOT {@link ModelDeserializer} for {@link ContextFreeModalProcessSystem}s.
+     *
+     * @see DOTCFMPSParser
+     */
     public static <L, AP> ModelDeserializer<ContextFreeModalProcessSystem<L, AP>> cfmps(L defaultLabel,
                                                                                         Function<Map<String, String>, Set<AP>> apParser,
                                                                                         Function<Map<String, String>, @Nullable L> labelParser,
-                                                                                        Function<Map<String, String>, L> procedureParser) {
+                                                                                        Function<Map<String, String>, L> processParser) {
         return cfmps(l -> new CompactPMPG<>(defaultLabel),
                      apParser,
                      labelParser,
-                     procedureParser,
+                     processParser,
                      DEFAULT_CFMPS_TRANSITION_PROPERTY_PARSER);
     }
 
+    /**
+     * Parser for {@link ContextFreeModalProcessSystem}s with custom instances for the internal
+     * {@link ProceduralModalProcessGraph}s, custom label types, and custom atomic propositions.
+     * <p>
+     * Invokes {@link #cfmps(Function, Function, Function, Function, Function, String, boolean)} with AutomataLib's
+     * default initial state label {@value GraphDOT#INITIAL_LABEL} as {@code initialNodeIdPrefix} and uses {@code true}
+     * for {@code fakeInitialNodeIds}.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned MMLT
+     * @param apParser
+     *         a parser for transforming node attributes to atomic propositions
+     * @param labelParser
+     *         a parser for transforming transition attributes to edge symbols
+     * @param processParser
+     *         a parser for extracting the process that a node belongs to
+     * @param tpParser
+     *         a parser for transforming node attributes to transition properties
+     * @param <N>
+     *         the node type
+     * @param <L>
+     *         the label type
+     * @param <E>
+     *         the edge type
+     * @param <AP>
+     *         the atomic proposition type
+     * @param <TP>
+     *         the transition property type
+     * @param <P>
+     *         the type of internal {@link ProceduralModalProcessGraph}s
+     *
+     * @return a DOT {@link ModelDeserializer} for {@link ContextFreeModalProcessSystem}s.
+     *
+     * @see DOTCFMPSParser
+     */
     public static <N, L, E, AP, TP extends MutableProceduralModalEdgeProperty, P extends MutableProceduralModalProcessGraph<N, L, E, AP, TP>> ModelDeserializer<ContextFreeModalProcessSystem<L, AP>> cfmps(
             Function<L, P> creator,
             Function<Map<String, String>, Set<AP>> apParser,
             Function<Map<String, String>, @Nullable L> labelParser,
-            Function<Map<String, String>, L> procedureParser,
+            Function<Map<String, String>, L> processParser,
             Function<Map<String, String>, TP> tpParser) {
-        return cfmps(creator, apParser, labelParser, procedureParser, tpParser, GraphDOT.INITIAL_LABEL, true);
+        return cfmps(creator, apParser, labelParser, processParser, tpParser, GraphDOT.INITIAL_LABEL, true);
     }
 
+    /**
+     * Parser for {@link ContextFreeModalProcessSystem}s with custom instances for the internal
+     * {@link ProceduralModalProcessGraph}s, custom label types, custom atomic propositions, and custom initial state
+     * labels.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned MMLT
+     * @param apParser
+     *         a parser for transforming node attributes to atomic propositions
+     * @param labelParser
+     *         a parser for transforming transition attributes to edge symbols
+     * @param processParser
+     *         a parser for extracting the process that a node belongs to
+     * @param tpParser
+     *         a parser for transforming node attributes to transition properties
+     * @param initialNodeIdPrefix
+     *         the prefix to match the ids of the initial nodes
+     * @param fakeInitialNodeIds
+     *         a flag indicating whether the {@code initialNodeIds} are artificial or not. If {@code true}, the nodes
+     *         matching the {@code initialNodeIdPrefix} will not be added to the automaton. Instead, their direct
+     *         successors will be initial states instead. This may be useful for instances where there are artificial
+     *         nodes used to display in incoming arrow for the actual initial states. If {@code false}, the nodes
+     *         matching the {@code initialNodeIds} will be used as initial nodes.
+     * @param <N>
+     *         the node type
+     * @param <L>
+     *         the label type
+     * @param <E>
+     *         the edge type
+     * @param <AP>
+     *         the atomic proposition type
+     * @param <TP>
+     *         the transition property type
+     * @param <P>
+     *         the type of internal {@link ProceduralModalProcessGraph}s
+     *
+     * @return a DOT {@link ModelDeserializer} for {@link ContextFreeModalProcessSystem}s.
+     *
+     * @see DOTCFMPSParser
+     */
     public static <N, L, E, AP, TP extends MutableProceduralModalEdgeProperty, P extends MutableProceduralModalProcessGraph<N, L, E, AP, TP>> ModelDeserializer<ContextFreeModalProcessSystem<L, AP>> cfmps(
             Function<L, P> creator,
             Function<Map<String, String>, Set<AP>> apParser,
             Function<Map<String, String>, @Nullable L> labelParser,
-            Function<Map<String, String>, L> procedureParser,
+            Function<Map<String, String>, L> processParser,
             Function<Map<String, String>, TP> tpParser,
-            String initialNodePrefix,
+            String initialNodeIdPrefix,
             boolean fakeInitialNodeIds) {
         return new DOTCFMPSParser<>(creator,
                                     apParser,
                                     labelParser,
-                                    procedureParser,
+                                    processParser,
                                     tpParser,
-                                    initialNodePrefix,
+                                    initialNodeIdPrefix,
                                     fakeInitialNodeIds);
     }
 

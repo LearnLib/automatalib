@@ -1,10 +1,10 @@
 digraph g {
 
-	s0 [shape="circle" label="" procedure="t"];
-	s1 [shape="box" final="true" label="[d]" procedure="t"];
-	s2 [shape="octagon" main="true" label="" procedure="s"];
-	s3 [shape="circle" main="true" label="[a, b]" procedure="s"];
-	s4 [shape="circle" main="true" label="[c]" procedure="s"];
+	s0 [process="t" shape="circle" label=""];
+	s1 [process="t" shape="box" final="true" label="[d]"];
+	s2 [process="s" shape="octagon" main="true" label=""];
+	s3 [process="s" shape="circle" main="true" label="[a, b]"];
+	s4 [process="s" shape="circle" main="true" label="[c]"];
 	s0 -> s1 [modality="MUST" style="" label="?" procedurality="INTERNAL"];
 	s0 -> s1 [modality="MAY" style="dashed" label="?" procedurality="INTERNAL"];
 	s1 -> s1 [modality="MUST" style="bold" label="?" procedurality="PROCESS"];

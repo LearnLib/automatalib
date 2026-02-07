@@ -67,7 +67,7 @@ public class PMPGVisualizationHelper<N, L, E, AP> extends DefaultVisualizationHe
         }
 
         if (label != null) {
-            properties.put(PMPGNodeAttrs.PROCEDURE, label.toString());
+            properties.put(PMPGNodeAttrs.PROCESS, label.toString());
             if (isMain) {
                 properties.put(PMPGNodeAttrs.MAIN, "true");
             }

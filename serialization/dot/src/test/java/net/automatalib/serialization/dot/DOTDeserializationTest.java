@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -49,10 +50,16 @@ import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.exception.FormatException;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.graph.UniversalGraph;
+import net.automatalib.graph.concept.NodeIDs;
+import net.automatalib.graph.impl.CompactPMPG;
 import net.automatalib.graph.impl.DefaultCFMPS;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.ts.modal.impl.CompactMTS;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
+import net.automatalib.ts.modal.transition.impl.ProceduralModalEdgePropertyImpl;
+import net.automatalib.visualization.VisualizationHelper.NodeStyles;
 import net.automatalib.visualization.VisualizationHelper.PMPGEdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.PMPGNodeAttrs;
 import net.automatalib.word.Word;
@@ -245,7 +252,7 @@ public class DOTDeserializationTest {
         var parser = DOTParsers.mmlt(alph -> new CompactMMLT<>(alph, "void", StringSymbolCombiner.getInstance()),
                                      Function.identity(),
                                      s -> StringSymbolCombiner.getInstance().separateSymbols(s),
-                                     Collections.singleton("s0"),
+                                     "s0",
                                      false);
 
         for (int i = 1; i <= 11; i++) {
@@ -262,9 +269,11 @@ public class DOTDeserializationTest {
         final DefaultCFMPS<Character, Character> cfmps = DOTSerializationUtil.CFMPS;
 
         Function<Map<String, String>, Set<Character>> apParser =
-                attr -> DOTCFMPSParser.parseNodeProperties(attr, s -> s.charAt(0));
-        Function<Map<String, String>, Character> labelParser = attr -> attr.get(PMPGEdgeAttrs.LABEL).charAt(0);
-        Function<Map<String, String>, Character> procedureParser = attr -> attr.get(PMPGNodeAttrs.PROCEDURE).charAt(0);
+                attr -> DOTCFMPSParser.parseLabelAsProperties(attr, s -> s.charAt(0));
+        Function<Map<String, String>, Character> labelParser =
+                attr -> attr.getOrDefault(PMPGEdgeAttrs.LABEL, "?").charAt(0);
+        Function<Map<String, String>, Character> procedureParser =
+                attr -> attr.getOrDefault(PMPGNodeAttrs.PROCESS, "?").charAt(0);
 
         var model = DOTParsers.cfmps('?', apParser, labelParser, procedureParser)
                               .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.CFMPS_RESOURCE));
@@ -273,15 +282,35 @@ public class DOTDeserializationTest {
         Assert.assertEquals(model.getPMPGs().keySet(), cfmps.getPMPGs().keySet());
 
         for (var e : model.getPMPGs().entrySet()) {
-            @SuppressWarnings("unchecked")
-            var actual =
-                    (ProceduralModalProcessGraph<?, Character, ?, Character, ProceduralModalEdgeProperty>) e.getValue();
-            @SuppressWarnings("unchecked")
-            var expected =
-                    (ProceduralModalProcessGraph<?, Character, ?, Character, ProceduralModalEdgeProperty>) cfmps.getPMPGs()
-                                                                                                                .get(e.getKey());
+            var actual = e.getValue();
+            var expected = cfmps.getPMPGs().get(e.getKey());
             checkGraphEquivalence(expected, actual, (s1, s2) -> 0);
+            Assert.assertEquals(actual.getInitialNode(), expected.getInitialNode());
+            Assert.assertEquals(actual.getFinalNode(), expected.getFinalNode());
         }
+    }
+
+    @Test
+    public void testSPAasCFMPSDeserialization() throws IOException, FormatException {
+
+        var model = DOTParsers.cfmps(CompactPMPG::new,
+                                     attr -> Collections.singleton(Integer.parseInt(attr.getOrDefault(PMPGNodeAttrs.LABEL,
+                                                                                                      "")
+                                                                                        .split(" ")[1])),
+                                     attr -> attr.getOrDefault(PMPGEdgeAttrs.LABEL, ""),
+                                     attr -> attr.getOrDefault(PMPGNodeAttrs.LABEL, "").split(" ")[0],
+                                     attr -> new ProceduralModalEdgePropertyImpl(NodeStyles.BOLD.equals(attr.get(
+                                             PMPGEdgeAttrs.STYLE)) ? ProceduralType.PROCESS : ProceduralType.INTERNAL,
+                                                                                 ModalType.MUST),
+                                     "__start",
+                                     true)
+                              .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.SPA_AS_CRMPS_RESOURCE));
+
+        Assert.assertEquals(model.getMainProcess(), "F");
+        Assert.assertEquals(model.getPMPGs().keySet(), Set.of("F", "G"));
+
+        assertPMPGForF(model.getPMPGs().get("F"));
+        assertPMPGForG(model.getPMPGs().get("G"));
     }
 
     @Test(expectedExceptions = FormatException.class)
@@ -301,6 +330,7 @@ public class DOTDeserializationTest {
              InputStream mealy = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MEALY_RESOURCE);
              InputStream moore = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MOORE_RESOURCE);
              InputStream mmlt = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MMLT_RESOURCE);
+             InputStream cfmps = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.CFMPS_RESOURCE);
              InputStream mts = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MTS_RESOURCE);
              InputStream nfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.NFA_RESOURCE)) {
             DOTParsers.dfa().readModel(new UnclosableInputStream(dfa));
@@ -308,6 +338,7 @@ public class DOTDeserializationTest {
             DOTParsers.mealy().readModel(new UnclosableInputStream(mealy));
             DOTParsers.moore().readModel(new UnclosableInputStream(moore));
             DOTParsers.mmlt("void", StringSymbolCombiner.getInstance()).readModel(new UnclosableInputStream(mmlt));
+            DOTParsers.cfmps().readModel(new UnclosableInputStream(cfmps));
             DOTParsers.mts().readModel(new UnclosableInputStream(mts));
             DOTParsers.nfa().readModel(new UnclosableInputStream(nfa));
         }
@@ -403,8 +434,8 @@ public class DOTDeserializationTest {
         checkGraphEquivalence(source, target, Comparator.naturalOrder());
     }
 
-    private static <N1, E1, NP, EP, N2, E2> void checkGraphEquivalence(UniversalGraph<N1, E1, NP, EP> source,
-                                                                       UniversalGraph<N2, E2, NP, EP> target,
+    private static <N1, E1, NP, EP, N2, E2> void checkGraphEquivalence(UniversalGraph<N1, E1, ? extends NP, ? extends EP> source,
+                                                                       UniversalGraph<N2, E2, ? extends NP, ? extends EP> target,
                                                                        Comparator<NP> comparator) {
 
         Assert.assertEquals(source.size(), target.size());
@@ -464,5 +495,76 @@ public class DOTDeserializationTest {
             throw new AssertionError();
         }
         Assert.assertFalse(model.isLocalReset(state, input));
+    }
+
+    private static <N, E, TP extends ProceduralModalEdgeProperty> void assertPMPGForF(ProceduralModalProcessGraph<N, String, E, Integer, TP> f) {
+        Assert.assertEquals(f.size(), 8);
+
+        final NodeIDs<N> nodeIDs = f.nodeIDs();
+        final N initialNode = f.getInitialNode();
+        final N finalNode = f.getFinalNode();
+
+        for (N n : f.getNodes()) {
+            Assert.assertEquals(Objects.equals(n, initialNode),
+                                f.getNodeProperty(n).equals(Collections.singleton(0)),
+                                Objects.toString(n));
+            Assert.assertEquals(Objects.equals(n, finalNode),
+                                f.getNodeProperty(n).equals(Collections.singleton(1)),
+                                Objects.toString(n));
+        }
+
+        Assert.assertFalse(f.isConnected(nodeIDs.getNode(0), nodeIDs.getNode(1)));
+        Assert.assertTrue(f.isConnected(nodeIDs.getNode(0), nodeIDs.getNode(2)));
+        Assert.assertTrue(f.isConnected(nodeIDs.getNode(2), nodeIDs.getNode(1)));
+
+        Collection<E> succs = f.getOutgoingEdges(nodeIDs.getNode(2));
+        Assert.assertEquals(succs.size(), 4);
+
+        for (E e : succs) {
+            Assert.assertEquals(f.getEdgeLabel(e).equals("G"),
+                                f.getEdgeProperty(e).getProceduralType() == ProceduralType.PROCESS);
+            Assert.assertEquals(f.getEdgeLabel(e).equals("G"),
+                                f.getNodeProperty(f.getTarget(e)).equals(Collections.singleton(3)));
+            Assert.assertEquals(f.getEdgeLabel(e).equals("a"),
+                                f.getNodeProperty(f.getTarget(e)).equals(Collections.singleton(4)));
+            Assert.assertEquals(f.getEdgeLabel(e).equals("b"),
+                                f.getNodeProperty(f.getTarget(e)).equals(Collections.singleton(5)));
+            Assert.assertEquals(f.getEdgeLabel(e).equals("R"),
+                                f.getNodeProperty(f.getTarget(e)).equals(Collections.singleton(1)));
+        }
+    }
+
+    private static <N, E, TP extends ProceduralModalEdgeProperty> void assertPMPGForG(ProceduralModalProcessGraph<N, String, E, Integer, TP> g) {
+        Assert.assertEquals(g.size(), 6);
+
+        final NodeIDs<N> nodeIDs = g.nodeIDs();
+        final N initialNode = g.getInitialNode();
+        final N finalNode = g.getFinalNode();
+
+        for (N n : g.getNodes()) {
+            Assert.assertEquals(Objects.equals(n, initialNode),
+                                g.getNodeProperty(n).equals(Collections.singleton(8)),
+                                Objects.toString(n));
+            Assert.assertEquals(Objects.equals(n, finalNode),
+                                g.getNodeProperty(n).equals(Collections.singleton(9)),
+                                Objects.toString(n));
+        }
+
+        // id = label - 8
+        Assert.assertFalse(g.isConnected(nodeIDs.getNode(0), nodeIDs.getNode(1)));
+        Assert.assertTrue(g.isConnected(nodeIDs.getNode(0), nodeIDs.getNode(2)));
+        Assert.assertTrue(g.isConnected(nodeIDs.getNode(2), nodeIDs.getNode(3)));
+
+        Collection<E> succs = g.getOutgoingEdges(nodeIDs.getNode(2));
+        Assert.assertEquals(succs.size(), 2);
+
+        for (E e : succs) {
+            Assert.assertEquals(g.getEdgeLabel(e).equals("F"),
+                                g.getEdgeProperty(e).getProceduralType() == ProceduralType.PROCESS);
+            Assert.assertEquals(g.getEdgeLabel(e).equals("F"),
+                                g.getNodeProperty(g.getTarget(e)).equals(Collections.singleton(11)));
+            Assert.assertEquals(g.getEdgeLabel(e).equals("c"),
+                                g.getNodeProperty(g.getTarget(e)).equals(Collections.singleton(12)));
+        }
     }
 }

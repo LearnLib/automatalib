@@ -75,6 +75,7 @@ final class DOTSerializationUtil {
     static final String CLUSTER_RESOURCE = "/cluster.dot";
     static final String PMPG_RESOURCE = "/pmpg.dot";
     static final String CFMPS_RESOURCE = "/cfmps.dot";
+    static final String SPA_AS_CRMPS_RESOURCE = "/spa_as_cfmps.dot";
     static final String SPA_RESOURCE = "/spa.dot";
     static final String SBA_RESOURCE = "/sba.dot";
     static final String SPMM_RESOURCE = "/spmm.dot";

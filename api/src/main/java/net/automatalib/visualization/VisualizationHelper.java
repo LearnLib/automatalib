@@ -109,7 +109,7 @@ public interface VisualizationHelper<N, E> {
 
     final class PMPGNodeAttrs extends NodeAttrs {
 
-        public static final String PROCEDURE = "procedure";
+        public static final String PROCESS = "process";
         public static final String MAIN = "main";
         public static final String FINAL = "final";
 
