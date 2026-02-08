@@ -5,7 +5,7 @@ digraph g {
 subgraph cluster1 {
 label="F";
 
-	s0 [shape="octagon" main="true" label="F 0"];
+	init1 [shape="octagon" main="true" label="F 0"];
 	s1 [shape="box" final="true" main="true" label="F 1"];
 	s2 [shape="circle" main="true" label="F 2"];
 	s3 [shape="circle" main="true" label="F 3"];
@@ -14,7 +14,7 @@ label="F";
 	s6 [shape="circle" main="true" label="F 6"];
 	s7 [shape="circle" main="true" label="F 7"];
 
-	s0 -> s2 [label="F"];
+	init1 -> s2 [label="F"];
 	s2 -> s1 [label="R"];
 	s2 -> s4 [label="a"];
 	s2 -> s5 [label="b"];
@@ -26,30 +26,24 @@ label="F";
 	s5 -> s7 [style="bold" label="F"];
 	s6 -> s3 [label="a"];
 	s7 -> s3 [label="b"];
-
-__start1 [label="" shape="none" width="0" height="0"];
-__start1 -> s0;
 }
 
-subgraph cluster0 {
+subgraph cluster2 {
 label="G";
 
-	s8 [shape="octagon" label="G 8"];
+	init2 [shape="octagon" label="G 8"];
 	s9 [shape="box" final="true" label="G 9"];
 	s10 [shape="circle" label="G 10"];
 	s11 [shape="circle" label="G 11"];
 	s12 [shape="circle" label="G 12"];
 	s13 [shape="circle" label="G 13"];
 
-	s8 -> s10 [label="G" procedurality="INTERNAL"];
-	s10 -> s12 [label="c" procedurality="INTERNAL"];
+	init2 -> s10 [label="G" procedurality="INTERNAL"];
+	s10 -> s12 [procedurality="INTERNAL"];
 	s10 -> s11 [style="bold" label="F" procedurality="PROCESS"];
 	s11 -> s9 [label="R" procedurality="INTERNAL"];
 	s12 -> s9 [label="R" procedurality="INTERNAL"];
 	s12 -> s13 [style="bold" label="G" procedurality="PROCESS"];
 	s13 -> s11 [label="c" procedurality="INTERNAL"];
-
-__start0 [label="" shape="none" width="0" height="0"];
-__start0 -> s8;
 }
 }

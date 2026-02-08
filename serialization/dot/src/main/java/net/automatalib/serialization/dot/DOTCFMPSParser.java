@@ -148,32 +148,23 @@ public class DOTCFMPSParser<N, L, E, AP, TP extends MutableProceduralModalEdgePr
             final L tgtLabel = labelMap.get(edge.tgt);
 
             if (fakeInitialNodeIds && edge.src.startsWith(initialNodePrefix)) {
-                final P pmpg = out.get(tgtLabel);
-
-                if (pmpg == null) {
-                    throw new FormatException("label references unknown process");
-                }
-
                 @SuppressWarnings("nullness") // we iterated over all nodes
-                @NonNull N node = stateMap.get(edge.tgt);
+                final @NonNull P pmpg = out.get(tgtLabel);
+                @SuppressWarnings("nullness") // we iterated over all nodes
+                final @NonNull N node = stateMap.get(edge.tgt);
                 pmpg.setInitialNode(node);
             } else {
                 if (!Objects.equals(srcLabel, tgtLabel)) {
                     throw new FormatException("edges connect nodes across different processes");
                 }
 
-                final P pmpg = out.get(srcLabel);
-
-                if (pmpg == null) {
-                    throw new FormatException("label references unknown process");
-                }
-
                 @SuppressWarnings("nullness") // we iterated over all nodes
-                @NonNull N src = stateMap.get(edge.src);
+                final @NonNull P pmpg = out.get(srcLabel);
                 @SuppressWarnings("nullness") // we iterated over all nodes
-                @NonNull N tgt = stateMap.get(edge.tgt);
-                final E e =
-                        pmpg.connect(src, tgt, tpParser.apply(edge.attributes));
+                final @NonNull N src = stateMap.get(edge.src);
+                @SuppressWarnings("nullness") // we iterated over all nodes
+                final @NonNull N tgt = stateMap.get(edge.tgt);
+                final E e = pmpg.connect(src, tgt, tpParser.apply(edge.attributes));
                 final L l = labelParser.apply(edge.attributes);
                 if (l != null) {
                     pmpg.setEdgeLabel(e, l);

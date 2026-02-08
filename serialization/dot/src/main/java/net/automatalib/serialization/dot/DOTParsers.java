@@ -126,12 +126,13 @@ public final class DOTParsers {
 
     /**
      * Parser that extracts the transition properties of a {@link ContextFreeModalProcessSystem} by reading the values
-     * of the {@value PMPGEdgeAttrs#MODALITY} and {@value PMPGEdgeAttrs#PROCEDURALITY} attributes.
+     * of the {@value PMPGEdgeAttrs#MODALITY} and {@value PMPGEdgeAttrs#PROCEDURALITY} attributes. If an attribute is
+     * not found, assumes an internal / must transition, respectively.
      */
     public static final Function<Map<String, String>, MutableProceduralModalEdgeProperty>
             DEFAULT_CFMPS_TRANSITION_PROPERTY_PARSER = attr -> {
-        final String modal = getAndRequireNotNull(attr, PMPGEdgeAttrs.MODALITY);
-        final String proc = getAndRequireNotNull(attr, PMPGEdgeAttrs.PROCEDURALITY);
+        final String proc = attr.getOrDefault(PMPGEdgeAttrs.PROCEDURALITY, ProceduralType.INTERNAL.name());
+        final String modal = attr.getOrDefault(PMPGEdgeAttrs.MODALITY, ModalType.MUST.name());
 
         return new ProceduralModalEdgePropertyImpl(ProceduralType.valueOf(proc.toUpperCase(Locale.ROOT)),
                                                    ModalType.valueOf(modal.toUpperCase(Locale.ROOT)));

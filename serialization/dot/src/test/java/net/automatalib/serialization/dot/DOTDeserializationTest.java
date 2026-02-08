@@ -99,18 +99,18 @@ public class DOTDeserializationTest {
                                                          Arrays.asList("s0", "s1", "s2"),
                                                          false)
                                                     .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.NFA2_RESOURCE)).model;
+        assertNFAProperties(parsed);
+    }
 
-        Assert.assertEquals(parsed.size(), 3);
-        Assert.assertEquals(parsed.getInitialStates().size(), 3);
-        Assert.assertFalse(parsed.accepts(Word.fromSymbols("a", "a", "a")));
-        Assert.assertFalse(parsed.accepts(Word.fromSymbols("b", "b")));
-        Assert.assertFalse(parsed.accepts(Word.fromSymbols("c")));
-        Assert.assertEquals(parsed.getStates(Word.fromSymbols("a", "a", "a")).size(), 1);
-        Assert.assertEquals(parsed.getStates(Word.fromSymbols("b", "b")).size(), 1);
-        Assert.assertEquals(parsed.getStates(Word.fromLetter("c")).size(), 1);
-        Assert.assertTrue(parsed.getStates(Word.fromSymbols("a", "b")).isEmpty());
-        Assert.assertTrue(parsed.getStates(Word.fromSymbols("c", "a")).isEmpty());
-        Assert.assertTrue(parsed.getStates(Word.fromSymbols("b", "c")).isEmpty());
+    @Test
+    public void testRegularNFA3Deserialization() throws IOException, FormatException {
+
+        final CompactNFA<String> parsed = DOTParsers.fsa(new CompactNFA.Creator<>(),
+                                                         DOTParsers.DEFAULT_FSA_NODE_PARSER,
+                                                         DOTParsers.DEFAULT_EDGE_PARSER,
+                                                         GraphDOT.INITIAL_LABEL)
+                                                    .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.NFA3_RESOURCE)).model;
+        assertNFAProperties(parsed);
     }
 
     @Test
@@ -152,6 +152,23 @@ public class DOTDeserializationTest {
 
         InputModelData<String, CompactMTS<String>> model =
                 DOTParsers.mts().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MTS_RESOURCE));
+
+        final Alphabet<String> alphabet = model.alphabet;
+        final CompactMTS<String> parsed = model.model;
+
+        checkIsomorphism(mts, parsed, alphabet);
+    }
+
+    @Test
+    public void testInitialPrefixMTSDeserialization() throws IOException, FormatException {
+        final CompactMTS<String> mts = DOTSerializationUtil.MTS;
+
+        InputModelData<String, CompactMTS<String>> model = DOTParsers.mts(CompactMTS::new,
+                                                                          DOTParsers.DEFAULT_EDGE_PARSER,
+                                                                          DOTParsers.DEFAULT_MTS_EDGE_PARSER,
+                                                                          GraphDOT.INITIAL_LABEL)
+                                                                     .readModel(DOTSerializationUtil.getResource(
+                                                                             DOTSerializationUtil.MTS_RESOURCE));
 
         final Alphabet<String> alphabet = model.alphabet;
         final CompactMTS<String> parsed = model.model;
@@ -291,26 +308,39 @@ public class DOTDeserializationTest {
     }
 
     @Test
-    public void testSPAasCFMPSDeserialization() throws IOException, FormatException {
+    public void testCFMPSCustomDeserialization() throws IOException, FormatException {
 
-        var model = DOTParsers.cfmps(CompactPMPG::new,
+        var model = DOTParsers.cfmps(label -> new CompactPMPG<>("?"),
                                      attr -> Collections.singleton(Integer.parseInt(attr.getOrDefault(PMPGNodeAttrs.LABEL,
                                                                                                       "")
                                                                                         .split(" ")[1])),
-                                     attr -> attr.getOrDefault(PMPGEdgeAttrs.LABEL, ""),
+                                     attr -> attr.get(PMPGEdgeAttrs.LABEL),
                                      attr -> attr.getOrDefault(PMPGNodeAttrs.LABEL, "").split(" ")[0],
                                      attr -> new ProceduralModalEdgePropertyImpl(NodeStyles.BOLD.equals(attr.get(
                                              PMPGEdgeAttrs.STYLE)) ? ProceduralType.PROCESS : ProceduralType.INTERNAL,
                                                                                  ModalType.MUST),
-                                     "__start",
-                                     true)
-                              .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.SPA_AS_CRMPS_RESOURCE));
+                                     "init",
+                                     false)
+                              .readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.CFMPS2_RESOURCE));
 
         Assert.assertEquals(model.getMainProcess(), "F");
         Assert.assertEquals(model.getPMPGs().keySet(), Set.of("F", "G"));
 
         assertPMPGForF(model.getPMPGs().get("F"));
         assertPMPGForG(model.getPMPGs().get("G"));
+    }
+
+    @Test
+    public void testCFMPSValidation() {
+
+        var parser = DOTParsers.cfmps();
+
+        for (int i = 1; i <= 3; i++) {
+            final int id = i;
+            Assert.assertThrows(Integer.toString(id),
+                                FormatException.class,
+                                () -> parser.readModel(DOTSerializationUtil.getResource("/cfmps_error" + id + ".dot")));
+        }
     }
 
     @Test(expectedExceptions = FormatException.class)
@@ -497,6 +527,20 @@ public class DOTDeserializationTest {
         Assert.assertFalse(model.isLocalReset(state, input));
     }
 
+    private static void assertNFAProperties(CompactNFA<String> parsed) {
+        Assert.assertEquals(parsed.size(), 3);
+        Assert.assertEquals(parsed.getInitialStates().size(), 3);
+        Assert.assertFalse(parsed.accepts(Word.fromSymbols("a", "a", "a")));
+        Assert.assertFalse(parsed.accepts(Word.fromSymbols("b", "b")));
+        Assert.assertFalse(parsed.accepts(Word.fromSymbols("c")));
+        Assert.assertEquals(parsed.getStates(Word.fromSymbols("a", "a", "a")).size(), 1);
+        Assert.assertEquals(parsed.getStates(Word.fromSymbols("b", "b")).size(), 1);
+        Assert.assertEquals(parsed.getStates(Word.fromLetter("c")).size(), 1);
+        Assert.assertTrue(parsed.getStates(Word.fromSymbols("a", "b")).isEmpty());
+        Assert.assertTrue(parsed.getStates(Word.fromSymbols("c", "a")).isEmpty());
+        Assert.assertTrue(parsed.getStates(Word.fromSymbols("b", "c")).isEmpty());
+    }
+
     private static <N, E, TP extends ProceduralModalEdgeProperty> void assertPMPGForF(ProceduralModalProcessGraph<N, String, E, Integer, TP> f) {
         Assert.assertEquals(f.size(), 8);
 
@@ -563,7 +607,7 @@ public class DOTDeserializationTest {
                                 g.getEdgeProperty(e).getProceduralType() == ProceduralType.PROCESS);
             Assert.assertEquals(g.getEdgeLabel(e).equals("F"),
                                 g.getNodeProperty(g.getTarget(e)).equals(Collections.singleton(11)));
-            Assert.assertEquals(g.getEdgeLabel(e).equals("c"),
+            Assert.assertEquals(g.getEdgeLabel(e).equals("?"),
                                 g.getNodeProperty(g.getTarget(e)).equals(Collections.singleton(12)));
         }
     }

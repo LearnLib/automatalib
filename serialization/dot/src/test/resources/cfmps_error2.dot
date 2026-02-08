@@ -1,0 +1,23 @@
+// erroneous CFMPS with referencing nodes corss-procedure
+
+digraph g {
+
+	s0 [shape="octagon" main="true" process="S"];
+	s1 [main="true" process="S"];
+	s2 [main="true" process="S"];
+	s3 [shape="box"final="true" main="true" process="S"];
+
+	s0 -> s1 [label="a"];
+	s1 -> s2 [label="U" style="bold" procedurality="PROCESS"];
+	s2 -> t1 [label="c"];
+
+	t0 [shape="octagon" process="T"];
+	t1 [shape="box" final="true" process="T"];
+
+	t0 -> s3 [label="b"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+__start1 [label="" shape="none" width="0" height="0"];
+__start1 -> t0;
+}

@@ -113,7 +113,7 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
                                      Function<Map<String, String>, Pair<I, TP>> edgeParser,
                                      String initialNodeIdPrefix,
                                      boolean fakeInitialNodeIds) {
-        this(creator, nodeParser, edgeParser, initialNodeIdPrefix::startsWith, fakeInitialNodeIds);
+        this(creator, nodeParser, edgeParser, p -> p.startsWith(initialNodeIdPrefix), fakeInitialNodeIds);
     }
 
     private DOTMutableAutomatonParser(AutomatonCreator<A, I> creator,

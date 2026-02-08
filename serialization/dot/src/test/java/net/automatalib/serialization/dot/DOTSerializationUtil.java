@@ -65,6 +65,7 @@ final class DOTSerializationUtil {
     static final String DFA_RESOURCE = "/dfa.dot";
     static final String NFA_RESOURCE = "/nfa.dot";
     static final String NFA2_RESOURCE = "/nfa2.dot";
+    static final String NFA3_RESOURCE = "/nfa3.dot";
     static final String MEALY_RESOURCE = "/mealy.dot";
     static final String MOORE_RESOURCE = "/moore.dot";
     static final String SST_RESOURCE = "/sst.dot";
@@ -75,7 +76,7 @@ final class DOTSerializationUtil {
     static final String CLUSTER_RESOURCE = "/cluster.dot";
     static final String PMPG_RESOURCE = "/pmpg.dot";
     static final String CFMPS_RESOURCE = "/cfmps.dot";
-    static final String SPA_AS_CRMPS_RESOURCE = "/spa_as_cfmps.dot";
+    static final String CFMPS2_RESOURCE = "/cfmps2.dot";
     static final String SPA_RESOURCE = "/spa.dot";
     static final String SBA_RESOURCE = "/sba.dot";
     static final String SPMM_RESOURCE = "/spmm.dot";
