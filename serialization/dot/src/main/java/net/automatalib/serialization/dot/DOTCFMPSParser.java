@@ -45,15 +45,15 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Parses a DOT file that defines an {@link ContextFreeModalProcessSystem}.
+ * Parses a DOT file that defines a {@link ContextFreeModalProcessSystem}.
  * <p>
- * Besides the typical structure of DOT files, this parser expects/supports the following attributes present in order to
+ * Besides the typical structure of DOT files, this parser expects/supports the following attributes in order to
  * correctly parse the semantics of {@link ContextFreeModalProcessSystem}s:
  * <ul>
- *     <li>nodes must provide a {@value PMPGNodeAttrs#PROCESS} attribute that denotes the process the node belongs to</li>
- *     <li>nodes may provide a {@value PMPGNodeAttrs#MAIN} attribute that denotes whether their respective process is the {@link ContextFreeModalProcessSystem#getMainProcess() main process}</li>
- *     <li>nodes may provide a {@value PMPGNodeAttrs#FINAL} attribute to denote their {@link FinalNode final} state</li>
- *     <li>edges must provide {@value PMPGEdgeAttrs#MODALITY} and {@value PMPGEdgeAttrs#PROCEDURALITY} attributes to denote their {@link ModalType} and {@link ProceduralType}</li>
+ *     <li>Nodes must provide a {@value PMPGNodeAttrs#PROCESS} attribute that denotes the process a node belongs to</li>
+ *     <li>Nodes may provide a {@value PMPGNodeAttrs#MAIN} attribute that denotes whether their respective process is the {@link ContextFreeModalProcessSystem#getMainProcess() main process}. Exactly one process must mark their nodes as main process nodes.</li>
+ *     <li>Nodes may provide a {@value PMPGNodeAttrs#FINAL} attribute to denote their {@link FinalNode final} state. Exactly one node per (sub-) process must be marked as a final node.</li>
+ *     <li>Edges may provide {@value PMPGEdgeAttrs#MODALITY} and {@value PMPGEdgeAttrs#PROCEDURALITY} attributes to denote their {@link ModalType} and {@link ProceduralType}. If missing, the respective parser may provide default values instead.</li>
  * </ul>
  *
  * @param <N>
