@@ -41,7 +41,11 @@ public interface ContextFreeModalProcessSystem<L, AP> extends FiniteRepresentati
 
     @Override
     default int size() {
-        return getPMPGs().values().stream().mapToInt(ProceduralModalProcessGraph::size).sum();
+        int result = 0;
+        for (ProceduralModalProcessGraph<?, L, ?, AP, ?> pmpg : getPMPGs().values()) {
+            result += pmpg.size();
+        }
+        return result;
     }
 
     @Override
