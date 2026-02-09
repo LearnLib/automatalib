@@ -43,7 +43,11 @@ import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
  */
 public final class GraphDOT {
 
-    private static final String INITIAL_LABEL = "__start";
+    /**
+     * The label to prefix artificial initial nodes with.
+     */
+    public static final String INITIAL_LABEL = "__start";
+
     private static final String HTML_START_TAG = "<HTML>";
     private static final String HTML_END_TAG = "</HTML>";
 

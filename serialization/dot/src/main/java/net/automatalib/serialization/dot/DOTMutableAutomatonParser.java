@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -58,7 +59,7 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
     private final AutomatonCreator<A, I> creator;
     private final Function<Map<String, String>, SP> nodeParser;
     private final Function<Map<String, String>, Pair<I, TP>> edgeParser;
-    private final Collection<String> initialNodeIds;
+    private final Predicate<String> initialPredicate;
     private final boolean fakeInitialNodeIds;
 
     /**
@@ -85,10 +86,45 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
                                      Function<Map<String, String>, Pair<I, TP>> edgeParser,
                                      Collection<String> initialNodeIds,
                                      boolean fakeInitialNodeIds) {
+        this(creator, nodeParser, edgeParser, initialNodeIds::contains, fakeInitialNodeIds);
+    }
+
+    /**
+     * Parser for arbitrary {@link MutableAutomaton}s with a custom automaton instance, custom node and edge attributes
+     * and custom labels for the initial nodes.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned automaton
+     * @param nodeParser
+     *         a node parser that extracts from a property map of a node the state property
+     * @param edgeParser
+     *         an edge parser that extracts from a property map of an edge the input symbol and transition property
+     * @param initialNodeIdPrefix
+     *         the prefix to match the ids of the initial nodes
+     * @param fakeInitialNodeIds
+     *         a flag indicating whether the {@code initialNodeIds} are artificial or not. If {@code true}, the nodes
+     *         matching the {@code initialNodeIds} will not be added to the automaton. Instead, their direct successors
+     *         will be initial states instead. This may be useful for instances where there are artificial nodes used to
+     *         display in incoming arrow for the actual initial states. If {@code false}, the nodes matching the
+     *         {@code initialNodeIds} will be used as initial nodes.
+     */
+    public DOTMutableAutomatonParser(AutomatonCreator<A, I> creator,
+                                     Function<Map<String, String>, SP> nodeParser,
+                                     Function<Map<String, String>, Pair<I, TP>> edgeParser,
+                                     String initialNodeIdPrefix,
+                                     boolean fakeInitialNodeIds) {
+        this(creator, nodeParser, edgeParser, p -> p.startsWith(initialNodeIdPrefix), fakeInitialNodeIds);
+    }
+
+    private DOTMutableAutomatonParser(AutomatonCreator<A, I> creator,
+                                     Function<Map<String, String>, SP> nodeParser,
+                                     Function<Map<String, String>, Pair<I, TP>> edgeParser,
+                                     Predicate<String> initialPredicate,
+                                     boolean fakeInitialNodeIds) {
         this.creator = creator;
         this.nodeParser = nodeParser;
         this.edgeParser = edgeParser;
-        this.initialNodeIds = initialNodeIds;
+        this.initialPredicate = initialPredicate;
         this.fakeInitialNodeIds = fakeInitialNodeIds;
     }
 
@@ -104,7 +140,7 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
             final Set<I> inputs = new HashSet<>();
 
             for (Edge edge : parser.getEdges()) {
-                if (!fakeInitialNodeIds || !initialNodeIds.contains(edge.src)) {
+                if (!fakeInitialNodeIds || !initialPredicate.test(edge.src)) {
                     inputs.add(edgeParser.apply(edge.attributes).getFirst());
                 }
             }
@@ -127,9 +163,9 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
         for (Node node : nodes) {
             final S state;
 
-            if (fakeInitialNodeIds && initialNodeIds.contains(node.id)) {
+            if (fakeInitialNodeIds && initialPredicate.test(node.id)) {
                 continue;
-            } else if (!fakeInitialNodeIds && initialNodeIds.contains(node.id)) {
+            } else if (!fakeInitialNodeIds && initialPredicate.test(node.id)) {
                 state = automaton.addInitialState(nodeParser.apply(node.attributes));
             } else {
                 state = automaton.addState(nodeParser.apply(node.attributes));
@@ -142,7 +178,7 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
         }
 
         for (Edge edge : parser.getEdges()) {
-            if (fakeInitialNodeIds && initialNodeIds.contains(edge.src)) {
+            if (fakeInitialNodeIds && initialPredicate.test(edge.src)) {
                 automaton.setInitial(stateMap.get(edge.tgt), true);
             } else {
                 final Pair<I, TP> property = edgeParser.apply(edge.attributes);

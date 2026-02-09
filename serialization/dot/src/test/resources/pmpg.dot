@@ -3,10 +3,10 @@ digraph g {
 	s0 [shape="octagon" label=""];
 	s1 [shape="circle" label="[a, b]"];
 	s2 [shape="circle" label="[c]"];
-	s0 -> s1 [style="" label="1"];
-	s0 -> s1 [style="dashed" label="2"];
-	s1 -> s2 [style="bold" label="3"];
-	s2 -> s0 [style="dashed,bold" label="4"];
+	s0 -> s1 [modality="MUST" style="" label="1" procedurality="INTERNAL"];
+	s0 -> s1 [modality="MAY" style="dashed" label="2" procedurality="INTERNAL"];
+	s1 -> s2 [modality="MUST" style="bold" label="3" procedurality="PROCESS"];
+	s2 -> s0 [modality="MAY" style="dashed,bold" label="4" procedurality="PROCESS"];
 
 __start0 [label="" shape="none" width="0" height="0"];
 __start0 -> s0;

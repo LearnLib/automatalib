@@ -84,7 +84,7 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    sealed class NodeAttrs extends CommonAttrs permits MMLTNodeAttrs {
+    sealed class NodeAttrs extends CommonAttrs permits MMLTNodeAttrs, PMPGNodeAttrs {
 
         public static final String SHAPE = "shape";
         public static final String WIDTH = "width";
@@ -107,6 +107,17 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
+    final class PMPGNodeAttrs extends NodeAttrs {
+
+        public static final String PROCESS = "process";
+        public static final String MAIN = "main";
+        public static final String FINAL = "final";
+
+        private PMPGNodeAttrs() {
+            // prevent instantiation
+        }
+    }
+
     sealed class EdgeAttrs extends CommonAttrs permits MTSEdgeAttrs, MMLTEdgeAttrs {
 
         public static final String PENWIDTH = "penwidth";
@@ -117,7 +128,7 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    final class MTSEdgeAttrs extends EdgeAttrs {
+    sealed class MTSEdgeAttrs extends EdgeAttrs permits PMPGEdgeAttrs {
 
         public static final String MODALITY = "modality";
 
@@ -131,6 +142,15 @@ public interface VisualizationHelper<N, E> {
         public static final String RESETS = "resets";
 
         private MMLTEdgeAttrs() {
+            // prevent instantiation
+        }
+    }
+
+    final class PMPGEdgeAttrs extends MTSEdgeAttrs {
+
+        public static final String PROCEDURALITY = "procedurality";
+
+        private PMPGEdgeAttrs() {
             // prevent instantiation
         }
     }

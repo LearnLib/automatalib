@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Added `KWay{State,Transition}CoverTestsIterator`s to `automata-util` as a new means for conformance testing.
 * Added `CollectionUtil#allCombintationsIterator` and `CollectionUtil#allPermutationsIterator` for computing k-combinations and k-permutations.
 * Added `NFAs#canonize` to canonize NFAs via [Brzozowski's algorithm](https://en.wikipedia.org/wiki/DFA_minimization#Brzozowski's_algorithm).
+* Added a DOT parser for `ContextFreeModalProcessSystem`s.
+* For nondeterministic model types, `DOTParsers` now contains methods that accept an initial node prefix, in case the number of initial nodes is not known beforehand.
 
 ### Changed
 

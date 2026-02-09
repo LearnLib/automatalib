@@ -50,6 +50,6 @@ public interface ContextFreeModalProcessSystem<L, AP> extends FiniteRepresentati
 
     @Override
     default Graph<?, ?> graphView() {
-        return new CFMPSGraphView<>(getPMPGs());
+        return new CFMPSGraphView<>(getMainProcess(), getPMPGs());
     }
 }
