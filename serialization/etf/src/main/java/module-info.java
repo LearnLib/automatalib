@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+
 /**
  * This module contains serializers for LTSmin's Enumerated Table Format (ETF). For further information about the ETF
  * format, see <a
- * href="https://ltsmin.utwente.nl/assets/man/etf.html">https://ltsmin.utwente.nl/assets/man/etf.html</a>.
+ * href="https://ltsmin.utwente.nl/assets/man/etf.html">https://ltsmin.utwente.nl/assets/man/etf.html</a>. Currently,
+ * this module supports serialization of {@link DFA}s and {@link MealyMachine}s.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

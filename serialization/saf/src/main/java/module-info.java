@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.NFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+
 /**
  * This module contains (de-) serializers for the Simple Automaton Format (SAF). SAF is a custom, human-readable text
- * format.
+ * format. Currently, this module supports (de-)serialization of {@link DFA}s, {@link NFA}s, and {@link MealyMachine}s.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import net.automatalib.automaton.fsa.DFA;
+
 /**
  * This module contains (de-) serializers for the legacy LearnLibV2 format. This is a custom text format used by
- * LearnLib.
+ * LearnLib. Currently, this module supports (de-)serialization of {@link DFA}s.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

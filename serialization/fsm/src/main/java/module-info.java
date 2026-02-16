@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+
 /**
  * This module contains deserializers for the Finite State Machine (FSM) format as used by LTSmin. For further
  * information about the FSM format, see the <a
- * href="https://mcrl2.org/web/user_manual/tools/lts.html#language-fsm-lts">mcrl2 documentation</a>.
+ * href="https://mcrl2.org/web/user_manual/tools/lts.html#language-fsm-lts">mcrl2 documentation</a>. Currently, this
+ * module supports deserialization of {@link DFA}s and {@link MealyMachine}s (both with alternating and synchronous
+ * input/ouput symbols).
  * <p>
  * Note that this format differs from the identically named FSM format of <a
  * href="https://github.com/katef/libfsm">libfsm</a>.

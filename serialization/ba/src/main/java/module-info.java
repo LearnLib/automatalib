@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+import net.automatalib.automaton.fsa.FiniteStateAcceptor;
+
 /**
  * This module contains (de-) serializers for the BA format. For further information about the BA format, see <a
  * href="https://languageinclusion.org/doku.php?id=tools#the_ba_format">https://languageinclusion.org/doku.php?id=tools#the_ba_format</a>.
+ * Currently, this module supports (de-)serialization of {@link FiniteStateAcceptor}s.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

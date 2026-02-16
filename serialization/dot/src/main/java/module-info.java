@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
+import net.automatalib.automaton.UniversalAutomaton;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.graph.Graph;
+import net.automatalib.ts.modal.ModalTransitionSystem;
+
 /**
  * This module contains (de-) serializers for the DOT format. For further information about the DOT format, see <a
- * href="https://graphviz.org/doc/info/lang.html">https://graphviz.org/doc/info/lang.html</a>.
+ * href="https://graphviz.org/doc/info/lang.html">https://graphviz.org/doc/info/lang.html</a>. Currently, this module
+ * supports (de-)serialization of generic {@link UniversalAutomaton}s (such as {@link DFA}s, {@link MealyMachine}s, and
+ * {@link MooreMachine}s), {@link Graph}s, {@link ModalTransitionSystem}s, {@link MMLT}s, and
+ * {@link ContextFreeModalProcessSystem}s.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

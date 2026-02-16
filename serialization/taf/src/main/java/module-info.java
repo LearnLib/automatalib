@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+
 /**
  * This module contains (de-) serializers for the Textual Automaton Format (TAF). TAF is a custom bitstream format.
+ * Currently, this module supports (de-)serialization of {@link DFA}s and {@link MealyMachine}s.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

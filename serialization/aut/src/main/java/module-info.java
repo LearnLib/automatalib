@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+import net.automatalib.automaton.simple.SimpleAutomaton;
+
 /**
  * This module contains (de-) serializers for the AUT format. For further information about the AUT format, see <a
- * href="http://cadp.inria.fr/man/aut.html">http://cadp.inria.fr/man/aut.html</a>.
+ * href="http://cadp.inria.fr/man/aut.html">http://cadp.inria.fr/man/aut.html</a>. Currently, this module supports
+ * (de-)serialization of {@link SimpleAutomaton}s.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>

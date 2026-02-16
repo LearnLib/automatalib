@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+import net.automatalib.automaton.fsa.NFA;
+
 /**
  * This module contains (de-) serializers for the Mata automaton format. This format is used by the <a
- * href="https://doi.org/10.1007/978-3-031-57249-4_7">Mata Automata Library</a>.
+ * href="https://doi.org/10.1007/978-3-031-57249-4_7">Mata Automata Library</a>. Currently, this module supports
+ * (de-)serialization of {@link NFA}s.
  * <p>
  * This module is provided by the following Maven dependency:
  * <pre>
