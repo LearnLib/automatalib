@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * An iterator that iterates over the cartesian product of its given source domains. Each intermediate combination of
+ * An iterator that iterates over the Cartesian product of its given source domains. Each intermediate combination of
  * elements is computed lazily.
  * <p>
  * <b>Note:</b> Subsequent calls to the {@link #next()} method return a reference to the same list, and only update the

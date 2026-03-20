@@ -32,8 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <T>
  *         (original) transition type
  */
-public class DeterministicPowersetView<S, I, T>
-        implements DeterministicTransitionSystem<S, I, T>, PowersetViewTS<S, I, T, S, T> {
+public class DeterministicPowersetView<S, I, T> implements PowersetViewTS<S, I, T, S, T> {
 
     private final DeterministicTransitionSystem<S, I, T> delegate;
 

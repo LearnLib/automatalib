@@ -25,7 +25,7 @@ import java.util.Set;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class IteratableUtilTest {
+public class IterableUtilTest {
 
     @Test
     public void testConcat() {

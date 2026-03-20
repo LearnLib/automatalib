@@ -72,7 +72,7 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         if (deterministic) {
             encodeBodyDet(out, automaton, alphabet, spDecoder, tpDecoder);
         } else {
-            encodeBodyNondet(out, automaton, alphabet, spDecoder, tpDecoder);
+            encodeBodyNonDet(out, automaton, alphabet, spDecoder, tpDecoder);
         }
     }
 
@@ -95,7 +95,7 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         encodeTransitionsDet(out, result, alphabet, states, tpEncoder);
     }
 
-    private void encodeBodyNondet(DataOutput out,
+    private void encodeBodyNonDet(DataOutput out,
                                   M source,
                                   Alphabet<I> alphabet,
                                   BlockPropertyEncoder<? super SP> spEncoder,
@@ -104,8 +104,8 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         final List<S> states = new ArrayList<>(source.getStates());
         final Set<S> initials = source.getInitialStates();
 
-        encodeStatesNondet(out, source, initials, states, spEncoder);
-        encodeTransitionsNondet(out, source, alphabet, states, tpEncoder);
+        encodeStatesNonDet(out, source, initials, states, spEncoder);
+        encodeTransitionsNonDet(out, source, alphabet, states, tpEncoder);
     }
 
     private void encodeStatesDet(DataOutput out,
@@ -150,7 +150,7 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         }
     }
 
-    private void encodeStatesNondet(DataOutput out,
+    private void encodeStatesNonDet(DataOutput out,
                                     M source,
                                     Collection<? extends S> initialStates,
                                     List<S> states,
@@ -166,7 +166,7 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         encodeStateProperties(out, source, states, encoder);
     }
 
-    private void encodeTransitionsNondet(DataOutput out,
+    private void encodeTransitionsNonDet(DataOutput out,
                                          M source,
                                          Alphabet<I> alphabet,
                                          List<S> stateList,

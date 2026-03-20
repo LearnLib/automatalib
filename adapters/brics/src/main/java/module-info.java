@@ -32,8 +32,5 @@ open module net.automatalib.brics {
     requires automaton;
     requires net.automatalib.api;
 
-    // annotations are 'provided'-scoped and do not need to be loaded at runtime
-    requires static org.checkerframework.checker.qual;
-
     exports net.automatalib.brics;
 }

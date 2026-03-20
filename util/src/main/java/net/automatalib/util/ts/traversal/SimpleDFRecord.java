@@ -27,7 +27,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 
 class SimpleDFRecord<S, I, T> {
 
-    public final S state;
+    final S state;
 
     private final Iterator<? extends I> inputsIterator;
     private I input;
@@ -38,11 +38,11 @@ class SimpleDFRecord<S, I, T> {
         this.inputsIterator = inputs.iterator();
     }
 
-    public final boolean wasStarted() {
+    final boolean wasStarted() {
         return transitionIterator != null;
     }
 
-    public boolean start(TransitionSystem<S, ? super I, T> ts) {
+    boolean start(TransitionSystem<S, ? super I, T> ts) {
         if (transitionIterator != null) {
             return false;
         }
@@ -67,7 +67,7 @@ class SimpleDFRecord<S, I, T> {
     }
 
     @EnsuresNonNullIf(expression = "transitionIterator", result = true)
-    public boolean hasNextTransition(TransitionSystem<S, ? super I, T> ts) {
+    boolean hasNextTransition(TransitionSystem<S, ? super I, T> ts) {
         if (transitionIterator == null) {
             return false;
         }
@@ -78,26 +78,26 @@ class SimpleDFRecord<S, I, T> {
     }
 
     @RequiresNonNull("transitionIterator")
-    public void advance(TransitionSystem<S, ? super I, T> ts) {
+    void advance(TransitionSystem<S, ? super I, T> ts) {
         if (transitionIterator.hasNext()) {
             return;
         }
         findNext(ts);
     }
 
-    public void advanceInput(TransitionSystem<S, ? super I, T> ts) {
+    void advanceInput(TransitionSystem<S, ? super I, T> ts) {
         transitionIterator = null;
         findNext(ts);
     }
 
     @Pure
-    public I input() {
+    I input() {
         return input;
     }
 
     @RequiresNonNull("transitionIterator")
     @SideEffectFree // while state changes, never does nullability
-    public T transition() {
+    T transition() {
         return transitionIterator.next();
     }
 

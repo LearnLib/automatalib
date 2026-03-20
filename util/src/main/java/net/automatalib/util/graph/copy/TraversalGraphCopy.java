@@ -48,7 +48,7 @@ final class TraversalGraphCopy<N1, E1, N2, E2, NP2, EP2>
     }
 
     @Override
-    public void doCopy() {
+    void doCopy() {
         GraphTraversal.traverse(traversalOrder, inGraph, limit, initNodes, this);
     }
 

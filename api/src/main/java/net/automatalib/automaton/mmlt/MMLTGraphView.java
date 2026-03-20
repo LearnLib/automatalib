@@ -30,8 +30,9 @@ import net.automatalib.symbol.time.TimerTimeoutSymbol;
 import net.automatalib.visualization.VisualizationHelper;
 
 /**
- * A graphview for {@link MMLT}s that explicitly represents timeouts as transitions between locations if possible. For
- * this purpose, edges use {@link SymbolicInput}s which include {@link InputSymbol}s and {@link TimerTimeoutSymbol}s.
+ * A graph-based view for {@link MMLT}s that explicitly represents timeouts as transitions between locations if
+ * possible. For this purpose, edges use {@link SymbolicInput}s which include {@link InputSymbol}s and
+ * {@link TimerTimeoutSymbol}s.
  *
  * @param <S>
  *         location type

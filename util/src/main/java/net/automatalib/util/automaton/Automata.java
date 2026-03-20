@@ -517,8 +517,8 @@ public final class Automata {
 
     private static final class ResultTransRecord<TP> {
 
-        public final int targetId;
-        public final TP property;
+        final int targetId;
+        final TP property;
 
         ResultTransRecord(int targetId, TP property) {
             this.targetId = targetId;
@@ -528,8 +528,8 @@ public final class Automata {
 
     private static final class ResultStateRecord<SP, TP> {
 
-        public final SP property;
-        public final ResultTransRecord<TP>[] transitions;
+        final SP property;
+        final ResultTransRecord<TP>[] transitions;
 
         @SuppressWarnings("unchecked")
         ResultStateRecord(int numInputs, SP property) {

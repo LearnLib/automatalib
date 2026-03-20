@@ -26,7 +26,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
- * Abstract super class for size based modelchecker caches.
+ * Abstract super class for size based model checker caches.
  *
  * @param <I>
  *         input symbol type

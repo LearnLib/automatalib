@@ -48,12 +48,6 @@ limitations under the License.
             <scope>provided</scope>
         </dependency>
 
-        <!-- build -->
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-        </dependency>
-
         <!-- test -->
         <dependency>
             <groupId>net.automatalib</groupId>

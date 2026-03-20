@@ -32,8 +32,6 @@ import net.automatalib.common.smartcollection.UnorderedCollection;
  */
 final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<TransitionLabel<S, EP>, TransitionLabel<S, EP>> {
 
-    // The original label
-    private final EP originalLabel;
     // The list of states that have an outgoing transition
     // with this label, considered in the respective step.
     private final UnorderedCollection<State<S, EP>> list = new UnorderedCollection<>();
@@ -44,21 +42,11 @@ final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<Transiti
     private final IntrusiveLinkedList<State<S, EP>> bucket = new IntrusiveLinkedList<>();
 
     /**
-     * Constructor.
-     *
-     * @param originalLabel
-     *         the original transition label.
-     */
-    TransitionLabel(EP originalLabel) {
-        this.originalLabel = originalLabel;
-    }
-
-    /**
      * Retrieves the bucket.
      *
      * @return the bucket.
      */
-    public IntrusiveLinkedList<State<S, EP>> getBucket() {
+    IntrusiveLinkedList<State<S, EP>> getBucket() {
         return bucket;
     }
 
@@ -70,7 +58,7 @@ final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<Transiti
      *
      * @return {@code true} if this is the first state to be added to the bucket, {@code false} otherwise.
      */
-    public boolean addToBucket(State<S, EP> state) {
+    boolean addToBucket(State<S, EP> state) {
         boolean first = bucket.isEmpty();
 
         bucket.pushBack(state);
@@ -79,18 +67,9 @@ final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<Transiti
     }
 
     /**
-     * Retrieves the original transition label.
-     *
-     * @return the original transition label.
-     */
-    public EP getOriginalLabel() {
-        return originalLabel;
-    }
-
-    /**
      * Clears the state set associated with this label.
      */
-    public void clearSet() {
+    void clearSet() {
         setContents.clear();
         list.quickClear();
     }
@@ -103,7 +82,7 @@ final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<Transiti
      *
      * @return {@code true} if this was the first state to be added to the set, {@code false} otherwise.
      */
-    public boolean addToSet(State<S, EP> state) {
+    boolean addToSet(State<S, EP> state) {
         boolean first = list.isEmpty();
         if (first || !setContents.get(state.getId())) {
             list.add(state);
@@ -118,13 +97,8 @@ final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<Transiti
      *
      * @return the state set of this label.
      */
-    public Collection<State<S, EP>> getSet() {
+    Collection<State<S, EP>> getSet() {
         return list;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(originalLabel);
     }
 
     @Override

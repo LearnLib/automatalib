@@ -101,9 +101,9 @@ final class FindShortestPathsIterator<N, E> extends AbstractSimplifiedIterator<P
 
     private static final class Pred<N, E> {
 
-        public final N node;
-        public final E edge;
-        public final int depth;
+        final N node;
+        final E edge;
+        final int depth;
 
         Pred(N node, E edge, int depth) {
             this.node = node;

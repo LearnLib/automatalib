@@ -25,8 +25,8 @@ package net.automatalib.util.ts.traversal;
  */
 final class BFSRecord<S, D> {
 
-    public final S state;
-    public final D data;
+    final S state;
+    final D data;
 
     BFSRecord(S state, D data) {
         this.state = state;

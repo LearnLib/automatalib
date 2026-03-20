@@ -170,10 +170,10 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
 
     private static final class APSPRecord<E> {
 
-        public final @Nullable E edge;
-        public float distance;
-        public int middle;
-        public int numEdges;
+        final @Nullable E edge;
+        float distance;
+        int middle;
+        int numEdges;
 
         APSPRecord(E edge, float distance) {
             this.edge = edge;

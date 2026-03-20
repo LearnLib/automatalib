@@ -107,7 +107,7 @@ public final class Bisimulation {
                 }
             }
 
-            // cartesian product on mid
+            // Cartesian product on mid
             for (int i = 0; i < mid; i++) {
                 for (int j = size - 1; j >= mid; j--) {
                     result.add(Pair.of(aIDs.getState(elems[i]), bIDs.getState(elems[j] - n1)));

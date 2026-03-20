@@ -33,7 +33,7 @@ final class PlainGraphCopy<N1, E1, N2, E2, NP2, EP2>
     }
 
     @Override
-    public void doCopy() {
+    void doCopy() {
         List<NodeRec<N1, N2>> outNodes = new ArrayList<>(inGraph.size());
         // Copy nodes
         for (N1 n1 : inGraph) {

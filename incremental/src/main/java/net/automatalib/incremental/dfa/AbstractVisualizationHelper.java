@@ -30,7 +30,7 @@ import net.automatalib.automaton.visualization.AutomatonVisualizationHelper;
  * @param <T>
  *         transition type
  * @param <A>
- *         automaton tyep
+ *         automaton type
  */
 public abstract class AbstractVisualizationHelper<S, I, T, A extends Automaton<S, I, T>>
         extends AutomatonVisualizationHelper<S, I, T, A> {

@@ -86,7 +86,7 @@ public final class IterableUtil {
     }
 
     /**
-     * Returns an iterator that iterates over the cartesian product of its given source domains. Each intermediate
+     * Returns an iterator that iterates over the Cartesian product of its given source domains. Each intermediate
      * combination of elements is computed lazily.
      * <p>
      * <b>Note:</b> Subsequent calls to the returned iterator's {@link Iterator#next() next()} method return a
@@ -98,7 +98,7 @@ public final class IterableUtil {
      * @param <T>
      *         type of elements
      *
-     * @return an iterator that iterates over the cartesian product of its given source domains
+     * @return an iterator that iterates over the Cartesian product of its given source domains
      */
     @SafeVarargs
     public static <T> Iterable<List<T>> cartesianProduct(Iterable<T>... iterables) {

@@ -96,7 +96,6 @@ interface InternalModelCheckerDelegator<MC extends ModelChecker<I, A, P, R>, I, 
      */
     interface MealyModelCheckerLassoDelegator<MC extends MealyModelCheckerLasso<I, O, P>, I, O, P> extends
                                                                                                    ModelCheckerLassoDelegator<MC, I, MealyMachine<?, I, ?, O>, P, MealyLasso<I, O>>,
-                                                                                                   MealyModelCheckerDelegator<MC, I, O, P, MealyLasso<I, O>>,
-                                                                                                   MealyModelChecker<I, O, P, MealyLasso<I, O>> {}
+                                                                                                   MealyModelCheckerDelegator<MC, I, O, P, MealyLasso<I, O>> {}
 
 }

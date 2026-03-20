@@ -108,7 +108,6 @@ public final class Minimizer<S, L> {
         // Add all blocks from the initial partition as an element
         // of the partition, and as a potential splitter.
         partition = new UnorderedCollection<>(initialBlocks.size());
-        ///splitters.hintNextCapacity(initialBlocks.size());
 
         for (Block<S, L> block : initialBlocks) {
             if (block.isEmpty()) {
@@ -119,8 +118,7 @@ public final class Minimizer<S, L> {
             numBlocks++;
         }
 
-        // Split the blocks of the partition, until no splitters
-        // remain
+        // Split the blocks of the partition, until no splitters remain
         while (!splitters.isEmpty()) {
             Block<S, L> block = splitters.choose();
             removeFromSplitterQueue(block);
@@ -178,9 +176,8 @@ public final class Minimizer<S, L> {
                 S origTarget = graph.getTarget(edge);
                 State<S, L> target = mapping.get(origTarget);
                 L label = graph.getEdgeProperty(edge);
-                TransitionLabel<S, L> transition = transitionMap.computeIfAbsent(label, TransitionLabel::new);
-                Edge<S, L> edgeObj = new Edge<>(state, target, transition);
-                state.addOutgoingEdge(edgeObj);
+                TransitionLabel<S, L> transition = transitionMap.computeIfAbsent(label, l -> new TransitionLabel<>());
+                Edge<S, L> edgeObj = new Edge<>(state, transition);
                 target.addIncomingEdge(edgeObj);
             }
         }
@@ -208,7 +205,7 @@ public final class Minimizer<S, L> {
     }
 
     /**
-     * Removes a block from the splitter queue. This is done when it is split completely and thus no longer existant.
+     * Removes a block from the splitter queue. This is done when it is split completely and thus no longer existent.
      */
     private boolean removeFromSplitterQueue(Block<S, L> block) {
         ElementReference ref = block.getSplitterQueueReference();
@@ -237,7 +234,7 @@ public final class Minimizer<S, L> {
     private void split(Block<S, L> splitter) {
         // STEP 1: Collect the states that have outgoing edges
         // pointing to states inside the currently considered blocks.
-        // Also, a list of transition labels occuring on these
+        // Also, a list of transition labels occurring on these
         // edges is created.
         for (State<S, L> state : splitter.getStates()) {
             for (Edge<S, L> edge : state.getIncoming()) {

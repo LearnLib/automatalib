@@ -227,10 +227,10 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
 
     private static final class Record<S, I, O> {
 
-        public final S automatonState;
-        public final Node<O> treeNode;
-        public final I incomingInput;
-        public final Iterator<? extends I> inputIt;
+        final S automatonState;
+        final Node<O> treeNode;
+        final I incomingInput;
+        final Iterator<? extends I> inputIt;
 
         Record(S automatonState, Node<O> treeNode, I incomingInput, Iterator<? extends I> inputIt) {
             this.automatonState = automatonState;

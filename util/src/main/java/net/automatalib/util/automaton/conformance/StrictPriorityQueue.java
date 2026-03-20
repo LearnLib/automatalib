@@ -184,7 +184,7 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
      *         element type
      */
     @FunctionalInterface
-    public interface MergeOperation<E> {
+    interface MergeOperation<E> {
 
         /**
          * Merges the old element and the new element into a replacement element.

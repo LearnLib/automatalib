@@ -180,7 +180,7 @@ final class ProceduralUtil {
                     finishedProcedures.add(sym);
                     newAS.add(sym);
                 } else {
-                    // If we encounter a failing call we land in a sink state and don't need to analyse further
+                    // If we encounter a failing call we land in a sink state and don't need to analyze further
                     // transitions. Therefore, skip the remaining trace.
                     continue;
                 }

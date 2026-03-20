@@ -39,21 +39,17 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
     private final S originalState;
     // The list of incoming edges.
     private final List<Edge<S, L>> incoming = new ArrayList<>();
-    // The list of outgoing edges.
-    private final List<Edge<S, L>> outgoing = new ArrayList<>();
 
     // The block that contains this state.
     private Block<S, L> block;
     // A reference to this state in the block's collection.
     private ElementReference blockReference;
 
-    // Signals whether this state is a split point, i.e.,
-    // differs from the preceeding states in the final list.
+    // Signals whether this state is a split point, i.e., differs from the preceding states in the final list.
     private boolean splitPoint;
 
-    // The signature of the state, i.e., a sorted list of the (relevant)
-    // outgoing edge labels.
-    private List<TransitionLabel<S, L>> signature = new ArrayList<>();
+    // The signature of the state, i.e., a sorted list of the (relevant) outgoing edge labels.
+    private final List<TransitionLabel<S, L>> signature = new ArrayList<>();
 
     /**
      * Constructor.
@@ -73,7 +69,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      *
      * @return the state id.
      */
-    public int getId() {
+    int getId() {
         return id;
     }
 
@@ -82,7 +78,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      *
      * @return the original state object.
      */
-    public S getOriginalState() {
+    S getOriginalState() {
         return originalState;
     }
 
@@ -91,7 +87,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      *
      * @return the block containing this state.
      */
-    public Block<S, L> getBlock() {
+    Block<S, L> getBlock() {
         return block;
     }
 
@@ -101,7 +97,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      * @param block
      *         the new block containing this state.
      */
-    public void setBlock(Block<S, L> block) {
+    void setBlock(Block<S, L> block) {
         this.block = block;
     }
 
@@ -110,17 +106,8 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      *
      * @return the incoming edges.
      */
-    public List<Edge<S, L>> getIncoming() {
+    List<Edge<S, L>> getIncoming() {
         return incoming;
-    }
-
-    /**
-     * Retrieves the list of outgoing edges.
-     *
-     * @return the outgoing edges.
-     */
-    public List<Edge<S, L>> getOutgoing() {
-        return outgoing;
     }
 
     /**
@@ -129,18 +116,8 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      * @param edge
      *         the incoming edge.
      */
-    public void addIncomingEdge(Edge<S, L> edge) {
+    void addIncomingEdge(Edge<S, L> edge) {
         incoming.add(edge);
-    }
-
-    /**
-     * Adds a new outgoing edge.
-     *
-     * @param edge
-     *         the outgoing edge.
-     */
-    public void addOutgoingEdge(Edge<S, L> edge) {
-        outgoing.add(edge);
     }
 
     /**
@@ -148,7 +125,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      *
      * @return {@code true} iff this state is a split point, {@code false} otherwise.
      */
-    public boolean isSplitPoint() {
+    boolean isSplitPoint() {
         return splitPoint;
     }
 
@@ -158,7 +135,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      * @param splitPoint
      *         whether this state is a split point.
      */
-    public void setSplitPoint(boolean splitPoint) {
+    void setSplitPoint(boolean splitPoint) {
         this.splitPoint = splitPoint;
     }
 
@@ -166,13 +143,9 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      * Resets the information needed for a single split step associated with this state, i.e., the split point property
      * and the signature.
      */
-    public void reset() {
+    void reset() {
         splitPoint = false;
-        if (signature == null) {
-            signature = new ArrayList<>();
-        } else {
-            signature.clear();
-        }
+        signature.clear();
     }
 
     /**
@@ -183,7 +156,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      *
      * @return {@code true} iff this was the first letter to be added to the signature, {@code false} otherwise.
      */
-    public boolean addToSignature(TransitionLabel<S, L> letter) {
+    boolean addToSignature(TransitionLabel<S, L> letter) {
         boolean first = signature.isEmpty();
         signature.add(letter);
         return first;
@@ -198,7 +171,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      *
      * @return the respective letter of the signature, or {@code null}.
      */
-    public @Nullable TransitionLabel<S, L> getSignatureLetter(int index) {
+    @Nullable TransitionLabel<S, L> getSignatureLetter(int index) {
         if (index < signature.size()) {
             return signature.get(index);
         }
@@ -210,7 +183,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      *
      * @return the reference.
      */
-    public ElementReference getBlockReference() {
+    ElementReference getBlockReference() {
         return blockReference;
     }
 
@@ -220,17 +193,8 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      * @param ref
      *         the reference.
      */
-    public void setBlockReference(ElementReference ref) {
+    void setBlockReference(ElementReference ref) {
         this.blockReference = ref;
-    }
-
-    /**
-     * Retrieves the signature of this state.
-     *
-     * @return the signature.
-     */
-    public List<TransitionLabel<S, L>> getSignature() {
-        return signature;
     }
 
     /**
@@ -238,13 +202,8 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      *
      * @return {@code true} if the containing block is a singleton, {@code false} otherwise.
      */
-    public boolean isSingletonBlock() {
+    boolean isSingletonBlock() {
         return block.size() == 1;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(originalState);
     }
 
     @Override

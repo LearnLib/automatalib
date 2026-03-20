@@ -103,7 +103,7 @@ abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I
         if (deterministic) {
             decodeBodyDet(in, result, alphabet, numStates, spDecoder, tpDecoder);
         } else {
-            decodeBodyNondet(in, result, alphabet, numStates, spDecoder, tpDecoder);
+            decodeBodyNonDet(in, result, alphabet, numStates, spDecoder, tpDecoder);
         }
 
         return result;
@@ -120,15 +120,15 @@ abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I
         decodeTransitionsDet(in, result, stateList, alphabet, tpDecoder);
     }
 
-    private void decodeBodyNondet(DataInput in,
+    private void decodeBodyNonDet(DataInput in,
                                   MutableAutomaton<S, I, ?, SP, TP> result,
                                   Alphabet<I> alphabet,
                                   int numStates,
                                   BlockPropertyDecoder<? extends SP> spDecoder,
                                   SinglePropertyDecoder<? extends TP> tpDecoder) throws IOException {
 
-        List<S> stateList = decodeStatesNondet(in, result, numStates, spDecoder);
-        decodeTransitionsNondet(in, result, stateList, alphabet, tpDecoder);
+        List<S> stateList = decodeStatesNonDet(in, result, numStates, spDecoder);
+        decodeTransitionsNonDet(in, result, stateList, alphabet, tpDecoder);
     }
 
     private List<S> decodeStatesDet(DataInput in,
@@ -169,7 +169,7 @@ abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I
         }
     }
 
-    private List<S> decodeStatesNondet(DataInput in,
+    private List<S> decodeStatesNonDet(DataInput in,
                                        MutableAutomaton<S, ?, ?, SP, ?> result,
                                        int numStates,
                                        BlockPropertyDecoder<? extends SP> decoder) throws IOException {
@@ -185,7 +185,7 @@ abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I
         return stateList;
     }
 
-    private void decodeTransitionsNondet(DataInput in,
+    private void decodeTransitionsNonDet(DataInput in,
                                          MutableAutomaton<S, I, ?, ?, TP> result,
                                          List<S> stateList,
                                          Alphabet<I> alphabet,

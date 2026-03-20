@@ -53,7 +53,7 @@ public interface VisualizationProvider {
     /**
      * Checks whether the provider is supported on the current platform.
      *
-     * @return {@code true} if the provider is able to visualiza, {@code false} otherwise
+     * @return {@code true} if the provider is able to visualize models on the current platform, {@code false} otherwise
      *
      * @see #visualize(Graph, List, boolean, Map)
      */

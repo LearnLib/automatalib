@@ -17,8 +17,8 @@ package net.automatalib.util.graph.traversal;
 
 final class BFRecord<N, D> {
 
-    public final N node;
-    public final D data;
+    final N node;
+    final D data;
 
     BFRecord(N node, D data) {
         this.node = node;

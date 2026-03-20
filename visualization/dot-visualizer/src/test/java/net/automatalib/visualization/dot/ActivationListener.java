@@ -22,7 +22,7 @@ import org.testng.ITestResult;
 import org.testng.SkipException;
 
 /**
- * This listener checks wether GUI tests can be executed and if so, sets up the necessary headless environments.
+ * This listener checks whether GUI tests can be executed and if so, sets up the necessary headless environments.
  */
 public class ActivationListener implements IInvokedMethodListener {
 

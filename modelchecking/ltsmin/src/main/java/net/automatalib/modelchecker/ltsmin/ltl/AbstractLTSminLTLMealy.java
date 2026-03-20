@@ -92,7 +92,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
     /**
      * Gets a set of outputs that need to be skipped while writing the Mealy machine to ETF.
      *
-     * @return the Colleciton.
+     * @return the Collection.
      */
     @Override
     public Collection<? super O> getSkipOutputs() {

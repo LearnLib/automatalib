@@ -22,7 +22,6 @@ import java.util.List;
 
 import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.concept.OutputAutomaton;
-import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.FSAVisualizationHelper;
@@ -33,10 +32,8 @@ import net.automatalib.visualization.VisualizationHelper;
 /**
  * {@code FiniteStateAcceptor}s accept regular languages.
  */
-public interface FiniteStateAcceptor<S, I> extends AcceptorTS<S, I>,
-                                                   UniversalAutomaton<S, I, S, Boolean, Void>,
-                                                   OutputAutomaton<S, I, S, Boolean>,
-                                                   SuffixOutput<I, Boolean> {
+public interface FiniteStateAcceptor<S, I>
+        extends AcceptorTS<S, I>, UniversalAutomaton<S, I, S, Boolean, Void>, OutputAutomaton<S, I, S, Boolean> {
 
     List<Boolean> STATE_PROPERTIES = Arrays.asList(Boolean.FALSE, Boolean.TRUE);
     List<Void> TRANSITION_PROPERTIES = Collections.singletonList(null);

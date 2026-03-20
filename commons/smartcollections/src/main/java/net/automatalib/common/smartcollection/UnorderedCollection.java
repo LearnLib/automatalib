@@ -255,8 +255,8 @@ public final class UnorderedCollection<E> extends AbstractSmartCollection<E> imp
      */
     private static class Reference<E> implements ElementReference {
 
-        public E element;
-        public int index;
+        E element;
+        int index;
 
         /**
          * Constructor.

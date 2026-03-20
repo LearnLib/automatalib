@@ -30,7 +30,7 @@ public final class ExceptionUtil {
      * Throws the given throwable if it is an unchecked exception.
      *
      * @param throwable
-     *         the throwable to analyse
+     *         the throwable to analyze
      */
     public static void throwIfUnchecked(@Nullable Throwable throwable) {
         if (throwable instanceof RuntimeException t) {

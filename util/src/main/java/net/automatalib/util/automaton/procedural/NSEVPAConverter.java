@@ -47,7 +47,7 @@ final class NSEVPAConverter {
         // prevent instantiation
     }
 
-    public static <I> SEVPA<?, I> convert(SPA<?, I> spa) {
+    static <I> SEVPA<?, I> convert(SPA<?, I> spa) {
         final Map<@Nullable I, List<Pair<Word<I>, Word<I>>>> contextPairs = computeContextPairs(spa);
         return constructNSEVPA(spa, contextPairs);
     }

@@ -53,27 +53,27 @@ class SplitTree<S, I, O> {
         this.sequence = Word.epsilon();
     }
 
-    public Map<O, SplitTree<S, I, O>> getSuccessors() {
+    Map<O, SplitTree<S, I, O>> getSuccessors() {
         return successors;
     }
 
-    public Map<S, S> getMapping() {
+    Map<S, S> getMapping() {
         return mapping;
     }
 
-    public Set<S> getPartition() {
+    Set<S> getPartition() {
         return partition;
     }
 
-    public Word<I> getSequence() {
+    Word<I> getSequence() {
         return sequence;
     }
 
-    public void setSequence(Word<I> sequence) {
+    void setSequence(Word<I> sequence) {
         this.sequence = sequence;
     }
 
-    public Optional<SplitTree<S, I, O>> findLowestSubsetNode(Set<S> nodes) {
+    Optional<SplitTree<S, I, O>> findLowestSubsetNode(Set<S> nodes) {
 
         for (SplitTree<S, I, O> st : successors.values()) {
             final Optional<SplitTree<S, I, O>> candidate = st.findLowestSubsetNode(nodes);

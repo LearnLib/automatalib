@@ -16,7 +16,7 @@
 package net.automatalib.common.smartcollection;
 
 /**
- * An intrusive version of a linked list. When using this linked list implementation, the elements themselve have to
+ * An intrusive version of a linked list. When using this linked list implementation, the elements themselves have to
  * store the reference to their successors and predecessors, i.e., must implement the {@link LinkedListEntry}
  * interface.
  * <p>

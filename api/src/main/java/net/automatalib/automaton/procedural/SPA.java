@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
@@ -57,8 +56,7 @@ import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
  * @param <I>
  *         input symbol type
  */
-public interface SPA<S, I>
-        extends ProceduralSystem<I, DFA<?, I>>, DeterministicAcceptorTS<S, I>, SuffixOutput<I, Boolean> {
+public interface SPA<S, I> extends ProceduralSystem<I, DFA<?, I>>, DeterministicAcceptorTS<S, I> {
 
     @Override
     default Collection<I> getProceduralInputs(Collection<I> constraints) {

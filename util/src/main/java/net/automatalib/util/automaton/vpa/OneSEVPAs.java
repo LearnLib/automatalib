@@ -731,9 +731,9 @@ public final class OneSEVPAs {
 
     private static class ReachResult<L, I> {
 
-        public final @Nullable L terminateLoc;
-        public final List<L> reachableLocs;
-        public final ArrayStorage<Word<I>> accessSequences;
+        final @Nullable L terminateLoc;
+        final List<L> reachableLocs;
+        final ArrayStorage<Word<I>> accessSequences;
 
         ReachResult(@Nullable L terminateLoc, List<L> reachableLocs, ArrayStorage<Word<I>> accessSequences) {
             this.terminateLoc = terminateLoc;

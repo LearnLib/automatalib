@@ -40,9 +40,9 @@ final class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
 
     static final class LastEdge<E, N, D> {
 
-        public final E edge;
-        public final N node;
-        public final D data;
+        final E edge;
+        final N node;
+        final D data;
 
         LastEdge(E edge, N node, D data) {
             this.edge = edge;

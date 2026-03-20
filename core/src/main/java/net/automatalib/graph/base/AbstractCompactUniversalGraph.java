@@ -15,13 +15,8 @@
  */
 package net.automatalib.graph.base;
 
-import net.automatalib.graph.MutableGraph;
-import net.automatalib.graph.MutableGraph.IntAbstraction;
-import net.automatalib.graph.concept.NodeIDs;
-
 public abstract class AbstractCompactUniversalGraph<E extends CompactEdge<EP>, NP, EP>
-        extends AbstractCompactGraph<E, NP, EP>
-        implements MutableGraph<Integer, E, NP, EP>, IntAbstraction<E, NP, EP>, NodeIDs<Integer> {
+        extends AbstractCompactGraph<E, NP, EP> {
 
     public AbstractCompactUniversalGraph() {
         // default constructor

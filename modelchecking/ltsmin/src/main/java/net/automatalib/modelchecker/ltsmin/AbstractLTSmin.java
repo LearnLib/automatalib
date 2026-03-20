@@ -28,7 +28,6 @@ import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.process.ProcessUtil;
 import net.automatalib.exception.FormatException;
 import net.automatalib.exception.ModelCheckingException;
-import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.etf.writer.AbstractETFWriter;
 import net.automatalib.serialization.fsm.parser.AbstractFSMParser;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
@@ -63,7 +62,7 @@ import org.slf4j.LoggerFactory;
  * @see AbstractETFWriter
  * @see AutomataLibSettings
  */
-public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, String, R>, LTSmin<I, A, R> {
+public abstract class AbstractLTSmin<I, A, R> implements LTSmin<I, A, R> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSmin.class);
 

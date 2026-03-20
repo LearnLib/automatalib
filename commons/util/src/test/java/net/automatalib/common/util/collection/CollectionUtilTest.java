@@ -125,12 +125,9 @@ public class CollectionUtilTest {
                         if (i3 != i1 && i3 != i2) {
                             for (int i4 = 0; i4 < n; i4++) {
                                 if (i4 != i1 && i4 != i2 && i4 != i3) {
-                                    final StringBuilder sb = new StringBuilder();
-                                    sb.append(COLLECTION.get(i1))
-                                      .append(COLLECTION.get(i2))
-                                      .append(COLLECTION.get(i3))
-                                      .append(COLLECTION.get(i4));
-                                    expected.add(sb.toString());
+                                    String str = String.valueOf(COLLECTION.get(i1)) + COLLECTION.get(i2) +
+                                                 COLLECTION.get(i3) + COLLECTION.get(i4);
+                                    expected.add(str);
                                 }
                             }
                         }

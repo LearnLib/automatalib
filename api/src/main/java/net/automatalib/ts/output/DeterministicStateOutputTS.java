@@ -19,7 +19,6 @@ import java.util.List;
 
 import net.automatalib.automaton.concept.StateOutput;
 import net.automatalib.ts.concept.DeterministicSuffixOutputTS;
-import net.automatalib.word.Word;
 
 /**
  * A deterministic state output transition system is a
@@ -36,7 +35,7 @@ import net.automatalib.word.Word;
  *         output symbol type
  */
 public interface DeterministicStateOutputTS<S, I, T, O>
-        extends DeterministicTraceableTS<S, I, T, O>, DeterministicSuffixOutputTS<S, I, T, Word<O>>, StateOutput<S, O> {
+        extends DeterministicTraceableTS<S, I, T, O>, StateOutput<S, O> {
 
     @Override
     default boolean trace(S state, Iterable<? extends I> input, List<? super O> output) {

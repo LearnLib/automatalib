@@ -212,10 +212,10 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 
     static final class Record<S, I> {
 
-        public final S automatonState;
-        public final Node treeNode;
-        public final I incomingInput;
-        public final Iterator<? extends I> inputIt;
+        final S automatonState;
+        final Node treeNode;
+        final I incomingInput;
+        final Iterator<? extends I> inputIt;
 
         Record(S automatonState, Node treeNode, I incomingInput, Iterator<? extends I> inputIt) {
             this.automatonState = automatonState;

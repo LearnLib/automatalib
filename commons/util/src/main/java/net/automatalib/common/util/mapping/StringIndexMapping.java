@@ -18,7 +18,7 @@ package net.automatalib.common.util.mapping;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
- * Class for transforming integer index values into string values (using latin characters, therefore effectively
+ * Class for transforming integer index values into string values (using Latin characters, therefore effectively
  * realizing a radix-26 representation of numbers).
  */
 public final class StringIndexMapping {

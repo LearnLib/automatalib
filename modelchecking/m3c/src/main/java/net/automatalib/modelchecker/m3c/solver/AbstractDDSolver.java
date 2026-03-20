@@ -86,7 +86,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
-    @SuppressWarnings("assignment") // validateCFPS verifies that mainProcess is a key in cfmps.getPMPGs()
+    @SuppressWarnings("assignment") // validateCFMPS verifies that mainProcess is a key in cfmps.getPMPGs()
     private AbstractDDSolver(L mainProcess, ContextFreeModalProcessSystem<L, AP> cfmps) {
         final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs = cfmps.getPMPGs();
 
@@ -206,6 +206,8 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         }
     }
 
+    // this needs to be public for our children to implement the respective interfaces
+    @SuppressWarnings("PMD.PublicMemberInNonPublicType")
     public boolean solve(FormulaNode<L, AP> formula) {
         final FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
 
@@ -220,7 +222,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         }
     }
 
-    public SolverHistory<T, L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
+    SolverHistory<T, L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
         final List<SolverState<?, T, L, AP>> history = new ArrayList<>();
         final FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
 

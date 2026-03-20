@@ -319,9 +319,9 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
 
     private static final class FindLiveRecord<S, I> {
 
-        public final S state;
-        public final I incomingInput;
-        public final Iterator<? extends I> inputIt;
+        final S state;
+        final I incomingInput;
+        final Iterator<? extends I> inputIt;
 
         FindLiveRecord(S state, I incomingInput, Iterator<? extends I> inputIt) {
             this.state = state;

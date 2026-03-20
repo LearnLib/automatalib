@@ -22,7 +22,6 @@ import java.util.Objects;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SBA;
-import net.automatalib.ts.simple.SimpleDTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -33,7 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input symbol type
  */
-public class StackSBA<S, I> implements SBA<StackState<S, I, DFA<S, I>>, I>, SimpleDTS<StackState<S, I, DFA<S, I>>, I> {
+public class StackSBA<S, I> implements SBA<StackState<S, I, DFA<S, I>>, I> {
 
     private final ProceduralInputAlphabet<I> alphabet;
     private final @Nullable I initialCall;

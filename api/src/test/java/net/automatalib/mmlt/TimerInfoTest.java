@@ -27,7 +27,7 @@ public class TimerInfoTest {
     }
 
     @Test
-    public void testOneshotTransformation() {
+    public void testOneShotTransformation() {
         TimerInfo<?, String> timer = new TimerInfo<>("t", 12, "out", null);
         TimerInfo<?, String> oneShot = timer.asOneShot();
 

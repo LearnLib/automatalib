@@ -18,7 +18,6 @@ package net.automatalib.alphabet.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.VPAlphabet;
 
 /**
@@ -28,7 +27,7 @@ import net.automatalib.alphabet.VPAlphabet;
  * @param <I>
  *         input symbol type
  */
-public class GrowingVPAlphabet<I> extends AbstractVPAlphabet<VPSym<I>> implements VPAlphabet<VPSym<I>> {
+public class GrowingVPAlphabet<I> extends AbstractVPAlphabet<VPSym<I>> {
 
     private final List<VPSym<I>> allSyms;
     private final List<VPSym<I>> callSyms;
@@ -91,7 +90,7 @@ public class GrowingVPAlphabet<I> extends AbstractVPAlphabet<VPSym<I>> implement
         return idx < allSyms.size() && allSyms.get(idx) == symbol;
     }
 
-    private static class AlphabetView<I> extends AbstractAlphabet<VPSym<I>> implements Alphabet<VPSym<I>> {
+    private static class AlphabetView<I> extends AbstractAlphabet<VPSym<I>> {
 
         private final List<VPSym<I>> list;
 

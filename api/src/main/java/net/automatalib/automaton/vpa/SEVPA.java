@@ -20,7 +20,6 @@ import java.util.List;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
-import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
@@ -40,11 +39,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input alphabet type
  */
-public interface SEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>,
-                                     SuffixOutput<I, Boolean>,
-                                     InputAlphabetHolder<I>,
-                                     GraphViewable,
-                                     FiniteRepresentation {
+public interface SEVPA<L, I>
+        extends DeterministicAcceptorTS<State<L>, I>, InputAlphabetHolder<I>, GraphViewable, FiniteRepresentation {
 
     @Override
     VPAlphabet<I> getInputAlphabet();

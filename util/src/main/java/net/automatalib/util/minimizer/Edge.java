@@ -28,9 +28,6 @@ final class Edge<S, T> {
     // source state
     private final State<S, T> source;
 
-    // target state
-    private final State<S, T> target;
-
     // transition label
     private final TransitionLabel<S, T> transitionLabel;
 
@@ -39,14 +36,11 @@ final class Edge<S, T> {
      *
      * @param source
      *         the source state.
-     * @param target
-     *         the target state.
      * @param transitionLabel
      *         the transition label.
      */
-    Edge(State<S, T> source, State<S, T> target, TransitionLabel<S, T> transitionLabel) {
+    Edge(State<S, T> source, TransitionLabel<S, T> transitionLabel) {
         this.source = source;
-        this.target = target;
         this.transitionLabel = transitionLabel;
     }
 
@@ -55,7 +49,7 @@ final class Edge<S, T> {
      *
      * @return the source state.
      */
-    public State<S, T> getSource() {
+    State<S, T> getSource() {
         return source;
     }
 
@@ -64,22 +58,8 @@ final class Edge<S, T> {
      *
      * @return the transition label.
      */
-    public TransitionLabel<S, T> getTransitionLabel() {
+    TransitionLabel<S, T> getTransitionLabel() {
         return transitionLabel;
-    }
-
-    /**
-     * Retrieves the target state.
-     *
-     * @return the target state.
-     */
-    public State<S, T> getTarget() {
-        return target;
-    }
-
-    @Override
-    public String toString() {
-        return "(" + source + ", " + transitionLabel + ", " + target + ")";
     }
 
 }

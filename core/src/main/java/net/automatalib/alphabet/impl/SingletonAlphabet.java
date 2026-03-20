@@ -25,7 +25,7 @@ import net.automatalib.alphabet.Alphabet;
  * @param <I>
  *         input symbol type
  */
-public class SingletonAlphabet<I> extends AbstractAlphabet<I> implements Alphabet<I> {
+public class SingletonAlphabet<I> extends AbstractAlphabet<I> {
 
     private final I symbol;
 
@@ -46,7 +46,7 @@ public class SingletonAlphabet<I> extends AbstractAlphabet<I> implements Alphabe
         if (Objects.equals(this.symbol, symbol)) {
             return 0;
         }
-        throw new IllegalArgumentException("Symbol " + symbol + " is not contained in the alaphabet");
+        throw new IllegalArgumentException("Symbol " + symbol + " is not contained in the alphabet");
     }
 
     @Override

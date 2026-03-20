@@ -18,7 +18,6 @@ package net.automatalib.ts.output;
 import java.util.List;
 
 import net.automatalib.automaton.concept.Output;
-import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.concept.DeterministicSuffixOutputTS;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -40,8 +39,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         output symbol type
  */
-public interface DeterministicTraceableTS<S, I, T, O>
-        extends DeterministicTransitionSystem<S, I, T>, DeterministicSuffixOutputTS<S, I, T, Word<O>> {
+public interface DeterministicTraceableTS<S, I, T, O> extends DeterministicSuffixOutputTS<S, I, T, Word<O>> {
 
     /**
      * Convenience method for {@link #trace(Object, Iterable, List)} which uses this transition system's

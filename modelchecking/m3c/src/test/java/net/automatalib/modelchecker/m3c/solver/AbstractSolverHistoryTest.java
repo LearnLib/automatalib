@@ -84,7 +84,7 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
 
         testNodeIDs(data);
         testInitialPropertyTransformers(data, s1, s2);
-        testInitialSatisifedSubformulas(data, s1, s2);
+        testInitialSatisfiedSubformulas(data, s1, s2);
         testMustTransformers(history);
         testSolverStates(history, pmpg, initialNode, s1, s2);
 
@@ -128,7 +128,7 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
         }
     }
 
-    protected <N> void testInitialSatisifedSubformulas(SolverData<N, ?, String, String> data, N s1, N s2) {
+    protected <N> void testInitialSatisfiedSubformulas(SolverData<N, ?, String, String> data, N s1, N s2) {
 
         final ProceduralModalProcessGraph<N, String, ?, String, ?> pmpg = data.getPmpg();
         final Mapping<N, List<FormulaNode<String, String>>> initialSatisfiedSubformulas =
@@ -173,9 +173,9 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
     }
 
     protected <N, E> N getS1(ProceduralModalProcessGraph<N, String, E, String, ?> pmpg) {
-        final N initalNode = pmpg.getInitialNode();
+        final N initialNode = pmpg.getInitialNode();
         // the initial node is connected to s1 by an "a" labeled edge
-        for (E edge : pmpg.getOutgoingEdges(initalNode)) {
+        for (E edge : pmpg.getOutgoingEdges(initialNode)) {
             if ("a".equals(pmpg.getEdgeLabel(edge))) {
                 return pmpg.getTarget(edge);
             }

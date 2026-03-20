@@ -161,8 +161,8 @@ public final class DeterministicEquivalenceTest {
 
     private static final class StatePair<S, S2> {
 
-        public final S ref;
-        public final S2 other;
+        final S ref;
+        final S2 other;
 
         StatePair(S ref, S2 other) {
             this.ref = ref;
@@ -172,8 +172,8 @@ public final class DeterministicEquivalenceTest {
 
     static final class Pred<I> {
 
-        public final @Nullable Pred<I> prev;
-        public final @Nullable I symbol;
+        final @Nullable Pred<I> prev;
+        final @Nullable I symbol;
 
         Pred() {
             this.prev = null;

@@ -117,14 +117,14 @@ public abstract class AbstractWordTest {
         Assert.assertEquals(testWord, unchanged);
 
         for (Word<?> other : all) {
-            Word<?> concated = testWord.concat(other, testWord);
-            Assert.assertEquals(2 * testWord.length() + other.length(), concated.length());
-            Assert.assertEquals(testWord, concated.subWord(0, testWord.length()));
-            Assert.assertEquals(other, concated.subWord(testWord.length(), testWord.length() + other.length()));
-            Assert.assertEquals(testWord, concated.subWord(testWord.length() + other.length(), concated.length()));
+            Word<?> concat = testWord.concat(other, testWord);
+            Assert.assertEquals(2 * testWord.length() + other.length(), concat.length());
+            Assert.assertEquals(testWord, concat.subWord(0, testWord.length()));
+            Assert.assertEquals(other, concat.subWord(testWord.length(), testWord.length() + other.length()));
+            Assert.assertEquals(testWord, concat.subWord(testWord.length() + other.length(), concat.length()));
 
-            Assert.assertTrue(testWord.isPrefixOf(concated));
-            Assert.assertTrue(testWord.isSuffixOf(concated));
+            Assert.assertTrue(testWord.isPrefixOf(concat));
+            Assert.assertTrue(testWord.isSuffixOf(concat));
         }
     }
 

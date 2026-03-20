@@ -24,7 +24,7 @@ import net.automatalib.exception.FormatException;
  */
 class FSMFormatException extends FormatException {
 
-    public static final String MESSAGE = "Unable to parse FSM: %s at line %d";
+    private static final String MESSAGE = "Unable to parse FSM: %s at line %d";
 
     FSMFormatException(String message, StreamTokenizer streamTokenizer) {
         super(String.format(MESSAGE, message, streamTokenizer.lineno()));

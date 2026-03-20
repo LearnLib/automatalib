@@ -47,15 +47,15 @@ class SplitTreeResult<S, I, O> {
     }
 
     @EnsuresNonNullIf(expression = "this.delegate", result = true)
-    public boolean isPresent() {
+    boolean isPresent() {
         return this.delegate != null;
     }
 
-    public @Nullable SplitTree<S, I, O> get() {
+    @Nullable SplitTree<S, I, O> get() {
         return this.delegate;
     }
 
-    public Set<S> getIndistinguishableStates() {
+    Set<S> getIndistinguishableStates() {
         return this.indistinguishableStates;
     }
 

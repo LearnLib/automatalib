@@ -16,14 +16,12 @@
 package net.automatalib.automaton.mmlt;
 
 import net.automatalib.automaton.concept.InputAlphabetHolder;
-import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.ts.output.MealyTransitionSystem;
-import net.automatalib.word.Word;
 
 /**
  * Defines the semantics of an MMLT.
@@ -49,7 +47,6 @@ import net.automatalib.word.Word;
  *         output symbol type
  */
 public interface MMLTSemantics<S, I, T, O> extends MealyTransitionSystem<State<S, O>, TimedInput<I>, T, TimedOutput<O>>,
-                                                   SuffixOutput<TimedInput<I>, Word<TimedOutput<O>>>,
                                                    InputAlphabetHolder<TimedInput<I>> {
 
     /**

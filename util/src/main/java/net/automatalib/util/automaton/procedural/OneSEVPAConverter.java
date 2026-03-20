@@ -38,7 +38,7 @@ final class OneSEVPAConverter {
         // prevent instantiation
     }
 
-    public static <I> OneSEVPA<?, I> convert(SPA<?, I> spa) {
+    static <I> OneSEVPA<?, I> convert(SPA<?, I> spa) {
         final List<Pair<Word<I>, Word<I>>> contextPairs = computeContextPairs(spa);
         return constructOneSEVPA(spa, contextPairs);
     }

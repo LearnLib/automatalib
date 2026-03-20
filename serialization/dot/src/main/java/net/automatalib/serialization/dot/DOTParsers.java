@@ -848,7 +848,7 @@ public final class DOTParsers {
     }
 
     /**
-     * Parser for {@link MMLT}s with {@link String}-based input and output symbols
+     * Parser for {@link MMLT}s with {@link String}-based input and output symbols.
      * <p>
      * Invokes {@link #mmlt(Function, Function, Object, SymbolCombiner)} with identity-based parsers and the given
      * {@code silentOutput} and {@code outputCombiner}.

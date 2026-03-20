@@ -32,7 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 final class EmptyWord<I> extends Word<I> {
 
-    public static final EmptyWord<?> INSTANCE = new EmptyWord<>();
+    static final EmptyWord<?> INSTANCE = new EmptyWord<>();
 
     @Override
     public int length() {

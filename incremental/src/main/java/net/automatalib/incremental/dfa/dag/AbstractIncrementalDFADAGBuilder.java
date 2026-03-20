@@ -508,11 +508,11 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
 
     private static final class Record<S, I> {
 
-        public final State state1;
-        public final S state2;
-        public final I reachedVia;
-        public final @Nullable Record<S, I> reachedFrom;
-        public final int depth;
+        final State state1;
+        final S state2;
+        final I reachedVia;
+        final @Nullable Record<S, I> reachedFrom;
+        final int depth;
 
         @SuppressWarnings("nullness") // we will only access reachedVia after checking reachedFrom for null
         Record(State state1, S state2) {

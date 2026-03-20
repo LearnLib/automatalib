@@ -77,9 +77,9 @@ abstract class AbstractGraphCopy<N1, E1, N2, E2, NP2, EP2, G1 extends Indefinite
         return n2;
     }
 
-    public Mapping<N1, N2> getNodeMapping() {
+    Mapping<N1, N2> getNodeMapping() {
         return nodeMapping;
     }
 
-    public abstract void doCopy();
+    abstract void doCopy();
 }

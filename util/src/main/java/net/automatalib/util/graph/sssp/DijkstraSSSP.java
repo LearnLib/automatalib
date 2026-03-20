@@ -185,11 +185,11 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
     @SuppressWarnings("PMD.OverrideBothEqualsAndHashCodeOnComparable")
     private static final class Record<N, E> implements Comparable<Record<N, E>> {
 
-        public final N node;
-        public float dist;
-        public @Nullable ElementReference ref;
-        public @PolyNull E reach;
-        public @PolyNull Record<N, E> parent;
+        final N node;
+        float dist;
+        @Nullable ElementReference ref;
+        @PolyNull E reach;
+        @PolyNull Record<N, E> parent;
         int depth;
 
         Record(N node, float dist) {
