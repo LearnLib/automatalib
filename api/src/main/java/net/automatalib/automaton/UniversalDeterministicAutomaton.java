@@ -18,9 +18,11 @@ package net.automatalib.automaton;
 import java.util.function.IntFunction;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstractionImpl;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.StateIntAbstraction;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.StateIntAbstractionImpl;
 import net.automatalib.ts.UniversalDTS;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link DeterministicAutomaton} with state and transition properties.
@@ -48,98 +50,13 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
 
     @Override
     default FullIntAbstraction<T, SP, TP> fullIntAbstraction(int numInputs, IntFunction<? extends I> symMapping) {
-        return new UniversalDeterministicAbstractions.FullIntAbstraction<>(stateIntAbstraction(),
-                                                                           numInputs,
-                                                                           symMapping);
+        return new FullIntAbstractionImpl<>(stateIntAbstraction(), numInputs, symMapping);
     }
 
     @Override
     default StateIntAbstraction<I, T, SP, TP> stateIntAbstraction() {
-        return new UniversalDeterministicAbstractions.StateIntAbstraction<>(this);
+        return new StateIntAbstractionImpl<>(this);
     }
 
-    /**
-     * Base interface for {@link DeterministicAutomaton.IntAbstraction integer abstractions} of a {@link
-     * UniversalDeterministicAutomaton}.
-     *
-     * @param <T>
-     *         transition type
-     * @param <SP>
-     *         state property type
-     * @param <TP>
-     *         transition property type
-     */
-    interface IntAbstraction<T, SP, TP> extends DeterministicAutomaton.IntAbstraction<T> {
-
-        /**
-         * Retrieves the state property of a given (abstracted) state.
-         *
-         * @param state
-         *         the integer representing the state of which to retrieve the property
-         *
-         * @return the property for the given state
-         */
-        SP getStateProperty(int state);
-
-        /**
-         * Retrieves the transition property of a given transition.
-         *
-         * @param transition
-         *         the transition of which to retrieve the property
-         *
-         * @return the property for the given transition
-         */
-        TP getTransitionProperty(T transition);
-    }
-
-    /**
-     * Interface for {@link DeterministicAutomaton.StateIntAbstraction state integer abstractions} of a {@link
-     * UniversalDeterministicAutomaton}.
-     *
-     * @param <I>
-     *         input symbol type
-     * @param <T>
-     *         transition type
-     * @param <SP>
-     *         state property type
-     * @param <TP>
-     *         transition property type
-     */
-    interface StateIntAbstraction<I, T, SP, TP>
-            extends IntAbstraction<T, SP, TP>, DeterministicAutomaton.StateIntAbstraction<I, T> {
-
-        default @Nullable TP getTransitionProperty(int state, I input) {
-            T trans = getTransition(state, input);
-            if (trans != null) {
-                return getTransitionProperty(trans);
-            }
-            return null;
-        }
-
-    }
-
-    /**
-     * Interface for {@link DeterministicAutomaton.FullIntAbstraction full integer abstractions} of a {@link
-     * UniversalDeterministicAutomaton}.
-     *
-     * @param <T>
-     *         transition type
-     * @param <SP>
-     *         state property type
-     * @param <TP>
-     *         transition property type
-     */
-    interface FullIntAbstraction<T, SP, TP>
-            extends IntAbstraction<T, SP, TP>, DeterministicAutomaton.FullIntAbstraction<T> {
-
-        default @Nullable TP getTransitionProperty(int state, int input) {
-            T trans = getTransition(state, input);
-            if (trans != null) {
-                return getTransitionProperty(trans);
-            }
-            return null;
-        }
-
-    }
 }
 

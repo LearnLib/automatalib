@@ -29,6 +29,7 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.comparison.CmpUtil;
+import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
 import net.automatalib.util.automaton.random.RandomAutomata;
@@ -100,16 +101,17 @@ public class WpMethodTestsIteratorTest {
 
     }
 
-    private <S, I> List<Word<I>> generateWpMethodTest(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+    private <S, I> List<Word<I>> generateWpMethodTest(UniversalSemantics<S, I, ?, ?> semantics,
                                                       Collection<? extends I> inputs,
                                                       List<Word<I>> middleParts) {
 
+        final UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton = semantics.getSemantics();
         final List<Word<I>> stateCover = new ArrayList<>(automaton.size());
         final List<Word<I>> transitionCover = new ArrayList<>(automaton.size() * inputs.size());
         final List<Word<I>> characterizingSet = new ArrayList<>();
 
-        Covers.cover(automaton, inputs, stateCover, transitionCover);
-        CharacterizingSets.findCharacterizingSet(automaton, inputs, characterizingSet);
+        Covers.cover(semantics, inputs, stateCover, transitionCover);
+        CharacterizingSets.findCharacterizingSet(semantics, inputs, characterizingSet);
 
         Assert.assertFalse(stateCover.isEmpty());
         Assert.assertFalse(transitionCover.isEmpty());
@@ -135,7 +137,7 @@ public class WpMethodTestsIteratorTest {
                 final S s = automaton.getState(prefixWithMiddle);
 
                 final List<Word<I>> suffixes = new ArrayList<>();
-                CharacterizingSets.findCharacterizingSet(automaton, inputs, s, suffixes);
+                CharacterizingSets.findCharacterizingSet(semantics, inputs, s, suffixes);
                 assert !suffixes.isEmpty();
 
                 for (Word<I> suffix : suffixes) {

@@ -22,9 +22,9 @@ import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.Automaton;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.Pair;
+import net.automatalib.semantics.FiniteSemantics.SimpleSemantics;
 import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.util.automaton.random.TabakovVardiRandomAutomata;
 import org.testng.Assert;
@@ -95,15 +95,15 @@ public class BisimulationTest {
         Assert.assertTrue(testBisimulationEquivalence(a, b, alphabet));
     }
 
-    private static <AS, I, AT, A extends Automaton<AS, I, AT>, BS, BT, B extends Automaton<BS, I, BT>> boolean testBisimulationEquivalence(
+    private static <AS, I, A extends SimpleSemantics<AS, I>, BS, B extends SimpleSemantics<BS, I>> boolean testBisimulationEquivalence(
             A a,
             B b,
             Collection<I> inputs) {
 
         Set<Pair<AS, BS>> bisim = Bisimulation.bisimulationEquivalenceRelation(a, b, inputs);
 
-        Set<AS> statesA = new HashSet<>(a.getStates());
-        Set<BS> statesB = new HashSet<>(b.getStates());
+        Set<AS> statesA = new HashSet<>(a.getSemantics().getStates());
+        Set<BS> statesB = new HashSet<>(b.getSemantics().getStates());
 
         for (Pair<AS, BS> p : bisim) {
             statesA.remove(p.getFirst());

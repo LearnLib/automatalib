@@ -22,10 +22,13 @@ import java.util.Queue;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstraction;
+import net.automatalib.automaton.concept.FinSem;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.common.util.IntDisjointSets;
 import net.automatalib.common.util.UnionFindRemSP;
+import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -41,10 +44,11 @@ public final class NearLinearEquivalenceTest {
         // prevent instantiation
     }
 
-    public static <S, I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, ?, ?, ?> target,
-                                                              S init1,
-                                                              S init2,
-                                                              Collection<? extends I> inputs) {
+    public static <S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?> & FinSem> @Nullable Word<I> findSeparatingWord(
+            A target,
+            S init1,
+            S init2,
+            Collection<? extends I> inputs) {
         return findSeparatingWord(target, init1, init2, inputs, false);
     }
 
@@ -71,11 +75,12 @@ public final class NearLinearEquivalenceTest {
      *
      * @return A word separating the two states, {@code null} if no such word can be found
      */
-    public static <S, I, T> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
-                                                                 S init1,
-                                                                 S init2,
-                                                                 Collection<? extends I> inputs,
-                                                                 boolean ignoreUndefinedTransitions) {
+    public static <S, I, T, A extends UniversalDeterministicAutomaton<S, I, T, ?, ?> & FinSem> @Nullable Word<I> findSeparatingWord(
+            A target,
+            S init1,
+            S init2,
+            Collection<? extends I> inputs,
+            boolean ignoreUndefinedTransitions) {
 
         Object sprop1 = target.getStateProperty(init1);
         Object sprop2 = target.getStateProperty(init2);
@@ -173,13 +178,20 @@ public final class NearLinearEquivalenceTest {
         return wb.toWord();
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,
-                                                           UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+    public static <I> @Nullable Word<I> findSeparatingWord(UniversalSemantics<?, I, ?, ?> target,
+                                                           UniversalSemantics<?, I, ?, ?> other,
                                                            Collection<? extends I> inputs) {
         return findSeparatingWord(target, other, inputs, false);
     }
 
-    public static <S, S2, I, T, T2, SP, SP2, TP, TP2> @Nullable Word<I> findSeparatingWord(
+    public static <I> @Nullable Word<I> findSeparatingWord(UniversalSemantics<?, I, ?, ?> target,
+                                                           UniversalSemantics<?, I, ?, ?> other,
+                                                           Collection<? extends I> inputs,
+                                                           boolean ignoreUndefinedTransitions) {
+        return findSeparatingWord(target.getSemantics(), other.getSemantics(), inputs, ignoreUndefinedTransitions);
+    }
+
+    private static <S, S2, I, T, T2, SP, SP2, TP, TP2> @Nullable Word<I> findSeparatingWord(
             UniversalDeterministicAutomaton<S, I, T, SP, TP> target,
             UniversalDeterministicAutomaton<S2, I, T2, SP2, TP2> other,
             Collection<? extends I> inputs,
@@ -305,19 +317,27 @@ public final class NearLinearEquivalenceTest {
         return wb.toWord();
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,
-                                                           UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+    public static <I> @Nullable Word<I> findSeparatingWord(UniversalSemantics<?, I, ?, ?> target,
+                                                           UniversalSemantics<?, I, ?, ?> other,
                                                            Alphabet<I> inputs) {
         return findSeparatingWord(target, other, inputs, false);
     }
 
-    public static <S, S2, I, T, T2, SP, SP2, TP, TP2> @Nullable Word<I> findSeparatingWord(
+    public static <I> @Nullable Word<I> findSeparatingWord(UniversalSemantics<?, I, ?, ?> target,
+                                                           UniversalSemantics<?, I, ?, ?> other,
+                                                           Alphabet<I> inputs,
+                                                           boolean ignoreUndefinedTransitions) {
+        return findSeparatingWord(target.getSemantics(), other.getSemantics(), inputs, ignoreUndefinedTransitions);
+    }
+
+    private static <S, S2, I, T, T2, SP, SP2, TP, TP2> @Nullable Word<I> findSeparatingWord(
             UniversalDeterministicAutomaton<S, I, T, SP, TP> target,
             UniversalDeterministicAutomaton<S2, I, T2, SP2, TP2> other,
             Alphabet<I> inputs,
             boolean ignoreUndefinedTransitions) {
-        UniversalDeterministicAutomaton.FullIntAbstraction<T, SP, TP> absTarget = target.fullIntAbstraction(inputs);
-        UniversalDeterministicAutomaton.FullIntAbstraction<T2, SP2, TP2> absOther = other.fullIntAbstraction(inputs);
+
+        FullIntAbstraction<T, SP, TP> absTarget = target.fullIntAbstraction(inputs);
+        FullIntAbstraction<T2, SP2, TP2> absOther = other.fullIntAbstraction(inputs);
 
         int init1 = absTarget.getIntInitialState();
         int init2 = absOther.getIntInitialState();
@@ -430,7 +450,8 @@ public final class NearLinearEquivalenceTest {
         private final @Nullable Record<S, S2, I> reachedFrom;
         private final int depth;
 
-        @SuppressWarnings("nullness") // we will only access reachedBy after checking reachedFrom for null
+        @SuppressWarnings("nullness")
+            // we will only access reachedBy after checking reachedFrom for null
         Record(S state1, S2 state2) {
             this(state1, state2, null, null);
         }

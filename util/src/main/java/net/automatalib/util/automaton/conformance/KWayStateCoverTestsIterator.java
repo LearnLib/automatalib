@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.automaton.concept.FinSem;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.collection.CollectionUtil;
@@ -60,7 +61,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <A>
  *         automaton type
  */
-public class KWayStateCoverTestsIterator<S, I, A extends DeterministicAutomaton<S, I, ?>>
+public class KWayStateCoverTestsIterator<S, I, A extends DeterministicAutomaton<S, I, ?> & FinSem>
         extends AbstractSimplifiedIterator<Word<I>> {
 
     /**

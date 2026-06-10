@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
+import net.automatalib.automaton.abstraction.SimpleDeterministicAbstractions;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstraction;
 import net.automatalib.common.util.array.ArrayUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -49,7 +49,7 @@ public final class HopcroftInitializers {
      *
      * @return the initialized partition refinement data structure
      */
-    public static Hopcroft initializeComplete(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> abs,
+    public static Hopcroft initializeComplete(FullIntAbstraction<?, ?, ?> abs,
                                               AutomatonInitialPartitioning ip,
                                               boolean pruneUnreachable) {
         return initializeComplete(abs, ip.initialClassifier(abs), pruneUnreachable);
@@ -73,7 +73,7 @@ public final class HopcroftInitializers {
      *
      * @return the initialized partition refinement data structure
      */
-    public static Hopcroft initializeComplete(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+    public static Hopcroft initializeComplete(SimpleDeterministicAbstractions.FullIntAbstraction abs,
                                               IntFunction<?> initialClassification,
                                               boolean pruneUnreachable) {
 
@@ -82,7 +82,7 @@ public final class HopcroftInitializers {
                 initializeCompleteNoPrune(abs, initialClassification);
     }
 
-    private static Hopcroft initializeCompletePrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+    private static Hopcroft initializeCompletePrune(SimpleDeterministicAbstractions.FullIntAbstraction abs,
                                                     IntFunction<?> initialClassification) {
 
         final Hopcroft pt = new Hopcroft();
@@ -156,7 +156,7 @@ public final class HopcroftInitializers {
         return pt;
     }
 
-    private static Hopcroft initializeCompleteNoPrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+    private static Hopcroft initializeCompleteNoPrune(SimpleDeterministicAbstractions.FullIntAbstraction abs,
                                                       IntFunction<?> initialClassification) {
         Hopcroft pt = new Hopcroft();
         int numStates = abs.size();
@@ -213,7 +213,7 @@ public final class HopcroftInitializers {
         return pt;
     }
 
-    public static Hopcroft initializePartial(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> abs,
+    public static Hopcroft initializePartial(FullIntAbstraction<?, ?, ?> abs,
                                              AutomatonInitialPartitioning ip,
                                              Object sinkClassification,
                                              boolean pruneUnreachable) {
@@ -237,7 +237,7 @@ public final class HopcroftInitializers {
      *
      * @return the initialized partition refinement data structure
      */
-    public static Hopcroft initializePartial(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+    public static Hopcroft initializePartial(SimpleDeterministicAbstractions.FullIntAbstraction abs,
                                              IntFunction<?> initialClassification,
                                              Object sinkClassification,
                                              boolean pruneUnreachable) {
@@ -246,7 +246,7 @@ public final class HopcroftInitializers {
                 initializePartialNoPrune(abs, initialClassification, sinkClassification);
     }
 
-    private static Hopcroft initializePartialPrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+    private static Hopcroft initializePartialPrune(SimpleDeterministicAbstractions.FullIntAbstraction abs,
                                                    IntFunction<?> initialClassification,
                                                    Object sinkClassification) {
 
@@ -363,7 +363,7 @@ public final class HopcroftInitializers {
         return pt;
     }
 
-    private static Hopcroft initializePartialNoPrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
+    private static Hopcroft initializePartialNoPrune(SimpleDeterministicAbstractions.FullIntAbstraction abs,
                                                      IntFunction<?> initialClassification,
                                                      Object sinkClassification) {
 

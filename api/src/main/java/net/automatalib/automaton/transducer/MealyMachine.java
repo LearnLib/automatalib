@@ -18,16 +18,24 @@ package net.automatalib.automaton.transducer;
 import java.util.Collection;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.FinSem;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.MealyVisualizationHelper;
 import net.automatalib.graph.UniversalGraph;
+import net.automatalib.semantics.DeterministicFiniteSemantics.FullSemantics;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
 
 public interface MealyMachine<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, T, Void, O>,
                                                   TransitionOutputAutomaton<S, I, T, O>,
-                                                  MealyTransitionSystem<S, I, T, O> {
+                                                  MealyTransitionSystem<S, I, T, O>, FinSem,
+                                                  FullSemantics<S, I, T, Void, O> {
+
+    @Override
+    default MealyMachine<S, I, T, O> getSemantics() {
+        return this;
+    }
 
     @Override
     default UniversalGraph<S, TransitionEdge<I, T>, Void, TransitionEdge.Property<I, O>> transitionGraphView(Collection<? extends I> inputs) {

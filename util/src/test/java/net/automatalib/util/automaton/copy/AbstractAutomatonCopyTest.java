@@ -22,10 +22,11 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.ShrinkableAutomaton;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.Shrinkable;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.predicate.TransitionPredicates;
@@ -142,21 +143,21 @@ public abstract class AbstractAutomatonCopyTest {
 
         for (S s : automaton) {
             if (stateFilterForRemoval.test(s)) {
-                ShrinkableAutomaton.unlinkState(automaton, s, null, alphabet);
+                Shrinkable.unlinkState(automaton, s, null, alphabet);
             }
         }
     }
 
-    private <A extends MutableDeterministic<S, I, T, SP, TP>, S, I, T, SP, TP> void checkEquivalence(A source,
-                                                                                                     Alphabet<I> alphabet,
-                                                                                                     AutomatonCreator<A, I> targetCreator) {
+    private <A extends MutableDeterministic<S, I, T, SP, TP> & UniversalSemantics<?, I, ?, ?>, S, I, T, SP, TP> void checkEquivalence(A source,
+                                                                                                                          Alphabet<I> alphabet,
+                                                                                                                          AutomatonCreator<A, I> targetCreator) {
         final A target = targetCreator.createAutomaton(alphabet);
         AutomatonLowLevelCopy.copy(getCopyMethod(), source, alphabet, target);
 
         Assert.assertTrue(Automata.testEquivalence(source, target, alphabet));
     }
 
-    private <A extends MutableDeterministic<S, I, T, SP, TP>, S, I, T, SP, TP> void checkFilteredEquivalence(A source,
+    private <A extends MutableDeterministic<S, I, T, SP, TP> & UniversalSemantics<?, I, ?, ?>, S, I, T, SP, TP> void checkFilteredEquivalence(A source,
                                                                                                              Alphabet<I> alphabet,
                                                                                                              AutomatonCreator<A, I> targetCreator,
                                                                                                              Predicate<S> sPred,

@@ -19,9 +19,9 @@ import java.util.Collection;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Symbol;
+import net.automatalib.automaton.abstraction.SimpleDeterministicAbstractions.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.SimpleDeterministicAbstractions.StateIntAbstraction;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
-import net.automatalib.automaton.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
-import net.automatalib.automaton.simple.SimpleDeterministicAutomaton.StateIntAbstraction;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.util.TestUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;

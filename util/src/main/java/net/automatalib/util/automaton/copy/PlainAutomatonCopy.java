@@ -29,13 +29,13 @@ final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2>
         extends AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2, Automaton<S1, ? super I1, T1>> {
 
     PlainAutomatonCopy(Automaton<S1, ? super I1, T1> in,
-                              Collection<? extends I1> inputs,
-                              MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
-                              Function<? super I1, ? extends I2> inputsMapping,
-                              Function<? super S1, ? extends SP2> spMapping,
-                              Function<? super T1, ? extends TP2> tpMapping,
-                              Predicate<? super S1> stateFilter,
-                              TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
+                       Collection<? extends I1> inputs,
+                       MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
+                       Function<? super I1, ? extends I2> inputsMapping,
+                       Function<? super S1, ? extends SP2> spMapping,
+                       Function<? super T1, ? extends TP2> tpMapping,
+                       Predicate<? super S1> stateFilter,
+                       TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
         super(in, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transFilter);
     }
 

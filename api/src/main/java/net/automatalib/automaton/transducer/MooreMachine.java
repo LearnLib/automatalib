@@ -23,12 +23,19 @@ import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.MooreVisualizationHelper;
 import net.automatalib.graph.UniversalGraph;
+import net.automatalib.semantics.DeterministicFiniteSemantics.FullSemantics;
 import net.automatalib.ts.output.MooreTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
 
 public interface MooreMachine<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, T, O, Void>,
                                                   StateOutputAutomaton<S, I, T, O>,
-                                                  MooreTransitionSystem<S, I, T, O> {
+                                                  MooreTransitionSystem<S, I, T, O>,
+                                                  FullSemantics<S, I, T, O, Void> {
+
+    @Override
+    default MooreMachine<S, I, T, O> getSemantics() {
+        return this;
+    }
 
     @Override
     default UniversalGraph<S, TransitionEdge<I, T>, O, Property<I, Void>> transitionGraphView(Collection<? extends I> inputs) {

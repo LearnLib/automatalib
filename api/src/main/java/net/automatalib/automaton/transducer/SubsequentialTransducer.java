@@ -26,6 +26,7 @@ import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.SSTVisualizationHelper;
 import net.automatalib.graph.UniversalGraph;
+import net.automatalib.semantics.DeterministicFiniteSemantics.FullSemantics;
 import net.automatalib.ts.concept.DeterministicOutputTS;
 import net.automatalib.ts.output.DeterministicTraceableTS;
 import net.automatalib.visualization.VisualizationHelper;
@@ -53,7 +54,13 @@ import net.automatalib.word.Word;
  */
 public interface SubsequentialTransducer<S, I, T, O> extends DeterministicTraceableTS<S, I, T, O>,
                                                              DeterministicSuffixOutputAutomaton<S, I, T, Word<O>>,
-                                                             UniversalDeterministicAutomaton<S, I, T, Word<O>, Word<O>> {
+                                                             UniversalDeterministicAutomaton<S, I, T, Word<O>, Word<O>>,
+                                                             FullSemantics<S, I, T, Word<O>, Word<O>> {
+
+    @Override
+    default SubsequentialTransducer<S, I, T, O> getSemantics() {
+        return this;
+    }
 
     @Override
     default boolean trace(S state, Iterable<? extends I> input, List<? super O> output) {

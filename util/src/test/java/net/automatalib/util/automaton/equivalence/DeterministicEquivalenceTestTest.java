@@ -27,6 +27,7 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.function.BiIntFunction;
+import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest.ArrayRegistry;
 import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest.MapRegistry;
 import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest.Pred;
@@ -158,29 +159,32 @@ public class DeterministicEquivalenceTestTest {
         }
     }
 
-    private static <I> void testForEmptySepWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> a1,
-                                                UniversalDeterministicAutomaton<?, I, ?, ?, ?> a2,
+    private static <I> void testForEmptySepWord(UniversalSemantics<?, I, ?, ?> s1,
+                                                UniversalSemantics<?, I, ?, ?> s2,
                                                 Collection<? extends I> inputs) {
 
-        Assert.assertNull(DeterministicEquivalenceTest.findSeparatingWord(a1, a1, inputs));
-        Assert.assertNull(DeterministicEquivalenceTest.findSeparatingWord(a2, a2, inputs));
+        Assert.assertNull(DeterministicEquivalenceTest.findSeparatingWord(s1, s1, inputs));
+        Assert.assertNull(DeterministicEquivalenceTest.findSeparatingWord(s2, s2, inputs));
 
-        final Word<I> sepWord1 = DeterministicEquivalenceTest.findSeparatingWord(a1, a2, inputs);
+        final UniversalDeterministicAutomaton<?, I, ?, ?, ?> a1 = s1.getSemantics();
+        final UniversalDeterministicAutomaton<?, I, ?, ?, ?> a2 = s1.getSemantics();
+
+        final Word<I> sepWord1 = DeterministicEquivalenceTest.findSeparatingWord(s1, s2, inputs);
         Assert.assertEquals(sepWord1, Word.epsilon());
         Assert.assertNotEquals(a1.getState(sepWord1), a2.getState(sepWord1));
 
-        final Word<I> sepWord2 = DeterministicEquivalenceTest.findSeparatingWord(a2, a1, inputs);
+        final Word<I> sepWord2 = DeterministicEquivalenceTest.findSeparatingWord(s2, s1, inputs);
         Assert.assertEquals(sepWord2, Word.epsilon());
         Assert.assertNotEquals(a1.getState(sepWord2), a2.getState(sepWord2));
     }
 
-    private <I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, ?>> void testEquivalenceInternal(M a1,
+    private <I, M extends UniversalSemantics<?, I, ?, ?> & Output<I, ?>> void testEquivalenceInternal(M a1,
                                                                                                                       M a2,
                                                                                                                       Alphabet<I> alphabet,
                                                                                                                       boolean equivalent) {
         // explicitly assign type to (redundant) variables, otherwise javac complains
-        final UniversalDeterministicAutomaton<?, I, ?, ?, ?> m1 = a1;
-        final UniversalDeterministicAutomaton<?, I, ?, ?, ?> m2 = a2;
+        final UniversalSemantics<?, I, ?, ?> m1 = a1;
+        final UniversalSemantics<?, I, ?, ?> m2 = a2;
 
         final Word<I> separatingWord = DeterministicEquivalenceTest.findSeparatingWord(m1, m2, alphabet);
 

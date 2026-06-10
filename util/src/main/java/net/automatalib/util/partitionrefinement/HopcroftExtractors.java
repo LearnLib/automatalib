@@ -21,7 +21,8 @@ import java.util.function.IntFunction;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.SimpleDeterministicAbstractions;
 import net.automatalib.common.util.function.BiIntFunction;
 
 /**
@@ -67,7 +68,7 @@ public final class HopcroftExtractors {
     public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministic(Hopcroft hopcroft,
                                                                                                  AutomatonCreator<A, I> creator,
                                                                                                  Alphabet<I> inputs,
-                                                                                                 SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                                                                                 SimpleDeterministicAbstractions.FullIntAbstraction abs,
                                                                                                  IntFunction<? extends SP> spExtractor,
                                                                                                  BiIntFunction<? extends TP> tpExtractor,
                                                                                                  boolean pruneUnreachable) {
@@ -79,7 +80,7 @@ public final class HopcroftExtractors {
     private static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicPruned(Hopcroft hopcroft,
                                                                                                         AutomatonCreator<A, I> creator,
                                                                                                         Alphabet<I> inputs,
-                                                                                                        SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                                                                                        SimpleDeterministicAbstractions.FullIntAbstraction abs,
                                                                                                         IntFunction<? extends SP> spExtractor,
                                                                                                         BiIntFunction<? extends TP> tpExtractor) {
 
@@ -90,7 +91,7 @@ public final class HopcroftExtractors {
         Arrays.fill(stateMap, -1);
 
         final A result = creator.createAutomaton(inputs, numBlocks);
-        final MutableDeterministic.FullIntAbstraction<?, SP, TP> resultAbs = result.fullIntAbstraction(inputs);
+        final FullIntAbstraction<?, SP, TP> resultAbs = result.fullIntAbstraction(inputs);
 
         final int origInit = abs.getIntInitialState();
         final SP initSp = spExtractor.apply(origInit);
@@ -130,7 +131,7 @@ public final class HopcroftExtractors {
     private static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicUnpruned(Hopcroft hopcroft,
                                                                                                           AutomatonCreator<A, I> creator,
                                                                                                           Alphabet<I> inputs,
-                                                                                                          SimpleDeterministicAutomaton.FullIntAbstraction abs,
+                                                                                                          SimpleDeterministicAbstractions.FullIntAbstraction abs,
                                                                                                           IntFunction<? extends SP> spExtractor,
                                                                                                           BiIntFunction<? extends TP> tpExtractor) {
 
@@ -138,7 +139,7 @@ public final class HopcroftExtractors {
         int numInputs = inputs.size();
 
         A result = creator.createAutomaton(inputs, numBlocks);
-        MutableDeterministic.FullIntAbstraction<?, SP, TP> resultAbs = result.fullIntAbstraction(inputs);
+        FullIntAbstraction<?, SP, TP> resultAbs = result.fullIntAbstraction(inputs);
 
         for (int i = 0; i < numBlocks; i++) {
             resultAbs.addIntState();

@@ -19,7 +19,7 @@ import java.util.function.IntFunction;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstraction;
 
 /**
  * This enum allows to conveniently specify how the states of a deterministic automaton are initially partitioned when
@@ -32,7 +32,7 @@ public enum AutomatonInitialPartitioning {
      */
     BY_STATE_PROPERTY {
         @Override
-        public IntFunction<?> initialClassifier(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> automaton) {
+        public IntFunction<?> initialClassifier(FullIntAbstraction<?, ?, ?> automaton) {
             return automaton::getStateProperty;
         }
     },
@@ -51,7 +51,7 @@ public enum AutomatonInitialPartitioning {
      */
     BY_TRANSITION_PROPERTIES {
         @Override
-        public IntFunction<?> initialClassifier(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> automaton) {
+        public IntFunction<?> initialClassifier(FullIntAbstraction<?, ?, ?> automaton) {
             return s -> StateSignature.byTransitionProperties(automaton, s);
         }
     },
@@ -70,11 +70,11 @@ public enum AutomatonInitialPartitioning {
      */
     BY_FULL_SIGNATURE {
         @Override
-        public IntFunction<?> initialClassifier(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> automaton) {
+        public IntFunction<?> initialClassifier(FullIntAbstraction<?, ?, ?> automaton) {
             return s -> StateSignature.byFullSignature(automaton, s);
         }
     };
 
-    public abstract IntFunction<?> initialClassifier(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> automaton);
+    public abstract IntFunction<?> initialClassifier(FullIntAbstraction<?, ?, ?> automaton);
 
 }

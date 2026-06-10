@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.FullIntAbstraction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

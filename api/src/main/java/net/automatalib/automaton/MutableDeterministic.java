@@ -20,7 +20,10 @@ import java.util.Objects;
 import java.util.function.IntFunction;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.abstraction.MutableDeterministicAbstraction;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.FullIntAbstractionImpl;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.StateIntAbstraction;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.StateIntAbstractionImpl;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -148,87 +151,12 @@ public interface MutableDeterministic<S, I, T, SP, TP>
 
     @Override
     default FullIntAbstraction<T, SP, TP> fullIntAbstraction(int numInputs, IntFunction<? extends I> symMapping) {
-        return new MutableDeterministicAbstraction.FullIntAbstraction<>(stateIntAbstraction(), numInputs, symMapping);
+        return new FullIntAbstractionImpl<>(stateIntAbstraction(), numInputs, symMapping);
     }
 
     @Override
     default StateIntAbstraction<I, T, SP, TP> stateIntAbstraction() {
-        return new MutableDeterministicAbstraction.StateIntAbstraction<>(this);
+        return new StateIntAbstractionImpl<>(this);
     }
 
-    /**
-     * Base interface for {@link UniversalDeterministicAutomaton.IntAbstraction integer abstractions} of a {@link
-     * MutableDeterministic}.
-     *
-     * @param <T>
-     *         transition type
-     * @param <SP>
-     *         state property type
-     * @param <TP>
-     *         transition property type
-     */
-    interface IntAbstraction<T, SP, TP> extends UniversalDeterministicAutomaton.IntAbstraction<T, SP, TP> {
-
-        void setStateProperty(int state, SP property);
-
-        void setTransitionProperty(T transition, TP property);
-
-        void setInitialState(int state);
-
-        T createTransition(int successor, TP property);
-
-        default int addIntState() {
-            return addIntState(null);
-        }
-
-        int addIntState(@Nullable SP property);
-
-        default int addIntInitialState() {
-            return addIntInitialState(null);
-        }
-
-        int addIntInitialState(@Nullable SP property);
-    }
-
-    /**
-     * Interface for {@link UniversalDeterministicAutomaton.StateIntAbstraction state integer abstractions} of a {@link
-     * MutableDeterministic}.
-     *
-     * @param <I>
-     *         input symbol type
-     * @param <T>
-     *         transition type
-     * @param <SP>
-     *         state property type
-     * @param <TP>
-     *         transition property type
-     */
-    interface StateIntAbstraction<I, T, SP, TP>
-            extends IntAbstraction<T, SP, TP>, UniversalDeterministicAutomaton.StateIntAbstraction<I, T, SP, TP> {
-
-        void setTransition(int state, I input, @Nullable T transition);
-
-        void setTransition(int state, I input, int successor, TP property);
-
-    }
-
-    /**
-     * Interface for {@link UniversalDeterministicAutomaton.FullIntAbstraction full integer abstractions} of a {@link
-     * MutableDeterministic}.
-     *
-     * @param <T>
-     *         transition type
-     * @param <SP>
-     *         state property type
-     * @param <TP>
-     *         transition property type
-     */
-    interface FullIntAbstraction<T, SP, TP>
-            extends IntAbstraction<T, SP, TP>, UniversalDeterministicAutomaton.FullIntAbstraction<T, SP, TP> {
-
-        void setTransition(int state, int input, @Nullable T transition);
-
-        void setTransition(int state, int input, int successor, TP property);
-
-    }
 }

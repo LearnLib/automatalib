@@ -18,6 +18,7 @@ package net.automatalib.automaton;
 import java.util.Collection;
 
 import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.graph.UniversalGraph;
 import net.automatalib.ts.UniversalTransitionSystem;
@@ -41,7 +42,7 @@ public interface UniversalAutomaton<S, I, T, SP, TP>
         extends Automaton<S, I, T>, UniversalTransitionSystem<S, I, T, SP, TP> {
 
     @Override
-    default UniversalGraph<S, TransitionEdge<I, T>, SP, TransitionEdge.Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {
+    default UniversalGraph<S, TransitionEdge<I, T>, SP, Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {
         return new UniversalAutomatonGraphView<>(this, inputs);
     }
 

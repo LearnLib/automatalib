@@ -24,6 +24,7 @@ import java.util.Queue;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -38,8 +39,14 @@ public final class DeterministicEquivalenceTest {
         // prevent instantiation
     }
 
+    public static <I> @Nullable Word<I> findSeparatingWord(UniversalSemantics<?, I, ?, ?> reference,
+                                                           UniversalSemantics<?, I, ?, ?> other,
+                                                           Collection<? extends I> inputs) {
+        return findSeparatingWord(reference.getSemantics(), other.getSemantics(), inputs);
+    }
+
     @SuppressWarnings("PMD.UnnecessaryCast") // we want to cast to long, to prevent overflows
-    public static <I, S, T, SP, TP, S2, T2, SP2, TP2> @Nullable Word<I> findSeparatingWord(
+    private static <I, S, T, SP, TP, S2, T2, SP2, TP2> @Nullable Word<I> findSeparatingWord(
             UniversalDeterministicAutomaton<S, I, T, SP, TP> reference,
             UniversalDeterministicAutomaton<S2, I, T2, SP2, TP2> other,
             Collection<? extends I> inputs) {

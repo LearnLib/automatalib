@@ -21,14 +21,14 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.MutableDeterministic.IntAbstraction;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstraction;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
-import net.automatalib.automaton.impl.UniversalCompactDet;
+import net.automatalib.automaton.impl.UniversalCompactDetAutomaton;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
@@ -486,8 +486,8 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
-                                                                               Alphabet<I> alphabet) {
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+                                                                                        Alphabet<I> alphabet) {
         return minimizeUniversal(automaton, alphabet, PruningMode.PRUNE_AFTER);
     }
 
@@ -509,9 +509,9 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
-                                                                               Alphabet<I> alphabet,
-                                                                               PruningMode pruningMode) {
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+                                                                                        Alphabet<I> alphabet,
+                                                                                        PruningMode pruningMode) {
         return minimizeUniversal(automaton, alphabet, pruningMode, AutomatonInitialPartitioning.BY_FULL_SIGNATURE);
     }
 
@@ -535,11 +535,11 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
-                                                                               Alphabet<I> alphabet,
-                                                                               PruningMode pruningMode,
-                                                                               AutomatonInitialPartitioning ip) {
-        return minimizeUniversal(automaton, alphabet, pruningMode, ip, new UniversalCompactDet.Creator<>());
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+                                                                                        Alphabet<I> alphabet,
+                                                                                        PruningMode pruningMode,
+                                                                                        AutomatonInitialPartitioning ip) {
+        return minimizeUniversal(automaton, alphabet, pruningMode, ip, new UniversalCompactDetAutomaton.Creator<>());
     }
 
     /**
@@ -658,8 +658,9 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizePartialUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
-                                                                                      Alphabet<I> alphabet) {
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizePartialUniversal(
+            UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+            Alphabet<I> alphabet) {
         return minimizePartialUniversal(automaton, alphabet, PruningMode.PRUNE_AFTER);
     }
 
@@ -681,9 +682,10 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizePartialUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
-                                                                                      Alphabet<I> alphabet,
-                                                                                      PruningMode pruningMode) {
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizePartialUniversal(
+            UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+            Alphabet<I> alphabet,
+            PruningMode pruningMode) {
 
         return minimizePartialUniversal(automaton,
                                         alphabet,
@@ -714,18 +716,19 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDet<I, SP, TP> minimizePartialUniversal(UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
-                                                                                      Alphabet<I> alphabet,
-                                                                                      PruningMode pruningMode,
-                                                                                      AutomatonInitialPartitioning ip,
-                                                                                      Object sinkClassification) {
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizePartialUniversal(
+            UniversalDeterministicAutomaton<?, I, ?, SP, TP> automaton,
+            Alphabet<I> alphabet,
+            PruningMode pruningMode,
+            AutomatonInitialPartitioning ip,
+            Object sinkClassification) {
 
         return minimizePartialUniversal(automaton,
                                         alphabet,
                                         pruningMode,
                                         ip,
                                         sinkClassification,
-                                        new UniversalCompactDet.Creator<>());
+                                        new UniversalCompactDetAutomaton.Creator<>());
     }
 
     /**
@@ -787,11 +790,11 @@ public final class HopcroftMinimizer {
                                                                                                    Storage<SP> spStorage,
                                                                                                    Storage<TP> tpStorage) {
 
-        final MutableDeterministic.FullIntAbstraction<?, SP, TP> abs =
+        final MutableDeterministicAbstractions.FullIntAbstraction<?, SP, TP> abs =
                 automaton.fullIntAbstraction(Alphabets.fromCollection(alphabet));
 
         final int init = abs.getIntInitialState();
-        if (init == IntAbstraction.INVALID_STATE) {
+        if (init == MutableDeterministicAbstractions.IntAbstraction.INVALID_STATE) {
             automaton.clear();
             return automaton;
         }

@@ -24,11 +24,13 @@ import java.util.Map;
 
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.FinSem;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
 import net.automatalib.common.util.collection.AbstractTwoLevelIterator;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.collection.ReusableIterator;
+import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
 import net.automatalib.util.automaton.procedural.ATSequences;
@@ -36,7 +38,7 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>>
+class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & FinSem>
         extends AbstractTwoLevelIterator<I, Word<I>, Word<I>> {
 
     private static final List<List<Word<?>>> EPSILON =

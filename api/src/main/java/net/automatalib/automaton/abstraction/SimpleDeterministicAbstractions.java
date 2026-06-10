@@ -17,32 +17,112 @@ package net.automatalib.automaton.abstraction;
 
 import java.util.function.IntFunction;
 
+import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Default implementations for {@link SimpleDeterministicAutomaton} abstractions.
+ * Abstractions for {@link SimpleDeterministicAutomaton}s.
  */
 public interface SimpleDeterministicAbstractions {
 
     /**
+     * Basic interface for integer abstractions of automata. In an integer abstraction, each state of an automaton is
+     * identified with an integer in the range {@code [0, size() - 1]}. A similar abstraction may be imposed on the
+     * input symbols, this is however not prescribed by this interface (see {@link StateIntAbstraction} and
+     * {@link FullIntAbstraction}).
+     */
+    interface IntAbstraction extends FiniteRepresentation {
+
+        /**
+         * Representative for an invalid state. This is the value being returned by methods that would return
+         * {@code null} in their non-abstracted version. However, for determining whether a state is valid or not, code
+         * should never rely on the corresponding integer being equal to this value, since any integer outside the range
+         * {@code [0, size() - 1]} is invalid, in particular all negative integers.
+         */
+        int INVALID_STATE = -1;
+
+        /**
+         * Retrieves the initial state of the (abstracted) automaton as an integer. If the automaton has no initial
+         * state, {@link #INVALID_STATE} is returned.
+         *
+         * @return the integer representing the initial state, or {@link #INVALID_STATE}.
+         */
+        int getIntInitialState();
+
+    }
+
+    /**
+     * Interface for {@link IntAbstraction integer abstractions} of an automaton that operate on non-abstracted input
+     * symbols (i.e., input symbols are of type {@code I}).
+     *
+     * @param <I>
+     *         input symbol type
+     */
+    interface StateIntAbstraction<I> extends IntAbstraction {
+
+        /**
+         * Retrieves the (abstracted) successor state for a given (abstracted) source state and input symbol.
+         *
+         * @param state
+         *         the integer representing the source state
+         * @param input
+         *         the input symbol
+         *
+         * @return the integer representing the successor state, or {@link IntAbstraction#INVALID_STATE} if there is no
+         * successor state.
+         */
+        int getSuccessor(int state, I input);
+
+    }
+
+    /**
+     * Interface for an {@link IntAbstraction integer abstraction} that abstracts both states and input symbols to
+     * integers. In addition to the modalities specified in {@link IntAbstraction}, this interface prescribes that input
+     * symbols are abstracted to integers in the range {@code [0, numInputs() - 1]}.
+     */
+    interface FullIntAbstraction extends IntAbstraction {
+
+        /**
+         * Retrieves the (abstracted) successor for a given (abstracted) source state and (abstracted) input.
+         *
+         * @param state
+         *         the integer representing the source state
+         * @param input
+         *         the integer representing the input symbol
+         *
+         * @return the integer representing the target state, or {@link IntAbstraction#INVALID_STATE} if there is no
+         * successor state.
+         */
+        int getSuccessor(int state, int input);
+
+        /**
+         * Retrieves the number of input symbols. This determines the valid range of input symbols, which is
+         * {@code [0, numInputs() - 1]}.
+         *
+         * @return the number of input symbols
+         */
+        int numInputs();
+
+    }
+
+    /**
      * Base class implementing the default way of obtaining an integer abstraction from an automaton, i.e., by mapping
-     * states to integers and vice versa using the {@link StateIDs} mapping obtained via {@link
-     * SimpleDeterministicAutomaton#stateIDs()}.
+     * states to integers and vice versa using the {@link StateIDs} mapping obtained via
+     * {@link SimpleDeterministicAutomaton#stateIDs()}.
      *
      * @param <S>
      *         state type
      * @param <A>
      *         automaton type
      */
-    class IntAbstraction<S, A extends SimpleDeterministicAutomaton<S, ?>>
-            implements SimpleDeterministicAutomaton.IntAbstraction {
+    class IntAbstractionImpl<S, A extends SimpleDeterministicAutomaton<S, ?>> implements IntAbstraction {
 
         protected final A automaton;
         protected final StateIDs<S> stateIds;
 
-        public IntAbstraction(A automaton) {
+        public IntAbstractionImpl(A automaton) {
             this.automaton = automaton;
             this.stateIds = automaton.stateIDs();
         }
@@ -75,7 +155,7 @@ public interface SimpleDeterministicAbstractions {
     }
 
     /**
-     * Base class implementing the default way of obtaining a {@link SimpleDeterministicAutomaton.StateIntAbstraction}.
+     * Base class implementing the default way of obtaining a {@link StateIntAbstraction}.
      *
      * @param <S>
      *         state type
@@ -84,12 +164,12 @@ public interface SimpleDeterministicAbstractions {
      * @param <A>
      *         automaton type
      *
-     * @see IntAbstraction
+     * @see IntAbstractionImpl
      */
-    class StateIntAbstraction<S, I, A extends SimpleDeterministicAutomaton<S, I>> extends IntAbstraction<S, A>
-            implements SimpleDeterministicAutomaton.StateIntAbstraction<I> {
+    class StateIntAbstractionImpl<S, I, A extends SimpleDeterministicAutomaton<S, I>>
+            extends IntAbstractionImpl<S, A> implements StateIntAbstraction<I> {
 
-        public StateIntAbstraction(A automaton) {
+        public StateIntAbstractionImpl(A automaton) {
             super(automaton);
         }
 
@@ -100,22 +180,21 @@ public interface SimpleDeterministicAbstractions {
     }
 
     /**
-     * Base class implementing the default way of obtaining a {@link FullIntAbstraction}, i.e., building on top of a
-     * {@link StateIntAbstraction} and a mapping from integers to (concrete) input symbols.
+     * Base class implementing the default way of obtaining a {@link FullIntAbstractionImpl}, i.e., building on top of a
+     * {@link StateIntAbstractionImpl} and a mapping from integers to (concrete) input symbols.
      *
      * @param <I>
      *         input symbol type
      * @param <A>
      *         state abstraction type
      */
-    class FullIntAbstraction<I, A extends SimpleDeterministicAutomaton.StateIntAbstraction<I>>
-            implements SimpleDeterministicAutomaton.FullIntAbstraction {
+    class FullIntAbstractionImpl<I, A extends StateIntAbstraction<I>> implements FullIntAbstraction {
 
         protected final A stateAbstraction;
         protected final int numInputs;
         protected final IntFunction<? extends I> symMapping;
 
-        public FullIntAbstraction(A stateAbstraction, int numInputs, IntFunction<? extends I> symMapping) {
+        public FullIntAbstractionImpl(A stateAbstraction, int numInputs, IntFunction<? extends I> symMapping) {
             this.stateAbstraction = stateAbstraction;
             this.numInputs = numInputs;
             this.symMapping = symMapping;

@@ -22,12 +22,14 @@ import java.util.Objects;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.StateIntAbstraction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract super class that refines {@link AbstractCompact} for deterministic automata. This class provides default
- * implementations for several of the {@link MutableDeterministic.FullIntAbstraction} concepts, such that subclasses
- * only need to care about the primitive-based implementations.
+ * implementations for several of the {@link FullIntAbstraction} concepts, such that subclasses only need to care about
+ * the primitive-based implementations.
  *
  * @param <I>
  *         input symbol type
@@ -40,8 +42,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends AbstractCompact<I, T, SP, TP> implements
                                                                                                        MutableDeterministic<Integer, I, T, SP, TP>,
-                                                                                                       MutableDeterministic.StateIntAbstraction<I, T, SP, TP>,
-                                                                                                       MutableDeterministic.FullIntAbstraction<T, SP, TP> {
+                                                                                                       StateIntAbstraction<I, T, SP, TP>,
+                                                                                                       FullIntAbstraction<T, SP, TP> {
 
     private int initial = AbstractCompact.INVALID_STATE;
 

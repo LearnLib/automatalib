@@ -23,13 +23,13 @@ import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.automaton.transducer.impl.CompactSST;
+import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.fsa.NFAs;
@@ -90,9 +90,9 @@ public class CopyConstructorTest {
         testCopyConstructor(sst, INPUT_ALPHABET, CompactSST::new);
     }
 
-    private <I, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> void testCopyConstructor(A automaton,
-                                                                                                   Alphabet<I> alphabet,
-                                                                                                   Function<A, A> copyConstructor) {
+    private <I, A extends UniversalSemantics<?, I, ?, ?>> void testCopyConstructor(A automaton,
+                                                                                   Alphabet<I> alphabet,
+                                                                                   Function<A, A> copyConstructor) {
         final A copy = copyConstructor.apply(automaton);
         Assert.assertTrue(Automata.testEquivalence(automaton, copy, alphabet));
     }

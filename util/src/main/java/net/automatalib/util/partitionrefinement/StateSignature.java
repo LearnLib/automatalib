@@ -19,6 +19,7 @@ import java.util.Arrays;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstraction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -40,7 +41,7 @@ public final class StateSignature {
         return new StateSignature(properties);
     }
 
-    public static StateSignature byFullSignature(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> automaton,
+    public static StateSignature byFullSignature(FullIntAbstraction<?, ?, ?> automaton,
                                                  int state) {
         int numInputs = automaton.numInputs();
         @Nullable Object[] properties = new Object[numInputs + 1];
@@ -64,7 +65,7 @@ public final class StateSignature {
         return new StateSignature(properties);
     }
 
-    public static StateSignature byTransitionProperties(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> automaton,
+    public static StateSignature byTransitionProperties(FullIntAbstraction<?, ?, ?> automaton,
                                                         int state) {
         int numInputs = automaton.numInputs();
         @Nullable Object[] properties = new Object[numInputs];
@@ -81,7 +82,7 @@ public final class StateSignature {
         return new StateSignature(properties);
     }
 
-    private static void fillTransitionProperties(UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> automaton,
+    private static void fillTransitionProperties(FullIntAbstraction<?, ?, ?> automaton,
                                                  int state,
                                                  @Nullable Object[] properties) {
         int numInputs = automaton.numInputs();

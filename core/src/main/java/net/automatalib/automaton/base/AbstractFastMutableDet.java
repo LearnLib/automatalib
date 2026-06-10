@@ -20,11 +20,11 @@ import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.ShrinkableDeterministic;
+import net.automatalib.automaton.MutableDeterministic;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFastMutableDet<S extends AbstractFastState<T>, I, T, SP, TP>
-        extends AbstractFastMutable<S, I, T, SP, TP> implements ShrinkableDeterministic<S, I, T, SP, TP> {
+        extends AbstractFastMutable<S, I, T, SP, TP> implements MutableDeterministic<S, I, T, SP, TP> {
 
     private @Nullable S initialState;
 

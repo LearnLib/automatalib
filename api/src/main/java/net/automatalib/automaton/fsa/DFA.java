@@ -19,6 +19,8 @@ import java.util.Collection;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.DeterministicSuffixOutputAutomaton;
+import net.automatalib.automaton.concept.FinSem;
+import net.automatalib.semantics.DeterministicFiniteSemantics.FullSemantics;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
 /**
@@ -27,7 +29,13 @@ import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 public interface DFA<S, I> extends UniversalDeterministicAutomaton<S, I, S, Boolean, Void>,
                                    DeterministicAcceptorTS<S, I>,
                                    DeterministicSuffixOutputAutomaton<S, I, S, Boolean>,
+                                   FullSemantics<S, I, S, Boolean, Void>, FinSem,
                                    NFA<S, I> {
+
+    @Override
+    default DFA<S, I> getSemantics() {
+        return this;
+    }
 
     @Override
     default boolean isAccepting(Collection<? extends S> states) {

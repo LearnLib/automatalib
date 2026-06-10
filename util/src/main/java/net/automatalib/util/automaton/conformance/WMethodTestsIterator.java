@@ -25,6 +25,7 @@ import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.collection.ReusableIterator;
+import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
 import net.automatalib.word.Word;
@@ -55,7 +56,7 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>,
      * @param inputs
      *         the input symbols that should be considered for test sequence generation
      */
-    public WMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+    public WMethodTestsIterator(UniversalSemantics<?, I, ?, ?> automaton,
                                 Collection<? extends I> inputs) {
         this(automaton, inputs, 0);
     }
@@ -70,7 +71,7 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>,
      * @param maxDepth
      *         the maximum number of symbols that are appended to the transition-cover part of the test sequences
      */
-    public WMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+    public WMethodTestsIterator(UniversalSemantics<?, I, ?, ?> automaton,
                                 Collection<? extends I> inputs,
                                 int maxDepth) {
         super(IteratorUtil.concat(IteratorUtil.singleton(Word.epsilon()),

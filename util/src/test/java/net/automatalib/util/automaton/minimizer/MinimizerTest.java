@@ -25,7 +25,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.graph.TransitionEdge.Property;
-import net.automatalib.automaton.impl.UniversalCompactDet;
+import net.automatalib.automaton.impl.UniversalCompactDetAutomaton;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
@@ -56,7 +56,8 @@ public class MinimizerTest extends AbstractMinimizationTest {
     @Override
     protected <I, SP, TP> UniversalDeterministicAutomaton<?, I, ?, SP, TP> minimizeUniversal(MutableDeterministic<?, I, ?, SP, TP> automaton,
                                                                                              Alphabet<I> alphabet) {
-        final UniversalCompactDet<I, SP, TP> result = new UniversalCompactDet<>(alphabet, automaton.size());
+        final UniversalCompactDetAutomaton<I, SP, TP> result =
+                new UniversalCompactDetAutomaton<>(alphabet, automaton.size());
         Automata.minimize(automaton, alphabet, result);
         return result;
     }

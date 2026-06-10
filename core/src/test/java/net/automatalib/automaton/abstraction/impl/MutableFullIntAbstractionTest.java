@@ -23,6 +23,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.impl.MutableAutomatonTest;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -79,7 +80,7 @@ public class MutableFullIntAbstractionTest extends MutableAutomatonTest {
     private static class MockUp<S, I, T, SP, TP> implements MutableDeterministic<S, I, T, SP, TP> {
 
         final MutableDeterministic<S, I, T, SP, TP> delegate;
-        final MutableDeterministic.FullIntAbstraction<T, SP, TP> abstraction;
+        final MutableDeterministicAbstractions.FullIntAbstraction<T, SP, TP> abstraction;
         final StateIDs<S> stateIDs;
         final Alphabet<I> alphabet;
 
@@ -123,18 +124,18 @@ public class MutableFullIntAbstractionTest extends MutableAutomatonTest {
         @Override
         public @Nullable S getSuccessor(S state, I input) {
             int succ = abstraction.getSuccessor(stateIDs.getStateId(state), alphabet.getSymbolIndex(input));
-            return succ == FullIntAbstraction.INVALID_STATE ? null : stateIDs.getState(succ);
+            return succ == MutableDeterministicAbstractions.FullIntAbstraction.INVALID_STATE ? null : stateIDs.getState(succ);
         }
 
         @Override
         public @Nullable S getInitialState() {
             final int intInitial = abstraction.getIntInitialState();
-            return intInitial == FullIntAbstraction.INVALID_STATE ? null : stateIDs.getState(intInitial);
+            return intInitial == MutableDeterministicAbstractions.FullIntAbstraction.INVALID_STATE ? null : stateIDs.getState(intInitial);
         }
 
         @Override
         public void setInitialState(@Nullable S state) {
-            abstraction.setInitialState(state == null ? FullIntAbstraction.INVALID_STATE : stateIDs.getStateId(state));
+            abstraction.setInitialState(state == null ? MutableDeterministicAbstractions.FullIntAbstraction.INVALID_STATE : stateIDs.getStateId(state));
         }
 
         @Override

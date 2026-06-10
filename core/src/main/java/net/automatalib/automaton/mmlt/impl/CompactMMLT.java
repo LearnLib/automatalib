@@ -27,11 +27,11 @@ import java.util.Set;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.impl.CompactTransition;
+import net.automatalib.automaton.impl.CompactTransitionOutput;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
 import net.automatalib.automaton.mmlt.MutableMMLT;
 import net.automatalib.automaton.mmlt.SymbolCombiner;
 import net.automatalib.automaton.mmlt.TimerInfo;
-import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Triple;
 import net.automatalib.graph.Graph;
 import net.automatalib.symbol.time.SymbolicInput;
@@ -44,7 +44,7 @@ import net.automatalib.symbol.time.SymbolicInput;
  * @param <O>
  *         output symbol type
  */
-public class CompactMMLT<I, O> extends CompactMealy<I, O> implements MutableMMLT<Integer, I, CompactTransition<O>, O> {
+public class CompactMMLT<I, O> extends CompactTransitionOutput<I, O> implements MutableMMLT<Integer, I, CompactTransition<O>, O> {
 
     private final Map<Integer, List<TimerInfo<Integer, O>>> sortedTimers; // location -> (sorted timers)
     private final Map<Integer, Set<I>> resets; // location -> inputs (that reset all timers)

@@ -24,11 +24,15 @@ import net.automatalib.automaton.Automaton;
 import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.FinSem;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.UniversalGraph;
+import net.automatalib.semantics.DeterministicFiniteSemantics.MutableSemantics;
+import net.automatalib.semantics.DeterministicFiniteSemantics.SimpleSemantics;
+import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
 import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
@@ -152,8 +156,10 @@ public final class Automata {
      *
      * @return {@code automaton}, for convenience
      */
-    public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A invasiveMinimize(A automaton,
-                                                                                                        Collection<? extends I> inputs) {
+    public static <S, I, T, SP, TP, A extends MutableSemantics<S, I, T, SP, TP>> A invasiveMinimize(A semantics,
+                                                                                                    Collection<? extends I> inputs) {
+
+        MutableDeterministic<S, I, T, SP, TP> automaton = semantics.getSemantics();
 
         final List<? extends I> inputList = CollectionUtil.randomAccessList(inputs);
 
@@ -225,13 +231,13 @@ public final class Automata {
                 automaton.addTransition(state, input, succ, transRec.property);
             }
         }
-        return automaton;
+        return semantics;
     }
 
     /**
      * Tests whether two automata are equivalent, i.e. whether there exists a
-     * {@link #findSeparatingWord(UniversalDeterministicAutomaton, UniversalDeterministicAutomaton, Collection)
-     * separating word} for the two given automata.
+     * {@link #findSeparatingWord(UniversalSemantics, UniversalSemantics, Collection) separating word} for the two given
+     * automata.
      *
      * @param <I>
      *         input symbol type
@@ -244,10 +250,10 @@ public final class Automata {
      *
      * @return {@code true} if the automata are equivalent, {@code false} otherwise.
      *
-     * @see #findSeparatingWord(UniversalDeterministicAutomaton, UniversalDeterministicAutomaton, Collection)
+     * @see #findSeparatingWord(UniversalSemantics, UniversalSemantics, Collection)
      */
-    public static <I> boolean testEquivalence(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
-                                              UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+    public static <I> boolean testEquivalence(UniversalSemantics<?, I, ?, ?> reference,
+                                              UniversalSemantics<?, I, ?, ?> other,
                                               Collection<? extends I> inputs) {
         return findSeparatingWord(reference, other, inputs) == null;
     }
@@ -267,9 +273,9 @@ public final class Automata {
      *
      * @return a separating word, or {@code null} if no such word could be found.
      */
-    public static <I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
-                                                           UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
-                                                           Collection<? extends I> inputs) {
+    public static <I, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & FinSem> @Nullable Word<I> findSeparatingWord(A reference,
+                                                                                                                              A other,
+                                                                                                                              Collection<? extends I> inputs) {
         return NearLinearEquivalenceTest.findSeparatingWord(reference, other, inputs);
     }
 
@@ -293,7 +299,7 @@ public final class Automata {
      *
      * @return a separating word, or {@code null} if no such word could be found
      */
-    public static <S, I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+    public static <S, I> @Nullable Word<I> findSeparatingWord(UniversalSemantics<S, I, ?, ?> automaton,
                                                               S state1,
                                                               S state2,
                                                               Collection<? extends I> inputs) {
@@ -316,8 +322,8 @@ public final class Automata {
      *
      * @return a separating word, or {@code null} if no such word could be found.
      */
-    public static <I> @Nullable Word<I> findShortestSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
-                                                                   UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+    public static <I> @Nullable Word<I> findShortestSeparatingWord(UniversalSemantics<?, I, ?, ?> reference,
+                                                                   UniversalSemantics<?, I, ?, ?> other,
                                                                    Collection<? extends I> inputs) {
         return DeterministicEquivalenceTest.findSeparatingWord(reference, other, inputs);
     }
@@ -336,7 +342,7 @@ public final class Automata {
      *
      * @see CharacterizingSets
      */
-    public static <I> List<Word<I>> characterizingSet(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+    public static <I> List<Word<I>> characterizingSet(UniversalSemantics<?, I, ?, ?> automaton,
                                                       Collection<? extends I> inputs) {
         List<Word<I>> result = new ArrayList<>();
         characterizingSet(automaton, inputs, result);
@@ -347,7 +353,7 @@ public final class Automata {
      * Computes a characterizing set for the given automaton.
      * <p>
      * This is a convenience method acting as a shortcut to
-     * {@link CharacterizingSets#findCharacterizingSet(UniversalDeterministicAutomaton, Collection, Collection)}.
+     * {@link CharacterizingSets#findCharacterizingSet(UniversalSemantics, Collection, Collection)}.
      *
      * @param <I>
      *         input symbol type
@@ -360,13 +366,13 @@ public final class Automata {
      *
      * @see CharacterizingSets
      */
-    public static <I> void characterizingSet(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+    public static <I> void characterizingSet(UniversalSemantics<?, I, ?, ?> automaton,
                                              Collection<? extends I> inputs,
                                              Collection<? super Word<I>> result) {
         CharacterizingSets.findCharacterizingSet(automaton, inputs, result);
     }
 
-    public static <I> boolean incrementalCharacterizingSet(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+    public static <I> boolean incrementalCharacterizingSet(UniversalSemantics<?, I, ?, ?> automaton,
                                                            Collection<? extends I> inputs,
                                                            Collection<? extends Word<I>> oldSuffixes,
                                                            Collection<? super Word<I>> newSuffixes) {
@@ -391,7 +397,7 @@ public final class Automata {
      *
      * @see CharacterizingSets
      */
-    public static <S, I> List<Word<I>> stateCharacterizingSet(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+    public static <S, I> List<Word<I>> stateCharacterizingSet(UniversalSemantics<S, I, ?, ?> automaton,
                                                               Collection<? extends I> inputs,
                                                               S state) {
         List<Word<I>> result = new ArrayList<>();
@@ -403,8 +409,7 @@ public final class Automata {
      * Computes a characterizing set for a single state.
      * <p>
      * This is a convenience method acting as a shortcut to
-     * {@link CharacterizingSets#findCharacterizingSet(UniversalDeterministicAutomaton, Collection, Object,
-     * Collection)}.
+     * {@link CharacterizingSets#findCharacterizingSet(UniversalSemantics, Collection, Object, Collection)}.
      *
      * @param <S>
      *         state type
@@ -421,7 +426,7 @@ public final class Automata {
      *
      * @see CharacterizingSets
      */
-    public static <S, I> void stateCharacterizingSet(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+    public static <S, I> void stateCharacterizingSet(UniversalSemantics<S, I, ?, ?> automaton,
                                                      Collection<? extends I> inputs,
                                                      S state,
                                                      Collection<? super Word<I>> result) {
@@ -442,10 +447,11 @@ public final class Automata {
      *
      * @see Covers#stateCover(DeterministicAutomaton, Collection, Collection)
      */
-    public static <I> List<Word<I>> stateCover(DeterministicAutomaton<?, I, ?> automaton,
+    public static <I> List<Word<I>> stateCover(SimpleSemantics<?, I> semantics,
                                                Collection<? extends I> inputs) {
+        DeterministicAutomaton<?, I, ?> automaton = semantics.getSemantics();
         final List<Word<I>> result = new ArrayList<>(automaton.size());
-        Covers.stateCover(automaton, inputs, result);
+        Covers.stateCover(semantics, inputs, result);
         return result;
     }
 
@@ -463,10 +469,11 @@ public final class Automata {
      *
      * @see Covers#transitionCover(DeterministicAutomaton, Collection, Collection)
      */
-    public static <I> List<Word<I>> transitionCover(DeterministicAutomaton<?, I, ?> automaton,
+    public static <I> List<Word<I>> transitionCover(SimpleSemantics<?, I> semantics,
                                                     Collection<? extends I> inputs) {
+        DeterministicAutomaton<?, I, ?> automaton = semantics.getSemantics();
         final List<Word<I>> result = new ArrayList<>(automaton.size() * inputs.size());
-        Covers.transitionCover(automaton, inputs, result);
+        Covers.transitionCover(semantics, inputs, result);
         return result;
     }
 
@@ -484,10 +491,11 @@ public final class Automata {
      *
      * @see Covers#structuralCover(DeterministicAutomaton, Collection, Collection)
      */
-    public static <I> List<Word<I>> structuralCover(DeterministicAutomaton<?, I, ?> automaton,
+    public static <I> List<Word<I>> structuralCover(SimpleSemantics<?, I> semantics,
                                                     Collection<? extends I> inputs) {
+        DeterministicAutomaton<?, I, ?> automaton = semantics.getSemantics();
         final List<Word<I>> result = new ArrayList<>(automaton.size() * (inputs.size() + 1));
-        Covers.structuralCover(automaton, inputs, result);
+        Covers.structuralCover(semantics, inputs, result);
         return result;
     }
 
