@@ -218,7 +218,12 @@ final class ProceduralUtil {
                         return Word.fromWords(as1, ts1, Word.fromLetter(alphabet.getReturnSymbol()));
                     }
 
-                    final Word<I> sepWord = Automata.findSeparatingWord(p1, p2, alphabet);
+                    final Set<I> localAlphabet = new HashSet<>(at1.terminatingSequences.keySet());
+                    localAlphabet.retainAll(at2.terminatingSequences.keySet());
+                    localAlphabet.addAll(alphabet.getInternalAlphabet());
+                    localAlphabet.add(alphabet.getReturnSymbol());
+
+                    final Word<I> sepWord = Automata.findSeparatingWord(p1, p2, localAlphabet);
 
                     if (sepWord != null) {
                         // deterministically select at1 because any mismatch will suffice for a counterexample
