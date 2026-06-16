@@ -56,7 +56,7 @@ public final class CharacterizingSets {
     /**
      * Computes a characterizing set for the given automaton.
      *
-     * @param semantics
+     * @param automaton
      *         the automaton for which to determine the characterizing set.
      * @param inputs
      *         the input alphabets to consider
@@ -65,16 +65,16 @@ public final class CharacterizingSets {
      * @param <I>
      *         input symbol type
      */
-    public static <I> void findCharacterizingSet(UniversalSemantics<?, I, ?, ?> semantics,
+    public static <I> void findCharacterizingSet(UniversalSemantics<?, I, ?, ?, ?> automaton,
                                                  Collection<? extends I> inputs,
                                                  Collection<? super Word<I>> result) {
-        findIncrementalCharacterizingSet(semantics, inputs, Collections.emptyList(), result);
+        findIncrementalCharacterizingSet(automaton, inputs, Collections.emptyList(), result);
     }
 
     /**
      * Computes a characterizing set for a specified state in the given automaton.
      *
-     * @param semantics
+     * @param automaton
      *         the automaton containing the state
      * @param inputs
      *         the input alphabets to consider
@@ -87,12 +87,10 @@ public final class CharacterizingSets {
      * @param <I>
      *         input symbol type
      */
-    public static <S, I> void findCharacterizingSet(UniversalSemantics<S, I, ?, ?> semantics,
+    public static <S, I> void findCharacterizingSet(UniversalSemantics<S, I, ?, ?, ?> automaton,
                                                     Collection<? extends I> inputs,
                                                     S state,
                                                     Collection<? super Word<I>> result) {
-
-        UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton = semantics.getSemantics();
 
         Object prop = automaton.getStateProperty(state);
 
@@ -123,7 +121,7 @@ public final class CharacterizingSets {
             Word<I> suffix = null;
             while (it.hasNext() && suffix == null) {
                 S s = it.next();
-                suffix = Automata.findSeparatingWord(semantics, state, s, inputs);
+                suffix = Automata.findSeparatingWord(automaton, state, s, inputs);
             }
 
             if (suffix == null) {
@@ -146,9 +144,9 @@ public final class CharacterizingSets {
         }
     }
 
-    public static <S, I> Iterator<Word<I>> characterizingSetIterator(UniversalSemantics<?, I, ?, ?> semantics,
-                                                                     Collection<? extends I> inputs) {
-        return new IncrementalCharacterizingSetIterator<>(semantics, inputs, Collections.emptyList());
+    public static <I> Iterator<Word<I>> characterizingSetIterator(UniversalSemantics<?, I, ?, ?, ?> automaton,
+                                                                  Collection<? extends I> inputs) {
+        return new IncrementalCharacterizingSetIterator<>(automaton, inputs, Collections.emptyList());
     }
 
     private static <S, I, T, SP, TP> List<?> buildTrace(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
@@ -219,12 +217,10 @@ public final class CharacterizingSets {
         return true;
     }
 
-    public static <S, I> boolean findIncrementalCharacterizingSet(UniversalSemantics<S, I, ?, ?> semantics,
+    public static <S, I> boolean findIncrementalCharacterizingSet(UniversalSemantics<S, I, ?, ?, ?> automaton,
                                                                   Collection<? extends I> inputs,
                                                                   Collection<? extends Word<I>> oldSuffixes,
                                                                   Collection<? super Word<I>> newSuffixes) {
-
-        UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton = semantics.getSemantics();
 
         boolean refined = false;
 
@@ -240,7 +236,7 @@ public final class CharacterizingSets {
 
         Word<I> suffix;
 
-        while ((suffix = refine(semantics, automaton, inputs, blocks)) != null) {
+        while ((suffix = refine(automaton, inputs, blocks)) != null) {
             newSuffixes.add(suffix);
             refined = true;
         }
@@ -248,13 +244,13 @@ public final class CharacterizingSets {
         return refined;
     }
 
-    public static <S, I> Iterator<Word<I>> incrementalCharacterizingSetIterator(UniversalSemantics<?, I, ?, ?> semantics,
-                                                                                Collection<? extends I> inputs,
-                                                                                Collection<? extends Word<I>> oldSuffixes) {
-        return new IncrementalCharacterizingSetIterator<>(semantics, inputs, oldSuffixes);
+    public static <I> Iterator<Word<I>> incrementalCharacterizingSetIterator(UniversalSemantics<?, I, ?, ?, ?> automaton,
+                                                                             Collection<? extends I> inputs,
+                                                                             Collection<? extends Word<I>> oldSuffixes) {
+        return new IncrementalCharacterizingSetIterator<>(automaton, inputs, oldSuffixes);
     }
 
-    private static <S, I> Queue<List<S>> buildInitialBlocks(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+    private static <S, I> Queue<List<S>> buildInitialBlocks(UniversalSemantics<S, I, ?, ?, ?> automaton,
                                                             List<? extends Word<I>> oldSuffixes) {
         Map<List<List<?>>, List<S>> initialPartitioning = new HashMap<>();
         Queue<List<S>> blocks = new ArrayDeque<>();
@@ -308,8 +304,7 @@ public final class CharacterizingSets {
         return refined;
     }
 
-    private static <S, I> @Nullable Word<I> refine(UniversalSemantics<S, I, ?, ?> semantics,
-                                                   UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+    private static <S, I> @Nullable Word<I> refine(UniversalSemantics<S, I, ?, ?, ?> automaton,
                                                    Collection<? extends I> inputs,
                                                    Queue<List<S>> blockQueue) {
 
@@ -327,7 +322,7 @@ public final class CharacterizingSets {
             S state = null;
             while (it.hasNext() && suffix == null) {
                 state = it.next();
-                suffix = Automata.findSeparatingWord(semantics, ref, state, inputs);
+                suffix = Automata.findSeparatingWord(automaton, ref, state, inputs);
             }
 
             if (state != null && suffix != null) {
@@ -391,17 +386,15 @@ public final class CharacterizingSets {
 
     private static class IncrementalCharacterizingSetIterator<S, I> extends AbstractSimplifiedIterator<Word<I>> {
 
-        private final UniversalSemantics<S, I, ?, ?> semantics;
-        private final UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton;
+        private final UniversalSemantics<S, I, ?, ?, ?> automaton;
         private final Collection<? extends I> inputs;
         private final List<? extends Word<I>> oldSuffixes;
         private Queue<List<S>> blocks;
 
-        IncrementalCharacterizingSetIterator(UniversalSemantics<S, I, ?, ?> semantics,
+        IncrementalCharacterizingSetIterator(UniversalSemantics<S, I, ?, ?, ?> automaton,
                                              Collection<? extends I> inputs,
                                              Collection<? extends Word<I>> oldSuffixes) {
-            this.semantics = semantics;
-            this.automaton = semantics.getSemantics();
+            this.automaton = automaton;
             this.inputs = inputs;
             this.oldSuffixes = CollectionUtil.randomAccessList(oldSuffixes);
         }
@@ -417,7 +410,7 @@ public final class CharacterizingSets {
                 }
             }
 
-            final Word<I> suffix = refine(semantics, automaton, inputs, blocks);
+            final Word<I> suffix = refine(automaton, inputs, blocks);
 
             if (suffix != null) {
                 super.nextValue = suffix;

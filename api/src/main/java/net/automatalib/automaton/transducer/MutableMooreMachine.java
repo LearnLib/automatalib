@@ -17,9 +17,12 @@ package net.automatalib.automaton.transducer;
 
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.concept.MutableStateOutput;
+import net.automatalib.semantics.DeterministicFiniteSemantics.MutableSemantics;
 
-public interface MutableMooreMachine<S, I, T, O>
-        extends MooreMachine<S, I, T, O>, MutableDeterministic<S, I, T, O, Void>, MutableStateOutput<S, O> {
+public interface MutableMooreMachine<S, I, T, O> extends MooreMachine<S, I, T, O>,
+                                                         MutableDeterministic<S, I, T, O, Void>,
+                                                         MutableStateOutput<S, O>,
+                                                         MutableSemantics<S, I, T, O, Void> {
 
     @Override
     default void setStateProperty(S state, O property) {

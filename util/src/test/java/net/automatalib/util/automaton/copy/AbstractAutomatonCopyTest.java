@@ -148,21 +148,23 @@ public abstract class AbstractAutomatonCopyTest {
         }
     }
 
-    private <A extends MutableDeterministic<S, I, T, SP, TP> & UniversalSemantics<?, I, ?, ?>, S, I, T, SP, TP> void checkEquivalence(A source,
-                                                                                                                          Alphabet<I> alphabet,
-                                                                                                                          AutomatonCreator<A, I> targetCreator) {
+    private <A extends MutableDeterministic<S, I, T, SP, TP> & UniversalSemantics<S, I, T, SP, TP>, S, I, T, SP, TP> void checkEquivalence(
+            A source,
+            Alphabet<I> alphabet,
+            AutomatonCreator<A, I> targetCreator) {
         final A target = targetCreator.createAutomaton(alphabet);
         AutomatonLowLevelCopy.copy(getCopyMethod(), source, alphabet, target);
 
         Assert.assertTrue(Automata.testEquivalence(source, target, alphabet));
     }
 
-    private <A extends MutableDeterministic<S, I, T, SP, TP> & UniversalSemantics<?, I, ?, ?>, S, I, T, SP, TP> void checkFilteredEquivalence(A source,
-                                                                                                             Alphabet<I> alphabet,
-                                                                                                             AutomatonCreator<A, I> targetCreator,
-                                                                                                             Predicate<S> sPred,
-                                                                                                             TransitionPredicate<S, I, T> tPred,
-                                                                                                             A expectedTarget) {
+    private <A extends MutableDeterministic<S, I, T, SP, TP> & UniversalSemantics<S, I, T, SP, TP>, S, I, T, SP, TP> void checkFilteredEquivalence(
+            A source,
+            Alphabet<I> alphabet,
+            AutomatonCreator<A, I> targetCreator,
+            Predicate<S> sPred,
+            TransitionPredicate<S, I, T> tPred,
+            A expectedTarget) {
 
         final A target = targetCreator.createAutomaton(alphabet);
         AutomatonLowLevelCopy.copy(getCopyMethod(), source, alphabet, target, sPred, tPred);

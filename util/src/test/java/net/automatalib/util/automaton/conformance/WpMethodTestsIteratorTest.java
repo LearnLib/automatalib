@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
@@ -101,17 +100,16 @@ public class WpMethodTestsIteratorTest {
 
     }
 
-    private <S, I> List<Word<I>> generateWpMethodTest(UniversalSemantics<S, I, ?, ?> semantics,
+    private <S, I> List<Word<I>> generateWpMethodTest(UniversalSemantics<S, I, ?, ?, ?> automaton,
                                                       Collection<? extends I> inputs,
                                                       List<Word<I>> middleParts) {
 
-        final UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton = semantics.getSemantics();
         final List<Word<I>> stateCover = new ArrayList<>(automaton.size());
         final List<Word<I>> transitionCover = new ArrayList<>(automaton.size() * inputs.size());
         final List<Word<I>> characterizingSet = new ArrayList<>();
 
-        Covers.cover(semantics, inputs, stateCover, transitionCover);
-        CharacterizingSets.findCharacterizingSet(semantics, inputs, characterizingSet);
+        Covers.cover(automaton, inputs, stateCover, transitionCover);
+        CharacterizingSets.findCharacterizingSet(automaton, inputs, characterizingSet);
 
         Assert.assertFalse(stateCover.isEmpty());
         Assert.assertFalse(transitionCover.isEmpty());
@@ -137,7 +135,7 @@ public class WpMethodTestsIteratorTest {
                 final S s = automaton.getState(prefixWithMiddle);
 
                 final List<Word<I>> suffixes = new ArrayList<>();
-                CharacterizingSets.findCharacterizingSet(semantics, inputs, s, suffixes);
+                CharacterizingSets.findCharacterizingSet(automaton, inputs, s, suffixes);
                 assert !suffixes.isEmpty();
 
                 for (Word<I> suffix : suffixes) {

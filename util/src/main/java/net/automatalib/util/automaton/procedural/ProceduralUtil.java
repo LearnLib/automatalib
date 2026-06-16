@@ -43,9 +43,9 @@ final class ProceduralUtil {
         // prevent instantiation
     }
 
-    static <I, M extends UniversalSemantics<?, I, ?, ?>> Map<I, Word<I>> computeTerminatingSequences(Map<I, ? extends M> procedures,
-                                                                                                     ProceduralInputAlphabet<I> alphabet,
-                                                                                                     BiPredicate<M, Word<I>> tracePredicate) {
+    static <I, M extends UniversalSemantics<?, I, ?, ?, ?>> Map<I, Word<I>> computeTerminatingSequences(Map<I, ? extends M> procedures,
+                                                                                                        ProceduralInputAlphabet<I> alphabet,
+                                                                                                        BiPredicate<M, Word<I>> tracePredicate) {
 
         final Map<I, Word<I>> terminatingSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
 
@@ -103,12 +103,12 @@ final class ProceduralUtil {
         return terminatingSequences;
     }
 
-    static <I, M extends UniversalSemantics<?, I, ?, ?>> Map<I, Word<I>> computeAccessSequences(Map<I, ? extends M> procedures,
-                                                                                                ProceduralInputAlphabet<I> alphabet,
-                                                                                                Collection<I> proceduralInputs,
-                                                                                                @Nullable I initialProcedure,
-                                                                                                Map<I, Word<I>> terminatingSequences,
-                                                                                                BiPredicate<M, Word<I>> transitionPredicate) {
+    static <I, M extends UniversalSemantics<?, I, ?, ?, ?>> Map<I, Word<I>> computeAccessSequences(Map<I, ? extends M> procedures,
+                                                                                                   ProceduralInputAlphabet<I> alphabet,
+                                                                                                   Collection<I> proceduralInputs,
+                                                                                                   @Nullable I initialProcedure,
+                                                                                                   Map<I, Word<I>> terminatingSequences,
+                                                                                                   BiPredicate<M, Word<I>> transitionPredicate) {
 
         if (initialProcedure == null) {
             return Collections.emptyMap();
@@ -150,7 +150,7 @@ final class ProceduralUtil {
         return accessSequences;
     }
 
-    private static <I, M extends UniversalSemantics<?, I, ?, ?>> Collection<I> discoverAccessSequences(
+    private static <I, M extends UniversalSemantics<?, I, ?, ?, ?>> Collection<I> discoverAccessSequences(
             ProceduralInputAlphabet<I> alphabet,
             Collection<I> proceduralInputs,
             I procedure,
@@ -193,11 +193,11 @@ final class ProceduralUtil {
         return newAS;
     }
 
-    static <I, M extends UniversalSemantics<?, I, ?, ?>> @Nullable Word<I> findSeparatingWord(Map<I, M> sys1,
-                                                                                              ATSequences<I> at1,
-                                                                                              Map<I, M> sys2,
-                                                                                              ATSequences<I> at2,
-                                                                                              ProceduralInputAlphabet<I> alphabet) {
+    static <I, M extends UniversalSemantics<?, I, ?, ?, ?>> @Nullable Word<I> findSeparatingWord(Map<I, M> sys1,
+                                                                                                 ATSequences<I> at1,
+                                                                                                 Map<I, M> sys2,
+                                                                                                 ATSequences<I> at2,
+                                                                                                 ProceduralInputAlphabet<I> alphabet) {
         for (I procedure : alphabet.getCallAlphabet()) {
             final M p1 = sys1.get(procedure);
             final M p2 = sys2.get(procedure);

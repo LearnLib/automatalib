@@ -24,7 +24,7 @@ import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.MTSVisualizationHelper;
 import net.automatalib.graph.UniversalGraph;
-import net.automatalib.semantics.FiniteSemantics.FullSemantics;
+import net.automatalib.semantics.FiniteSemantics.UniversalSemantics;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper;
 
@@ -45,7 +45,7 @@ import net.automatalib.visualization.VisualizationHelper;
  *         (specific) transition property type
  */
 public interface ModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>
-        extends UniversalFiniteAlphabetAutomaton<S, I, T, Void, TP>, FullSemantics<S, I, T, Void, TP> {
+        extends UniversalFiniteAlphabetAutomaton<S, I, T, Void, TP>, UniversalSemantics<S, I, T, Void, TP> {
 
     @Override
     default ModalTransitionSystem<S, I, T, TP> getSemantics() {

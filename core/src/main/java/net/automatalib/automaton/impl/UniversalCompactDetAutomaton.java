@@ -20,6 +20,8 @@ import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automaton.base.AbstractCompactDeterministic;
+import net.automatalib.semantics.DeterministicFiniteSemantics.MutableSemantics;
+import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 
 /**
  * A default implementation for {@link AbstractCompactDeterministic} that uses {@link CompactTransition} as transition
@@ -32,9 +34,11 @@ import net.automatalib.automaton.base.AbstractCompactDeterministic;
  * @param <TP>
  *         transition property type
  */
-public class UniversalCompactDetAutomaton<I, SP, TP> extends UniversalCompactDet<I, SP, TP>
-        implements MutableDeterministic<Integer, I, CompactTransition<TP>, SP, TP>,
-                   UniversalFiniteAlphabetAutomaton<Integer, I, CompactTransition<TP>, SP, TP> {
+public class UniversalCompactDetAutomaton<I, SP, TP> extends UniversalCompactDet<I, SP, TP> implements
+                                                                                            MutableDeterministic<Integer, I, CompactTransition<TP>, SP, TP>,
+                                                                                            UniversalFiniteAlphabetAutomaton<Integer, I, CompactTransition<TP>, SP, TP>,
+                                                                                            UniversalSemantics<Integer, I, CompactTransition<TP>, SP, TP>,
+                                                                                            MutableSemantics<Integer, I, CompactTransition<TP>, SP, TP> {
 
     public UniversalCompactDetAutomaton(Alphabet<I> alphabet) {
         super(alphabet);
@@ -44,7 +48,13 @@ public class UniversalCompactDetAutomaton<I, SP, TP> extends UniversalCompactDet
         super(alphabet, stateCapacity);
     }
 
-    public static final class Creator<I, SP, TP> implements AutomatonCreator<UniversalCompactDetAutomaton<I, SP, TP>, I> {
+    @Override
+    public UniversalCompactDetAutomaton<I, SP, TP> getSemantics() {
+        return this;
+    }
+
+    public static final class Creator<I, SP, TP>
+            implements AutomatonCreator<UniversalCompactDetAutomaton<I, SP, TP>, I> {
 
         @Override
         public UniversalCompactDetAutomaton<I, SP, TP> createAutomaton(Alphabet<I> alphabet, int numStates) {

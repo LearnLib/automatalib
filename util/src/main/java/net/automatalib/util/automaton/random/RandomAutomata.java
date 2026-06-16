@@ -45,6 +45,7 @@ import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.impl.Location;
 import net.automatalib.common.util.HashUtil;
+import net.automatalib.semantics.FiniteSemantics;
 import net.automatalib.util.automaton.fsa.DFAs;
 import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.automaton.minimizer.OneSEVPAMinimizer;
@@ -337,22 +338,24 @@ public final class RandomAutomata {
                                mealies);
     }
 
-    public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(Random rand,
-                                                                                                           @NonNegative int numStates,
-                                                                                                           Collection<? extends I> inputs,
-                                                                                                           Collection<? extends SP> stateProps,
-                                                                                                           Collection<? extends TP> transProps,
-                                                                                                           A out) {
+    public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP> & FiniteSemantics> A randomDeterministic(
+            Random rand,
+            @NonNegative int numStates,
+            Collection<? extends I> inputs,
+            Collection<? extends SP> stateProps,
+            Collection<? extends TP> transProps,
+            A out) {
         return randomDeterministic(rand, numStates, inputs, stateProps, transProps, out, true);
     }
 
-    public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(Random rand,
-                                                                                                           @NonNegative int numStates,
-                                                                                                           Collection<? extends I> inputs,
-                                                                                                           Collection<? extends SP> stateProps,
-                                                                                                           Collection<? extends TP> transProps,
-                                                                                                           A out,
-                                                                                                           boolean minimize) {
+    public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP> & FiniteSemantics> A randomDeterministic(
+            Random rand,
+            @NonNegative int numStates,
+            Collection<? extends I> inputs,
+            Collection<? extends SP> stateProps,
+            Collection<? extends TP> transProps,
+            A out,
+            boolean minimize) {
 
         RandomDeterministicAutomatonGenerator<S, I, T, SP, TP, A> gen =
                 new RandomDeterministicAutomatonGenerator<>(rand, inputs, stateProps, transProps, out);

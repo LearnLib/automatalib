@@ -90,9 +90,9 @@ public class CopyConstructorTest {
         testCopyConstructor(sst, INPUT_ALPHABET, CompactSST::new);
     }
 
-    private <I, A extends UniversalSemantics<?, I, ?, ?>> void testCopyConstructor(A automaton,
-                                                                                   Alphabet<I> alphabet,
-                                                                                   Function<A, A> copyConstructor) {
+    private <I, A extends UniversalSemantics<?, I, ?, ?, ?>> void testCopyConstructor(A automaton,
+                                                                                      Alphabet<I> alphabet,
+                                                                                      Function<A, A> copyConstructor) {
         final A copy = copyConstructor.apply(automaton);
         Assert.assertTrue(Automata.testEquivalence(automaton, copy, alphabet));
     }

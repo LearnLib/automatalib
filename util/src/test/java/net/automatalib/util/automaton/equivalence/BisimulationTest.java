@@ -24,7 +24,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.Pair;
-import net.automatalib.semantics.FiniteSemantics.SimpleSemantics;
+import net.automatalib.semantics.FiniteSemantics.PlainSemantics;
 import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.util.automaton.random.TabakovVardiRandomAutomata;
 import org.testng.Assert;
@@ -95,10 +95,9 @@ public class BisimulationTest {
         Assert.assertTrue(testBisimulationEquivalence(a, b, alphabet));
     }
 
-    private static <AS, I, A extends SimpleSemantics<AS, I>, BS, B extends SimpleSemantics<BS, I>> boolean testBisimulationEquivalence(
-            A a,
-            B b,
-            Collection<I> inputs) {
+    private static <AS, BS, I> boolean testBisimulationEquivalence(PlainSemantics<AS, I, ?> a,
+                                                                   PlainSemantics<BS, I, ?> b,
+                                                                   Collection<I> inputs) {
 
         Set<Pair<AS, BS>> bisim = Bisimulation.bisimulationEquivalenceRelation(a, b, inputs);
 

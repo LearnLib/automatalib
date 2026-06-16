@@ -20,12 +20,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.automatalib.automaton.concept.Shrinkable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A mutable automaton. This interface adds support for non-destructive modifications, i.e., adding and modifying states
  * and transitions. If also removal of states and single transitions (from the set of outgoing transitions) should be
- * removed, then {@link ShrinkableAutomaton} is the adequate interface.
+ * removed, then {@link Shrinkable} is the adequate interface.
  *
  * @param <S>
  *         state class.

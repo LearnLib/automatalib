@@ -8,6 +8,8 @@ import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.semantics.DeterministicFiniteSemantics;
 import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
+import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 
 public class Example {
 
@@ -26,7 +28,11 @@ public class Example {
         Automata.findSeparatingWord(dfa, mealy, alphabet);
         Automata.findSeparatingWord(mealy, mealy, alphabet);
         Automata.findSeparatingWord(mealy, mmlt, alphabet);
-        Automata.findSeparatingWord(mealy, DeterministicFiniteSemantics.fromAutomaton(mmlt), alphabet);
+//        Automata.findSeparatingWord(mealy, DeterministicFiniteSemantics.fromAutomaton(mmlt), alphabet);
+
+        var newMealy = new CompactMealy<>(alphabet);
+        AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, mmlt, alphabet, newMealy);
+        Automata.findSeparatingWord(mealy, newMealy, alphabet);
     }
 
 }

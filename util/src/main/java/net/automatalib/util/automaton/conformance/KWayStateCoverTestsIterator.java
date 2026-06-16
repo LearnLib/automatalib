@@ -27,8 +27,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import net.automatalib.automaton.DeterministicAutomaton;
-import net.automatalib.automaton.concept.FinSem;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.collection.CollectionUtil;
@@ -36,6 +34,7 @@ import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.Mappings;
 import net.automatalib.common.util.random.RandomUtil;
+import net.automatalib.semantics.DeterministicFiniteSemantics.PlainSemantics;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -58,11 +57,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         automaton state type
  * @param <I>
  *         input symbol type
- * @param <A>
- *         automaton type
  */
-public class KWayStateCoverTestsIterator<S, I, A extends DeterministicAutomaton<S, I, ?> & FinSem>
-        extends AbstractSimplifiedIterator<Word<I>> {
+public class KWayStateCoverTestsIterator<S, I> extends AbstractSimplifiedIterator<Word<I>> {
 
     /**
      * The default value of k used in the k-way combinations/permutations.
@@ -74,7 +70,7 @@ public class KWayStateCoverTestsIterator<S, I, A extends DeterministicAutomaton<
      */
     public static final int DEFAULT_R_WALK_LEN = 20;
 
-    private final A automaton;
+    private final PlainSemantics<S, I, ?> automaton;
     private final List<? extends I> alphabet;
     private final Random random;
     private final int randomWalkLen;
@@ -92,9 +88,9 @@ public class KWayStateCoverTestsIterator<S, I, A extends DeterministicAutomaton<
      * @param inputs
      *         the inputs to consider for test case generation
      *
-     * @see #KWayStateCoverTestsIterator(DeterministicAutomaton, Collection, Random)
+     * @see #KWayStateCoverTestsIterator(PlainSemantics, Collection, Random)
      */
-    public KWayStateCoverTestsIterator(A automaton, Collection<? extends I> inputs) {
+    public KWayStateCoverTestsIterator(PlainSemantics<S, I, ?> automaton, Collection<? extends I> inputs) {
         this(automaton, inputs, new Random());
     }
 
@@ -110,9 +106,11 @@ public class KWayStateCoverTestsIterator<S, I, A extends DeterministicAutomaton<
      * @param random
      *         the random number generator to use
      *
-     * @see #KWayStateCoverTestsIterator(DeterministicAutomaton, Collection, Random, int, int, CombinationMethod)
+     * @see #KWayStateCoverTestsIterator(PlainSemantics, Collection, Random, int, int, CombinationMethod)
      */
-    public KWayStateCoverTestsIterator(A automaton, Collection<? extends I> inputs, Random random) {
+    public KWayStateCoverTestsIterator(PlainSemantics<S, I, ?> automaton,
+                                       Collection<? extends I> inputs,
+                                       Random random) {
         this(automaton, inputs, random, DEFAULT_R_WALK_LEN, DEFAULT_K, CombinationMethod.PERMUTATIONS);
     }
 
@@ -132,7 +130,7 @@ public class KWayStateCoverTestsIterator<S, I, A extends DeterministicAutomaton<
      * @param method
      *         the method for computing combinations
      */
-    public KWayStateCoverTestsIterator(A automaton,
+    public KWayStateCoverTestsIterator(PlainSemantics<S, I, ?> automaton,
                                        Collection<? extends I> inputs,
                                        Random random,
                                        int randomWalkLen,

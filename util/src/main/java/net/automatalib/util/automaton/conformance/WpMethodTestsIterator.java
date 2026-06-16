@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
 import net.automatalib.common.util.collection.IterableUtil;
@@ -50,16 +49,15 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
     private final Iterator<Word<I>> wpIterator;
 
     /**
-     * Convenience-constructor for {@link #WpMethodTestsIterator(UniversalDeterministicAutomaton, Collection, int)} that
-     * selects {@code 0} as {@code maxDepth}.
+     * Convenience-constructor for {@link #WpMethodTestsIterator(UniversalSemantics, Collection, int)} that selects
+     * {@code 0} as {@code maxDepth}.
      *
      * @param automaton
      *         the automaton for which the testing sequences should be generated
      * @param inputs
      *         the input symbols that should be considered for test sequence generation
      */
-    public WpMethodTestsIterator(UniversalSemantics<?, I, ?, ?> automaton,
-                                 Collection<? extends I> inputs) {
+    public WpMethodTestsIterator(UniversalSemantics<?, I, ?, ?, ?> automaton, Collection<? extends I> inputs) {
         this(automaton, inputs, 0);
     }
 
@@ -73,17 +71,16 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
      * @param maxDepth
      *         the maximum number of symbols that are appended to the transition-cover part of the test sequences
      */
-    public WpMethodTestsIterator(UniversalSemantics<?, I, ?, ?> semantics,
+    public WpMethodTestsIterator(UniversalSemantics<?, I, ?, ?, ?> automaton,
                                  Collection<? extends I> inputs,
                                  int maxDepth) {
 
-        final UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton = semantics.getSemantics();
         final Set<Word<I>> stateCover = new HashSet<>(HashUtil.capacity(automaton.size()));
         final Set<Word<I>> transitionCover = new HashSet<>(HashUtil.capacity(automaton.size() * inputs.size()));
 
-        Covers.cover(semantics, inputs, stateCover, transitionCover);
+        Covers.cover(automaton, inputs, stateCover, transitionCover);
 
-        Iterator<Word<I>> characterizingIter = CharacterizingSets.characterizingSetIterator(semantics, inputs);
+        Iterator<Word<I>> characterizingIter = CharacterizingSets.characterizingSetIterator(automaton, inputs);
 
         // Special case: List of characterizing suffixes may be empty,
         // but in this case we still need to iterate over the prefixes!
@@ -97,7 +94,7 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
 
         // Phase 2: transitions (not in state cover) * middle part * local suffixes
         transitionCover.removeAll(stateCover);
-        final Iterator<Word<I>> secondIterator = new SecondPhaseIterator<>(semantics,
+        final Iterator<Word<I>> secondIterator = new SecondPhaseIterator<>(automaton,
                                                                            inputs,
                                                                            transitionCover,
                                                                            IterableUtil.allTuples(inputs, 0, maxDepth));
@@ -147,21 +144,19 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
     private static class SecondPhaseIterator<S, I>
             extends AbstractThreeLevelIterator<Word<I>, List<I>, Word<I>, Word<I>> {
 
-        private final UniversalSemantics<S, I, ?, ?> semantics;
-        private final UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton;
+        private final UniversalSemantics<S, I, ?, ?, ?> automaton;
         private final Collection<? extends I> inputs;
 
         private final MutableMapping<S, List<Word<I>>> localSuffixSets;
         private final Iterable<List<I>> middleParts;
 
-        SecondPhaseIterator(UniversalSemantics<S, I, ?, ?> semantics,
+        SecondPhaseIterator(UniversalSemantics<S, I, ?, ?, ?> automaton,
                             Collection<? extends I> inputs,
                             Iterable<Word<I>> prefixes,
                             Iterable<List<I>> middleParts) {
             super(prefixes.iterator());
 
-            this.semantics = semantics;
-            this.automaton = semantics.getSemantics();
+            this.automaton = automaton;
             this.inputs = inputs;
             this.localSuffixSets = automaton.createStaticStateMapping();
             this.middleParts = middleParts;
@@ -180,10 +175,11 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
             @SuppressWarnings("nullness") // input sequences have been computed on defined transitions
             final @NonNull S state = automaton.getSuccessor(tmp, middle);
 
-            @Nullable List<Word<I>> localSuffixes = localSuffixSets.get(state);
+            @Nullable
+            List<Word<I>> localSuffixes = localSuffixSets.get(state);
 
             if (localSuffixes == null) {
-                localSuffixes = Automata.stateCharacterizingSet(semantics, inputs, state);
+                localSuffixes = Automata.stateCharacterizingSet(automaton, inputs, state);
                 if (localSuffixes.isEmpty()) {
                     localSuffixes = Collections.singletonList(Word.epsilon());
                 }

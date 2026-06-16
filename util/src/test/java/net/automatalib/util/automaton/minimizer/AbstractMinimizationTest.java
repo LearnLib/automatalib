@@ -19,8 +19,6 @@ import java.util.Collection;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
@@ -29,6 +27,7 @@ import net.automatalib.automaton.impl.UniversalCompactDetAutomaton;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.semantics.DeterministicFiniteSemantics.MutableSemantics;
 import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
@@ -222,10 +221,9 @@ public abstract class AbstractMinimizationTest {
         }
     }
 
-    private <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP> & UniversalSemantics<?, I, SP, TP>> void testMinimizeUniversal(TestConfig<I, A> test) {
+    private <I, SP, TP, A extends MutableSemantics<?, I, ?, SP, TP>> void testMinimizeUniversal(TestConfig<I, A> test) {
 
-        final UniversalDeterministicAutomaton<?, I, ?, SP, TP> result =
-                minimizeUniversal(test.automaton, test.alphabet);
+        final UniversalSemantics<?, I, ?, SP, TP> result = minimizeUniversal(test.automaton, test.alphabet);
 
         if (isPruned()) {
             Assert.assertEquals(result.size(), test.prunedSize);
@@ -241,25 +239,23 @@ public abstract class AbstractMinimizationTest {
     protected abstract <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
                                                                      Alphabet<I> alphabet);
 
-    protected abstract <I, SP, TP> UniversalDeterministicAutomaton<?, I, ?, SP, TP> minimizeUniversal(
-            MutableDeterministic<?, I, ?, SP, TP> automaton,
-            Alphabet<I> alphabet);
+    protected abstract <I, SP, TP> UniversalSemantics<?, I, ?, SP, TP> minimizeUniversal(MutableSemantics<?, I, ?, SP, TP> automaton,
+                                                                                         Alphabet<I> alphabet);
 
     protected abstract boolean isPruned();
 
     protected abstract boolean supportsPartial();
 
-    private static <S, I> void assertAllInequivalent(UniversalSemantics<S, I, ?, ?> semantics,
+    private static <S, I> void assertAllInequivalent(UniversalSemantics<S, I, ?, ?, ?> automaton,
                                                      Collection<? extends I> inputs) {
 
-        UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton = semantics.getSemantics();
         StateIDs<S> ids = automaton.stateIDs();
         int size = automaton.size();
         for (int i = 0; i < size - 1; i++) {
             S s1 = ids.getState(i);
             for (int j = i + 1; j < size; j++) {
                 S s2 = ids.getState(j);
-                Assert.assertNotNull(Automata.findSeparatingWord(semantics, s1, s2, inputs));
+                Assert.assertNotNull(Automata.findSeparatingWord(automaton, s1, s2, inputs));
             }
         }
     }

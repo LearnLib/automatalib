@@ -19,8 +19,9 @@ import java.util.Collection;
 import java.util.Random;
 
 import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.semantics.FiniteSemantics;
 
-public class RandomDeterministicAutomatonGenerator<S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>>
+public class RandomDeterministicAutomatonGenerator<S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP> & FiniteSemantics>
         extends RandomAutomatonGenerator<S, I, T, SP, TP, A> {
 
     public RandomDeterministicAutomatonGenerator(Random random,
