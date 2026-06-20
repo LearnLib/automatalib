@@ -58,5 +58,15 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
         return new StateIntAbstractionImpl<>(this);
     }
 
+    interface FiniteSemantics<S, I, T, SP, TP> extends UniversalDeterministicAutomaton<S, I, T, SP, TP>,
+                                                       DeterministicAutomaton.FiniteSemantics<S, I, T>,
+                                                       UniversalAutomaton.FiniteSemantics<S, I, T, SP, TP> {
+
+        @Override
+        default UniversalDeterministicAutomaton<S, I, T, SP, TP> getSemantics() {
+            return this;
+        }
+    }
+
 }
 

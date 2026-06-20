@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.concept.StateIDs;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -56,12 +57,29 @@ public abstract class AbstractDefaultSEVPA<I> extends AbstractSEVPA<Location, I>
         return locations.size();
     }
 
-    public void setInternalSuccessor(Location loc, I intSym, Location succ) {
-        loc.setInternalSuccessor(alphabet.getInternalSymbolIndex(intSym), succ);
+    @Override
+    public StateIDs<Location> stateIDs() {
+        return this;
     }
 
-    public void setReturnSuccessor(Location loc, I retSym, int stackSym, Location succ) {
-        loc.setReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym, succ);
+    @Override
+    public int getStateId(Location state) {
+        return state.getIndex();
+    }
+
+    @Override
+    public Location getState(int id) {
+        return this.locations.get(id);
+    }
+
+    @Override
+    public List<Location> getStates() {
+        return locations;
+    }
+
+    @Override
+    public Boolean getStateProperty(Location state) {
+        return state.isAccepting();
     }
 
     @Override
@@ -69,19 +87,8 @@ public abstract class AbstractDefaultSEVPA<I> extends AbstractSEVPA<Location, I>
         return loc.getInternalSuccessor(alphabet.getInternalSymbolIndex(intSym));
     }
 
-    @Override
-    public Location getLocation(int id) {
-        return locations.get(id);
-    }
-
-    @Override
-    public int getLocationId(Location loc) {
-        return loc.getIndex();
-    }
-
-    @Override
-    public List<Location> getLocations() {
-        return locations;
+    public void setInternalSuccessor(Location loc, I intSym, Location succ) {
+        loc.setInternalSuccessor(alphabet.getInternalSymbolIndex(intSym), succ);
     }
 
     @Override
@@ -89,13 +96,12 @@ public abstract class AbstractDefaultSEVPA<I> extends AbstractSEVPA<Location, I>
         return loc.getReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym);
     }
 
-    @Override
-    public boolean isAcceptingLocation(Location loc) {
-        return loc.isAccepting();
+    public void setReturnSuccessor(Location loc, I retSym, int stackSym, Location succ) {
+        loc.setReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym, succ);
     }
 
     @Override
-    public Location getInitialLocation() {
+    public Location getInitialState() {
         return initLoc;
     }
 

@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.transducer;
+package net.automatalib.semantic;
 
-import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
-import net.automatalib.automaton.concept.MutableStateOutput;
+import net.automatalib.ts.DeterministicTransitionSystem;
 
-public interface MutableMooreMachine<S, I, T, O>
-        extends MooreMachine<S, I, T, O>, FiniteSemantics<S, I, T, O, Void>, MutableStateOutput<S, O> {
-
-    @Override
-    default void setStateProperty(S state, O property) {
-        setStateOutput(state, property);
-    }
+@FunctionalInterface
+public interface DeterministicSemantics extends Semantics {
 
     @Override
-    default void setTransitionProperty(T transition, Void property) {}
+    DeterministicTransitionSystem<?, ?, ?> getSemantics();
 
 }

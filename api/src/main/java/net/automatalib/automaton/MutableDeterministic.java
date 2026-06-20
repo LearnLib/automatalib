@@ -159,4 +159,8 @@ public interface MutableDeterministic<S, I, T, SP, TP>
         return new StateIntAbstractionImpl<>(this);
     }
 
+    interface FiniteSemantics<S, I, T, SP, TP> extends MutableDeterministic<S, I, T, SP, TP>,
+                                                       MutableAutomaton.FiniteSemantics<S, I, T, SP, TP>,
+                                                       UniversalDeterministicAutomaton.FiniteSemantics<S, I, T, SP, TP> {}
+
 }

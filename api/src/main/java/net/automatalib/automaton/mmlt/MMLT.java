@@ -22,10 +22,8 @@ import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.common.util.Triple;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
-import net.automatalib.semantics.DeterministicSemantics.WildcardUniversalSemantics;
+import net.automatalib.semantic.DeterministicSemantics;
 import net.automatalib.symbol.time.SymbolicInput;
-import net.automatalib.symbol.time.TimedInput;
-import net.automatalib.symbol.time.TimedOutput;
 
 /**
  * Base type for a Mealy Machine with Local Timers (MMLT).
@@ -55,7 +53,7 @@ import net.automatalib.symbol.time.TimedOutput;
  */
 public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, T, Void, O>,
                                           InputAlphabetHolder<I>,
-                                          WildcardUniversalSemantics<State<S, O>, TimedInput<I>, Void, TimedOutput<O>>,
+                                          DeterministicSemantics,
                                           GraphViewable {
 
     /**

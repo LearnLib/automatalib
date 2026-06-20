@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;
 
+import net.automatalib.automaton.DeterministicAutomaton.FiniteSemantics;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.semantics.DeterministicFiniteSemantics.PlainSemantics;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -38,11 +38,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input symbol type
  *
- * @see Covers#stateCover(PlainSemantics, Collection, Collection)
+ * @see Covers#stateCover(FiniteSemantics, Collection, Collection)
  */
 class IncrementalStateCoverIterator<S, I> extends AbstractSimplifiedIterator<Word<I>> {
 
-    private final PlainSemantics<S, I, ?> automaton;
+    private final FiniteSemantics<S, I, ?> automaton;
     private final Collection<? extends I> inputs;
     private final Collection<? extends Word<I>> oldCover;
 
@@ -52,7 +52,7 @@ class IncrementalStateCoverIterator<S, I> extends AbstractSimplifiedIterator<Wor
     private Iterator<? extends I> inputIterator;
     private @Nullable Record<S, I> curr;
 
-    IncrementalStateCoverIterator(PlainSemantics<S, I, ?> automaton,
+    IncrementalStateCoverIterator(FiniteSemantics<S, I, ?> automaton,
                                   Collection<? extends I> inputs,
                                   Collection<? extends Word<I>> oldCover) {
         this.automaton = automaton;

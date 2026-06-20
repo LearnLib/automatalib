@@ -6,7 +6,6 @@ import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.mmlt.impl.CompactMMLT;
 import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.semantics.DeterministicFiniteSemantics;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;

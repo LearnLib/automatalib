@@ -17,11 +17,8 @@ package net.automatalib.automaton.impl;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
-import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
+import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
 import net.automatalib.automaton.base.AbstractCompactDeterministic;
-import net.automatalib.semantics.DeterministicFiniteSemantics.MutableSemantics;
-import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 
 /**
  * A default implementation for {@link AbstractCompactDeterministic} that uses {@link CompactTransition} as transition
@@ -34,11 +31,8 @@ import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics
  * @param <TP>
  *         transition property type
  */
-public class UniversalCompactDetAutomaton<I, SP, TP> extends UniversalCompactDet<I, SP, TP> implements
-                                                                                            MutableDeterministic<Integer, I, CompactTransition<TP>, SP, TP>,
-                                                                                            UniversalFiniteAlphabetAutomaton<Integer, I, CompactTransition<TP>, SP, TP>,
-                                                                                            UniversalSemantics<Integer, I, CompactTransition<TP>, SP, TP>,
-                                                                                            MutableSemantics<Integer, I, CompactTransition<TP>, SP, TP> {
+public class UniversalCompactDetAutomaton<I, SP, TP> extends UniversalCompactDet<I, SP, TP>
+        implements FiniteSemantics<Integer, I, CompactTransition<TP>, SP, TP> {
 
     public UniversalCompactDetAutomaton(Alphabet<I> alphabet) {
         super(alphabet);

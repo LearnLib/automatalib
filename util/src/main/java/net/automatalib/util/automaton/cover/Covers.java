@@ -24,10 +24,10 @@ import java.util.Queue;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
+import net.automatalib.automaton.DeterministicAutomaton.FiniteSemantics;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.semantics.DeterministicFiniteSemantics.PlainSemantics;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -56,7 +56,7 @@ public final class Covers {
      * @param <I>
      *         input symbol type
      */
-    public static <S, I> void stateCover(PlainSemantics<S, I, ?> automaton,
+    public static <S, I> void stateCover(FiniteSemantics<S, I, ?> automaton,
                                          Collection<? extends I> inputs,
                                          Collection<? super Word<I>> states) {
         cover(automaton, inputs, automaton.getInitialState(), states::add, w -> {});
@@ -75,9 +75,9 @@ public final class Covers {
      *
      * @return an iterator for the input sequences of the cover.
      *
-     * @see #stateCover(PlainSemantics, Collection, Collection)
+     * @see #stateCover(FiniteSemantics, Collection, Collection)
      */
-    public static <I> Iterator<Word<I>> stateCoverIterator(PlainSemantics<?, I, ?> automaton,
+    public static <I> Iterator<Word<I>> stateCoverIterator(FiniteSemantics<?, I, ?> automaton,
                                                            Collection<? extends I> inputs) {
         return new IncrementalStateCoverIterator<>(automaton, inputs, Collections.emptyList());
     }
@@ -103,7 +103,7 @@ public final class Covers {
      * @param <I>
      *         input symbol type
      */
-    public static <S, I> void transitionCover(PlainSemantics<S, I, ?> automaton,
+    public static <S, I> void transitionCover(FiniteSemantics<S, I, ?> automaton,
                                               Collection<? extends I> inputs,
                                               Collection<? super Word<I>> transitions) {
         cover(automaton, inputs, automaton.getInitialState(), w -> {}, transitions::add);
@@ -122,9 +122,9 @@ public final class Covers {
      *
      * @return an iterator for the input sequences of the cover.
      *
-     * @see #transitionCover(PlainSemantics, Collection, Collection)
+     * @see #transitionCover(FiniteSemantics, Collection, Collection)
      */
-    public static <I> Iterator<Word<I>> transitionCoverIterator(PlainSemantics<?, I, ?> automaton,
+    public static <I> Iterator<Word<I>> transitionCoverIterator(FiniteSemantics<?, I, ?> automaton,
                                                                 Collection<? extends I> inputs) {
         return new IncrementalTransitionCoverIterator<>(automaton, inputs, Collections.emptyList());
     }
@@ -145,10 +145,10 @@ public final class Covers {
      * @param <I>
      *         input symbol type
      *
-     * @see #stateCover(PlainSemantics, Collection, Collection)
-     * @see #transitionCover(PlainSemantics, Collection, Collection)
+     * @see #stateCover(FiniteSemantics, Collection, Collection)
+     * @see #transitionCover(FiniteSemantics, Collection, Collection)
      */
-    public static <S, I> void structuralCover(PlainSemantics<S, I, ?> automaton,
+    public static <S, I> void structuralCover(FiniteSemantics<S, I, ?> automaton,
                                               Collection<? extends I> inputs,
                                               Collection<? super Word<I>> cover) {
         cover(automaton, inputs, automaton.getInitialState(), cover::add, cover::add);
@@ -170,10 +170,10 @@ public final class Covers {
      * @param <I>
      *         input symbol type
      *
-     * @see #stateCover(PlainSemantics, Collection, Collection)
-     * @see #transitionCover(PlainSemantics, Collection, Collection)
+     * @see #stateCover(FiniteSemantics, Collection, Collection)
+     * @see #transitionCover(FiniteSemantics, Collection, Collection)
      */
-    public static <S, I> void cover(PlainSemantics<S, I, ?> automaton,
+    public static <S, I> void cover(FiniteSemantics<S, I, ?> automaton,
                                     Collection<? extends I> inputs,
                                     Collection<? super Word<I>> states,
                                     Collection<? super Word<I>> transitions) {
@@ -210,7 +210,7 @@ public final class Covers {
      *
      * @return a mapping from automaton states to their access sequences
      */
-    public static <S, I> Mapping<S, @Nullable Word<I>> cover(PlainSemantics<S, I, ?> automaton,
+    public static <S, I> Mapping<S, @Nullable Word<I>> cover(FiniteSemantics<S, I, ?> automaton,
                                                              Collection<? extends I> inputs,
                                                              @Nullable S start,
                                                              Consumer<? super Word<I>> states,
@@ -233,7 +233,8 @@ public final class Covers {
 
         while ((curr = bfsQueue.poll()) != null) {
             @SuppressWarnings("nullness") // in a breadth-first traversal the predecessors are always defined
-            @NonNull Word<I> as = reach.get(curr);
+            @NonNull
+            Word<I> as = reach.get(curr);
 
             for (I in : inputs) {
                 S succ = automaton.getSuccessor(curr, in);
@@ -274,9 +275,9 @@ public final class Covers {
      *
      * @return {@code true} if new sequences have been added to the state cover, {@code false} otherwise.
      *
-     * @see #stateCover(PlainSemantics, Collection, Collection)
+     * @see #stateCover(FiniteSemantics, Collection, Collection)
      */
-    public static <S, I> boolean incrementalStateCover(PlainSemantics<S, I, ?> automaton,
+    public static <S, I> boolean incrementalStateCover(FiniteSemantics<S, I, ?> automaton,
                                                        Collection<? extends I> inputs,
                                                        Collection<? extends Word<I>> oldStates,
                                                        Collection<? super Word<I>> newStates) {
@@ -343,9 +344,9 @@ public final class Covers {
      *
      * @return an iterator for the remaining input sequences of the cover.
      *
-     * @see #incrementalStateCover(PlainSemantics, Collection, Collection, Collection)
+     * @see #incrementalStateCover(FiniteSemantics, Collection, Collection, Collection)
      */
-    public static <I> Iterator<Word<I>> incrementalStateCoverIterator(PlainSemantics<?, I, ?> automaton,
+    public static <I> Iterator<Word<I>> incrementalStateCoverIterator(FiniteSemantics<?, I, ?> automaton,
                                                                       Collection<? extends I> inputs,
                                                                       Collection<? extends Word<I>> stateCover) {
         return new IncrementalStateCoverIterator<>(automaton, inputs, stateCover);
@@ -368,12 +369,12 @@ public final class Covers {
      *
      * @return {@code true} if new sequences have been added to the state cover, {@code false} otherwise.
      *
-     * @see #transitionCover(PlainSemantics, Collection, Collection)
+     * @see #transitionCover(FiniteSemantics, Collection, Collection)
      */
-    public static <I> boolean incrementalTransitionCover(PlainSemantics<?, I, ?> automaton,
+    public static <I> boolean incrementalTransitionCover(FiniteSemantics<?, I, ?> automaton,
                                                          Collection<? extends I> inputs,
                                                          Collection<? extends Word<I>> oldTransCover,
-                                                                                                                      Collection<? super Word<I>> newTransCover) {
+                                                         Collection<? super Word<I>> newTransCover) {
         final int oldTransSize = newTransCover.size();
 
         incrementalCover(automaton, inputs, Collections.emptySet(), oldTransCover, w -> {}, newTransCover::add);
@@ -396,9 +397,9 @@ public final class Covers {
      *
      * @return an iterator for the remaining input sequences of the cover.
      *
-     * @see #incrementalStateCover(PlainSemantics, Collection, Collection, Collection)
+     * @see #incrementalStateCover(FiniteSemantics, Collection, Collection, Collection)
      */
-    public static <I> Iterator<Word<I>> incrementalTransitionCoverIterator(PlainSemantics<?, I, ?> automaton,
+    public static <I> Iterator<Word<I>> incrementalTransitionCoverIterator(FiniteSemantics<?, I, ?> automaton,
                                                                            Collection<? extends I> inputs,
                                                                            Collection<? extends Word<I>> transitionCover) {
         return new IncrementalTransitionCoverIterator<>(automaton, inputs, transitionCover);
@@ -424,10 +425,10 @@ public final class Covers {
      *
      * @return {@code true} if new sequences have been added to the structural cover, {@code false} otherwise.
      *
-     * @see #incrementalStateCover(PlainSemantics, Collection, Collection, Collection)
-     * @see #incrementalStateCover(PlainSemantics, Collection, Collection, Collection)
+     * @see #incrementalStateCover(FiniteSemantics, Collection, Collection, Collection)
+     * @see #incrementalStateCover(FiniteSemantics, Collection, Collection, Collection)
      */
-    public static <I> boolean incrementalCover(PlainSemantics<?, I, ?> automaton,
+    public static <I> boolean incrementalCover(FiniteSemantics<?, I, ?> automaton,
                                                Collection<? extends I> inputs,
                                                Collection<? extends Word<I>> oldStateCover,
                                                Collection<? extends Word<I>> oldTransCover,
@@ -441,7 +442,7 @@ public final class Covers {
         return oldStateSize < newStateCover.size() || oldTransSize < newTransCover.size();
     }
 
-    private static <S, I> void incrementalCover(PlainSemantics<S, I, ?> automaton,
+    private static <S, I> void incrementalCover(FiniteSemantics<S, I, ?> automaton,
                                                 Collection<? extends I> inputs,
                                                 Collection<? extends Word<I>> oldStateCover,
                                                 Collection<? extends Word<I>> oldTransCover,
@@ -508,7 +509,7 @@ public final class Covers {
 
     static <S, I> boolean buildReachFromStateCover(MutableMapping<S, Record<S, I>> reach,
                                                    Queue<Record<S, I>> bfsQueue,
-                                                   PlainSemantics<S, I, ?> automaton,
+                                                   FiniteSemantics<S, I, ?> automaton,
                                                    Collection<? extends Word<I>> oldStateCover,
                                                    BiFunction<S, Word<I>, Record<S, I>> recordBuilder) {
 
@@ -533,7 +534,7 @@ public final class Covers {
 
     static <S, I> void buildReachFromTransitionCover(MutableMapping<S, Record<S, I>> reach,
                                                      Queue<Record<S, I>> bfsQueue,
-                                                     PlainSemantics<S, I, ?> automaton,
+                                                     FiniteSemantics<S, I, ?> automaton,
                                                      Collection<? extends Word<I>> oldTransCover,
                                                      BiFunction<S, Word<I>, Record<S, I>> recordBuilder,
                                                      Consumer<? super Word<I>> newStateCallback) {

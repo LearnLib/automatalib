@@ -15,8 +15,4 @@
  */
 package net.automatalib.automaton.fsa;
 
-import net.automatalib.semantics.FiniteSemantics.MutableSemantics;
-
-public interface MutableNFA<S, I> extends NFA<S, I>, MutableFSA<S, I>, MutableSemantics<S, I, S, Boolean, Void> {
-
-}
+public interface MutableNFA<S, I> extends NFA<S, I>, MutableFSA<S, I> {}

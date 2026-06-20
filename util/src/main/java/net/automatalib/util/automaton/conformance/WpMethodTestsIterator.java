@@ -22,12 +22,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import net.automatalib.automaton.UniversalDeterministicAutomaton.FiniteSemantics;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
@@ -49,7 +49,7 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
     private final Iterator<Word<I>> wpIterator;
 
     /**
-     * Convenience-constructor for {@link #WpMethodTestsIterator(UniversalSemantics, Collection, int)} that selects
+     * Convenience-constructor for {@link #WpMethodTestsIterator(FiniteSemantics, Collection, int)} that selects
      * {@code 0} as {@code maxDepth}.
      *
      * @param automaton
@@ -57,7 +57,7 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
      * @param inputs
      *         the input symbols that should be considered for test sequence generation
      */
-    public WpMethodTestsIterator(UniversalSemantics<?, I, ?, ?, ?> automaton, Collection<? extends I> inputs) {
+    public WpMethodTestsIterator(FiniteSemantics<?, I, ?, ?, ?> automaton, Collection<? extends I> inputs) {
         this(automaton, inputs, 0);
     }
 
@@ -71,7 +71,7 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
      * @param maxDepth
      *         the maximum number of symbols that are appended to the transition-cover part of the test sequences
      */
-    public WpMethodTestsIterator(UniversalSemantics<?, I, ?, ?, ?> automaton,
+    public WpMethodTestsIterator(FiniteSemantics<?, I, ?, ?, ?> automaton,
                                  Collection<? extends I> inputs,
                                  int maxDepth) {
 
@@ -144,13 +144,13 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
     private static class SecondPhaseIterator<S, I>
             extends AbstractThreeLevelIterator<Word<I>, List<I>, Word<I>, Word<I>> {
 
-        private final UniversalSemantics<S, I, ?, ?, ?> automaton;
+        private final FiniteSemantics<S, I, ?, ?, ?> automaton;
         private final Collection<? extends I> inputs;
 
         private final MutableMapping<S, List<Word<I>>> localSuffixSets;
         private final Iterable<List<I>> middleParts;
 
-        SecondPhaseIterator(UniversalSemantics<S, I, ?, ?, ?> automaton,
+        SecondPhaseIterator(FiniteSemantics<S, I, ?, ?, ?> automaton,
                             Collection<? extends I> inputs,
                             Iterable<Word<I>> prefixes,
                             Iterable<List<I>> middleParts) {

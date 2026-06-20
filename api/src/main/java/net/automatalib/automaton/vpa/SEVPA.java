@@ -15,14 +15,19 @@
  */
 package net.automatalib.automaton.vpa;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.automaton.concept.FiniteRepresentation;
+import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
+import net.automatalib.semantic.DeterministicSemantics;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -34,50 +39,79 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * For more information on the semantics of VPAs see e.g. <a href="https://doi.org/10.1007/11523468_89">Congruences for
  * Visibly Pushdown Languages</a> by Alur, Kumar, Madhusudan and Viswanathan.
  *
- * @param <L>
+ * @param <S>
  *         location type
  * @param <I>
  *         input alphabet type
  */
-public interface SEVPA<L, I>
-        extends DeterministicAcceptorTS<State<L>, I>, InputAlphabetHolder<I>, GraphViewable, FiniteRepresentation {
+public interface SEVPA<S, I> extends UniversalAutomaton<S, I, S, Boolean, Void>,
+                                     DeterministicSemantics,
+                                     GraphViewable,
+                                     InputAlphabetHolder<I> {
 
     @Override
     VPAlphabet<I> getInputAlphabet();
 
-    int encodeStackSym(L srcLoc, I callSym);
-
-    @Nullable L getInternalSuccessor(L loc, I intSym);
-
-    L getLocation(int id);
-
-    int getLocationId(L loc);
-
-    List<L> getLocations();
+    S getModuleEntry(I callSym);
 
     int getNumStackSymbols();
 
-    L getModuleEntry(I callSym);
+    int encodeStackSym(S srcLoc, I callSym);
 
-    @Nullable L getReturnSuccessor(L loc, I retSym, int stackSym);
+    @Nullable
+    S getInternalSuccessor(S loc, I intSym);
+
+    @Nullable
+    S getReturnSuccessor(S loc, I retSym, int stackSym);
+
+    @Nullable
+    S getInitialState();
 
     @Override
-    default boolean isAccepting(State<L> state) {
-        return state.getLocation() != null && isAcceptingLocation(state.getLocation()) &&
-               state.getStackContents() == null;
+    default Set<S> getInitialStates() {
+        final S init = getInitialState();
+        return init == null ? Collections.emptySet() : Collections.singleton(init);
     }
 
-    boolean isAcceptingLocation(L loc);
-
     @Override
-    default State<L> getInitialState() {
-        return new State<>(getInitialLocation(), null);
+    default Void getTransitionProperty(S transition) {
+        return null;
     }
 
-    L getInitialLocation();
+    @Override
+    default Collection<S> getTransitions(S state, I input) {
+        final VPAlphabet<I> alphabet = getInputAlphabet();
+        return switch (alphabet.getSymbolType(input)) {
+            case CALL:
+                yield Collections.singleton(getModuleEntry(input));
+            case INTERNAL:
+                final S iSucc = getInternalSuccessor(state, input);
+                yield iSucc == null ? Collections.emptyList() : Collections.singleton(iSucc);
+            case RETURN:
+                final int symbols = getNumStackSymbols();
+                final List<S> result = new ArrayList<>(symbols);
+                for (int i = 0; i < symbols; i++) {
+                    final S rSucc = getReturnSuccessor(state, input, i);
+                    if (rSucc != null) {
+                        result.add(rSucc);
+                    }
+                }
+                yield result;
+        };
+    }
 
     @Override
-    default Graph<L, SevpaViewEdge<L, I>> graphView() {
+    default S getSuccessor(S transition) {
+        return transition;
+    }
+
+    @Override
+    default DeterministicAcceptorTS<State<S>, I> getSemantics() {
+        return new SEVPASemantics<>(this);
+    }
+
+    @Override
+    default Graph<S, SevpaViewEdge<S, I>> graphView() {
         return new SEVPAGraphView<>(this);
     }
 }

@@ -46,4 +46,13 @@ public interface UniversalAutomaton<S, I, T, SP, TP>
         return new UniversalAutomatonGraphView<>(this, inputs);
     }
 
+    interface FiniteSemantics<S, I, T, SP, TP>
+            extends UniversalAutomaton<S, I, T, SP, TP>, Automaton.FiniteSemantics<S, I, T> {
+
+        @Override
+        default UniversalAutomaton<S, I, T, SP, TP> getSemantics() {
+            return this;
+        }
+    }
+
 }

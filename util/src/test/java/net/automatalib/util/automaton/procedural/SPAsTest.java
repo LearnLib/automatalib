@@ -40,6 +40,7 @@ import net.automatalib.automaton.procedural.impl.EmptySPA;
 import net.automatalib.automaton.procedural.impl.StackSPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.SEVPA;
+import net.automatalib.automaton.vpa.State;
 import net.automatalib.common.util.Holder;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
@@ -47,6 +48,7 @@ import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.dot.GraphDOT;
+import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.conformance.SPATestsIterator;
 import net.automatalib.util.automaton.conformance.WMethodTestsIterator;
@@ -561,23 +563,25 @@ public class SPAsTest {
 
     @Test(dataProvider = "systems")
     public <I> void testOneSEVPAConversion(SPA<?, I> spa) {
-        final OneSEVPA<?, I> oneSEVPA = SPAs.toOneSEVPA(spa);
+        final OneSEVPA<?, I> sevpa = SPAs.toOneSEVPA(spa);
+        final DeterministicAcceptorTS<? extends State<?>, I> semantics = sevpa.getSemantics();
 
         final List<Word<I>> tests = IteratorUtil.list(new SPATestsIterator<>(spa, WMethodTestsIterator::new));
 
         for (Word<I> t : tests) {
-            Assert.assertEquals(spa.accepts(t), oneSEVPA.accepts(t));
+            Assert.assertEquals(spa.accepts(t), semantics.accepts(t));
         }
     }
 
     @Test(dataProvider = "systems")
     public <I> void testNSEVPAConversion(SPA<?, I> spa) {
         final SEVPA<?, I> sevpa = SPAs.toNSEVPA(spa);
+        final DeterministicAcceptorTS<? extends State<?>, I> semantics = sevpa.getSemantics();
 
         final List<Word<I>> tests = IteratorUtil.list(new SPATestsIterator<>(spa, WMethodTestsIterator::new));
 
         for (Word<I> t : tests) {
-            Assert.assertEquals(spa.accepts(t), sevpa.accepts(t));
+            Assert.assertEquals(spa.accepts(t), semantics.accepts(t));
         }
     }
 

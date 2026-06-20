@@ -24,7 +24,7 @@ import java.util.Objects;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.semantics.DeterministicSemantics.UniversalSemantics;
+import net.automatalib.semantic.DeterministicSemantics;
 import net.automatalib.ts.concept.DeterministicSuffixOutputTS;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.word.Word;
@@ -47,7 +47,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         output symbol type
  */
 public interface SPMM<S, I, T, O> extends ProceduralSystem<I, MealyMachine<?, I, ?, O>>,
-                                          MealyTransitionSystem<S, I, T, O>, UniversalSemantics<S, I, T, Void, O> {
+                                          MealyTransitionSystem<S, I, T, O>,
+                                          DeterministicSemantics {
 
     @Override
     default SPMM<S, I, T, O> getSemantics() {

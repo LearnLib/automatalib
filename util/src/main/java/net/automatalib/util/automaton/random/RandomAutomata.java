@@ -30,7 +30,7 @@ import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralOutputAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.Automaton;
-import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.procedural.SBA;
@@ -45,7 +45,6 @@ import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.impl.Location;
 import net.automatalib.common.util.HashUtil;
-import net.automatalib.semantics.FiniteSemantics;
 import net.automatalib.util.automaton.fsa.DFAs;
 import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.automaton.minimizer.OneSEVPAMinimizer;
@@ -123,10 +122,10 @@ public final class RandomAutomata {
 
                 do {
                     retSym = alphabet.getReturnSymbol(r.nextInt(alphabet.getNumReturns()));
-                    srcLoc = result.getLocation(r.nextInt(result.size()));
+                    srcLoc = result.getState(r.nextInt(result.size()));
 
                     I callSym = alphabet.getCallSymbol(r.nextInt(alphabet.getNumCalls()));
-                    final Location stackLoc = result.getLocation(r.nextInt(result.size()));
+                    final Location stackLoc = result.getState(r.nextInt(result.size()));
                     stackSym = result.encodeStackSym(stackLoc, callSym);
                 } while (result.getReturnSuccessor(srcLoc, retSym, stackSym) != null);
 
@@ -138,7 +137,7 @@ public final class RandomAutomata {
 
                 do {
                     intSym = alphabet.getInternalSymbol(r.nextInt(alphabet.getNumInternals()));
-                    srcLoc = result.getLocation(r.nextInt(result.size()));
+                    srcLoc = result.getState(r.nextInt(result.size()));
                 } while (result.getInternalSuccessor(srcLoc, intSym) != null);
 
                 final Location newLoc = result.addLocation(r.nextDouble() < acceptanceProb);
@@ -146,20 +145,20 @@ public final class RandomAutomata {
             }
         }
 
-        for (Location loc : result.getLocations()) {
+        for (Location loc : result.getStates()) {
             for (I intSym : alphabet.getInternalAlphabet()) {
                 if (result.getInternalSuccessor(loc, intSym) == null) {
-                    final Location tgtLoc = result.getLocation(r.nextInt(result.size()));
+                    final Location tgtLoc = result.getState(r.nextInt(result.size()));
                     result.setInternalSuccessor(loc, intSym, tgtLoc);
                 }
             }
 
             for (I callSym : alphabet.getCallAlphabet()) {
-                for (Location stackLoc : result.getLocations()) {
+                for (Location stackLoc : result.getStates()) {
                     int stackSym = result.encodeStackSym(stackLoc, callSym);
                     for (I retSym : alphabet.getReturnAlphabet()) {
                         if (result.getReturnSuccessor(loc, retSym, stackSym) == null) {
-                            final Location tgtLoc = result.getLocation(r.nextInt(result.size()));
+                            final Location tgtLoc = result.getState(r.nextInt(result.size()));
                             result.setReturnSuccessor(loc, retSym, stackSym, tgtLoc);
                         }
                     }
@@ -338,24 +337,22 @@ public final class RandomAutomata {
                                mealies);
     }
 
-    public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP> & FiniteSemantics> A randomDeterministic(
-            Random rand,
-            @NonNegative int numStates,
-            Collection<? extends I> inputs,
-            Collection<? extends SP> stateProps,
-            Collection<? extends TP> transProps,
-            A out) {
+    public static <S, I, T, SP, TP, A extends FiniteSemantics<S, I, T, SP, TP>> A randomDeterministic(Random rand,
+                                                                                                      @NonNegative int numStates,
+                                                                                                      Collection<? extends I> inputs,
+                                                                                                      Collection<? extends SP> stateProps,
+                                                                                                      Collection<? extends TP> transProps,
+                                                                                                      A out) {
         return randomDeterministic(rand, numStates, inputs, stateProps, transProps, out, true);
     }
 
-    public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP> & FiniteSemantics> A randomDeterministic(
-            Random rand,
-            @NonNegative int numStates,
-            Collection<? extends I> inputs,
-            Collection<? extends SP> stateProps,
-            Collection<? extends TP> transProps,
-            A out,
-            boolean minimize) {
+    public static <S, I, T, SP, TP, A extends FiniteSemantics<S, I, T, SP, TP>> A randomDeterministic(Random rand,
+                                                                                                      @NonNegative int numStates,
+                                                                                                      Collection<? extends I> inputs,
+                                                                                                      Collection<? extends SP> stateProps,
+                                                                                                      Collection<? extends TP> transProps,
+                                                                                                      A out,
+                                                                                                      boolean minimize) {
 
         RandomDeterministicAutomatonGenerator<S, I, T, SP, TP, A> gen =
                 new RandomDeterministicAutomatonGenerator<>(rand, inputs, stateProps, transProps, out);

@@ -27,6 +27,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import net.automatalib.automaton.DeterministicAutomaton.FiniteSemantics;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.collection.AbstractTwoLevelIterator;
@@ -35,7 +36,6 @@ import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.random.RandomUtil;
-import net.automatalib.semantics.DeterministicFiniteSemantics.PlainSemantics;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -87,7 +87,7 @@ public class KWayTransitionCoverTestsIterator<S, I> implements Iterator<Word<I>>
      */
     public static final int DEFAULT_R_WALK_LEN = 10;
 
-    private final PlainSemantics<S, I, ?> automaton;
+    private final FiniteSemantics<S, I, ?> automaton;
     private final List<? extends I> alphabet;
     private final Random random;
     private final int randomWalkLen;
@@ -107,9 +107,9 @@ public class KWayTransitionCoverTestsIterator<S, I> implements Iterator<Word<I>>
      * @param inputs
      *         the inputs to consider for test case generation
      *
-     * @see #KWayTransitionCoverTestsIterator(PlainSemantics, Collection, Random)
+     * @see #KWayTransitionCoverTestsIterator(FiniteSemantics, Collection, Random)
      */
-    public KWayTransitionCoverTestsIterator(PlainSemantics<S, I, ?> automaton, Collection<? extends I> inputs) {
+    public KWayTransitionCoverTestsIterator(FiniteSemantics<S, I, ?> automaton, Collection<? extends I> inputs) {
         this(automaton, inputs, new Random());
     }
 
@@ -127,10 +127,10 @@ public class KWayTransitionCoverTestsIterator<S, I> implements Iterator<Word<I>>
      * @param random
      *         the random number generator to use
      *
-     * @see #KWayTransitionCoverTestsIterator(PlainSemantics, Collection, Random, int, int, int, int, int,
+     * @see #KWayTransitionCoverTestsIterator(FiniteSemantics, Collection, Random, int, int, int, int, int,
      * OptimizationMetric, GenerationMethod)
      */
-    public KWayTransitionCoverTestsIterator(PlainSemantics<S, I, ?> automaton,
+    public KWayTransitionCoverTestsIterator(FiniteSemantics<S, I, ?> automaton,
                                             Collection<? extends I> inputs,
                                             Random random) {
         this(automaton,
@@ -171,7 +171,7 @@ public class KWayTransitionCoverTestsIterator<S, I> implements Iterator<Word<I>>
      * @param generationMethod
      *         defines how the tests are generated
      */
-    public KWayTransitionCoverTestsIterator(PlainSemantics<S, I, ?> automaton,
+    public KWayTransitionCoverTestsIterator(FiniteSemantics<S, I, ?> automaton,
                                             Collection<? extends I> inputs,
                                             Random random,
                                             int randomWalkLen,
@@ -212,7 +212,7 @@ public class KWayTransitionCoverTestsIterator<S, I> implements Iterator<Word<I>>
         return iterator.next();
     }
 
-    private Set<Path<S, I>> generateRandomPaths(PlainSemantics<S, I, ?> hypothesis, S initial) {
+    private Set<Path<S, I>> generateRandomPaths(FiniteSemantics<S, I, ?> hypothesis, S initial) {
         final Set<Path<S, I>> result = new HashSet<>(HashUtil.capacity(numGeneratePaths));
 
         for (int i = 0; i < numGeneratePaths; i++) {
@@ -225,7 +225,7 @@ public class KWayTransitionCoverTestsIterator<S, I> implements Iterator<Word<I>>
         return result;
     }
 
-    private Path<S, I> createPath(PlainSemantics<S, I, ?> hypothesis, S initial, Word<I> steps) {
+    private Path<S, I> createPath(FiniteSemantics<S, I, ?> hypothesis, S initial, Word<I> steps) {
         final Set<KWayTransition<S, I>> transitions = new HashSet<>();
 
         final List<@Nullable S> prevStates = new ArrayList<>(steps.size());
@@ -252,7 +252,7 @@ public class KWayTransitionCoverTestsIterator<S, I> implements Iterator<Word<I>>
         return new Path<>(steps, transitions);
     }
 
-    private Iterator<Word<I>> generatePrefixSteps(PlainSemantics<S, I, ?> hypothesis, S initial) {
+    private Iterator<Word<I>> generatePrefixSteps(FiniteSemantics<S, I, ?> hypothesis, S initial) {
         final List<S> states = new ArrayList<>(hypothesis.getStates());
         Collections.reverse(states);
         return new PrefixStepsIterator(states.iterator(), initial);

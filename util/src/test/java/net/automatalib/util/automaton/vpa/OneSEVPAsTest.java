@@ -33,7 +33,8 @@ import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.impl.Location;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
-import net.automatalib.common.util.array.ArrayStorage;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.util.automaton.conformance.SPATestsIterator;
 import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
 import net.automatalib.util.automaton.random.RandomAutomata;
@@ -67,12 +68,14 @@ public class OneSEVPAsTest {
     @Test(dataProvider = "systems")
     public <L, I> void testAccessSequenceSet(OneSEVPA<L, I> sevpa) {
         final VPAlphabet<I> alphabet = sevpa.getInputAlphabet();
+        final DeterministicAcceptorTS<State<L>, I> semantics = sevpa.getSemantics();
 
-        final ArrayStorage<Word<I>> accessSequences = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
+        final Mapping<L, Word<I>> accessSequences = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
         final Set<L> locations = new HashSet<>(HashUtil.capacity(sevpa.size()));
 
-        for (Word<I> as : accessSequences) {
-            final State<L> s = sevpa.getState(as);
+        for (L loc : sevpa.getStates()) {
+            final Word<I> as = accessSequences.get(loc);
+            final State<L> s = semantics.getState(as);
             Assert.assertNotNull(s);
             Assert.assertTrue(locations.add(s.getLocation()));
         }
@@ -86,16 +89,17 @@ public class OneSEVPAsTest {
 
         final List<L> reachableLocations = OneSEVPAs.findReachableLocations(sevpa, alphabet);
 
-        Assert.assertEquals(new HashSet<>(reachableLocations), new HashSet<>(sevpa.getLocations()));
+        Assert.assertEquals(new HashSet<>(reachableLocations), new HashSet<>(sevpa.getStates()));
     }
 
     @Test(dataProvider = "systems")
     public <L, I> void testFindSeparatingWord(OneSEVPA<L, I> sevpa) {
         final VPAlphabet<I> alphabet = sevpa.getInputAlphabet();
-        final ArrayStorage<Word<I>> as = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
+        final DeterministicAcceptorTS<State<L>, I> semantics = sevpa.getSemantics();
+        final Mapping<L, Word<I>> as = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
 
-        for (L l1 : sevpa.getLocations()) {
-            for (L l2 : sevpa.getLocations()) {
+        for (L l1 : sevpa.getStates()) {
+            for (L l2 : sevpa.getStates()) {
                 final Pair<Word<I>, Word<I>> sepWord = OneSEVPAs.findSeparatingWord(sevpa, l1, l2, alphabet);
 
                 if (Objects.equals(l1, l2)) {
@@ -104,8 +108,8 @@ public class OneSEVPAsTest {
                     Assert.assertNotNull(sepWord);
                     final Word<I> pref = sepWord.getFirst();
                     final Word<I> suff = sepWord.getSecond();
-                    Assert.assertNotEquals(sevpa.accepts(Word.fromWords(pref, as.get(sevpa.getLocationId(l1)), suff)),
-                                           sevpa.accepts(Word.fromWords(pref, as.get(sevpa.getLocationId(l2)), suff)));
+                    Assert.assertNotEquals(semantics.accepts(Word.fromWords(pref, as.get(l1), suff)),
+                                           semantics.accepts(Word.fromWords(pref, as.get(l2), suff)));
                 }
             }
         }
@@ -114,20 +118,21 @@ public class OneSEVPAsTest {
     @Test(dataProvider = "systems")
     public <L, I> void testCharacterizingSet(OneSEVPA<L, I> sevpa) {
         final VPAlphabet<I> alphabet = sevpa.getInputAlphabet();
-        final ArrayStorage<Word<I>> accessSequences = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
+        final DeterministicAcceptorTS<State<L>, I> semantics = sevpa.getSemantics();
+        final Mapping<L, Word<I>> accessSequences = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
         final List<Pair<Word<I>, Word<I>>> cSet = new ArrayList<>(OneSEVPAs.findCharacterizingSet(sevpa, alphabet));
 
         final Set<boolean[]> signatures = new HashSet<>(HashUtil.capacity(sevpa.size()));
 
-        for (L l : sevpa.getLocations()) {
-            final Word<I> as = accessSequences.get(sevpa.getLocationId(l));
+        for (L l : sevpa.getStates()) {
+            final Word<I> as = accessSequences.get(l);
             final boolean[] signature = new boolean[cSet.size()];
             int idx = 0;
 
             for (Pair<Word<I>, Word<I>> p : cSet) {
                 final Word<I> w = Word.fromWords(p.getFirst(), as, p.getSecond());
                 Assert.assertTrue(alphabet.isWellMatched(w));
-                signature[idx++] = sevpa.accepts(w);
+                signature[idx++] = semantics.accepts(w);
             }
 
             Assert.assertTrue(signatures.add(signature));
@@ -139,19 +144,21 @@ public class OneSEVPAsTest {
     @Test(dataProvider = "spaSystems")
     public <L, I> void testToSPA(OneSEVPA<L, I> sevpa, boolean minimize) {
         final VPAlphabet<I> alphabet = sevpa.getInputAlphabet();
+        final DeterministicAcceptorTS<State<L>, I> semantics = sevpa.getSemantics();
 
         final String mainProcedure = "main";
-        final ArrayStorage<Word<I>> accessSequences = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
+        final Mapping<L, Word<I>> accessSequences = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
         final List<Pair<Word<I>, Word<I>>> cSet = new ArrayList<>(OneSEVPAs.findCharacterizingSet(sevpa, alphabet));
         final ConversionResult<I, String> conversionResult =
                 OneSEVPAs.toSPA(sevpa, alphabet, mainProcedure, new StringSymbolMapper<>(), minimize);
 
-        for (Word<I> as : accessSequences) {
+        for (L loc : sevpa.getStates()) {
+            final Word<I> as = accessSequences.get(loc);
             for (Pair<Word<I>, Word<I>> cs : cSet) {
                 final Word<I> w = Word.fromWords(cs.getFirst(), as, cs.getSecond());
                 final Word<String> mapped = conversionResult.mapper.apply(w);
 
-                Assert.assertEquals(conversionResult.spa.accepts(mapped), sevpa.accepts(w), w + " -> " + mapped);
+                Assert.assertEquals(conversionResult.spa.accepts(mapped), semantics.accepts(w), w + " -> " + mapped);
             }
         }
 
@@ -167,7 +174,9 @@ public class OneSEVPAsTest {
                     final Word<I> w = cropped.transform(conversionResult.reverseMapping::get);
                     final Word<String> mapped = conversionResult.mapper.apply(w);
 
-                    Assert.assertEquals(conversionResult.spa.accepts(mapped), sevpa.accepts(w), w + " -> " + mapped);
+                    Assert.assertEquals(conversionResult.spa.accepts(mapped),
+                                        semantics.accepts(w),
+                                        w + " -> " + mapped);
                 }
             }
         }
@@ -214,7 +223,7 @@ public class OneSEVPAsTest {
         Location locToCopy = null;
 
         outer:
-        for (Location l : automaton.getLocations()) {
+        for (Location l : automaton.getStates()) {
             for (I i : alphabet.getInternalAlphabet()) {
                 final Location succ = automaton.getInternalSuccessor(l, i);
                 if (!locationCache.add(succ)) {
@@ -230,8 +239,8 @@ public class OneSEVPAsTest {
         Assert.assertNotNull(incomingInput);
         Assert.assertNotNull(locToCopy);
 
-        final Set<Location> oldStates = new HashSet<>(automaton.getLocations());
-        final Location locCopy = automaton.addLocation(automaton.isAcceptingLocation(locToCopy));
+        final Set<Location> oldStates = new HashSet<>(automaton.getStates());
+        final Location locCopy = automaton.addLocation(automaton.getStateProperty(locToCopy));
 
         // make return transitions of old states behave identical for the new stack symbol
         for (I callSym : alphabet.getCallAlphabet()) {
@@ -310,14 +319,14 @@ public class OneSEVPAsTest {
         result.setReturnSuccessor(l3, 'r', s2, l4);
         result.setReturnSuccessor(l4, 'r', s0, l5);
 
-        for (Location l : result.getLocations()) {
+        for (Location l : result.getStates()) {
             for (Character i : internalAlphabet) {
                 final Location succ = result.getInternalSuccessor(l, i);
                 if (succ == null) {
                     result.setInternalSuccessor(l, i, l6);
                 }
             }
-            for (Location s : result.getLocations()) {
+            for (Location s : result.getStates()) {
                 final int sym = result.encodeStackSym(s, (Character) 'c');
                 final Location succ = result.getReturnSuccessor(l, 'r', sym);
                 if (succ == null) {

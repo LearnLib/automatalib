@@ -22,7 +22,7 @@ import java.util.Map;
 
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.semantics.DeterministicSemantics.UniversalSemantics;
+import net.automatalib.semantic.DeterministicSemantics;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
 /**
@@ -36,8 +36,8 @@ import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
  * @param <I>
  *         input symbol type
  */
-public interface SBA<S, I> extends ProceduralSystem<I, DFA<?, I>>, DeterministicAcceptorTS<S, I>,
-                                   UniversalSemantics<S, I, S, Boolean, Void> {
+public interface SBA<S, I>
+        extends ProceduralSystem<I, DFA<?, I>>, DeterministicAcceptorTS<S, I>, DeterministicSemantics {
 
     @Override
     default SBA<S, I> getSemantics() {

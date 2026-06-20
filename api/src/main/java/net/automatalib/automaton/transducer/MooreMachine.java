@@ -17,20 +17,17 @@ package net.automatalib.automaton.transducer;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.FiniteSemantics;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.MooreVisualizationHelper;
 import net.automatalib.graph.UniversalGraph;
-import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.ts.output.MooreTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
 
-public interface MooreMachine<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, T, O, Void>,
-                                                  StateOutputAutomaton<S, I, T, O>,
-                                                  MooreTransitionSystem<S, I, T, O>,
-                                                  UniversalSemantics<S, I, T, O, Void> {
+public interface MooreMachine<S, I, T, O>
+        extends FiniteSemantics<S, I, T, O, Void>, StateOutputAutomaton<S, I, T, O>, MooreTransitionSystem<S, I, T, O> {
 
     @Override
     default MooreMachine<S, I, T, O> getSemantics() {

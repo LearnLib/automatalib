@@ -30,7 +30,7 @@ public interface OneSEVPA<L, I> extends SEVPA<L, I> {
 
     @Override
     default L getModuleEntry(I callSym) {
-        return getInitialLocation();
+        return getInitialState();
     }
 
 }

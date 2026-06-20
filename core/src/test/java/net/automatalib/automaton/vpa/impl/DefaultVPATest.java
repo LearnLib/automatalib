@@ -96,17 +96,17 @@ public class DefaultVPATest {
     }
 
     private void checkBracketWord(SEVPA<?, Character> sevpa) {
-        Assert.assertTrue(sevpa.accepts(Word.fromString("()")));
-        Assert.assertTrue(sevpa.accepts(Word.fromString("[]")));
-        Assert.assertTrue(sevpa.accepts(Word.fromString("(([[]]))")));
-        Assert.assertTrue(sevpa.accepts(Word.fromString("([([])])")));
-        Assert.assertTrue(sevpa.accepts(Word.fromString("[(())]")));
+        Assert.assertTrue(sevpa.getSemantics().accepts(Word.fromString("()")));
+        Assert.assertTrue(sevpa.getSemantics().accepts(Word.fromString("[]")));
+        Assert.assertTrue(sevpa.getSemantics().accepts(Word.fromString("(([[]]))")));
+        Assert.assertTrue(sevpa.getSemantics().accepts(Word.fromString("([([])])")));
+        Assert.assertTrue(sevpa.getSemantics().accepts(Word.fromString("[(())]")));
 
-        Assert.assertFalse(sevpa.accepts(Word.fromString("")));
-        Assert.assertFalse(sevpa.accepts(Word.fromString("([([")));
-        Assert.assertFalse(sevpa.accepts(Word.fromString("(((]]]")));
-        Assert.assertFalse(sevpa.accepts(Word.fromString(")(")));
-        Assert.assertFalse(sevpa.accepts(Word.fromString("()()")));
+        Assert.assertFalse(sevpa.getSemantics().accepts(Word.fromString("")));
+        Assert.assertFalse(sevpa.getSemantics().accepts(Word.fromString("([([")));
+        Assert.assertFalse(sevpa.getSemantics().accepts(Word.fromString("(((]]]")));
+        Assert.assertFalse(sevpa.getSemantics().accepts(Word.fromString(")(")));
+        Assert.assertFalse(sevpa.getSemantics().accepts(Word.fromString("()()")));
     }
 
     /**
@@ -175,14 +175,14 @@ public class DefaultVPATest {
                                                          OneSEVPA<L, I> vpa,
                                                          Graph<L, SevpaViewEdge<L, I>> graph) {
 
-        Assert.assertEquals(new HashSet<>(vpa.getLocations()), new HashSet<>(graph.getNodes()));
+        Assert.assertEquals(new HashSet<>(vpa.getStates()), new HashSet<>(graph.getNodes()));
 
-        for (L loc : vpa.getLocations()) {
+        for (L loc : vpa.getStates()) {
             for (SevpaViewEdge<L, I> edge : graph.getOutgoingEdges(loc)) {
 
                 final I input = edge.input;
                 final L target = edge.target;
-                final int callLocId = edge.callLocId;
+                final L callLoc = edge.callLoc;
                 final I callSymbol = edge.callSymbol;
 
                 switch (alphabet.getSymbolType(input)) {
@@ -193,7 +193,7 @@ public class DefaultVPATest {
                         Assert.assertEquals(vpa.getInternalSuccessor(loc, input), target);
                         break;
                     case RETURN:
-                        final int stackSym = vpa.encodeStackSym(vpa.getLocation(callLocId), callSymbol);
+                        final int stackSym = vpa.encodeStackSym(callLoc, callSymbol);
                         Assert.assertEquals(vpa.getReturnSuccessor(loc, input, stackSym), target);
                         break;
                     default:

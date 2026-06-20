@@ -138,4 +138,8 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
         TP property = getTransitionProperty(trans);
         return createTransition(succ, property);
     }
+
+    interface FiniteSemantics<S, I, T, SP, TP>
+            extends MutableAutomaton<S, I, T, SP, TP>, UniversalAutomaton.FiniteSemantics<S, I, T, SP, TP> {}
+
 }

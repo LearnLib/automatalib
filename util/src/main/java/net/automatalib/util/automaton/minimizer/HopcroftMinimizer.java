@@ -21,6 +21,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions;
 import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstraction;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
@@ -31,8 +32,6 @@ import net.automatalib.automaton.impl.UniversalCompactDetAutomaton;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
-import net.automatalib.semantics.FiniteSemantics;
 import net.automatalib.util.automaton.minimizer.Storage.BooleanStorage;
 import net.automatalib.util.automaton.minimizer.Storage.GenericStorage;
 import net.automatalib.util.automaton.minimizer.Storage.VoidStorage;
@@ -487,7 +486,7 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizeUniversal(UniversalSemantics<?, I, ?, SP, TP> automaton,
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> automaton,
                                                                                         Alphabet<I> alphabet) {
         return minimizeUniversal(automaton, alphabet, PruningMode.PRUNE_AFTER);
     }
@@ -510,7 +509,7 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizeUniversal(UniversalSemantics<?, I, ?, SP, TP> automaton,
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> automaton,
                                                                                         Alphabet<I> alphabet,
                                                                                         PruningMode pruningMode) {
         return minimizeUniversal(automaton, alphabet, pruningMode, AutomatonInitialPartitioning.BY_FULL_SIGNATURE);
@@ -536,7 +535,7 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizeUniversal(UniversalSemantics<?, I, ?, SP, TP> automaton,
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizeUniversal(UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> automaton,
                                                                                         Alphabet<I> alphabet,
                                                                                         PruningMode pruningMode,
                                                                                         AutomatonInitialPartitioning ip) {
@@ -568,11 +567,12 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A minimizeUniversal(UniversalSemantics<?, I, ?, SP, TP> automaton,
-                                                                                                   Alphabet<I> alphabet,
-                                                                                                   PruningMode pruningMode,
-                                                                                                   AutomatonInitialPartitioning ip,
-                                                                                                   AutomatonCreator<A, I> creator) {
+    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A minimizeUniversal(
+            UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> automaton,
+            Alphabet<I> alphabet,
+            PruningMode pruningMode,
+            AutomatonInitialPartitioning ip,
+            AutomatonCreator<A, I> creator) {
 
         final FullIntAbstraction<?, SP, TP> abs = automaton.fullIntAbstraction(alphabet);
         final Hopcroft hopcroft =
@@ -609,7 +609,7 @@ public final class HopcroftMinimizer {
      *
      * @return {@code automaton} for convenience
      */
-    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP> & FiniteSemantics> A minimizeUniversalInvasive(
+    public static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A minimizeUniversalInvasive(
             A automaton,
             Collection<? extends I> inputs) {
         return minimizeUniversalInvasive(automaton, inputs, AutomatonInitialPartitioning.BY_FULL_SIGNATURE);
@@ -636,7 +636,7 @@ public final class HopcroftMinimizer {
      *
      * @return {@code automaton} for convenience
      */
-    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP> & FiniteSemantics> A minimizeUniversalInvasive(
+    public static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A minimizeUniversalInvasive(
             A automaton,
             Collection<? extends I> inputs,
             AutomatonInitialPartitioning ip) {
@@ -660,8 +660,9 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizePartialUniversal(UniversalSemantics<?, I, ?, SP, TP> automaton,
-                                                                                               Alphabet<I> alphabet) {
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizePartialUniversal(
+            UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> automaton,
+            Alphabet<I> alphabet) {
         return minimizePartialUniversal(automaton, alphabet, PruningMode.PRUNE_AFTER);
     }
 
@@ -683,9 +684,10 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizePartialUniversal(UniversalSemantics<?, I, ?, SP, TP> automaton,
-                                                                                               Alphabet<I> alphabet,
-                                                                                               PruningMode pruningMode) {
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizePartialUniversal(
+            UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> automaton,
+            Alphabet<I> alphabet,
+            PruningMode pruningMode) {
 
         return minimizePartialUniversal(automaton,
                                         alphabet,
@@ -716,11 +718,12 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizePartialUniversal(UniversalSemantics<?, I, ?, SP, TP> automaton,
-                                                                                               Alphabet<I> alphabet,
-                                                                                               PruningMode pruningMode,
-                                                                                               AutomatonInitialPartitioning ip,
-                                                                                               Object sinkClassification) {
+    public static <I, SP, TP> UniversalCompactDetAutomaton<I, SP, TP> minimizePartialUniversal(
+            UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> automaton,
+            Alphabet<I> alphabet,
+            PruningMode pruningMode,
+            AutomatonInitialPartitioning ip,
+            Object sinkClassification) {
 
         return minimizePartialUniversal(automaton,
                                         alphabet,
@@ -757,8 +760,8 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP> & FiniteSemantics> A minimizePartialUniversal(
-            UniversalSemantics<?, I, ?, SP, TP> automaton,
+    public static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A minimizePartialUniversal(
+            UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> automaton,
             Alphabet<I> alphabet,
             PruningMode pruningMode,
             AutomatonInitialPartitioning ip,
@@ -783,11 +786,11 @@ public final class HopcroftMinimizer {
 
     }
 
-    private static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP> & FiniteSemantics> A minimizeInvasive(A automaton,
-                                                                                                                     Collection<? extends I> alphabet,
-                                                                                                                     AutomatonInitialPartitioning ip,
-                                                                                                                     Storage<SP> spStorage,
-                                                                                                                     Storage<TP> tpStorage) {
+    private static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A minimizeInvasive(A automaton,
+                                                                                                                   Collection<? extends I> alphabet,
+                                                                                                                   AutomatonInitialPartitioning ip,
+                                                                                                                   Storage<SP> spStorage,
+                                                                                                                   Storage<TP> tpStorage) {
 
         final MutableDeterministicAbstractions.FullIntAbstraction<?, SP, TP> abs =
                 automaton.fullIntAbstraction(Alphabets.fromCollection(alphabet));

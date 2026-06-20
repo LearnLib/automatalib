@@ -47,4 +47,12 @@ public interface Automaton<S, I, T> extends TransitionSystem<S, I, T>, SimpleAut
     default Graph<S, TransitionEdge<I, T>> transitionGraphView(Collection<? extends I> inputs) {
         return new AutomatonGraphView<>(this, inputs);
     }
+
+    interface FiniteSemantics<S, I, T> extends Automaton<S, I, T>, net.automatalib.semantic.FiniteSemantics {
+
+        @Override
+        default Automaton<S, I, T> getSemantics() {
+            return this;
+        }
+    }
 }

@@ -22,9 +22,9 @@ import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.semantics.DeterministicFiniteSemantics.MutableSemantics;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -192,8 +192,8 @@ public class NearLinearEquivalenceTestTest {
         Assert.assertEquals(sepWord.length(), TestUtil.LARGE_AUTOMATON_A.size() - 1);
     }
 
-    private static <I> void testForEmptySepWord(MutableSemantics<?, I, ?, ?, ?> a1,
-                                                MutableSemantics<?, I, ?, ?, ?> a2,
+    private static <I> void testForEmptySepWord(FiniteSemantics<?, I, ?, ?, ?> a1,
+                                                FiniteSemantics<?, I, ?, ?, ?> a2,
                                                 Collection<I> inputs) {
         Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(a1, a1, inputs));
         Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(a2, a2, inputs));

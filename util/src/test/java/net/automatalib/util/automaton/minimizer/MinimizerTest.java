@@ -19,7 +19,8 @@ import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
@@ -28,8 +29,6 @@ import net.automatalib.automaton.impl.UniversalCompactDetAutomaton;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.semantics.DeterministicFiniteSemantics.MutableSemantics;
-import net.automatalib.semantics.DeterministicFiniteSemantics.UniversalSemantics;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.MinimizationResult;
@@ -55,8 +54,9 @@ public class MinimizerTest extends AbstractMinimizationTest {
     }
 
     @Override
-    protected <I, SP, TP> UniversalSemantics<?, I, ?, SP, TP> minimizeUniversal(MutableSemantics<?, I, ?, SP, TP> automaton,
-                                                                                Alphabet<I> alphabet) {
+    protected <I, SP, TP> UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> minimizeUniversal(
+            FiniteSemantics<?, I, ?, SP, TP> automaton,
+            Alphabet<I> alphabet) {
         final UniversalCompactDetAutomaton<I, SP, TP> result = new UniversalCompactDetAutomaton<>(alphabet);
         Automata.minimize(automaton, alphabet, result);
         return result;
