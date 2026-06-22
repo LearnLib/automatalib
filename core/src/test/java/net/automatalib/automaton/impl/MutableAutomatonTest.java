@@ -139,6 +139,11 @@ public class MutableAutomatonTest {
     }
 
     @Test
+    public void testCompactTransitionOutput() {
+        this.checkAutomaton(new CompactTransitionOutput.Creator<>(), ALPHABET, EMPTY_PROPS, TRANS_PROPS);
+    }
+
+    @Test
     public void testUniversalCompactDet() {
         this.checkAutomaton(new UniversalCompactDet.Creator<>(), ALPHABET, STATE_PROPS, TRANS_PROPS);
     }

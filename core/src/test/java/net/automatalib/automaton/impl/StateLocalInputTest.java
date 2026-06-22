@@ -94,6 +94,21 @@ public class StateLocalInputTest {
         this.testAutomaton(new CompactSimpleAutomaton<>(ALPHABET));
     }
 
+    @Test
+    public void testCompactTransitionOutput() {
+        this.testAutomaton(new CompactTransitionOutput<>(ALPHABET));
+    }
+
+    @Test
+    public void testUniversalCompactDet() {
+        this.testAutomaton(new UniversalCompactDet<>(ALPHABET));
+    }
+
+    @Test
+    public void testUniversalCompactDetAutomaton() {
+        this.testAutomaton(new UniversalCompactDetAutomaton<>(ALPHABET));
+    }
+
     private <M extends MutableAutomaton<S, Integer, T, SP, TP> & StateLocalInput<S, Integer>, S, T, SP, TP> void testAutomaton(
             final M automaton) {
 
