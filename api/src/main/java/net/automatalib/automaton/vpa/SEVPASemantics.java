@@ -19,19 +19,19 @@ import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class SEVPASemantics<S, I> implements DeterministicAcceptorTS<State<S>, I> {
+public class SEVPASemantics<L, I> implements DeterministicAcceptorTS<State<L>, I> {
 
-    private final SEVPA<S, I> sevpa;
+    private final SEVPA<L, I> sevpa;
     private final VPAlphabet<I> alphabet;
 
-    public SEVPASemantics(SEVPA<S, I> sevpa) {
+    public SEVPASemantics(SEVPA<L, I> sevpa) {
         this.sevpa = sevpa;
         this.alphabet = sevpa.getInputAlphabet();
     }
 
     @Override
-    public @Nullable State<S> getTransition(State<S> state, I input) {
-        final S loc = state.getLocation();
+    public @Nullable State<L> getTransition(State<L> state, I input) {
+        final L loc = state.getLocation();
         return switch (alphabet.getSymbolType(input)) {
             case CALL:
                 final int newStackElem = sevpa.encodeStackSym(loc, input);
@@ -43,14 +43,14 @@ public class SEVPASemantics<S, I> implements DeterministicAcceptorTS<State<S>, I
                     yield null;
                 }
                 final int stackElem = contents.peek();
-                final S succ = sevpa.getReturnSuccessor(loc, input, stackElem);
+                final L succ = sevpa.getReturnSuccessor(loc, input, stackElem);
                 if (succ == null) {
                     yield null;
                 }
                 yield new State<>(succ, contents.pop());
             }
             case INTERNAL: {
-                final S succ = sevpa.getInternalSuccessor(loc, input);
+                final L succ = sevpa.getInternalSuccessor(loc, input);
                 if (succ == null) {
                     yield null;
                 }
@@ -60,12 +60,12 @@ public class SEVPASemantics<S, I> implements DeterministicAcceptorTS<State<S>, I
     }
 
     @Override
-    public boolean isAccepting(State<S> state) {
+    public boolean isAccepting(State<L> state) {
         return sevpa.getStateProperty(state.getLocation()) && state.getStackContents() == null;
     }
 
     @Override
-    public State<S> getInitialState() {
+    public State<L> getInitialState() {
         return new State<>(sevpa.getInitialState(), null);
     }
 }

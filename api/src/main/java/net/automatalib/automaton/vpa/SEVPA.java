@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.UniversalAutomaton;
+import net.automatalib.automaton.concept.InitialState;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graph.Graph;
@@ -38,13 +38,20 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <p>
  * For more information on the semantics of VPAs see e.g. <a href="https://doi.org/10.1007/11523468_89">Congruences for
  * Visibly Pushdown Languages</a> by Alur, Kumar, Madhusudan and Viswanathan.
+ * <p>
+ * Note that this formalism integrates into the hierarchy of a non-deterministic {@link UniversalAutomaton} because a
+ * single return symbol may identify multiple transitions depending on the current top-of-stack symbol. Via
+ * {@link #getInternalSuccessor(Object, Object)} and {@link #getReturnSuccessor(Object, Object, int)}, these
+ * information can be accessed deterministically. As a result, its <em>states</em> act more like locations than actual
+ * states. A (deterministic, infinite-state) semantics view can be obtained via the {@link #getSemantics()} method.
  *
- * @param <S>
+ * @param <L>
  *         location type
  * @param <I>
- *         input alphabet type
+ *         input symbol type
  */
-public interface SEVPA<S, I> extends UniversalAutomaton<S, I, S, Boolean, Void>,
+public interface SEVPA<L, I> extends UniversalAutomaton<L, I, L, Boolean, Void>,
+                                     InitialState<L>,
                                      DeterministicSemantics,
                                      GraphViewable,
                                      InputAlphabetHolder<I> {
@@ -52,46 +59,38 @@ public interface SEVPA<S, I> extends UniversalAutomaton<S, I, S, Boolean, Void>,
     @Override
     VPAlphabet<I> getInputAlphabet();
 
-    S getModuleEntry(I callSym);
+    L getModuleEntry(I callSym);
 
     int getNumStackSymbols();
 
-    int encodeStackSym(S srcLoc, I callSym);
+    int encodeStackSym(L srcLoc, I callSym);
 
-    @Nullable
-    S getInternalSuccessor(S loc, I intSym);
+    @Nullable L getInternalSuccessor(L loc, I intSym);
 
-    @Nullable
-    S getReturnSuccessor(S loc, I retSym, int stackSym);
+    @Nullable L getReturnSuccessor(L loc, I retSym, int stackSym);
 
-    @Nullable
-    S getInitialState();
+    @Override // do not allow nullable initial state
+    L getInitialState();
 
     @Override
-    default Set<S> getInitialStates() {
-        final S init = getInitialState();
-        return init == null ? Collections.emptySet() : Collections.singleton(init);
-    }
-
-    @Override
-    default Void getTransitionProperty(S transition) {
+    default Void getTransitionProperty(L transition) {
         return null;
     }
 
     @Override
-    default Collection<S> getTransitions(S state, I input) {
+    default Collection<L> getTransitions(L state, I input) {
         final VPAlphabet<I> alphabet = getInputAlphabet();
         return switch (alphabet.getSymbolType(input)) {
             case CALL:
                 yield Collections.singleton(getModuleEntry(input));
             case INTERNAL:
-                final S iSucc = getInternalSuccessor(state, input);
+                final L iSucc = getInternalSuccessor(state, input);
                 yield iSucc == null ? Collections.emptyList() : Collections.singleton(iSucc);
             case RETURN:
                 final int symbols = getNumStackSymbols();
-                final List<S> result = new ArrayList<>(symbols);
+                final List<L> result = new ArrayList<>(symbols);
                 for (int i = 0; i < symbols; i++) {
-                    final S rSucc = getReturnSuccessor(state, input, i);
+                    final L rSucc = getReturnSuccessor(state, input, i);
                     if (rSucc != null) {
                         result.add(rSucc);
                     }
@@ -101,17 +100,17 @@ public interface SEVPA<S, I> extends UniversalAutomaton<S, I, S, Boolean, Void>,
     }
 
     @Override
-    default S getSuccessor(S transition) {
+    default L getSuccessor(L transition) {
         return transition;
     }
 
     @Override
-    default DeterministicAcceptorTS<State<S>, I> getSemantics() {
+    default DeterministicAcceptorTS<State<L>, I> getSemantics() {
         return new SEVPASemantics<>(this);
     }
 
     @Override
-    default Graph<S, SevpaViewEdge<S, I>> graphView() {
+    default Graph<L, SevpaViewEdge<L, I>> graphView() {
         return new SEVPAGraphView<>(this);
     }
 }

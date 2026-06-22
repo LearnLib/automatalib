@@ -24,21 +24,22 @@ import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.Fu
 import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.FullIntAbstractionImpl;
 import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.StateIntAbstraction;
 import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.StateIntAbstractionImpl;
+import net.automatalib.semantic.DeterministicFiniteSemantics;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Interface for a <i>mutable</i> deterministic automaton.
  *
  * @param <S>
- *         state class.
+ *         state type
  * @param <I>
- *         input symbol class.
+ *         input symbol type
  * @param <T>
- *         transition class.
+ *         transition type
  * @param <SP>
- *         state property.
+ *         state property type
  * @param <TP>
- *         transition property.
+ *         transition property type
  */
 public interface MutableDeterministic<S, I, T, SP, TP>
         extends UniversalDeterministicAutomaton<S, I, T, SP, TP>, MutableAutomaton<S, I, T, SP, TP> {
@@ -159,6 +160,20 @@ public interface MutableDeterministic<S, I, T, SP, TP>
         return new StateIntAbstractionImpl<>(this);
     }
 
+    /**
+     * Convenience interface that links a {@link MutableDeterministic} with {@link DeterministicFiniteSemantics}.
+     *
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     */
     interface FiniteSemantics<S, I, T, SP, TP> extends MutableDeterministic<S, I, T, SP, TP>,
                                                        MutableAutomaton.FiniteSemantics<S, I, T, SP, TP>,
                                                        UniversalDeterministicAutomaton.FiniteSemantics<S, I, T, SP, TP> {}

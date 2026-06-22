@@ -29,15 +29,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * removed, then {@link Shrinkable} is the adequate interface.
  *
  * @param <S>
- *         state class.
+ *         state type
  * @param <I>
- *         input symbol class.
+ *         input symbol type
  * @param <T>
- *         transition class.
+ *         transition type
  * @param <SP>
- *         state property.
+ *         state property type
  * @param <TP>
- *         transition property.
+ *         transition property type
  */
 public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S, I, T, SP, TP> {
 
@@ -139,6 +139,21 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
         return createTransition(succ, property);
     }
 
+    /**
+     * Convenience interface that links a {@link MutableAutomaton} with
+     * {@link net.automatalib.semantic.FiniteSemantics}.
+     *
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     */
     interface FiniteSemantics<S, I, T, SP, TP>
             extends MutableAutomaton<S, I, T, SP, TP>, UniversalAutomaton.FiniteSemantics<S, I, T, SP, TP> {}
 

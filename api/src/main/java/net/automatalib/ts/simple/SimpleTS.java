@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.automatalib.automaton.concept.InitialStates;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 
@@ -31,7 +32,7 @@ import net.automatalib.common.util.mapping.MutableMapping;
  * @param <I>
  *         symbol class.
  */
-public interface SimpleTS<S, I> {
+public interface SimpleTS<S, I> extends InitialStates<S> {
 
     /**
      * Retrieves the set of successors for the given input symbol.
@@ -87,13 +88,6 @@ public interface SimpleTS<S, I> {
     default Set<S> getStates(Iterable<? extends I> input) {
         return getSuccessors(getInitialStates(), input);
     }
-
-    /**
-     * Retrieves the set of initial states of the transition system.
-     *
-     * @return the initial states.
-     */
-    Set<S> getInitialStates();
 
     /**
      * Creates a {@link MutableMapping} allowing to associate arbitrary data with this transition system's states. The

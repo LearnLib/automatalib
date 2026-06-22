@@ -567,7 +567,7 @@ public final class HopcroftMinimizer {
      *
      * @return the minimized automaton, initially constructed from the given {@code creator}.
      */
-    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A minimizeUniversal(
+    public static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A minimizeUniversal(
             UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> automaton,
             Alphabet<I> alphabet,
             PruningMode pruningMode,

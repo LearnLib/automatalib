@@ -23,7 +23,7 @@ import net.automatalib.automaton.abstraction.DeterministicAbstractions.FullIntAb
 import net.automatalib.automaton.abstraction.DeterministicAbstractions.StateIntAbstraction;
 import net.automatalib.automaton.abstraction.DeterministicAbstractions.StateIntAbstractionImpl;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
-import net.automatalib.semantic.DeterministicSemantics;
+import net.automatalib.semantic.DeterministicFiniteSemantics;
 import net.automatalib.ts.DeterministicTransitionSystem;
 
 /**
@@ -55,8 +55,18 @@ public interface DeterministicAutomaton<S, I, T>
         return new StateIntAbstractionImpl<>(this);
     }
 
+    /**
+     * Convenience interface that links a {@link DeterministicAutomaton} with {@link DeterministicFiniteSemantics}.
+     *
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     */
     interface FiniteSemantics<S, I, T>
-            extends DeterministicAutomaton<S, I, T>, Automaton.FiniteSemantics<S, I, T>, DeterministicSemantics {
+            extends DeterministicAutomaton<S, I, T>, Automaton.FiniteSemantics<S, I, T>, DeterministicFiniteSemantics {
 
         @Override
         default DeterministicAutomaton<S, I, T> getSemantics() {

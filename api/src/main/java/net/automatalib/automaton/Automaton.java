@@ -48,6 +48,16 @@ public interface Automaton<S, I, T> extends TransitionSystem<S, I, T>, SimpleAut
         return new AutomatonGraphView<>(this, inputs);
     }
 
+    /**
+     * Convenience interface that links an {@link Automaton} with {@link net.automatalib.semantic.FiniteSemantics}.
+     *
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     */
     interface FiniteSemantics<S, I, T> extends Automaton<S, I, T>, net.automatalib.semantic.FiniteSemantics {
 
         @Override

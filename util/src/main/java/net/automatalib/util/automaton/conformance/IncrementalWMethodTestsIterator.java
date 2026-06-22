@@ -96,8 +96,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
         Item<I> nextItem = itemQueue.remove();
 
         Word<I> result = assembleWord(nextItem);
-        @Nullable
-        Item<I> inc = increment(nextItem);
+        @Nullable Item<I> inc = increment(nextItem);
         if (inc != null) {
             itemQueue.offer(inc);
         }

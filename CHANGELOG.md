@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 * A new formalism for *Mealy machines with local timers* (MMLTs) including means for conformance testing and equivalence checking has been added (thanks to [Paul Kogel](https://github.com/pdev55)).
+* With the introduction of `MMLT`s which are finite-state systems structurally but infinite-state systems semantically, AutomataLib now more rigorously distinguishes between these two concepts by introducing (and at some points requiring) specific `{Finite,}Semantics` types. For automaton types that are inherently finite-state (e.g., `DFA`s, `MealyMachine`s, etc.), this should not require any refactoring.
 * Added a new `automata-serialization-mata` module for serializing (explicit) NFAs in the `.mata` format as used by the [mata library](https://github.com/VeriFIT/mata).
 * `automata-modelchecking-m3c` now supports ARM-based macOS systems.
 * `automata-modelchecking-m3c` can now be included in jlink images.
@@ -21,15 +22,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 
 * AutomataLib now requires Java 17 at runtime.
-* The following classes have been refactored to `record`s:
-  * `BricsTransitionProperty`
-  * `TransitionEdge{,.Property}`
-  * `ProbabilisticOutput`
-  * `LTSminVersion`
-* The following class hierarchies have been made `sealed`:
-  * `CommonAttrs`
-  * `CommonStyles`
+  * The following classes have been refactored to `record`s:
+    * `BricsTransitionProperty`
+    * `TransitionEdge{,.Property}`
+    * `ProbabilisticOutput`
+    * `LTSminVersion`
+  * The following class hierarchies have been made `sealed`:
+    * `CommonAttrs`
+    * `CommonStyles`
+* `SEVPA`s have been adjusted to the new structure/semantics split, by now implementing `UniversalAutomaton` and `DeterministicSemantics`.
 * `AbstractDDSolver` no longer implements the `ModelChecker` interface to prevent possible conflicts with how systems are managed (an `AbstractDDSolver` is inherently linked to a specific CFMPS instance, whereas a `ModelChecker` should handle arbitrary ones). Instead, obtain M3C-based model checkers via the new `M3CChecker` factory.
+* The `IntAbstraction` interfaces have been moved to their respective implementations in the `net.automatalib.automaton.abstraction` package.
+* The `ShrinkableAutomaton` interface has been replaced with the `Shrinkable` concept.
 * The `compute{State,Suffix,}Output` concepts from `Det{Suffix,}OutputAutomaton` have been lifted to infinite-state transition systems. As part of this refactoring, some inconsistencies have been addressed. Previously, for `Word`-output systems, `computeSuffixOutput` threw an `UndefinedPropertyAccessException` if the prefix traversed an undefined transition but not if the suffix did (here, the output would only be cut short). Now, both methods simply early-exit output computation. Furthermore, these changes also include the following renamings:
   * `DetOutputAutomaton` -> `DeterministicOutputAutomaton`
   * `DetSuffixOutputAutomaton` -> `DeterministicSuffixOutputAutomaton`

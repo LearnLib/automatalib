@@ -17,9 +17,17 @@ package net.automatalib.semantic;
 
 import net.automatalib.ts.TransitionSystem;
 
+/**
+ * An interface for providing non-deterministic, infinite-state semantics.
+ */
 @FunctionalInterface
 public interface Semantics {
 
+    /**
+     * Returns a view on the semantic transition systems induced by the implementing structure.
+     *
+     * @return a view on the semantic transition systems induced by the implementing structure
+     */
     TransitionSystem<?, ?, ?> getSemantics();
 
 }

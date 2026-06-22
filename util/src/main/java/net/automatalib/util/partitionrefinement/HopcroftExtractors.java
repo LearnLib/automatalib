@@ -65,24 +65,26 @@ public final class HopcroftExtractors {
      * @return an automaton created using the specified creator, over the specified input alphabet, and reflecting the
      * partition data of the specified {@link Hopcroft} object
      */
-    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministic(Hopcroft hopcroft,
-                                                                                                 AutomatonCreator<A, I> creator,
-                                                                                                 Alphabet<I> inputs,
-                                                                                                 SimpleDeterministicAbstractions.FullIntAbstraction abs,
-                                                                                                 IntFunction<? extends SP> spExtractor,
-                                                                                                 BiIntFunction<? extends TP> tpExtractor,
-                                                                                                 boolean pruneUnreachable) {
+    public static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A toDeterministic(
+            Hopcroft hopcroft,
+            AutomatonCreator<A, I> creator,
+            Alphabet<I> inputs,
+            SimpleDeterministicAbstractions.FullIntAbstraction abs,
+            IntFunction<? extends SP> spExtractor,
+            BiIntFunction<? extends TP> tpExtractor,
+            boolean pruneUnreachable) {
         return pruneUnreachable ?
                 toDeterministicPruned(hopcroft, creator, inputs, abs, spExtractor, tpExtractor) :
                 toDeterministicUnpruned(hopcroft, creator, inputs, abs, spExtractor, tpExtractor);
     }
 
-    private static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicPruned(Hopcroft hopcroft,
-                                                                                                        AutomatonCreator<A, I> creator,
-                                                                                                        Alphabet<I> inputs,
-                                                                                                        SimpleDeterministicAbstractions.FullIntAbstraction abs,
-                                                                                                        IntFunction<? extends SP> spExtractor,
-                                                                                                        BiIntFunction<? extends TP> tpExtractor) {
+    private static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A toDeterministicPruned(
+            Hopcroft hopcroft,
+            AutomatonCreator<A, I> creator,
+            Alphabet<I> inputs,
+            SimpleDeterministicAbstractions.FullIntAbstraction abs,
+            IntFunction<? extends SP> spExtractor,
+            BiIntFunction<? extends TP> tpExtractor) {
 
         final int numBlocks = hopcroft.getNumBlocks();
         final int numInputs = inputs.size();
@@ -128,12 +130,13 @@ public final class HopcroftExtractors {
         return result;
     }
 
-    private static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicUnpruned(Hopcroft hopcroft,
-                                                                                                          AutomatonCreator<A, I> creator,
-                                                                                                          Alphabet<I> inputs,
-                                                                                                          SimpleDeterministicAbstractions.FullIntAbstraction abs,
-                                                                                                          IntFunction<? extends SP> spExtractor,
-                                                                                                          BiIntFunction<? extends TP> tpExtractor) {
+    private static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A toDeterministicUnpruned(
+            Hopcroft hopcroft,
+            AutomatonCreator<A, I> creator,
+            Alphabet<I> inputs,
+            SimpleDeterministicAbstractions.FullIntAbstraction abs,
+            IntFunction<? extends SP> spExtractor,
+            BiIntFunction<? extends TP> tpExtractor) {
 
         int numBlocks = hopcroft.getNumBlocks();
         int numInputs = inputs.size();

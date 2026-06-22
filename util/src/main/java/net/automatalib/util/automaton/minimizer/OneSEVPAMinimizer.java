@@ -171,7 +171,7 @@ public final class OneSEVPAMinimizer {
 
         final Location[] resultLocs = new Location[numBlocks];
         for (int i = 0; i < resultLocs.length; i++) {
-            resultLocs[i] = result.addLocation(false);
+            resultLocs[i] = result.addState(false);
         }
 
         for (Block curr : pt.blockList()) {
@@ -212,7 +212,7 @@ public final class OneSEVPAMinimizer {
         }
 
         final int origInit = stateIDs.getStateId(original.getInitialState());
-        result.setInitialLocation(resultLocs[pt.getBlockForState(origInit).id]);
+        result.setInitialState(resultLocs[pt.getBlockForState(origInit).id]);
 
         return result;
     }

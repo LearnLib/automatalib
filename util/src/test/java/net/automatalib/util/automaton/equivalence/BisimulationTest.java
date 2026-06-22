@@ -101,8 +101,8 @@ public class BisimulationTest {
 
         Set<Pair<AS, BS>> bisim = Bisimulation.bisimulationEquivalenceRelation(a, b, inputs);
 
-        Set<AS> statesA = new HashSet<>(a.getSemantics().getStates());
-        Set<BS> statesB = new HashSet<>(b.getSemantics().getStates());
+        Set<AS> statesA = new HashSet<>(a.getStates());
+        Set<BS> statesB = new HashSet<>(b.getStates());
 
         for (Pair<AS, BS> p : bisim) {
             statesA.remove(p.getFirst());

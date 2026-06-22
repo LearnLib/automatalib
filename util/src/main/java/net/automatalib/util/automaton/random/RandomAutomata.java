@@ -112,7 +112,7 @@ public final class RandomAutomata {
                                                         double initialRetTransProb,
                                                         boolean minimize,
                                                         DefaultOneSEVPA<I> result) {
-        result.addInitialLocation(r.nextDouble() < acceptanceProb);
+        result.addInitialState(r.nextDouble() < acceptanceProb);
 
         for (int i = 0; i < locCount - 1; i++) {
             if (alphabet.getNumInternals() == 0 || r.nextDouble() < initialRetTransProb) {
@@ -129,7 +129,7 @@ public final class RandomAutomata {
                     stackSym = result.encodeStackSym(stackLoc, callSym);
                 } while (result.getReturnSuccessor(srcLoc, retSym, stackSym) != null);
 
-                final Location newLoc = result.addLocation(r.nextDouble() < acceptanceProb);
+                final Location newLoc = result.addState(r.nextDouble() < acceptanceProb);
                 result.setReturnSuccessor(srcLoc, retSym, stackSym, newLoc);
             } else {
                 I intSym;
@@ -140,7 +140,7 @@ public final class RandomAutomata {
                     srcLoc = result.getState(r.nextInt(result.size()));
                 } while (result.getInternalSuccessor(srcLoc, intSym) != null);
 
-                final Location newLoc = result.addLocation(r.nextDouble() < acceptanceProb);
+                final Location newLoc = result.addState(r.nextDouble() < acceptanceProb);
                 result.setInternalSuccessor(srcLoc, intSym, newLoc);
             }
         }

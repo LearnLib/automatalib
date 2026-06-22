@@ -240,7 +240,7 @@ public class OneSEVPAsTest {
         Assert.assertNotNull(locToCopy);
 
         final Set<Location> oldStates = new HashSet<>(automaton.getStates());
-        final Location locCopy = automaton.addLocation(automaton.getStateProperty(locToCopy));
+        final Location locCopy = automaton.addState(automaton.getStateProperty(locToCopy));
 
         // make return transitions of old states behave identical for the new stack symbol
         for (I callSym : alphabet.getCallAlphabet()) {
@@ -301,13 +301,13 @@ public class OneSEVPAsTest {
 
         final DefaultOneSEVPA<Character> result = new DefaultOneSEVPA<>(alphabet);
 
-        final Location l0 = result.addInitialLocation(false);
-        final Location l1 = result.addLocation(false);
-        final Location l2 = result.addLocation(false);
-        final Location l3 = result.addLocation(false);
-        final Location l4 = result.addLocation(false);
-        final Location l5 = result.addLocation(true);
-        final Location l6 = result.addLocation(false);
+        final Location l0 = result.addInitialState(false);
+        final Location l1 = result.addState(false);
+        final Location l2 = result.addState(false);
+        final Location l3 = result.addState(false);
+        final Location l4 = result.addState(false);
+        final Location l5 = result.addState(true);
+        final Location l6 = result.addState(false);
 
         final int s0 = result.encodeStackSym(l0, (Character) 'c');
         final int s2 = result.encodeStackSym(l2, (Character) 'c');

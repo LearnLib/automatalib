@@ -341,8 +341,8 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     }
 
     /**
-     * An enum containing the different kind of update operations. Each enum constant implements the required
-     * {@link TransitionUpdateOperation#updateStorage(Object, Payload, IntFunction, ArrayInitializer)} method.
+     * An enum containing the different kind of update operations. Each enum constant implements the required {@link
+     * TransitionUpdateOperation#updateStorage(Object, Payload, IntFunction, ArrayInitializer)} method.
      */
     private enum TransitionUpdateOperation {
         /**

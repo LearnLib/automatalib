@@ -54,7 +54,7 @@ public final class OneSEVPAExample {
     }
 
     private static void traceVisiblePushdownWords(DefaultOneSEVPA<Character> vpa, String input) {
-        final boolean accept = vpa.accepts(Word.fromString(input));
+        final boolean accept = vpa.getSemantics().accepts(Word.fromString(input));
 
         LOGGER.info("The VPA does {}accept the word '{}'", accept ? "" : "not ", input);
     }
@@ -70,8 +70,8 @@ public final class OneSEVPAExample {
 
         final DefaultOneSEVPA<Character> result = new DefaultOneSEVPA<>(ALPHABET);
 
-        final Location l0 = result.addInitialLocation(false);
-        final Location l1 = result.addLocation(true);
+        final Location l0 = result.addInitialState(false);
+        final Location l1 = result.addState(true);
 
         result.setInternalSuccessor(l0, 'i', l1);
         result.setInternalSuccessor(l1, 'i', l0);

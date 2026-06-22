@@ -175,8 +175,7 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
             @SuppressWarnings("nullness") // input sequences have been computed on defined transitions
             final @NonNull S state = automaton.getSuccessor(tmp, middle);
 
-            @Nullable
-            List<Word<I>> localSuffixes = localSuffixSets.get(state);
+            @Nullable List<Word<I>> localSuffixes = localSuffixSets.get(state);
 
             if (localSuffixes == null) {
                 localSuffixes = Automata.stateCharacterizingSet(automaton, inputs, state);

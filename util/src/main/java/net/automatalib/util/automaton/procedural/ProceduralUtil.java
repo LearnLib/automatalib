@@ -116,7 +116,7 @@ final class ProceduralUtil {
 
         final M initialP = procedures.get(initialProcedure);
 
-        if (initialP == null || initialP.getSemantics().getInitialState() == null) {
+        if (initialP == null || initialP.getInitialState() == null) {
             return Collections.emptyMap();
         }
 

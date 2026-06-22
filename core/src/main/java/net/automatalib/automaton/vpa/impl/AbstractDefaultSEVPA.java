@@ -40,21 +40,16 @@ public abstract class AbstractDefaultSEVPA<I> extends AbstractSEVPA<Location, I>
         this.locations = new ArrayList<>(capacity);
     }
 
-    public Location addInitialLocation(boolean accepting) {
-        final Location loc = addLocation(accepting);
-        setInitialLocation(loc);
+    public Location addInitialState(boolean accepting) {
+        final Location loc = addState(accepting);
+        setInitialState(loc);
         return loc;
     }
 
-    public Location addLocation(boolean accepting) {
+    public Location addState(boolean accepting) {
         final Location loc = new Location(alphabet, locations.size(), accepting);
         locations.add(loc);
         return loc;
-    }
-
-    @Override
-    public int size() {
-        return locations.size();
     }
 
     @Override
@@ -105,7 +100,7 @@ public abstract class AbstractDefaultSEVPA<I> extends AbstractSEVPA<Location, I>
         return initLoc;
     }
 
-    public void setInitialLocation(Location loc) {
+    public void setInitialState(Location loc) {
         this.initLoc = loc;
     }
 

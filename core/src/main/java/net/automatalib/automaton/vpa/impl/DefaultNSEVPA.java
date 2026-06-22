@@ -42,14 +42,14 @@ public class DefaultNSEVPA<I> extends AbstractDefaultSEVPA<I> {
     }
 
     @Override
-    public Location addLocation(boolean accepting) {
-        final Location loc = super.addLocation(accepting);
+    public Location addState(boolean accepting) {
+        final Location loc = super.addState(accepting);
         this.moduleMapping.ensureCapacity(loc.getIndex() + 1);
         return loc;
     }
 
     public Location addLocation(I module, boolean accepting) {
-        final Location result = this.addLocation(accepting);
+        final Location result = this.addState(accepting);
         this.moduleMapping.set(result.getIndex(), module);
         return result;
     }

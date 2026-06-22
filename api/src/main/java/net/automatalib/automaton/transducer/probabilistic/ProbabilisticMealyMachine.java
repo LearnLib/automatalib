@@ -15,15 +15,12 @@
  */
 package net.automatalib.automaton.transducer.probabilistic;
 
-import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.UniversalAutomaton.FiniteSemantics;
 import net.automatalib.automaton.concept.Probabilistic;
 import net.automatalib.automaton.concept.TransitionOutput;
-import net.automatalib.ts.UniversalTransitionSystem;
 
-public interface ProbabilisticMealyMachine<S, I, T, O> extends Automaton<S, I, T>,
-                                                               TransitionOutput<T, O>,
-                                                               UniversalTransitionSystem<S, I, T, Void, ProbabilisticOutput<O>>,
-                                                               Probabilistic<T> {
+public interface ProbabilisticMealyMachine<S, I, T, O>
+        extends FiniteSemantics<S, I, T, Void, ProbabilisticOutput<O>>, TransitionOutput<T, O>, Probabilistic<T> {
 
     @Override
     default Void getStateProperty(S state) {

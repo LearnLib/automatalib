@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalAutomaton;
+import net.automatalib.automaton.UniversalAutomaton.FiniteSemantics;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.NFA;
@@ -92,7 +92,7 @@ public final class ValmariInitializers {
      *
      * @return the initialized partition refinement data structure
      */
-    public static <S, I, T> Valmari initializeUniversal(UniversalAutomaton<S, I, T, ?, ?> automaton,
+    public static <S, I, T> Valmari initializeUniversal(FiniteSemantics<S, I, T, ?, ?> automaton,
                                                         Alphabet<I> alphabet,
                                                         Function<? super S, ?> initialClassifier) {
         final int n = automaton.size();

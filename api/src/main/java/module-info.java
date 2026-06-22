@@ -61,8 +61,8 @@ open module net.automatalib.api {
     exports net.automatalib.graph.helper;
     exports net.automatalib.graph.visualization;
     exports net.automatalib.modelchecking;
-    exports net.automatalib.serialization;
     exports net.automatalib.semantic;
+    exports net.automatalib.serialization;
     exports net.automatalib.symbol.time;
     exports net.automatalib.ts;
     exports net.automatalib.ts.acceptor;

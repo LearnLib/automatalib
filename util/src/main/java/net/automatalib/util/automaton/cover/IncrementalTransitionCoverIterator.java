@@ -59,7 +59,7 @@ class IncrementalTransitionCoverIterator<S, I> extends AbstractSimplifiedIterato
         this.automaton = automaton;
         this.inputs = inputs;
         this.oldCover = oldCover;
-        this.reach = this.automaton.createStaticStateMapping();
+        this.reach = automaton.createStaticStateMapping();
         this.bfsQueue = new ArrayDeque<>();
     }
 

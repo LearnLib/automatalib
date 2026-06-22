@@ -28,15 +28,15 @@ import net.automatalib.ts.UniversalTransitionSystem;
  * and transitions. See {@link UniversalTransitionSystem} for a further explanation of this concept.
  *
  * @param <S>
- *         state class
+ *         state type
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <T>
- *         transition class
+ *         transition type
  * @param <SP>
- *         state property class
+ *         state property type
  * @param <TP>
- *         transition property class
+ *         transition property type
  */
 public interface UniversalAutomaton<S, I, T, SP, TP>
         extends Automaton<S, I, T>, UniversalTransitionSystem<S, I, T, SP, TP> {
@@ -46,6 +46,21 @@ public interface UniversalAutomaton<S, I, T, SP, TP>
         return new UniversalAutomatonGraphView<>(this, inputs);
     }
 
+    /**
+     * Convenience interface that links a {@link UniversalAutomaton} with
+     * {@link net.automatalib.semantic.FiniteSemantics}.
+     *
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     */
     interface FiniteSemantics<S, I, T, SP, TP>
             extends UniversalAutomaton<S, I, T, SP, TP>, Automaton.FiniteSemantics<S, I, T> {
 

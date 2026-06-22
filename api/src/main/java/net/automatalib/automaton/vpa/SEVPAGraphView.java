@@ -75,7 +75,7 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
                     final L succ = sevpa.getReturnSuccessor(location, i, sym);
 
                     if (succ != null) {
-                        result.add(new SevpaViewEdge<>(i, succ, loc, stackSymbol));
+                        result.add(new SevpaViewEdge<>(i, succ, loc, stackSymbol, stateIDs));
                     }
                 }
             }
@@ -95,7 +95,7 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
             @Override
             protected Collection<L> initialNodes() {
-                return Collections.singleton(sevpa.getInitialState());
+                return Collections.unmodifiableCollection(sevpa.getInitialStates());
             }
 
             @Override
@@ -114,13 +114,7 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
             public boolean getEdgeProperties(L src, SevpaViewEdge<L, I> edge, L tgt, Map<String, String> properties) {
                 super.getEdgeProperties(src, edge, tgt, properties);
 
-                final I input = edge.input;
-                if (alphabet.isReturnSymbol(input)) {
-                    properties.put(EdgeAttrs.LABEL,
-                                   input + "/(L" + stateIDs.getStateId(edge.callLoc) + ',' + edge.callSymbol + ')');
-                } else {
-                    properties.put(EdgeAttrs.LABEL, String.valueOf(input));
-                }
+                properties.put(EdgeAttrs.LABEL, edge.label);
 
                 return true;
             }
@@ -131,19 +125,29 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
         public final I input;
         public final S target;
+        public final String label;
 
-        public final S callLoc;
+        public final @Nullable S callLoc;
         public final @Nullable I callSymbol;
 
-        SevpaViewEdge(I internalAction, S target) {
-            this(internalAction, target, null, null);
-        }
-
-        SevpaViewEdge(I returnAction, S target, S callLoc, @Nullable I callSymbol) {
-            this.input = returnAction;
+        private SevpaViewEdge(I input, S target, @Nullable S callLoc, @Nullable I callSymbol, String label) {
+            this.input = input;
             this.target = target;
             this.callLoc = callLoc;
             this.callSymbol = callSymbol;
+            this.label = label;
+        }
+
+        SevpaViewEdge(I internalAction, S target) {
+            this(internalAction, target, null, null, String.valueOf(internalAction));
+        }
+
+        SevpaViewEdge(I returnAction, S target, S callLoc, I callSymbol, StateIDs<S> stateIDs) {
+            this(returnAction,
+                 target,
+                 callLoc,
+                 callSymbol,
+                 returnAction + "/(L" + stateIDs.getStateId(callLoc) + ',' + callSymbol + ')');
         }
 
     }

@@ -22,21 +22,22 @@ import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.
 import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstractionImpl;
 import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.StateIntAbstraction;
 import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.StateIntAbstractionImpl;
+import net.automatalib.semantic.DeterministicFiniteSemantics;
 import net.automatalib.ts.UniversalDTS;
 
 /**
  * A {@link DeterministicAutomaton} with state and transition properties.
  *
  * @param <S>
- *         state class
+ *         state type
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <T>
- *         transition class
+ *         transition type
  * @param <SP>
- *         state property class
+ *         state property type
  * @param <TP>
- *         transition property class
+ *         transition property type
  *
  * @see UniversalAutomaton
  */
@@ -58,6 +59,21 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
         return new StateIntAbstractionImpl<>(this);
     }
 
+    /**
+     * Convenience interface that links a {@link UniversalDeterministicAutomaton} with
+     * {@link DeterministicFiniteSemantics}.
+     *
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     */
     interface FiniteSemantics<S, I, T, SP, TP> extends UniversalDeterministicAutomaton<S, I, T, SP, TP>,
                                                        DeterministicAutomaton.FiniteSemantics<S, I, T>,
                                                        UniversalAutomaton.FiniteSemantics<S, I, T, SP, TP> {

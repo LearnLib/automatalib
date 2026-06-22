@@ -16,10 +16,10 @@
 package net.automatalib.ts.simple;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
+import net.automatalib.automaton.concept.InitialState;
 import net.automatalib.ts.TransitionSystem;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -36,21 +36,16 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input symbol class
  */
-public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
+public interface SimpleDTS<S, I> extends SimpleTS<S, I>, InitialState<S> {
 
     @Override
     default Set<S> getSuccessors(S state, I input) {
-        return stateToSet(getSuccessor(state, input));
+        return InitialState.stateToSet(getSuccessor(state, input));
     }
 
     @Override
     default Set<S> getStates(Iterable<? extends I> input) {
-        return stateToSet(getState(input));
-    }
-
-    @Override
-    default Set<S> getInitialStates() {
-        return stateToSet(getInitialState());
+        return InitialState.stateToSet(getState(input));
     }
 
     /**
@@ -67,15 +62,6 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
         final S init = getInitialState();
         return init == null ? null : getSuccessor(init, input);
     }
-
-    /**
-     * Retrieves the initial state of this transition system.
-     *
-     * @return the initial state.
-     *
-     * @see TransitionSystem#getInitialStates()
-     */
-    @Nullable S getInitialState();
 
     /**
      * Retrieves the successor state reachable by the given sequence of input symbols.
@@ -117,10 +103,4 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      */
     @Nullable S getSuccessor(S state, I input);
 
-    static <S> Set<S> stateToSet(@Nullable S state) {
-        if (state == null) {
-            return Collections.emptySet();
-        }
-        return Collections.singleton(state);
-    }
 }

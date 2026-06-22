@@ -20,7 +20,7 @@ import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Location type used for the default 1-SEVPA.
+ * Location type used for {@link AbstractDefaultSEVPA}.
  */
 public class Location {
 

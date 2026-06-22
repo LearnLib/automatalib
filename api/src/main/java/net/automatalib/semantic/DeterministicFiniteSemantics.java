@@ -17,6 +17,9 @@ package net.automatalib.semantic;
 
 import net.automatalib.automaton.DeterministicAutomaton;
 
+/**
+ * An interface for providing deterministic, finite-state semantics.
+ */
 @FunctionalInterface
 public interface DeterministicFiniteSemantics extends DeterministicSemantics, FiniteSemantics {
 

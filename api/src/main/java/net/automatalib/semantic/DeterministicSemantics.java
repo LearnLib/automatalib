@@ -17,6 +17,9 @@ package net.automatalib.semantic;
 
 import net.automatalib.ts.DeterministicTransitionSystem;
 
+/**
+ * An interface for providing deterministic, infinite-state semantics.
+ */
 @FunctionalInterface
 public interface DeterministicSemantics extends Semantics {
 

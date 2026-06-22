@@ -233,8 +233,7 @@ public final class Covers {
 
         while ((curr = bfsQueue.poll()) != null) {
             @SuppressWarnings("nullness") // in a breadth-first traversal the predecessors are always defined
-            @NonNull
-            Word<I> as = reach.get(curr);
+            @NonNull Word<I> as = reach.get(curr);
 
             for (I in : inputs) {
                 S succ = automaton.getSuccessor(curr, in);

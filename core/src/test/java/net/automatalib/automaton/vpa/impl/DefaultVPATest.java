@@ -46,8 +46,8 @@ public class DefaultVPATest {
 
         final DefaultOneSEVPA<Character> vpa = new DefaultOneSEVPA<>(alphabet);
 
-        final Location init = vpa.addInitialLocation(false);
-        final Location accepting = vpa.addLocation(true);
+        final Location init = vpa.addInitialState(false);
+        final Location accepting = vpa.addState(true);
 
         vpa.setReturnSuccessor(init, ')', vpa.encodeStackSym(init, callAlphabet.getSymbolIndex('(')), accepting);
         vpa.setReturnSuccessor(init, ']', vpa.encodeStackSym(init, callAlphabet.getSymbolIndex('[')), accepting);
@@ -71,10 +71,10 @@ public class DefaultVPATest {
 
         final DefaultNSEVPA<Character> vpa = new DefaultNSEVPA<>(alphabet);
 
-        final Location init = vpa.addInitialLocation(false);
+        final Location init = vpa.addInitialState(false);
         final Location m1 = vpa.addModuleEntryLocation('(', false);
         final Location m2 = vpa.addModuleEntryLocation('[', false);
-        final Location accepting = vpa.addLocation(true);
+        final Location accepting = vpa.addState(true);
 
         vpa.setReturnSuccessor(m1, ')', vpa.encodeStackSym(init, (Character) '('), accepting);
         vpa.setReturnSuccessor(m2, ']', vpa.encodeStackSym(init, (Character) '['), accepting);
@@ -122,8 +122,8 @@ public class DefaultVPATest {
 
         // create arbitrary VPA
         final DefaultOneSEVPA<Integer> vpa = new DefaultOneSEVPA<>(alphabet);
-        final Location init = vpa.addInitialLocation(false);
-        final Location accepting = vpa.addLocation(true);
+        final Location init = vpa.addInitialState(false);
+        final Location accepting = vpa.addState(true);
 
         // criss-cross internal successors
         for (Integer i : internalAlphabet) {
@@ -193,6 +193,8 @@ public class DefaultVPATest {
                         Assert.assertEquals(vpa.getInternalSuccessor(loc, input), target);
                         break;
                     case RETURN:
+                        Assert.assertNotNull(callLoc);
+                        Assert.assertNotNull(callSymbol);
                         final int stackSym = vpa.encodeStackSym(callLoc, callSymbol);
                         Assert.assertEquals(vpa.getReturnSuccessor(loc, input, stackSym), target);
                         break;

@@ -13,17 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.semantic;
+package net.automatalib.automaton.concept;
 
-import net.automatalib.automaton.Automaton;
+import java.util.Set;
 
 /**
- * An interface for providing non-deterministic, finite-state semantics.
+ * The concept of providing (potentially multiple) initial states.
+ *
+ * @param <S>
+ *         state type
  */
 @FunctionalInterface
-public interface FiniteSemantics extends Semantics {
+public interface InitialStates<S> {
 
-    @Override
-    Automaton<?, ?, ?> getSemantics();
+    /**
+     * Retrieves the set of initial states of a transition system.
+     *
+     * @return the initial states.
+     */
+    Set<S> getInitialStates();
 
 }
+

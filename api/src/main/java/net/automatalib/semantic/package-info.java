@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.semantic;
-
-import net.automatalib.automaton.Automaton;
 
 /**
- * An interface for providing non-deterministic, finite-state semantics.
+ * This package introduces the concept of <em>semantics</em> which allow one to distinguish between the structural and
+ * semantic interpretations of transition systems and automata using the same type definitions.
+ * <p>
+ * The classes in this package act as semantic providers allowing, for example, structurally finite-state systems such
+ * as {@link net.automatalib.automaton.vpa.SEVPA}s or {@link net.automatalib.automaton.mmlt.MMLT}s to provide a view on
+ * their semantically infinite-state systems.
  */
-@FunctionalInterface
-public interface FiniteSemantics extends Semantics {
-
-    @Override
-    Automaton<?, ?, ?> getSemantics();
-
-}
+package net.automatalib.semantic;

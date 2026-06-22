@@ -196,8 +196,7 @@ public final class Automata {
         automaton.clear();
 
         // Add states from records
-        @Nullable
-        Object[] states = new Object[records.length];
+        @Nullable Object[] states = new Object[records.length];
         for (int i = 0; i < records.length; i++) {
             ResultStateRecord<SP, TP> rec = records[i];
             SP prop = rec.property;
