@@ -24,6 +24,14 @@ import net.automatalib.automaton.base.AbstractCompactDeterministic;
 import net.automatalib.automaton.concept.MutableTransitionOutput;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A compact implementation that supports generic transition outputs.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
 public class CompactTransitionOutput<I, O> extends AbstractCompactDeterministic<I, CompactTransition<O>, Void, O>
         implements MutableTransitionOutput<CompactTransition<O>, O> {
 

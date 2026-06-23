@@ -166,8 +166,8 @@ public interface SimpleDeterministicAbstractions {
      *
      * @see IntAbstractionImpl
      */
-    class StateIntAbstractionImpl<S, I, A extends SimpleDeterministicAutomaton<S, I>>
-            extends IntAbstractionImpl<S, A> implements StateIntAbstraction<I> {
+    class StateIntAbstractionImpl<S, I, A extends SimpleDeterministicAutomaton<S, I>> extends IntAbstractionImpl<S, A>
+            implements StateIntAbstraction<I> {
 
         public StateIntAbstractionImpl(A automaton) {
             super(automaton);

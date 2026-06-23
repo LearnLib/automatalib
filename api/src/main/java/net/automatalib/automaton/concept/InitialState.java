@@ -32,7 +32,7 @@ public interface InitialState<S> extends InitialStates<S> {
     /**
      * Retrieves the initial state of a transition system.
      *
-     * @return the initial state.
+     * @return the initial state
      *
      * @see InitialStates#getInitialStates()
      */

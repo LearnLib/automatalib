@@ -29,7 +29,7 @@ public interface InitialStates<S> {
     /**
      * Retrieves the set of initial states of a transition system.
      *
-     * @return the initial states.
+     * @return the initial states
      */
     Set<S> getInitialStates();
 

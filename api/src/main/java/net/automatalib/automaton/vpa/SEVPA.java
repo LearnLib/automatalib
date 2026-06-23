@@ -69,7 +69,7 @@ public interface SEVPA<L, I> extends UniversalAutomaton<L, I, L, Boolean, Void>,
 
     @Nullable L getReturnSuccessor(L loc, I retSym, int stackSym);
 
-    @Override // do not allow nullable initial state
+    @Override // do not allow a nullable initial state
     L getInitialState();
 
     @Override

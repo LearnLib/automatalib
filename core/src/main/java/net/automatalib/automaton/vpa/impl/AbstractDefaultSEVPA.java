@@ -53,11 +53,6 @@ public abstract class AbstractDefaultSEVPA<I> extends AbstractSEVPA<Location, I>
     }
 
     @Override
-    public StateIDs<Location> stateIDs() {
-        return this;
-    }
-
-    @Override
     public int getStateId(Location state) {
         return state.getIndex();
     }

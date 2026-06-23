@@ -41,6 +41,11 @@ public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I>, StateIDs<L> {
     }
 
     @Override
+    public StateIDs<L> stateIDs() {
+        return this;
+    }
+
+    @Override
     public int encodeStackSym(L srcLoc, I callSym) {
         return encodeStackSym(srcLoc, alphabet.getCallSymbolIndex(callSym));
     }
