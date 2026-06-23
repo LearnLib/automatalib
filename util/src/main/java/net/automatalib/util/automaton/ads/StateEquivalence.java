@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.FiniteSemantics;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
 import net.automatalib.common.util.Pair;
@@ -39,8 +39,8 @@ public final class StateEquivalence {
     private StateEquivalence() {}
 
     /**
-     * Computes a two-state ADS by using {@link Automata#findSeparatingWord(UniversalDeterministicAutomaton,
-     * UniversalDeterministicAutomaton, Collection)}.
+     * Computes a two-state ADS by using
+     * {@link Automata#findSeparatingWord(FiniteSemantics, FiniteSemantics, Collection)}.
      *
      * @param automaton
      *         the automaton for which an ADS should be computed
