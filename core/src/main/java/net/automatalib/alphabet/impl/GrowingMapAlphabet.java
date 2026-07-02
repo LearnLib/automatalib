@@ -37,9 +37,8 @@ public class GrowingMapAlphabet<I> extends MapAlphabet<I> implements GrowingAlph
 
     @Override
     public boolean add(I a) {
-        int s = size();
-        int idx = addSymbol(a);
-        return idx == s;
+        // do not use default implementation from AbstractList
+        return GrowingAlphabet.super.add(a);
     }
 
     @Override

@@ -34,4 +34,11 @@ public interface GrowingAlphabet<I> extends Alphabet<I> {
      */
     int addSymbol(I a);
 
+    @Override
+    default boolean add(I a) {
+        int s = size();
+        int idx = addSymbol(a);
+        return idx == s;
+    }
+
 }
