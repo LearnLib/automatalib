@@ -20,8 +20,8 @@ import net.automatalib.ts.output.DeterministicTransitionOutputTS;
 import net.automatalib.word.Word;
 
 /**
- * A state output automaton is a {@link DeterministicSuffixOutputAutomaton deterministic suffix output automaton} that
- * produces outputs based on its {@link DeterministicTransitionOutputTS transition outputs}.
+ * A transition output automaton is a {@link DeterministicSuffixOutputAutomaton deterministic suffix output automaton}
+ * that produces outputs based on its {@link DeterministicTransitionOutputTS transition outputs}.
  *
  * @param <S>
  *         state type
