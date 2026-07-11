@@ -49,17 +49,17 @@ public final class M3CSPAExample {
 
         //@formatter:off
         final String[] formulas = {"EF <b><b>true", // there exists a path with "bb"
-                                   "EF <b><S><b>true", // there exists a path with "bSb"
-                                   "EF <b><T><b>true", // there exists a path with "bTb"
-                                   "<S><T><a>true", // There exists a starting sequence of STa
-                                   "<S><T><b>true", // There exists a starting sequence of STb
-                                   "<S><T><c>true", // There exists a starting sequence of STc
-                                   "<S><a><T><c>true", // There exists a starting sequence of SaTc
-                                   "<S><a><S><T><c>true", // There exists a starting sequence of SaSTc
+                                   "EF <b><F><b>true", // there exists a path with "bFb"
+                                   "EF <b><G><b>true", // there exists a path with "bGb"
+                                   "<F><G><a>true", // There exists a starting sequence of FGa
+                                   "<F><G><b>true", // There exists a starting sequence of FGb
+                                   "<F><G><c>true", // There exists a starting sequence of FGc
+                                   "<F><a><G><c>true", // There exists a starting sequence of FaGc
+                                   "<F><a><F><G><c>true", // There exists a starting sequence of FaFGc
                                    "EF [] false", // there exists a path to the final state
                                    "AF [] false", // all paths reach the final state
                                    "AG EF [] false", // on all paths there exists a path to the final state
-                                   "AG ([S] (AF <R>true))" // globally, every S path must be followed by an R eventually
+                                   "AG ([F] (AF <R>true))" // globally, every F path must be followed by an R eventually
         };
         //@formatter:on
 
