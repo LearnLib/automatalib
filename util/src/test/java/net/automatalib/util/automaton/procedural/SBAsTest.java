@@ -33,8 +33,10 @@ import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.impl.EmptySBA;
 import net.automatalib.automaton.procedural.impl.StackSBA;
 import net.automatalib.automaton.procedural.impl.StackSPA;
+import net.automatalib.common.util.Holder;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
+import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.random.RandomAutomata;
@@ -297,6 +299,39 @@ public class SBAsTest {
         Assert.assertEquals(p4.getNodes().size(), 3);
 
         SPAsTest.verifyDot(cfmps, "/cfmps/sba.dot");
+    }
+
+    @Test
+    public void testModelChecker() {
+        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'f');
+        final String prop = "property";
+        final int result = 5;
+        final Holder<Boolean> holder = new Holder<>(false);
+
+        final ModelChecker<String, ContextFreeModalProcessSystem<String, Void>, String, Integer> originalChecker =
+                (automaton, inputs, property) -> {
+
+                    try {
+                        SPAsTest.verifyDot(automaton, "/cfmps/sba.dot");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    Assert.assertEquals(inputs, alphabet);
+                    Assert.assertEquals(property, prop);
+
+                    holder.value = true;
+                    return result;
+                };
+
+        final ModelChecker<String, SBA<?, String>, String, Integer> transformedChecker =
+                SBAs.transformModelChecker(originalChecker);
+
+        final Integer counterExample =
+                transformedChecker.findCounterExample(buildSBAWithNonTerminatingProcedures(), alphabet, prop);
+
+        Assert.assertTrue(holder.value);
+        Assert.assertEquals(counterExample, result);
     }
 
     private static <S> void fillS(MutableDFA<S, Character> dfa, boolean sba) {

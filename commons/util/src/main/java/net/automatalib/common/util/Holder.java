@@ -15,7 +15,19 @@
  */
 package net.automatalib.common.util;
 
+/**
+ * A class that holds a value. May be useful in situations where you need to pass a reference to write data to.
+ *
+ * @param <T>
+ *         value type
+ */
 public final class Holder<T> {
 
     public T value;
+
+    public Holder() {}
+
+    public Holder(T value) {
+        this.value = value;
+    }
 }

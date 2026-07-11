@@ -40,10 +40,12 @@ import net.automatalib.automaton.procedural.impl.EmptySPA;
 import net.automatalib.automaton.procedural.impl.StackSPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.SEVPA;
+import net.automatalib.common.util.Holder;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
+import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.conformance.SPATestsIterator;
@@ -623,6 +625,38 @@ public class SPAsTest {
         Assert.assertEquals(c2.getNodes().size(), 5);
 
         verifyDot(cfmps, "/cfmps/diss.dot");
+    }
+
+    @Test
+    public void testModelChecker() {
+        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'f');
+        final String prop = "property";
+        final int result = 5;
+        final Holder<Boolean> holder = new Holder<>(false);
+
+        final ModelChecker<String, ContextFreeModalProcessSystem<String, Void>, String, Integer> originalChecker =
+                (automaton, inputs, property) -> {
+
+                    try {
+                        verifyDot(automaton, "/cfmps/diss.dot");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    Assert.assertEquals(inputs, alphabet);
+                    Assert.assertEquals(property, prop);
+
+                    holder.value = true;
+                    return result;
+                };
+
+        final ModelChecker<String, SPA<?, String>, String, Integer> transformedChecker =
+                SPAs.transformModelChecker(originalChecker);
+
+        final Integer counterExample = transformedChecker.findCounterExample(buildDissSystem(), alphabet, prop);
+
+        Assert.assertTrue(holder.value);
+        Assert.assertEquals(counterExample, result);
     }
 
     static void verifyDot(ContextFreeModalProcessSystem<?, ?> cfmps, String expected) throws IOException {

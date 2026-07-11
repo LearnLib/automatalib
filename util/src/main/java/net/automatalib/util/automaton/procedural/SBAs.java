@@ -35,6 +35,7 @@ import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.impl.StackSPA;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
@@ -396,6 +397,25 @@ public final class SBAs {
     public static <I> ContextFreeModalProcessSystem<I, Void> toCFMPS(SBA<?, I> sba) {
         assert SBAs.isValid(sba);
         return new CFMPSViewSBA<>(sba);
+    }
+
+    /**
+     * Transforms a model checker for {@link ContextFreeModalProcessSystem}s to a model checker for {@link SBA}s by
+     * transforming the {@link SBA} via {@link #toCFMPS(SBA)}.
+     *
+     * @param modelChecker
+     *         the original model checker
+     * @param <I>
+     *         input symbol type
+     * @param <P>
+     *         property type
+     * @param <R>
+     *         counterexample type
+     *
+     * @return the transformed model checker
+     */
+    public static <I, P, R> ModelChecker<I, SBA<?, I>, P, R> transformModelChecker(ModelChecker<I, ContextFreeModalProcessSystem<I, Void>, P, R> modelChecker) {
+        return (automaton, inputs, property) -> modelChecker.findCounterExample(toCFMPS(automaton), inputs, property);
     }
 
 }

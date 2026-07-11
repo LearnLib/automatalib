@@ -31,6 +31,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.SEVPA;
@@ -39,6 +40,7 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.UniversalGraph;
+import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.graph.Graphs;
 import net.automatalib.util.graph.apsp.APSPResult;
@@ -524,6 +526,25 @@ public final class SPAs {
      */
     public static <I> ContextFreeModalProcessSystem<I, Void> toCFMPS(SPA<?, I> spa) {
         return new CFMPSViewSPA<>(spa);
+    }
+
+    /**
+     * Transforms a model checker for {@link ContextFreeModalProcessSystem}s to a model checker for {@link SPA}s by
+     * transforming the {@link SBA} via {@link #toCFMPS(SPA)}.
+     *
+     * @param modelChecker
+     *         the original model checker
+     * @param <I>
+     *         input symbol type
+     * @param <P>
+     *         property type
+     * @param <R>
+     *         counterexample type
+     *
+     * @return the transformed model checker
+     */
+    public static <I, P, R> ModelChecker<I, SPA<?, I>, P, R> transformModelChecker(ModelChecker<I, ContextFreeModalProcessSystem<I, Void>, P, R> modelChecker) {
+        return (automaton, inputs, property) -> modelChecker.findCounterExample(toCFMPS(automaton), inputs, property);
     }
 
 }
