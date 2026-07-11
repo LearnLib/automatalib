@@ -98,7 +98,7 @@ public final class M3CParser {
             final InternalM3CParser<L, AP> parser = new InternalM3CParser<>(reader);
             try {
                 return parser.parse(labelParser, apParser);
-            } catch (ParseException e) {
+            } catch (ParseException | TokenMgrError e) {
                 throw new FormatException(e);
             }
         }

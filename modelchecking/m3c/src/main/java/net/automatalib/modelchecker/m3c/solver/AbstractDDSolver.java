@@ -17,7 +17,6 @@ package net.automatalib.modelchecker.m3c.solver;
 
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,7 +44,6 @@ import net.automatalib.modelchecker.m3c.formula.TrueNode;
 import net.automatalib.modelchecker.m3c.formula.visitor.CTLToMuCalc;
 import net.automatalib.modelchecker.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelchecker.m3c.transformer.TransformerSerializer;
-import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
@@ -54,9 +52,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Base implementation of the model checker which supports different types of property transformers. The
- * {@link ModelChecker} is (currently) implemented on the basis of the {@link WitnessTreeExtractor} including all its
- * restrictions.
+ * Base implementation of the model checker which supports different types of property transformers.
  *
  * @param <T>
  *         property transformer type
@@ -65,10 +61,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <AP>
  *         atomic proposition type
  */
-abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP>
-        implements ModelChecker<L, ContextFreeModalProcessSystem<L, AP>, FormulaNode<L, AP>, WitnessTree<L, AP>> {
+public abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
     // Attributes that are constant for a given CFMPS
+    private final ContextFreeModalProcessSystem<L, AP> cfmps;
     private final @KeyFor("workUnits") L mainProcess;
 
     // Attributes that change for each formula
@@ -97,6 +93,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
             workUnits.put(label, initializeWorkUnits(label, pmpg));
         }
 
+        this.cfmps = cfmps;
         this.mainProcess = mainProcess;
     }
 
@@ -178,12 +175,8 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         return nodeToPredecessors;
     }
 
-    @Override
-    public @Nullable WitnessTree<L, AP> findCounterExample(ContextFreeModalProcessSystem<L, AP> cfmps,
-                                                           Collection<? extends L> inputs,
-                                                           FormulaNode<L, AP> formulaNode) {
-        final NotNode<L, AP> negatedFormula = new NotNode<>(formulaNode);
-        final FormulaNode<L, AP> ast = ctlToMuCalc(negatedFormula).toNNF();
+    public @Nullable WitnessTree<L, AP> findWitness(FormulaNode<L, AP> formulaNode) {
+        final FormulaNode<L, AP> ast = ctlToMuCalc(formulaNode).toNNF();
 
         initialize(ast);
 
@@ -206,8 +199,6 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         }
     }
 
-    // this needs to be public for our children to implement the respective interfaces
-    @SuppressWarnings("PMD.PublicMemberInNonPublicType")
     public boolean solve(FormulaNode<L, AP> formula) {
         final FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
 
@@ -222,7 +213,8 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         }
     }
 
-    SolverHistory<T, L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
+    // this method is public because it is used by external tools such as CINCO
+    public SolverHistory<T, L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
         final List<SolverState<?, T, L, AP>> history = new ArrayList<>();
         final FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
 

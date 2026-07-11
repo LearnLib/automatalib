@@ -29,7 +29,7 @@ public final class M3CSolvers {
     }
 
     /**
-     * Returns a default {@link M3CSolver} solver for string-based modal context-free process systems. This method
+     * Returns a default {@link M3CSolver} solver for string-based {@link ContextFreeModalProcessSystem}s. This method
      * currently delegates solver construction to {@link #bddSolver(ContextFreeModalProcessSystem)}.
      *
      * @param cfmps
@@ -44,7 +44,7 @@ public final class M3CSolvers {
     }
 
     /**
-     * Returns a default {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems. This
+     * Returns a default {@link TypedM3CSolver} solver for strongly-typed {@link ContextFreeModalProcessSystem}s. This
      * method currently delegates solver construction to {@link #typedBDDSolver(ContextFreeModalProcessSystem)}.
      *
      * @param cfmps
@@ -96,7 +96,7 @@ public final class M3CSolvers {
      * @param cfmps
      *         the system to evaluate formulas on
      *
-     * @return an ADD-backed {@link M3CSolver} for string-based systems
+     * @return a BDD-backed {@link M3CSolver} for string-based systems
      */
     public static M3CSolver<String> bddSolver(ContextFreeModalProcessSystem<String, String> cfmps) {
         return new StringBDDSolver(cfmps);

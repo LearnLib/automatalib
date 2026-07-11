@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelchecker.m3c.solver;
+package net.automatalib.modelchecker.m3c.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +31,6 @@ import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
 import net.automatalib.graph.impl.CompactPMPG;
 import net.automatalib.graph.impl.DefaultCFMPS;
-import net.automatalib.modelchecker.m3c.util.Examples;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
@@ -42,13 +41,20 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-final class ExternalSystemDeserializer {
+public final class ExternalSystemDeserializer {
 
     private ExternalSystemDeserializer() {
         // prevent instantiation
     }
 
-    static <AP> ContextFreeModalProcessSystem<String, AP> parse(InputStream is)
+    public static <AP> ContextFreeModalProcessSystem<String, AP> parse(String name)
+            throws IOException, ParserConfigurationException, SAXException {
+        try (InputStream is = ExternalSystemDeserializer.class.getResourceAsStream(name)) {
+            return parse(is);
+        }
+    }
+
+    public static <AP> ContextFreeModalProcessSystem<String, AP> parse(InputStream is)
             throws ParserConfigurationException, IOException, SAXException {
 
         final Element root = getRoot(is);

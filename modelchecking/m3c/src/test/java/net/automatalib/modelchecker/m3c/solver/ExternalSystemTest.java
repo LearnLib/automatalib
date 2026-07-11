@@ -25,6 +25,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.exception.FormatException;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.modelchecker.m3c.util.ExternalSystemDeserializer;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
