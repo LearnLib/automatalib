@@ -23,27 +23,26 @@ import net.automatalib.exception.ModelCheckingException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A model-checker checks whether a given automaton satisfies a given property. If the property can not be satisfied it
- * provides counter examples. In fact, the counter examples is an automaton which language is a subset of the language
- * of the given automaton.
+ * A model-checker checks whether a given model satisfies a given property. If the property can not be satisfied it
+ * provides counter examples.
  *
  * @param <I>
  *         the input type
- * @param <A>
- *         the automaton type
+ * @param <M>
+ *         the model type
  * @param <P>
  *         the property type
  * @param <R>
  *         the type of counterexample
  */
 @FunctionalInterface
-public interface ModelChecker<I, A, P, R> {
+public interface ModelChecker<I, M, P, R> {
 
     /**
-     * Try to find counter examples for the given {@code property} and {@code automaton}.
+     * Try to find counter examples for the given {@code property} and {@code model}.
      *
-     * @param automaton
-     *         the automaton to check the property on.
+     * @param model
+     *         the model to check the property on.
      * @param inputs
      *         the alphabet.
      * @param property
@@ -54,7 +53,7 @@ public interface ModelChecker<I, A, P, R> {
      * @throws ModelCheckingException
      *         when this model checker can not check the property.
      */
-    @Nullable R findCounterExample(A automaton, Collection<? extends I> inputs, P property);
+    @Nullable R findCounterExample(M model, Collection<? extends I> inputs, P property);
 
     @FunctionalInterface
     interface DFAModelChecker<I, P, R> extends ModelChecker<I, DFA<?, I>, P, R> {}
@@ -62,8 +61,8 @@ public interface ModelChecker<I, A, P, R> {
     /**
      * A model checker for Mealy machines. Key about the {@link MealyMachine} type here is that it may not be
      * input-complete. Implementations of {@link MealyMachine}s should in these cases not return any output for a given
-     * input sequence. I.e. {@link MealyMachine#computeOutput(Iterable)} should return null when its argument is not
-     * accepted.
+     * input sequence, i.e., {@link MealyMachine#computeOutput(Iterable)} should return {@code null} when its argument
+     * is not accepted.
      *
      * @see ModelChecker
      */

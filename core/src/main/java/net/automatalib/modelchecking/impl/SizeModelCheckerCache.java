@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import net.automatalib.automaton.simple.SimpleAutomaton;
+import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.common.util.Pair;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.modelchecking.ModelCheckerCache;
@@ -32,14 +32,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         the input type
- * @param <A>
- *         the automaton type
+ * @param <M>
+ *         the model type
  * @param <P>
  *         the property type
  * @param <R>
- *         the result type of call to {@link #findCounterExample(SimpleAutomaton, Collection, Object)}.
+ *         the result type of call to {@link #findCounterExample(FiniteRepresentation, Collection, Object)}.
  */
-class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> implements ModelCheckerCache<I, A, P, R> {
+class SizeModelCheckerCache<I, M extends FiniteRepresentation, P, R> implements ModelCheckerCache<I, M, P, R> {
 
     /**
      * The actual cache. We need to wrap R in an {@link Optional} because {@link Map#computeIfAbsent(Object, Function)}
@@ -56,7 +56,7 @@ class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> implements
     /**
      * A function to any ModelChecker.findCounterExample.
      */
-    private final ModelChecker<I, A, P, R> modelChecker;
+    private final ModelChecker<I, M, P, R> modelChecker;
 
     /**
      * Constructs a new {@link SizeModelCheckerCache}.
@@ -64,7 +64,7 @@ class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> implements
      * @param modelChecker
      *         a function to any ModelChecker.findCounterExample.
      */
-    SizeModelCheckerCache(ModelChecker<I, A, P, R> modelChecker) {
+    SizeModelCheckerCache(ModelChecker<I, M, P, R> modelChecker) {
         this.modelChecker = modelChecker;
     }
 
@@ -74,16 +74,18 @@ class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> implements
      * @see ModelChecker#findCounterExample(Object, Collection, Object)
      */
     @Override
-    public @Nullable R findCounterExample(A automaton, Collection<? extends I> inputs, P property) {
-        if (automaton.size() > size) {
+    public @Nullable R findCounterExample(M model, Collection<? extends I> inputs, P property) {
+        if (model.size() > size) {
             counterExamples.clear();
         }
 
-        size = automaton.size();
+        size = model.size();
 
-        return counterExamples.computeIfAbsent(
-                Pair.of(inputs, property),
-                key -> Optional.ofNullable(modelChecker.findCounterExample(automaton, inputs, property))).orElse(null);
+        return counterExamples.computeIfAbsent(Pair.of(inputs, property),
+                                               key -> Optional.ofNullable(modelChecker.findCounterExample(model,
+                                                                                                          inputs,
+                                                                                                          property)))
+                              .orElse(null);
     }
 
     @Override
