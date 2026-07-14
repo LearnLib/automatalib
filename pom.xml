@@ -254,8 +254,9 @@ limitations under the License.
         <addlib.apidocs>https://scce.gitlab.io/add-lib/${addlib.version}/apidocs/</addlib.apidocs>
         <brics-automaton.apidocs>https://www.brics.dk/automaton/doc</brics-automaton.apidocs>
         <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
-        <guava.apidocs>http://google.github.io/guava/releases/${guava.version}/api/docs/</guava.apidocs>
+        <guava.apidocs>https://guava.dev/releases/${guava.version}/api/docs/</guava.apidocs>
         <jung.apidocs>https://jrtom.github.io/jung/javadoc/</jung.apidocs>
+        <metainf-services.apidocs>https://javadoc.io/doc/org.kohsuke.metainf-services/metainf-services/${metainf-services.version}</metainf-services.apidocs>
     </properties>
 
     <!--
@@ -737,14 +738,13 @@ limitations under the License.
                     <version>${javadoc-plugin.version}</version>
                     <configuration>
                         <quiet>true</quiet>
-                        <detectLinks>true</detectLinks>
-                        <linksource>false</linksource>
                         <links>
                             <link>${addlib.apidocs}</link>
                             <link>${brics-automaton.apidocs}</link>
                             <link>${checkerframework.apidocs}</link>
                             <link>${guava.apidocs}</link>
                             <link>${jung.apidocs}</link>
+                            <link>${metainf-services.apidocs}</link>
                         </links>
                         <sourceFileExcludes>
                             <!-- TODO: should be package-private, anyway. See https://github.com/javacc/javacc/issues/277 -->
