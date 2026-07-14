@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A utility class to consume a given {@link InputStream} inside a standalone thread.
  */
-final class StreamGobbler extends Thread {
+final class StreamGobbler implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StreamGobbler.class);
 

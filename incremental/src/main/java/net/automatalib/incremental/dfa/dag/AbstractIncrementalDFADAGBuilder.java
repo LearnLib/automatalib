@@ -498,7 +498,7 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
                     }
 
                     @Override
-                    public Acceptance getAcceptance(State state) {
+                    protected Acceptance getAcceptance(State state) {
                         return state.getAcceptance();
                     }
                 };

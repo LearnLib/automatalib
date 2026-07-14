@@ -20,10 +20,10 @@ import java.util.function.Function;
 
 class MappingIterator<D, R> implements Iterator<R> {
 
-    private final Iterator<D> delegate;
+    private final Iterator<? extends D> delegate;
     private final Function<? super D, ? extends R> mapping;
 
-    MappingIterator(Iterator<D> delegate, Function<? super D, ? extends R> mapping) {
+    MappingIterator(Iterator<? extends D> delegate, Function<? super D, ? extends R> mapping) {
         this.delegate = delegate;
         this.mapping = mapping;
     }

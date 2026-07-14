@@ -45,7 +45,7 @@ final class EmptyWord<I> extends Word<I> {
     }
 
     @Override
-    public Word<I> subWordInternal(int fromIndex, int toIndex) {
+    protected Word<I> subWordInternal(int fromIndex, int toIndex) {
         return this;
     }
 

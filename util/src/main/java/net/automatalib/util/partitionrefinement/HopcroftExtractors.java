@@ -83,20 +83,20 @@ public final class HopcroftExtractors {
                                                                                                         IntFunction<? extends SP> spExtractor,
                                                                                                         BiIntFunction<? extends TP> tpExtractor) {
 
-        int numBlocks = hopcroft.getNumBlocks();
-        int numInputs = inputs.size();
-        int[] repMap = new int[numBlocks];
-        int[] stateMap = new int[numBlocks];
+        final int numBlocks = hopcroft.getNumBlocks();
+        final int numInputs = inputs.size();
+        final int[] repMap = new int[numBlocks];
+        final int[] stateMap = new int[numBlocks];
         Arrays.fill(stateMap, -1);
 
-        A result = creator.createAutomaton(inputs, numBlocks);
-        MutableDeterministic.FullIntAbstraction<?, SP, TP> resultAbs = result.fullIntAbstraction(inputs);
+        final A result = creator.createAutomaton(inputs, numBlocks);
+        final MutableDeterministic.FullIntAbstraction<?, SP, TP> resultAbs = result.fullIntAbstraction(inputs);
 
-        int origInit = abs.getIntInitialState();
-        SP initSp = spExtractor.apply(origInit);
-        int resInit = resultAbs.addIntInitialState(initSp);
+        final int origInit = abs.getIntInitialState();
+        final SP initSp = spExtractor.apply(origInit);
+        final int resInit = resultAbs.addIntInitialState(initSp);
 
-        Block initBlock = hopcroft.getBlockForState(origInit);
+        final Block initBlock = hopcroft.getBlockForState(origInit);
         stateMap[initBlock.id] = resInit;
         repMap[resInit] = origInit;
 

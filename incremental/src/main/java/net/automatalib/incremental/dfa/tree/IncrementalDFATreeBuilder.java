@@ -202,7 +202,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
                 return new AbstractVisualizationHelper<>(automaton) {
 
                     @Override
-                    public Acceptance getAcceptance(Node node) {
+                    protected Acceptance getAcceptance(Node node) {
                         return node.getAcceptance();
                     }
                 };

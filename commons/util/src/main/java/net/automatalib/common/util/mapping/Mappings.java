@@ -156,7 +156,7 @@ public final class Mappings {
      *
      * @return the mapped iterator
      */
-    public static <D, R> Iterator<R> apply(Mapping<? super D, R> mapping, Iterator<? extends D> baseIt) {
+    public static <D, R> Iterator<R> apply(Mapping<? super D, ? extends R> mapping, Iterator<? extends D> baseIt) {
         return IteratorUtil.map(baseIt, mapping::get);
     }
 

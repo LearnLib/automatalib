@@ -289,8 +289,8 @@ public final class ProcessUtil {
         final ProcessBuilder processBuilder = new ProcessBuilder(commandLine);
         final Process process = processBuilder.start();
 
-        final Thread stdOutThread = new StreamGobbler(process.getInputStream(), stdOutConsumer);
-        final Thread stdErrThread = new StreamGobbler(process.getErrorStream(), stdErrConsumer);
+        final Thread stdOutThread = new Thread(new StreamGobbler(process.getInputStream(), stdOutConsumer));
+        final Thread stdErrThread = new Thread(new StreamGobbler(process.getErrorStream(), stdErrConsumer));
 
         // consume process outputs to prevent blocking from full buffers
         stdOutThread.start();

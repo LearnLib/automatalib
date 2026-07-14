@@ -63,11 +63,6 @@ public final class DeterministicEquivalenceTest {
         StateIDs<S> refStateIds = reference.stateIDs();
         StateIDs<S2> otherStateIds = other.stateIDs();
 
-        int currDepth = 0;
-        int inCurrDepth = 1;
-        int inNextDepth = 0;
-
-        I lastSym = null;
         Pred<I> lastPred = new Pred<>();
         Registry<I> reg;
 
@@ -82,6 +77,11 @@ public final class DeterministicEquivalenceTest {
         Queue<StatePair<S, S2>> bfsQueue = new ArrayDeque<>();
         bfsQueue.add(new StatePair<>(refInit, otherInit));
         StatePair<S, S2> currPair;
+
+        int currDepth = 0;
+        int inCurrDepth = 1;
+        int inNextDepth = 0;
+        I lastSym = null;
 
         bfs:
         while ((currPair = bfsQueue.poll()) != null) {

@@ -25,6 +25,7 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.graph.visualization.CFMPSVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Graph representation of a {@link ContextFreeModalProcessSystem} that displays all nodes of its sub-procedures once,
@@ -41,12 +42,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public class CFMPSGraphView<N, L, E, AP> implements Graph<Pair<L, N>, Pair<L, E>> {
 
-    private final L mainProcedure;
+    private final @Nullable L mainProcedure;
     private final Map<L, ProceduralModalProcessGraph<N, L, E, AP, ?>> pmpgs;
 
     // cast is fine, because we make sure to only query nodes/edges belonging to the respective procedures
     @SuppressWarnings("unchecked")
-    public CFMPSGraphView(L mainProcedure, Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, AP, ?>> pmpgs) {
+    public CFMPSGraphView(@Nullable L mainProcedure, Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, AP, ?>> pmpgs) {
         this.mainProcedure = mainProcedure;
         this.pmpgs = (Map<L, ProceduralModalProcessGraph<N, L, E, AP, ?>>) pmpgs;
     }

@@ -178,7 +178,7 @@ public final class IteratorUtil {
      *
      * @return the mapped view on the given iterator
      */
-    public static <D, R> Iterator<R> map(Iterator<D> iterator, Function<? super D, ? extends R> mapping) {
+    public static <D, R> Iterator<R> map(Iterator<? extends D> iterator, Function<? super D, ? extends R> mapping) {
         return new MappingIterator<>(iterator, mapping);
     }
 

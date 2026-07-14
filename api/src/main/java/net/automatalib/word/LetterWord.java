@@ -63,7 +63,7 @@ final class LetterWord<I> extends Word<I> {
     }
 
     @Override
-    public Word<I> subWordInternal(int fromIndex, int toIndex) {
+    protected Word<I> subWordInternal(int fromIndex, int toIndex) {
         if (fromIndex > 0 || toIndex == 0) {
             return Word.epsilon();
         }

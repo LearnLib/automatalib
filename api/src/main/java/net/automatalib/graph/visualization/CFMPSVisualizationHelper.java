@@ -28,6 +28,7 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CFMPSVisualizationHelper<N, L, E> extends DefaultVisualizationHelper<Pair<L, N>, Pair<L, E>> {
 
@@ -36,7 +37,7 @@ public class CFMPSVisualizationHelper<N, L, E> extends DefaultVisualizationHelpe
 
     // cast is fine, because we make sure to only query nodes/edges belonging to the respective procedures
     @SuppressWarnings("unchecked")
-    public CFMPSVisualizationHelper(L mainProcedure,
+    public CFMPSVisualizationHelper(@Nullable L mainProcedure,
                                     Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, ?, ?>> pmpgs) {
         this.visualizers = new HashMap<>(HashUtil.capacity(pmpgs.size()));
         this.initialNodes = new ArrayList<>(pmpgs.size());

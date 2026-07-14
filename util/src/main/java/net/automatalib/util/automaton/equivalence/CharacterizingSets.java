@@ -325,7 +325,7 @@ public final class CharacterizingSets {
             }
 
             if (state != null && suffix != null) {
-                int otherBlocks = blockQueue.size();
+                final int otherBlocks = blockQueue.size();
 
                 Map<List<?>, List<S>> buckets = new HashMap<>();
 

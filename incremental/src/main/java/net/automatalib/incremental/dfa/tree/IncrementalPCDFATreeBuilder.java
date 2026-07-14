@@ -181,7 +181,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
                 return new AbstractVisualizationHelper<>(automaton) {
 
                     @Override
-                    public Acceptance getAcceptance(Node node) {
+                    protected Acceptance getAcceptance(Node node) {
                         return node.getAcceptance();
                     }
                 };

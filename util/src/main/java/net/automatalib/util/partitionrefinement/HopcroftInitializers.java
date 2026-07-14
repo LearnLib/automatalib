@@ -85,27 +85,26 @@ public final class HopcroftInitializers {
     private static Hopcroft initializeCompletePrune(SimpleDeterministicAutomaton.FullIntAbstraction abs,
                                                     IntFunction<?> initialClassification) {
 
-        Hopcroft pt = new Hopcroft();
-        int numStates = abs.size();
-        int numInputs = abs.numInputs();
+        final Hopcroft pt = new Hopcroft();
+        final int numStates = abs.size();
+        final int numInputs = abs.numInputs();
 
-        int posDataLow = numStates;
-        int predOfsDataLow = posDataLow + numStates;
-        int numTransitions = numStates * numInputs;
-        int predDataLow = predOfsDataLow + numTransitions + 1;
-        int dataSize = predDataLow + numTransitions;
+        final int posDataLow = numStates;
+        final int predOfsDataLow = posDataLow + numStates;
+        final int numTransitions = numStates * numInputs;
+        final int predDataLow = predOfsDataLow + numTransitions + 1;
+        final int dataSize = predDataLow + numTransitions;
 
-        int[] data = new int[dataSize];
-        Block[] blockForState = new Block[numStates];
+        final int[] data = new int[dataSize];
+        final Block[] blockForState = new Block[numStates];
+        final Map<@Nullable Object, Block> blockMap = new HashMap<>();
 
-        Map<@Nullable Object, Block> blockMap = new HashMap<>();
-
-        int init = abs.getIntInitialState();
-        Object initClass = initialClassification.apply(init);
+        final int init = abs.getIntInitialState();
+        final Object initClass = initialClassification.apply(init);
 
         blockForState[init] = getOrCreateBlock(blockMap, initClass, pt);
 
-        int[] statesBuff = new int[numStates];
+        final int[] statesBuff = new int[numStates];
         statesBuff[0] = init;
 
         int statesPtr = 0;
@@ -251,30 +250,28 @@ public final class HopcroftInitializers {
                                                    IntFunction<?> initialClassification,
                                                    Object sinkClassification) {
 
-        Hopcroft pt = new Hopcroft();
-        int numStates = abs.size();
-        int numInputs = abs.numInputs();
+        final Hopcroft pt = new Hopcroft();
+        final int numStates = abs.size();
+        final int numInputs = abs.numInputs();
 
-        int sinkId = numStates;
-        int numStatesWithSink = numStates + 1;
-        int posDataLow = numStatesWithSink;
-        int predOfsDataLow = posDataLow + numStatesWithSink;
-        int numTransitionsFull = numStatesWithSink * numInputs;
-        int predDataLow = predOfsDataLow + numTransitionsFull + 1;
-        int dataSize = predDataLow + numTransitionsFull;
+        final int sinkId = numStates;
+        final int numStatesWithSink = numStates + 1;
+        final int posDataLow = numStatesWithSink;
+        final int predOfsDataLow = posDataLow + numStatesWithSink;
+        final int numTransitionsFull = numStatesWithSink * numInputs;
+        final int predDataLow = predOfsDataLow + numTransitionsFull + 1;
+        final int dataSize = predDataLow + numTransitionsFull;
 
-        int[] data = new int[dataSize];
-        Block[] blockForState = new Block[numStatesWithSink];
+        final int[] data = new int[dataSize];
+        final Block[] blockForState = new Block[numStatesWithSink];
+        final Map<@Nullable Object, Block> blockMap = new HashMap<>();
 
-        Map<@Nullable Object, Block> blockMap = new HashMap<>();
-
-        int initId = abs.getIntInitialState();
-
-        Object initClass = initialClassification.apply(initId);
+        final int initId = abs.getIntInitialState();
+        final Object initClass = initialClassification.apply(initId);
 
         blockForState[initId] = getOrCreateBlock(blockMap, initClass, pt);
 
-        int[] statesBuff = new int[numStatesWithSink];
+        final int[] statesBuff = new int[numStatesWithSink];
         statesBuff[0] = initId;
 
         int statesPtr = 0;
@@ -370,22 +367,21 @@ public final class HopcroftInitializers {
                                                      IntFunction<?> initialClassification,
                                                      Object sinkClassification) {
 
-        Hopcroft pt = new Hopcroft();
-        int numStates = abs.size();
-        int numInputs = abs.numInputs();
+        final Hopcroft pt = new Hopcroft();
+        final int numStates = abs.size();
+        final int numInputs = abs.numInputs();
 
-        int sinkId = numStates;
-        int numStatesWithSink = numStates + 1;
-        int posDataLow = numStatesWithSink;
-        int predOfsDataLow = posDataLow + numStatesWithSink;
-        int numTransitionsFull = numStatesWithSink * numInputs;
-        int predDataLow = predOfsDataLow + numTransitionsFull + 1;
-        int dataSize = predDataLow + numTransitionsFull;
+        final int sinkId = numStates;
+        final int numStatesWithSink = numStates + 1;
+        final int posDataLow = numStatesWithSink;
+        final int predOfsDataLow = posDataLow + numStatesWithSink;
+        final int numTransitionsFull = numStatesWithSink * numInputs;
+        final int predDataLow = predOfsDataLow + numTransitionsFull + 1;
+        final int dataSize = predDataLow + numTransitionsFull;
 
-        int[] data = new int[dataSize];
-        Block[] blockForState = new Block[numStatesWithSink];
-
-        Map<@Nullable Object, Block> blockMap = new HashMap<>();
+        final int[] data = new int[dataSize];
+        final Block[] blockForState = new Block[numStatesWithSink];
+        final Map<@Nullable Object, Block> blockMap = new HashMap<>();
 
         boolean partial = false;
         for (int i = 0; i < numStates; i++) {

@@ -79,7 +79,7 @@ final class SharedWord<I> extends Word<I> {
     }
 
     @Override
-    public Word<I> subWordInternal(int fromIndex, int toIndex) {
+    protected Word<I> subWordInternal(int fromIndex, int toIndex) {
         int newLen = toIndex - fromIndex;
         if (newLen <= 0) {
             return Word.epsilon();
