@@ -87,7 +87,7 @@ public class MMLTTests {
         var reachedState = reducedSemanticsModel.getState(includedConfigPrefix);
 
         // Verify that the output is identical:
-        var fullOutput = automaton.getSemantics().computeSuffixOutput(Word.epsilon(), includedConfigPrefix);
+        var fullOutput = automaton.computeOutput(includedConfigPrefix);
         var reducedOutput = reducedSemanticsModel.computeOutput(includedConfigPrefix);
         Assert.assertEquals(fullOutput, reducedOutput);
 
@@ -111,7 +111,7 @@ public class MMLTTests {
                             () -> reducedSemanticsModel.getStateForConfiguration(omittedConfig, false));
 
         // Verify that the output is incomplete:
-        var fullOutput = automaton.getSemantics().computeSuffixOutput(Word.epsilon(), omittedConfigPrefix);
+        var fullOutput = automaton.computeOutput(omittedConfigPrefix);
         var reducedOutput = reducedSemanticsModel.computeOutput(omittedConfigPrefix);
         Assert.assertNotEquals(fullOutput, reducedOutput);
 

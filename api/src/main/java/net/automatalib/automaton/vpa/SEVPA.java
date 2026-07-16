@@ -24,6 +24,7 @@ import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.concept.InitialState;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
@@ -41,9 +42,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <p>
  * Note that this formalism integrates into the hierarchy of a non-deterministic {@link UniversalAutomaton} because a
  * single return symbol may identify multiple transitions depending on the current top-of-stack symbol. Via
- * {@link #getInternalSuccessor(Object, Object)} and {@link #getReturnSuccessor(Object, Object, int)}, these
- * information can be accessed deterministically. As a result, its <em>states</em> act more like locations than actual
- * states. A (deterministic, infinite-state) semantics view can be obtained via the {@link #getSemantics()} method.
+ * {@link #getInternalSuccessor(Object, Object)} and {@link #getReturnSuccessor(Object, Object, int)}, these information
+ * can be accessed deterministically. As a result, its <em>states</em> act more like locations than actual states. A
+ * (deterministic, infinite-state) semantics view can be obtained via the {@link #getSemantics()} method.
+ * <p>
+ * For convenience, this type also implements {@link SuffixOutput} which delegates computation directly to its
+ * {@link DeterministicSemantics semantics}.
  *
  * @param <L>
  *         location type
@@ -53,6 +57,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public interface SEVPA<L, I> extends UniversalAutomaton<L, I, L, Boolean, Void>,
                                      InitialState<L>,
                                      DeterministicSemantics,
+                                     SuffixOutput<I, Boolean>,
                                      GraphViewable,
                                      InputAlphabetHolder<I> {
 
@@ -107,6 +112,11 @@ public interface SEVPA<L, I> extends UniversalAutomaton<L, I, L, Boolean, Void>,
     @Override
     default DeterministicAcceptorTS<State<L>, I> getSemantics() {
         return new SEVPASemantics<>(this);
+    }
+
+    @Override
+    default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
+        return getSemantics().computeSuffixOutput(prefix, suffix);
     }
 
     @Override
