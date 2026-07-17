@@ -20,7 +20,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.NFA;
@@ -29,7 +28,6 @@ import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
-import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
 import net.automatalib.util.ts.acceptor.Acceptors;
 import net.automatalib.util.ts.copy.TSCopy;
@@ -472,47 +470,6 @@ public final class DFAs {
         AutomatonLowLevelCopy.copy(AutomatonCopyMethod.DFS, dfa, inputs, out);
         MutableDFAs.complete(out, inputs, true);
         return out;
-    }
-
-    /**
-     * Minimizes the given DFA over the given alphabet. This method does not modify the given DFA, but returns the
-     * minimized version as a new instance.
-     * <p>
-     * <b>Note:</b> the DFA must be completely specified.
-     *
-     * @param dfa
-     *         the DFA to be minimized
-     * @param alphabet
-     *         the input alphabet to consider for minimization (this will also be the input alphabet of the resulting
-     *         automaton)
-     * @param <I>
-     *         input symbol type
-     *
-     * @return a minimized version of the specified DFA
-     */
-    public static <I> CompactDFA<I> minimize(DFA<?, I> dfa, Alphabet<I> alphabet) {
-        return HopcroftMinimizer.minimizeDFA(dfa, alphabet);
-    }
-
-    /**
-     * Minimizes the given DFA. This method does not modify the given DFA, but returns the minimized version as a new
-     * instance.
-     * <p>
-     * <b>Note:</b> the DFA must be completely specified
-     *
-     * @param dfa
-     *         the DFA to be minimized
-     * @param <I>
-     *         input symbol type
-     * @param <S>
-     *         state type
-     * @param <A>
-     *         automaton type
-     *
-     * @return a minimized version of the specified DFA
-     */
-    public static <S, I, A extends DFA<S, I> & InputAlphabetHolder<I>> CompactDFA<I> minimize(A dfa) {
-        return HopcroftMinimizer.minimizeDFA(dfa);
     }
 
     /**

@@ -87,7 +87,7 @@ public final class RandomAutomata {
                                                                                                  inputs,
                                                                                                  new CompactDFA.Creator<>(),
                                                                                                  rand);
-        return minimize ? DFAs.minimize(dfa) : dfa;
+        return minimize ? HopcroftMinimizer.minimizeDFAInvasive(dfa, inputs) : dfa;
     }
 
     public static <I> DefaultOneSEVPA<I> randomOneSEVPA(Random r,
