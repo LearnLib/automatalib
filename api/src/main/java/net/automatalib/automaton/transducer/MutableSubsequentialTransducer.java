@@ -16,7 +16,7 @@
 package net.automatalib.automaton.transducer;
 
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
+import net.automatalib.automaton.MutableDeterministic.RegularAutomaton;
 import net.automatalib.word.Word;
 
 /**
@@ -32,4 +32,4 @@ import net.automatalib.word.Word;
  *         output symbol type
  */
 public interface MutableSubsequentialTransducer<S, I, T, O>
-        extends SubsequentialTransducer<S, I, T, O>, FiniteSemantics<S, I, T, Word<O>, Word<O>> {}
+        extends SubsequentialTransducer<S, I, T, O>, RegularAutomaton<S, I, T, Word<O>, Word<O>> {}

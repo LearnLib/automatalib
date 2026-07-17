@@ -17,12 +17,11 @@ package net.automatalib.automaton.impl;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
-import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
+import net.automatalib.automaton.MutableDeterministic.RegularAutomaton;
 
 /**
- * A refinement of {@link UniversalCompactDet} that additionally implements {@link MutableDeterministic.FiniteSemantics}
- * so that structural determinism and finiteness coincides with semantic determinism and finiteness.
+ * A refinement of {@link UniversalCompactDet} that additionally implements {@link RegularAutomaton} so that structural
+ * determinism and finiteness coincides with semantic determinism and finiteness.
  *
  * @param <I>
  *         input symbol type
@@ -32,7 +31,7 @@ import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
  *         transition property type
  */
 public class UniversalCompactDetAutomaton<I, SP, TP> extends UniversalCompactDet<I, SP, TP>
-        implements FiniteSemantics<Integer, I, CompactTransition<TP>, SP, TP> {
+        implements RegularAutomaton<Integer, I, CompactTransition<TP>, SP, TP> {
 
     public UniversalCompactDetAutomaton(Alphabet<I> alphabet) {
         super(alphabet);

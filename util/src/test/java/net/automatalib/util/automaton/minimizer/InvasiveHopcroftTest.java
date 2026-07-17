@@ -16,8 +16,7 @@
 package net.automatalib.util.automaton.minimizer;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.MutableDeterministic.RegularAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -37,9 +36,8 @@ public class InvasiveHopcroftTest extends AbstractMinimizationTest {
     }
 
     @Override
-    protected <I, SP, TP> UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> minimizeUniversal(
-            FiniteSemantics<?, I, ?, SP, TP> automaton,
-            Alphabet<I> alphabet) {
+    protected <I, SP, TP> RegularAutomaton<?, I, ?, SP, TP> minimizeUniversal(RegularAutomaton<?, I, ?, SP, TP> automaton,
+                                                                              Alphabet<I> alphabet) {
         return HopcroftMinimizer.minimizeUniversalInvasive(automaton, alphabet);
     }
 

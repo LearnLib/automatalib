@@ -18,7 +18,7 @@ package net.automatalib.automaton.transducer;
 import java.util.Collection;
 import java.util.List;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FiniteSemantics;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.DeterministicSuffixOutputAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.graph.TransitionEdge;
@@ -53,7 +53,7 @@ import net.automatalib.word.Word;
  */
 public interface SubsequentialTransducer<S, I, T, O> extends DeterministicTraceableTS<S, I, T, O>,
                                                              DeterministicSuffixOutputAutomaton<S, I, T, Word<O>>,
-                                                             FiniteSemantics<S, I, T, Word<O>, Word<O>> {
+                                                             RegularAutomaton<S, I, T, Word<O>, Word<O>> {
 
     @Override
     default SubsequentialTransducer<S, I, T, O> getSemantics() {

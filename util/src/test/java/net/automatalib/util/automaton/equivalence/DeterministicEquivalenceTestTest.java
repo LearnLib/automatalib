@@ -20,7 +20,7 @@ import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FiniteSemantics;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
@@ -158,8 +158,8 @@ public class DeterministicEquivalenceTestTest {
         }
     }
 
-    private static <I> void testForEmptySepWord(FiniteSemantics<?, I, ?, ?, ?> a1,
-                                                FiniteSemantics<?, I, ?, ?, ?> a2,
+    private static <I> void testForEmptySepWord(RegularAutomaton<?, I, ?, ?, ?> a1,
+                                                RegularAutomaton<?, I, ?, ?, ?> a2,
                                                 Collection<? extends I> inputs) {
 
         Assert.assertNull(DeterministicEquivalenceTest.findSeparatingWord(a1, a1, inputs));
@@ -174,13 +174,13 @@ public class DeterministicEquivalenceTestTest {
         Assert.assertNotEquals(a1.getState(sepWord2), a2.getState(sepWord2));
     }
 
-    private <I, M extends FiniteSemantics<?, I, ?, ?, ?> & Output<I, ?>> void testEquivalenceInternal(M a1,
-                                                                                                      M a2,
-                                                                                                      Alphabet<I> alphabet,
-                                                                                                      boolean equivalent) {
+    private <I, M extends RegularAutomaton<?, I, ?, ?, ?> & Output<I, ?>> void testEquivalenceInternal(M a1,
+                                                                                                       M a2,
+                                                                                                       Alphabet<I> alphabet,
+                                                                                                       boolean equivalent) {
         // explicitly assign type to (redundant) variables, otherwise javac complains
-        final FiniteSemantics<?, I, ?, ?, ?> m1 = a1;
-        final FiniteSemantics<?, I, ?, ?, ?> m2 = a2;
+        final RegularAutomaton<?, I, ?, ?, ?> m1 = a1;
+        final RegularAutomaton<?, I, ?, ?, ?> m2 = a2;
 
         final Word<I> separatingWord = DeterministicEquivalenceTest.findSeparatingWord(m1, m2, alphabet);
 

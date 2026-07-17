@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 * A new formalism for *Mealy machines with local timers* (MMLTs) including means for conformance testing and equivalence checking has been added (thanks to [Paul Kogel](https://github.com/pdev55)).
-* With the introduction of `MMLT`s which are finite-state systems structurally but infinite-state systems semantically, AutomataLib now more rigorously distinguishes between these two concepts by introducing (and at some points requiring) specific `{Finite,}Semantics` types. For automaton types that are inherently finite-state (e.g., `DFA`s, `MealyMachine`s, etc.), this should not require any refactoring.
+* With the introduction of `MMLT`s which are finite-state systems structurally but infinite-state systems semantically, AutomataLib now more rigorously distinguishes between these two concepts by introducing (and at some points requiring) specific `{Finite,}Semantics` types. Both concepts are conveniently accessible via new `RegularAutomaton` types. For automaton types that are inherently finite-state (e.g., `DFA`s, `MealyMachine`s, etc.), this should not require any refactoring.
 * Added a new `automata-serialization-mata` module for serializing (explicit) NFAs in the `.mata` format as used by the [mata library](https://github.com/VeriFIT/mata).
 * `automata-modelchecking-m3c` now supports ARM-based macOS systems.
 * `automata-modelchecking-m3c` can now be included in jlink images.

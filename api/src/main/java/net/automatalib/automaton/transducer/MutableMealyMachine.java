@@ -15,11 +15,11 @@
  */
 package net.automatalib.automaton.transducer;
 
-import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
+import net.automatalib.automaton.MutableDeterministic.RegularAutomaton;
 import net.automatalib.automaton.concept.MutableTransitionOutput;
 
 public interface MutableMealyMachine<S, I, T, O>
-        extends MealyMachine<S, I, T, O>, FiniteSemantics<S, I, T, Void, O>, MutableTransitionOutput<T, O> {
+        extends MealyMachine<S, I, T, O>, RegularAutomaton<S, I, T, Void, O>, MutableTransitionOutput<T, O> {
 
     @Override
     default void setStateProperty(S state, Void property) {}

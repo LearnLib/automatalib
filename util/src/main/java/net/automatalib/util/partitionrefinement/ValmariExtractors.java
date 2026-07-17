@@ -134,10 +134,10 @@ public final class ValmariExtractors {
      *
      * @return the "quotiented" automaton of the original one
      */
-    public static <S, I, SP, TP, A extends MutableAutomaton.FiniteSemantics<S, I, ?, SP, TP>> A toUniversal(Valmari valmari,
-                                                                                                            UniversalAutomaton.FiniteSemantics<?, I, ?, SP, TP> original,
-                                                                                                            Alphabet<I> alphabet,
-                                                                                                            AutomatonCreator<A, I> creator) {
+    public static <S, I, SP, TP, A extends MutableAutomaton.RegularAutomaton<S, I, ?, SP, TP>> A toUniversal(Valmari valmari,
+                                                                                                             UniversalAutomaton.RegularAutomaton<?, I, ?, SP, TP> original,
+                                                                                                             Alphabet<I> alphabet,
+                                                                                                             AutomatonCreator<A, I> creator) {
         return toUniversal(valmari, original, alphabet, creator, true);
     }
 
@@ -169,19 +169,19 @@ public final class ValmariExtractors {
      *
      * @return the "quotiented" automaton of the original one
      */
-    public static <S, I, SP, TP, A extends MutableAutomaton.FiniteSemantics<S, I, ?, SP, TP>> A toUniversal(Valmari valmari,
-                                                                                                            UniversalAutomaton.FiniteSemantics<?, I, ?, SP, TP> original,
-                                                                                                            Alphabet<I> alphabet,
-                                                                                                            AutomatonCreator<A, I> creator,
-                                                                                                            boolean pruneUnreachable) {
+    public static <S, I, SP, TP, A extends MutableAutomaton.RegularAutomaton<S, I, ?, SP, TP>> A toUniversal(Valmari valmari,
+                                                                                                             UniversalAutomaton.RegularAutomaton<?, I, ?, SP, TP> original,
+                                                                                                             Alphabet<I> alphabet,
+                                                                                                             AutomatonCreator<A, I> creator,
+                                                                                                             boolean pruneUnreachable) {
         return pruneUnreachable ?
                 toUniversalPrune(valmari, original, alphabet, creator) :
                 toUniversalNoPrune(valmari, original, alphabet, creator);
     }
 
-    private static <S1, S2, I, T, SP, TP, A extends MutableAutomaton.FiniteSemantics<S2, I, ?, ? super SP, ? super TP>> A toUniversalPrune(
+    private static <S1, S2, I, T, SP, TP, A extends MutableAutomaton.RegularAutomaton<S2, I, ?, ? super SP, ? super TP>> A toUniversalPrune(
             Valmari valmari,
-            UniversalAutomaton.FiniteSemantics<S1, I, T, SP, TP> original,
+            UniversalAutomaton.RegularAutomaton<S1, I, T, SP, TP> original,
             Alphabet<I> alphabet,
             AutomatonCreator<A, I> creator) {
 
@@ -238,9 +238,9 @@ public final class ValmariExtractors {
         return result;
     }
 
-    private static <S1, S2, I, T, SP, TP, A extends MutableAutomaton.FiniteSemantics<S2, I, ?, ? super SP, ? super TP>> A toUniversalNoPrune(
+    private static <S1, S2, I, T, SP, TP, A extends MutableAutomaton.RegularAutomaton<S2, I, ?, ? super SP, ? super TP>> A toUniversalNoPrune(
             Valmari valmari,
-            UniversalAutomaton.FiniteSemantics<S1, I, T, SP, TP> original,
+            UniversalAutomaton.RegularAutomaton<S1, I, T, SP, TP> original,
             Alphabet<I> alphabet,
             AutomatonCreator<A, I> creator) {
         final int numBlocks = valmari.blocks.sets + 1;

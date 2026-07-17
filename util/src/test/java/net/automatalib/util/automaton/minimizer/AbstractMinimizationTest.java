@@ -19,7 +19,7 @@ import java.util.Collection;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
+import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
@@ -221,9 +221,10 @@ public abstract class AbstractMinimizationTest {
         }
     }
 
-    private <I, SP, TP, A extends FiniteSemantics<?, I, ?, SP, TP>> void testMinimizeUniversal(TestConfig<I, A> test) {
+    private <I, SP, TP, A extends MutableDeterministic.RegularAutomaton<?, I, ?, SP, TP>> void testMinimizeUniversal(
+            TestConfig<I, A> test) {
 
-        final UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> result =
+        final UniversalDeterministicAutomaton.RegularAutomaton<?, I, ?, SP, TP> result =
                 minimizeUniversal(test.automaton, test.alphabet);
 
         if (isPruned()) {
@@ -240,15 +241,15 @@ public abstract class AbstractMinimizationTest {
     protected abstract <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
                                                                      Alphabet<I> alphabet);
 
-    protected abstract <I, SP, TP> UniversalDeterministicAutomaton.FiniteSemantics<?, I, ?, SP, TP> minimizeUniversal(
-            FiniteSemantics<?, I, ?, SP, TP> automaton,
+    protected abstract <I, SP, TP> UniversalDeterministicAutomaton.RegularAutomaton<?, I, ?, SP, TP> minimizeUniversal(
+            MutableDeterministic.RegularAutomaton<?, I, ?, SP, TP> automaton,
             Alphabet<I> alphabet);
 
     protected abstract boolean isPruned();
 
     protected abstract boolean supportsPartial();
 
-    private static <S, I> void assertAllInequivalent(UniversalDeterministicAutomaton.FiniteSemantics<S, I, ?, ?, ?> automaton,
+    private static <S, I> void assertAllInequivalent(UniversalDeterministicAutomaton.RegularAutomaton<S, I, ?, ?, ?> automaton,
                                                      Collection<? extends I> inputs) {
 
         StateIDs<S> ids = automaton.stateIDs();

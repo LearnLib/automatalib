@@ -65,7 +65,7 @@ public final class HopcroftExtractors {
      * @return an automaton created using the specified creator, over the specified input alphabet, and reflecting the
      * partition data of the specified {@link Hopcroft} object
      */
-    public static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A toDeterministic(
+    public static <I, SP, TP, A extends MutableDeterministic.RegularAutomaton<?, I, ?, SP, TP>> A toDeterministic(
             Hopcroft hopcroft,
             AutomatonCreator<A, I> creator,
             Alphabet<I> inputs,
@@ -78,7 +78,7 @@ public final class HopcroftExtractors {
                 toDeterministicUnpruned(hopcroft, creator, inputs, abs, spExtractor, tpExtractor);
     }
 
-    private static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A toDeterministicPruned(
+    private static <I, SP, TP, A extends MutableDeterministic.RegularAutomaton<?, I, ?, SP, TP>> A toDeterministicPruned(
             Hopcroft hopcroft,
             AutomatonCreator<A, I> creator,
             Alphabet<I> inputs,
@@ -130,7 +130,7 @@ public final class HopcroftExtractors {
         return result;
     }
 
-    private static <I, SP, TP, A extends MutableDeterministic.FiniteSemantics<?, I, ?, SP, TP>> A toDeterministicUnpruned(
+    private static <I, SP, TP, A extends MutableDeterministic.RegularAutomaton<?, I, ?, SP, TP>> A toDeterministicUnpruned(
             Hopcroft hopcroft,
             AutomatonCreator<A, I> creator,
             Alphabet<I> inputs,

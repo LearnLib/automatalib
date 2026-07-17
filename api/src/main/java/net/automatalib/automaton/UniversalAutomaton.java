@@ -21,6 +21,7 @@ import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.graph.UniversalGraph;
+import net.automatalib.semantic.FiniteSemantics;
 import net.automatalib.ts.UniversalTransitionSystem;
 
 /**
@@ -47,8 +48,8 @@ public interface UniversalAutomaton<S, I, T, SP, TP>
     }
 
     /**
-     * Convenience interface that links a {@link UniversalAutomaton} with
-     * {@link net.automatalib.semantic.FiniteSemantics}.
+     * Convenience interface that describes an automaton with finite syntactic and finite semantic state space. This
+     * type links a {@link UniversalAutomaton} with {@link FiniteSemantics}.
      *
      * @param <S>
      *         state type
@@ -61,8 +62,8 @@ public interface UniversalAutomaton<S, I, T, SP, TP>
      * @param <TP>
      *         transition property type
      */
-    interface FiniteSemantics<S, I, T, SP, TP>
-            extends UniversalAutomaton<S, I, T, SP, TP>, Automaton.FiniteSemantics<S, I, T> {
+    interface RegularAutomaton<S, I, T, SP, TP>
+            extends UniversalAutomaton<S, I, T, SP, TP>, Automaton.RegularAutomaton<S, I, T> {
 
         @Override
         default UniversalAutomaton<S, I, T, SP, TP> getSemantics() {

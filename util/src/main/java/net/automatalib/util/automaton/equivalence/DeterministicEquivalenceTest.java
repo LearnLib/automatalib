@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FiniteSemantics;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -39,8 +39,8 @@ public final class DeterministicEquivalenceTest {
     }
 
     @SuppressWarnings("PMD.UnnecessaryCast") // we want to cast to long, to prevent overflows
-    public static <I, S, T, SP, TP, S2, T2, SP2, TP2> @Nullable Word<I> findSeparatingWord(FiniteSemantics<S, I, T, SP, TP> reference,
-                                                                                           FiniteSemantics<S2, I, T2, SP2, TP2> other,
+    public static <I, S, T, SP, TP, S2, T2, SP2, TP2> @Nullable Word<I> findSeparatingWord(RegularAutomaton<S, I, T, SP, TP> reference,
+                                                                                           RegularAutomaton<S2, I, T2, SP2, TP2> other,
                                                                                            Collection<? extends I> inputs) {
         int refSize = reference.size();
         int otherSize = other.size();

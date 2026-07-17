@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FiniteSemantics;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.fsa.FiniteStateAcceptor;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.collection.CollectionUtil;
@@ -64,7 +64,7 @@ public final class CharacterizingSets {
      * @param <I>
      *         input symbol type
      */
-    public static <I> void findCharacterizingSet(FiniteSemantics<?, I, ?, ?, ?> automaton,
+    public static <I> void findCharacterizingSet(RegularAutomaton<?, I, ?, ?, ?> automaton,
                                                  Collection<? extends I> inputs,
                                                  Collection<? super Word<I>> result) {
         findIncrementalCharacterizingSet(automaton, inputs, Collections.emptyList(), result);
@@ -86,7 +86,7 @@ public final class CharacterizingSets {
      * @param <I>
      *         input symbol type
      */
-    public static <S, I> void findCharacterizingSet(FiniteSemantics<S, I, ?, ?, ?> automaton,
+    public static <S, I> void findCharacterizingSet(RegularAutomaton<S, I, ?, ?, ?> automaton,
                                                     Collection<? extends I> inputs,
                                                     S state,
                                                     Collection<? super Word<I>> result) {
@@ -143,12 +143,12 @@ public final class CharacterizingSets {
         }
     }
 
-    public static <I> Iterator<Word<I>> characterizingSetIterator(FiniteSemantics<?, I, ?, ?, ?> automaton,
+    public static <I> Iterator<Word<I>> characterizingSetIterator(RegularAutomaton<?, I, ?, ?, ?> automaton,
                                                                   Collection<? extends I> inputs) {
         return new IncrementalCharacterizingSetIterator<>(automaton, inputs, Collections.emptyList());
     }
 
-    private static <S, I, T, SP, TP> List<?> buildTrace(FiniteSemantics<S, I, T, SP, TP> automaton,
+    private static <S, I, T, SP, TP> List<?> buildTrace(RegularAutomaton<S, I, T, SP, TP> automaton,
                                                         S state,
                                                         Word<I> suffix) {
         if (suffix.isEmpty()) {
@@ -182,7 +182,7 @@ public final class CharacterizingSets {
         return trace;
     }
 
-    private static <S, I, T, SP, TP, P> boolean checkTrace(FiniteSemantics<S, I, T, SP, TP> automaton,
+    private static <S, I, T, SP, TP, P> boolean checkTrace(RegularAutomaton<S, I, T, SP, TP> automaton,
                                                            S state,
                                                            Word<I> suffix,
                                                            List<P> trace) {
@@ -216,7 +216,7 @@ public final class CharacterizingSets {
         return true;
     }
 
-    public static <S, I> boolean findIncrementalCharacterizingSet(FiniteSemantics<S, I, ?, ?, ?> automaton,
+    public static <S, I> boolean findIncrementalCharacterizingSet(RegularAutomaton<S, I, ?, ?, ?> automaton,
                                                                   Collection<? extends I> inputs,
                                                                   Collection<? extends Word<I>> oldSuffixes,
                                                                   Collection<? super Word<I>> newSuffixes) {
@@ -243,13 +243,13 @@ public final class CharacterizingSets {
         return refined;
     }
 
-    public static <I> Iterator<Word<I>> incrementalCharacterizingSetIterator(FiniteSemantics<?, I, ?, ?, ?> automaton,
+    public static <I> Iterator<Word<I>> incrementalCharacterizingSetIterator(RegularAutomaton<?, I, ?, ?, ?> automaton,
                                                                              Collection<? extends I> inputs,
                                                                              Collection<? extends Word<I>> oldSuffixes) {
         return new IncrementalCharacterizingSetIterator<>(automaton, inputs, oldSuffixes);
     }
 
-    private static <S, I> Queue<List<S>> buildInitialBlocks(FiniteSemantics<S, I, ?, ?, ?> automaton,
+    private static <S, I> Queue<List<S>> buildInitialBlocks(RegularAutomaton<S, I, ?, ?, ?> automaton,
                                                             List<? extends Word<I>> oldSuffixes) {
         Map<List<List<?>>, List<S>> initialPartitioning = new HashMap<>();
         Queue<List<S>> blocks = new ArrayDeque<>();
@@ -267,7 +267,7 @@ public final class CharacterizingSets {
         return blocks;
     }
 
-    private static <S, I> List<List<?>> buildSignature(FiniteSemantics<S, I, ?, ?, ?> automaton,
+    private static <S, I> List<List<?>> buildSignature(RegularAutomaton<S, I, ?, ?, ?> automaton,
                                                        List<? extends Word<I>> suffixes,
                                                        S state) {
         List<List<?>> signature = new ArrayList<>(suffixes.size());
@@ -280,7 +280,7 @@ public final class CharacterizingSets {
         return signature;
     }
 
-    private static <S, I> boolean epsilonRefine(FiniteSemantics<S, I, ?, ?, ?> automaton, Queue<List<S>> blockQueue) {
+    private static <S, I> boolean epsilonRefine(RegularAutomaton<S, I, ?, ?, ?> automaton, Queue<List<S>> blockQueue) {
 
         int initialSize = blockQueue.size();
 
@@ -302,7 +302,7 @@ public final class CharacterizingSets {
         return refined;
     }
 
-    private static <S, I> @Nullable Word<I> refine(FiniteSemantics<S, I, ?, ?, ?> automaton,
+    private static <S, I> @Nullable Word<I> refine(RegularAutomaton<S, I, ?, ?, ?> automaton,
                                                    Collection<? extends I> inputs,
                                                    Queue<List<S>> blockQueue) {
 
@@ -356,7 +356,7 @@ public final class CharacterizingSets {
         return null;
     }
 
-    private static <S, I, SP> Map<?, List<S>> clusterByProperty(FiniteSemantics<S, I, ?, SP, ?> automaton,
+    private static <S, I, SP> Map<?, List<S>> clusterByProperty(RegularAutomaton<S, I, ?, SP, ?> automaton,
                                                                 List<S> states) {
         Map<SP, List<S>> result = new HashMap<>();
 
@@ -369,7 +369,7 @@ public final class CharacterizingSets {
         return result;
     }
 
-    private static <S, I> void cluster(FiniteSemantics<S, I, ?, ?, ?> automaton,
+    private static <S, I> void cluster(RegularAutomaton<S, I, ?, ?, ?> automaton,
                                        Word<I> suffix,
                                        Iterator<S> stateIt,
                                        Map<List<?>, List<S>> bucketMap) {
@@ -384,12 +384,12 @@ public final class CharacterizingSets {
 
     private static class IncrementalCharacterizingSetIterator<S, I> extends AbstractSimplifiedIterator<Word<I>> {
 
-        private final FiniteSemantics<S, I, ?, ?, ?> automaton;
+        private final RegularAutomaton<S, I, ?, ?, ?> automaton;
         private final Collection<? extends I> inputs;
         private final List<? extends Word<I>> oldSuffixes;
         private Queue<List<S>> blocks;
 
-        IncrementalCharacterizingSetIterator(FiniteSemantics<S, I, ?, ?, ?> automaton,
+        IncrementalCharacterizingSetIterator(RegularAutomaton<S, I, ?, ?, ?> automaton,
                                              Collection<? extends I> inputs,
                                              Collection<? extends Word<I>> oldSuffixes) {
             this.automaton = automaton;

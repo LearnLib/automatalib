@@ -21,6 +21,7 @@ import net.automatalib.automaton.graph.AutomatonGraphView;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.graph.Graph;
+import net.automatalib.semantic.FiniteSemantics;
 import net.automatalib.ts.TransitionSystem;
 
 /**
@@ -49,7 +50,8 @@ public interface Automaton<S, I, T> extends TransitionSystem<S, I, T>, SimpleAut
     }
 
     /**
-     * Convenience interface that links an {@link Automaton} with {@link net.automatalib.semantic.FiniteSemantics}.
+     * Convenience interface that describes an automaton with finite syntactic and finite semantic state space. This
+     * type links an {@link Automaton} with {@link FiniteSemantics}.
      *
      * @param <S>
      *         state type
@@ -58,7 +60,7 @@ public interface Automaton<S, I, T> extends TransitionSystem<S, I, T>, SimpleAut
      * @param <T>
      *         transition type
      */
-    interface FiniteSemantics<S, I, T> extends Automaton<S, I, T>, net.automatalib.semantic.FiniteSemantics {
+    interface RegularAutomaton<S, I, T> extends Automaton<S, I, T>, FiniteSemantics {
 
         @Override
         default Automaton<S, I, T> getSemantics() {

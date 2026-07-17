@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.automatalib.automaton.concept.Shrinkable;
+import net.automatalib.semantic.FiniteSemantics;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -140,8 +141,8 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
     }
 
     /**
-     * Convenience interface that links a {@link MutableAutomaton} with
-     * {@link net.automatalib.semantic.FiniteSemantics}.
+     * Convenience interface that describes an automaton with finite syntactic and finite semantic state space. This
+     * type links a {@link MutableAutomaton} with {@link FiniteSemantics}.
      *
      * @param <S>
      *         state type
@@ -154,7 +155,7 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
      * @param <TP>
      *         transition property type
      */
-    interface FiniteSemantics<S, I, T, SP, TP>
-            extends MutableAutomaton<S, I, T, SP, TP>, UniversalAutomaton.FiniteSemantics<S, I, T, SP, TP> {}
+    interface RegularAutomaton<S, I, T, SP, TP>
+            extends MutableAutomaton<S, I, T, SP, TP>, UniversalAutomaton.RegularAutomaton<S, I, T, SP, TP> {}
 
 }

@@ -56,7 +56,8 @@ public interface DeterministicAutomaton<S, I, T>
     }
 
     /**
-     * Convenience interface that links a {@link DeterministicAutomaton} with {@link DeterministicFiniteSemantics}.
+     * Convenience interface that describes an automaton with finite syntactic and finite semantic state space. This
+     * type links a {@link DeterministicAutomaton} with {@link DeterministicFiniteSemantics}.
      *
      * @param <S>
      *         state type
@@ -65,8 +66,8 @@ public interface DeterministicAutomaton<S, I, T>
      * @param <T>
      *         transition type
      */
-    interface FiniteSemantics<S, I, T>
-            extends DeterministicAutomaton<S, I, T>, Automaton.FiniteSemantics<S, I, T>, DeterministicFiniteSemantics {
+    interface RegularAutomaton<S, I, T>
+            extends DeterministicAutomaton<S, I, T>, Automaton.RegularAutomaton<S, I, T>, DeterministicFiniteSemantics {
 
         @Override
         default DeterministicAutomaton<S, I, T> getSemantics() {

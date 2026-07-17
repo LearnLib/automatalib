@@ -15,10 +15,10 @@
  */
 package net.automatalib.automaton.fsa;
 
-import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
+import net.automatalib.automaton.MutableDeterministic.RegularAutomaton;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public interface MutableDFA<S, I> extends DFA<S, I>, FiniteSemantics<S, I, S, Boolean, Void>, MutableFSA<S, I> {
+public interface MutableDFA<S, I> extends DFA<S, I>, RegularAutomaton<S, I, S, Boolean, Void>, MutableFSA<S, I> {
 
     @Override
     // Overridden for performance reasons (to prevent creating redundant transition objects)

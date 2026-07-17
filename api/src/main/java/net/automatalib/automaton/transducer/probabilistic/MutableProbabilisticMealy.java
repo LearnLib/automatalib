@@ -15,11 +15,11 @@
  */
 package net.automatalib.automaton.transducer.probabilistic;
 
-import net.automatalib.automaton.MutableAutomaton.FiniteSemantics;
+import net.automatalib.automaton.MutableAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.MutableProbabilistic;
 import net.automatalib.automaton.concept.MutableTransitionOutput;
 
-public interface MutableProbabilisticMealy<S, I, T, O> extends FiniteSemantics<S, I, T, Void, ProbabilisticOutput<O>>,
+public interface MutableProbabilisticMealy<S, I, T, O> extends RegularAutomaton<S, I, T, Void, ProbabilisticOutput<O>>,
                                                                ProbabilisticMealyMachine<S, I, T, O>,
                                                                MutableTransitionOutput<T, O>,
                                                                MutableProbabilistic<T> {

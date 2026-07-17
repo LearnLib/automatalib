@@ -42,12 +42,12 @@ public class SemanticsTest {
 
     @Test
     public void testIdentitySemantics() {
-        checkSameSemantics(Automaton.FiniteSemantics.class);
-        checkSameSemantics(UniversalAutomaton.FiniteSemantics.class);
-        checkSameSemantics(DeterministicAutomaton.FiniteSemantics.class);
-        checkSameSemantics(UniversalDeterministicAutomaton.FiniteSemantics.class);
-        checkSameSemantics(MutableAutomaton.FiniteSemantics.class);
-        checkSameSemantics(MutableDeterministic.FiniteSemantics.class);
+        checkSameSemantics(Automaton.RegularAutomaton.class);
+        checkSameSemantics(UniversalAutomaton.RegularAutomaton.class);
+        checkSameSemantics(DeterministicAutomaton.RegularAutomaton.class);
+        checkSameSemantics(UniversalDeterministicAutomaton.RegularAutomaton.class);
+        checkSameSemantics(MutableAutomaton.RegularAutomaton.class);
+        checkSameSemantics(MutableDeterministic.RegularAutomaton.class);
 
         checkSameSemantics(DFA.class);
         checkSameSemantics(MutableDFA.class);

@@ -20,7 +20,7 @@ import java.util.HashSet;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FiniteSemantics;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.common.util.process.ProcessUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
  *
  * @param <A> the automaton type.
  */
-public abstract class AbstractAut2ETF2FSM2AutTest<A extends FiniteSemantics<Integer, String, ?, ?, ?> & InputAlphabetHolder<String>> {
+public abstract class AbstractAut2ETF2FSM2AutTest<A extends RegularAutomaton<Integer, String, ?, ?, ?> & InputAlphabetHolder<String>> {
 
     @BeforeClass
     public void setupBeforeClass() {

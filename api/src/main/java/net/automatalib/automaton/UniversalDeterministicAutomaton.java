@@ -60,8 +60,8 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
     }
 
     /**
-     * Convenience interface that links a {@link UniversalDeterministicAutomaton} with
-     * {@link DeterministicFiniteSemantics}.
+     * Convenience interface that describes an automaton with finite syntactic and finite semantic state space. This
+     * type links a {@link UniversalDeterministicAutomaton} with {@link DeterministicFiniteSemantics}.
      *
      * @param <S>
      *         state type
@@ -74,9 +74,9 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
      * @param <TP>
      *         transition property type
      */
-    interface FiniteSemantics<S, I, T, SP, TP> extends UniversalDeterministicAutomaton<S, I, T, SP, TP>,
-                                                       DeterministicAutomaton.FiniteSemantics<S, I, T>,
-                                                       UniversalAutomaton.FiniteSemantics<S, I, T, SP, TP> {
+    interface RegularAutomaton<S, I, T, SP, TP> extends UniversalDeterministicAutomaton<S, I, T, SP, TP>,
+                                                        DeterministicAutomaton.RegularAutomaton<S, I, T>,
+                                                        UniversalAutomaton.RegularAutomaton<S, I, T, SP, TP> {
 
         @Override
         default UniversalDeterministicAutomaton<S, I, T, SP, TP> getSemantics() {

@@ -161,7 +161,8 @@ public interface MutableDeterministic<S, I, T, SP, TP>
     }
 
     /**
-     * Convenience interface that links a {@link MutableDeterministic} with {@link DeterministicFiniteSemantics}.
+     * Convenience interface that describes an automaton with finite syntactic and finite semantic state space. This
+     * type links a {@link MutableDeterministic} with {@link DeterministicFiniteSemantics}.
      *
      * @param <S>
      *         state type
@@ -174,8 +175,8 @@ public interface MutableDeterministic<S, I, T, SP, TP>
      * @param <TP>
      *         transition property type
      */
-    interface FiniteSemantics<S, I, T, SP, TP> extends MutableDeterministic<S, I, T, SP, TP>,
-                                                       MutableAutomaton.FiniteSemantics<S, I, T, SP, TP>,
-                                                       UniversalDeterministicAutomaton.FiniteSemantics<S, I, T, SP, TP> {}
+    interface RegularAutomaton<S, I, T, SP, TP> extends MutableDeterministic<S, I, T, SP, TP>,
+                                                        MutableAutomaton.RegularAutomaton<S, I, T, SP, TP>,
+                                                        UniversalDeterministicAutomaton.RegularAutomaton<S, I, T, SP, TP> {}
 
 }

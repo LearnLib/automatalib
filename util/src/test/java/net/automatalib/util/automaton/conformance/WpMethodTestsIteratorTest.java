@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FiniteSemantics;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
@@ -100,7 +100,7 @@ public class WpMethodTestsIteratorTest {
 
     }
 
-    private <S, I> List<Word<I>> generateWpMethodTest(FiniteSemantics<S, I, ?, ?, ?> automaton,
+    private <S, I> List<Word<I>> generateWpMethodTest(RegularAutomaton<S, I, ?, ?, ?> automaton,
                                                       Collection<? extends I> inputs,
                                                       List<Word<I>> middleParts) {
 

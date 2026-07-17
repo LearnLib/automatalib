@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FiniteSemantics;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
@@ -47,7 +47,7 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>,
     private final Iterable<Word<I>> suffixes;
 
     /**
-     * Convenience-constructor for {@link #WMethodTestsIterator(FiniteSemantics, Collection, int)} that selects
+     * Convenience-constructor for {@link #WMethodTestsIterator(RegularAutomaton, Collection, int)} that selects
      * {@code 0} as {@code maxDepth}.
      *
      * @param automaton
@@ -55,7 +55,7 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>,
      * @param inputs
      *         the input symbols that should be considered for test sequence generation
      */
-    public WMethodTestsIterator(FiniteSemantics<?, I, ?, ?, ?> automaton, Collection<? extends I> inputs) {
+    public WMethodTestsIterator(RegularAutomaton<?, I, ?, ?, ?> automaton, Collection<? extends I> inputs) {
         this(automaton, inputs, 0);
     }
 
@@ -69,7 +69,7 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>,
      * @param maxDepth
      *         the maximum number of symbols that are appended to the transition-cover part of the test sequences
      */
-    public WMethodTestsIterator(FiniteSemantics<?, I, ?, ?, ?> automaton,
+    public WMethodTestsIterator(RegularAutomaton<?, I, ?, ?, ?> automaton,
                                 Collection<? extends I> inputs,
                                 int maxDepth) {
         super(IteratorUtil.concat(IteratorUtil.singleton(Word.epsilon()),

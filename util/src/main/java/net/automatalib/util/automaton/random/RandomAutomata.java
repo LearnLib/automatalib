@@ -30,7 +30,7 @@ import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralOutputAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.Automaton;
-import net.automatalib.automaton.MutableDeterministic.FiniteSemantics;
+import net.automatalib.automaton.MutableDeterministic.RegularAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.procedural.SBA;
@@ -337,22 +337,22 @@ public final class RandomAutomata {
                                mealies);
     }
 
-    public static <S, I, T, SP, TP, A extends FiniteSemantics<S, I, T, SP, TP>> A randomDeterministic(Random rand,
-                                                                                                      @NonNegative int numStates,
-                                                                                                      Collection<? extends I> inputs,
-                                                                                                      Collection<? extends SP> stateProps,
-                                                                                                      Collection<? extends TP> transProps,
-                                                                                                      A out) {
+    public static <S, I, T, SP, TP, A extends RegularAutomaton<S, I, T, SP, TP>> A randomDeterministic(Random rand,
+                                                                                                       @NonNegative int numStates,
+                                                                                                       Collection<? extends I> inputs,
+                                                                                                       Collection<? extends SP> stateProps,
+                                                                                                       Collection<? extends TP> transProps,
+                                                                                                       A out) {
         return randomDeterministic(rand, numStates, inputs, stateProps, transProps, out, true);
     }
 
-    public static <S, I, T, SP, TP, A extends FiniteSemantics<S, I, T, SP, TP>> A randomDeterministic(Random rand,
-                                                                                                      @NonNegative int numStates,
-                                                                                                      Collection<? extends I> inputs,
-                                                                                                      Collection<? extends SP> stateProps,
-                                                                                                      Collection<? extends TP> transProps,
-                                                                                                      A out,
-                                                                                                      boolean minimize) {
+    public static <S, I, T, SP, TP, A extends RegularAutomaton<S, I, T, SP, TP>> A randomDeterministic(Random rand,
+                                                                                                       @NonNegative int numStates,
+                                                                                                       Collection<? extends I> inputs,
+                                                                                                       Collection<? extends SP> stateProps,
+                                                                                                       Collection<? extends TP> transProps,
+                                                                                                       A out,
+                                                                                                       boolean minimize) {
 
         RandomDeterministicAutomatonGenerator<S, I, T, SP, TP, A> gen =
                 new RandomDeterministicAutomatonGenerator<>(rand, inputs, stateProps, transProps, out);
