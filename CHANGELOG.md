@@ -39,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * `DetSuffixOutputAutomaton` -> `DeterministicSuffixOutputAutomaton`
   * `DeterministicOutputTS` -> `DeterministicTraceableTS`
 * `ProcessUtil#invokeProcess` now handles consumers for stdout and stderr separately.
+* `RandomAutomata#randomDeterministic` has been renamed to `RandomAutomata#randomRegularDeterministic`.
 
 ### Removed
 

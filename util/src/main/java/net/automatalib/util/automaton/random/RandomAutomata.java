@@ -30,6 +30,7 @@ import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralOutputAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.MutableDeterministic.RegularAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
@@ -228,13 +229,13 @@ public final class RandomAutomata {
 
         for (I procedure : alphabet.getCallAlphabet()) {
             final CompactDFA<I> dfa = new CompactDFA<>(alphabet);
-            RandomAutomata.randomDeterministic(random,
-                                               procedureSize - 2,
-                                               inputs,
-                                               Collections.singletonList(Boolean.TRUE),
-                                               DFA.TRANSITION_PROPERTIES,
-                                               dfa,
-                                               false);
+            RandomAutomata.randomRegularDeterministic(random,
+                                                      procedureSize - 2,
+                                                      inputs,
+                                                      Collections.singletonList(Boolean.TRUE),
+                                                      DFA.TRANSITION_PROPERTIES,
+                                                      dfa,
+                                                      false);
 
             final List<Integer> originalStates = new ArrayList<>(dfa.getStates());
             final Integer successSink = dfa.addState(true);
@@ -298,13 +299,13 @@ public final class RandomAutomata {
 
         for (I procedure : inputAlphabet.getCallAlphabet()) {
             final CompactMealy<I, O> mealy = new CompactMealy<>(inputAlphabet);
-            RandomAutomata.randomDeterministic(random,
-                                               procedureSize - 1,
-                                               inputAlphabet,
-                                               Collections.emptyList(),
-                                               outputAlphabet,
-                                               mealy,
-                                               false);
+            RandomAutomata.randomRegularDeterministic(random,
+                                                      procedureSize - 1,
+                                                      inputAlphabet,
+                                                      Collections.emptyList(),
+                                                      outputAlphabet,
+                                                      mealy,
+                                                      false);
 
             final List<Integer> originalStates = new ArrayList<>(mealy.getStates());
             final Integer sink = mealy.addState();
@@ -337,29 +338,39 @@ public final class RandomAutomata {
                                mealies);
     }
 
-    public static <S, I, T, SP, TP, A extends RegularAutomaton<S, I, T, SP, TP>> A randomDeterministic(Random rand,
-                                                                                                       @NonNegative int numStates,
-                                                                                                       Collection<? extends I> inputs,
-                                                                                                       Collection<? extends SP> stateProps,
-                                                                                                       Collection<? extends TP> transProps,
-                                                                                                       A out) {
-        return randomDeterministic(rand, numStates, inputs, stateProps, transProps, out, true);
-    }
-
-    public static <S, I, T, SP, TP, A extends RegularAutomaton<S, I, T, SP, TP>> A randomDeterministic(Random rand,
-                                                                                                       @NonNegative int numStates,
-                                                                                                       Collection<? extends I> inputs,
-                                                                                                       Collection<? extends SP> stateProps,
-                                                                                                       Collection<? extends TP> transProps,
-                                                                                                       A out,
-                                                                                                       boolean minimize) {
-
+    public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(Random rand,
+                                                                                                           @NonNegative int numStates,
+                                                                                                           Collection<? extends I> inputs,
+                                                                                                           Collection<? extends SP> stateProps,
+                                                                                                           Collection<? extends TP> transProps,
+                                                                                                           A out) {
         RandomDeterministicAutomatonGenerator<S, I, T, SP, TP, A> gen =
                 new RandomDeterministicAutomatonGenerator<>(rand, inputs, stateProps, transProps, out);
 
         gen.addStates(numStates);
         gen.addTransitions();
         gen.chooseInitial();
+
+        return out;
+    }
+
+    public static <S, I, T, SP, TP, A extends RegularAutomaton<S, I, T, SP, TP>> A randomRegularDeterministic(Random rand,
+                                                                                                              @NonNegative int numStates,
+                                                                                                              Collection<? extends I> inputs,
+                                                                                                              Collection<? extends SP> stateProps,
+                                                                                                              Collection<? extends TP> transProps,
+                                                                                                              A out) {
+        return randomRegularDeterministic(rand, numStates, inputs, stateProps, transProps, out, true);
+    }
+
+    public static <S, I, T, SP, TP, A extends RegularAutomaton<S, I, T, SP, TP>> A randomRegularDeterministic(Random rand,
+                                                                                                              @NonNegative int numStates,
+                                                                                                              Collection<? extends I> inputs,
+                                                                                                              Collection<? extends SP> stateProps,
+                                                                                                              Collection<? extends TP> transProps,
+                                                                                                              A out,
+                                                                                                              boolean minimize) {
+        randomDeterministic(rand, numStates, inputs, stateProps, transProps, out);
 
         if (minimize) {
             HopcroftMinimizer.minimizeUniversalInvasive(out, inputs);
@@ -372,13 +383,13 @@ public final class RandomAutomata {
                                               @NonNegative int numStates,
                                               Alphabet<I> inputs,
                                               boolean minimize) {
-        return randomDeterministic(rand,
-                                   numStates,
-                                   inputs,
-                                   DFA.STATE_PROPERTIES,
-                                   DFA.TRANSITION_PROPERTIES,
-                                   new CompactDFA<>(inputs),
-                                   minimize);
+        return randomRegularDeterministic(rand,
+                                          numStates,
+                                          inputs,
+                                          DFA.STATE_PROPERTIES,
+                                          DFA.TRANSITION_PROPERTIES,
+                                          new CompactDFA<>(inputs),
+                                          minimize);
     }
 
     public static <I> CompactDFA<I> randomDFA(Random rand, @NonNegative int numStates, Alphabet<I> inputs) {
@@ -390,13 +401,13 @@ public final class RandomAutomata {
                                                         Alphabet<I> inputs,
                                                         Collection<? extends O> outputs,
                                                         boolean minimize) {
-        return randomDeterministic(rand,
-                                   numStates,
-                                   inputs,
-                                   Collections.singleton(null),
-                                   outputs,
-                                   new CompactMealy<>(inputs),
-                                   minimize);
+        return randomRegularDeterministic(rand,
+                                          numStates,
+                                          inputs,
+                                          Collections.singleton(null),
+                                          outputs,
+                                          new CompactMealy<>(inputs),
+                                          minimize);
     }
 
     public static <I, O> CompactMealy<I, O> randomMealy(Random rand,
@@ -411,13 +422,13 @@ public final class RandomAutomata {
                                                         Alphabet<I> inputs,
                                                         Collection<? extends O> outputs,
                                                         boolean minimize) {
-        return randomDeterministic(rand,
-                                   numStates,
-                                   inputs,
-                                   outputs,
-                                   Collections.singleton(null),
-                                   new CompactMoore<>(inputs),
-                                   minimize);
+        return randomRegularDeterministic(rand,
+                                          numStates,
+                                          inputs,
+                                          outputs,
+                                          Collections.singleton(null),
+                                          new CompactMoore<>(inputs),
+                                          minimize);
     }
 
     public static <I, O> CompactMoore<I, O> randomMoore(Random rand,

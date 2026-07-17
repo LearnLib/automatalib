@@ -86,7 +86,12 @@ public class CopyConstructorTest {
     public void testSST() {
         final CompactSST<Character, Character> sst = new CompactSST<>(INPUT_ALPHABET);
 
-        RandomAutomata.randomDeterministic(RANDOM, SIZE, INPUT_ALPHABET, Collections.emptyList(), SST_PROPERTIES, sst);
+        RandomAutomata.randomRegularDeterministic(RANDOM,
+                                                  SIZE,
+                                                  INPUT_ALPHABET,
+                                                  Collections.emptyList(),
+                                                  SST_PROPERTIES,
+                                                  sst);
         testCopyConstructor(sst, INPUT_ALPHABET, CompactSST::new);
     }
 

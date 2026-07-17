@@ -145,12 +145,12 @@ public class CoversTest {
         final Alphabet<Integer> alphabet = Alphabets.integers(0, 5);
         final CompactDFA<Integer> dfa = new CompactDFA<>(alphabet);
 
-        RandomAutomata.randomDeterministic(random,
-                                           15,
-                                           Alphabets.integers(0, 4),
-                                           DFA.STATE_PROPERTIES,
-                                           DFA.TRANSITION_PROPERTIES,
-                                           dfa);
+        RandomAutomata.randomRegularDeterministic(random,
+                                                  15,
+                                                  Alphabets.integers(0, 4),
+                                                  DFA.STATE_PROPERTIES,
+                                                  DFA.TRANSITION_PROPERTIES,
+                                                  dfa);
 
         dfa.addState(true);
         dfa.addState(false);
