@@ -32,22 +32,76 @@ public final class CollectionUtil {
         // prevent instantiation.
     }
 
+    /**
+     * Returns a sequence of integers beginning from {@code start} (inclusive) to {@code end} (exclusive).
+     *
+     * @param start
+     *         the first and minimal element of the list (inclusive)
+     * @param end
+     *         the last and maximal element of the list (exclusive)
+     *
+     * @return a sequence of integers from {@code start} to {@code end}
+     */
     public static List<Integer> intRange(int start, int end) {
         return new IntRange(start, end);
     }
 
+    /**
+     * Returns a sequence of integers beginning from {@code start} (inclusive) to {@code end} (exclusive), each
+     * {@code step} elements apart.
+     *
+     * @param start
+     *         the first and minimal element of the list (inclusive)
+     * @param end
+     *         the last and maximal element of the list (exclusive)
+     * @param step
+     *         the step size between elements.
+     *
+     * @return a sequence of integers from {@code start} to {@code end}, each {@code step} elements apart.
+     */
     public static List<Integer> intRange(int start, int end, int step) {
         return new IntRange(start, end, step);
     }
 
+    /**
+     * Returns a sequence of characters beginning from {@code start} (inclusive) to {@code end} (exclusive).
+     *
+     * @param start
+     *         the first and minimal element of the list (inclusive)
+     * @param end
+     *         the last and maximal element of the list (exclusive)
+     *
+     * @return a sequence of characters from {@code start} to {@code end}
+     */
     public static List<Character> charRange(char start, char end) {
         return new CharRange(start, end);
     }
 
+    /**
+     * Returns a sequence of strings beginning from {@code start} (inclusive) to {@code end} (exclusive).
+     *
+     * @param start
+     *         the first and minimal element of the list (inclusive)
+     * @param end
+     *         the last and maximal element of the list (exclusive)
+     *
+     * @return a sequence of strings from {@code start} to {@code end}
+     */
     public static List<String> charStringRange(char start, char end) {
         return new CharStringRange(start, end);
     }
 
+    /**
+     * Guarantees that the provided elements are randomly accessible. If the given collection already implements
+     * {@link List} and {@link RandomAccess} it is returned as-is. Otherwise it is wrapped in an {@link ArrayList}.
+     *
+     * @param coll
+     *         the input collection
+     * @param <T>
+     *         element type
+     *
+     * @return the provided elements in a randomly accessible manner
+     */
     public static <T> List<T> randomAccessList(Collection<T> coll) {
         if (coll instanceof List<T> list && coll instanceof RandomAccess) {
             return list;
