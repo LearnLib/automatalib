@@ -17,11 +17,13 @@ package net.automatalib.automaton.impl;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.MutableDeterministic.RegularAutomaton;
 
 /**
- * A refinement of {@link UniversalCompactDet} that additionally implements {@link RegularAutomaton} so that structural
- * determinism and finiteness coincides with semantic determinism and finiteness.
+ * A refinement of {@link UniversalCompactDet} that additionally implements
+ * {@link MutableDeterministic.RegularAutomaton} so that structural determinism and finiteness coincides with semantic
+ * determinism and finiteness.
  *
  * @param <I>
  *         input symbol type
