@@ -33,7 +33,7 @@ import net.automatalib.serialization.InputModelDeserializer;
 /**
  * Abstract deserializer for the SAF (simple automaton format).
  */
-abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I, T, SP, TP>>
+abstract class AbstractSAFInput<I, SP, TP, A extends MutableAutomaton<?, I, ?, SP, TP>>
         implements InputModelDeserializer<I, A> {
 
     private static final AutomatonType[] TYPES = AutomatonType.values();
@@ -77,7 +77,7 @@ abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I
         }
     }
 
-    private AutomatonType readHeader(DataInput in) throws IOException, FormatException {
+    private static AutomatonType readHeader(DataInput in) throws IOException, FormatException {
         final int headerSize = 4;
         byte[] header = new byte[headerSize];
         in.readFully(header);
@@ -91,50 +91,52 @@ abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I
         return TYPES[type];
     }
 
-    private A readAutomatonBody(DataInput in,
-                                Alphabet<I> alphabet,
-                                boolean deterministic,
-                                AutomatonCreator<? extends A, I> creator,
-                                BlockPropertyDecoder<? extends SP> spDecoder,
-                                SinglePropertyDecoder<? extends TP> tpDecoder) throws IOException {
+    private static <I, SP, TP, A extends MutableAutomaton<?, I, ?, SP, TP>> A readAutomatonBody(DataInput in,
+                                                                                                Alphabet<I> alphabet,
+                                                                                                boolean deterministic,
+                                                                                                AutomatonCreator<? extends A, I> creator,
+                                                                                                BlockPropertyDecoder<? extends SP> spDecoder,
+                                                                                                SinglePropertyDecoder<? extends TP> tpDecoder)
+            throws IOException {
         int numStates = in.readInt();
         A result = creator.createAutomaton(alphabet, numStates);
 
         if (deterministic) {
-            decodeBodyDet(in, result, alphabet, numStates, spDecoder, tpDecoder);
+            decodeBodyDet(in, (MutableAutomaton<?, I, ?, SP, TP>) result, alphabet, numStates, spDecoder, tpDecoder);
         } else {
-            decodeBodyNonDet(in, result, alphabet, numStates, spDecoder, tpDecoder);
+            decodeBodyNonDet(in, (MutableAutomaton<?, I, ?, SP, TP>) result, alphabet, numStates, spDecoder, tpDecoder);
         }
 
         return result;
     }
 
-    private void decodeBodyDet(DataInput in,
-                               MutableAutomaton<S, I, ?, SP, TP> result,
-                               Alphabet<I> alphabet,
-                               int numStates,
-                               BlockPropertyDecoder<? extends SP> spDecoder,
-                               SinglePropertyDecoder<? extends TP> tpDecoder) throws IOException {
+    private static <S, I, SP, TP> void decodeBodyDet(DataInput in,
+                                                     MutableAutomaton<S, I, ?, SP, TP> result,
+                                                     Alphabet<I> alphabet,
+                                                     int numStates,
+                                                     BlockPropertyDecoder<? extends SP> spDecoder,
+                                                     SinglePropertyDecoder<? extends TP> tpDecoder) throws IOException {
 
         List<S> stateList = decodeStatesDet(in, result, numStates, spDecoder);
         decodeTransitionsDet(in, result, stateList, alphabet, tpDecoder);
     }
 
-    private void decodeBodyNonDet(DataInput in,
-                                  MutableAutomaton<S, I, ?, SP, TP> result,
-                                  Alphabet<I> alphabet,
-                                  int numStates,
-                                  BlockPropertyDecoder<? extends SP> spDecoder,
-                                  SinglePropertyDecoder<? extends TP> tpDecoder) throws IOException {
+    private static <S, I, SP, TP> void decodeBodyNonDet(DataInput in,
+                                                        MutableAutomaton<S, I, ?, SP, TP> result,
+                                                        Alphabet<I> alphabet,
+                                                        int numStates,
+                                                        BlockPropertyDecoder<? extends SP> spDecoder,
+                                                        SinglePropertyDecoder<? extends TP> tpDecoder)
+            throws IOException {
 
         List<S> stateList = decodeStatesNonDet(in, result, numStates, spDecoder);
         decodeTransitionsNonDet(in, result, stateList, alphabet, tpDecoder);
     }
 
-    private List<S> decodeStatesDet(DataInput in,
-                                    MutableAutomaton<S, ?, ?, SP, ?> result,
-                                    int numStates,
-                                    BlockPropertyDecoder<? extends SP> decoder) throws IOException {
+    private static <S, SP> List<S> decodeStatesDet(DataInput in,
+                                                   MutableAutomaton<S, ?, ?, SP, ?> result,
+                                                   int numStates,
+                                                   BlockPropertyDecoder<? extends SP> decoder) throws IOException {
         int initStateId = in.readInt();
 
         List<S> stateList = decodeStateProperties(in, result, numStates, decoder);
@@ -146,11 +148,12 @@ abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I
         return stateList;
     }
 
-    private void decodeTransitionsDet(DataInput in,
-                                      MutableAutomaton<S, I, ?, ?, TP> result,
-                                      List<S> stateList,
-                                      Alphabet<I> alphabet,
-                                      SinglePropertyDecoder<? extends TP> tpDecoder) throws IOException {
+    private static <S, I, TP> void decodeTransitionsDet(DataInput in,
+                                                        MutableAutomaton<S, I, ?, ?, TP> result,
+                                                        List<S> stateList,
+                                                        Alphabet<I> alphabet,
+                                                        SinglePropertyDecoder<? extends TP> tpDecoder)
+            throws IOException {
         int numStates = stateList.size();
         assert result.size() == numStates;
 
@@ -169,10 +172,10 @@ abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I
         }
     }
 
-    private List<S> decodeStatesNonDet(DataInput in,
-                                       MutableAutomaton<S, ?, ?, SP, ?> result,
-                                       int numStates,
-                                       BlockPropertyDecoder<? extends SP> decoder) throws IOException {
+    private static <S, SP> List<S> decodeStatesNonDet(DataInput in,
+                                                      MutableAutomaton<S, ?, ?, SP, ?> result,
+                                                      int numStates,
+                                                      BlockPropertyDecoder<? extends SP> decoder) throws IOException {
         int[] initStates = readInts(in);
 
         List<S> stateList = decodeStateProperties(in, result, numStates, decoder);
@@ -185,11 +188,12 @@ abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I
         return stateList;
     }
 
-    private void decodeTransitionsNonDet(DataInput in,
-                                         MutableAutomaton<S, I, ?, ?, TP> result,
-                                         List<S> stateList,
-                                         Alphabet<I> alphabet,
-                                         SinglePropertyDecoder<? extends TP> tpDecoder) throws IOException {
+    private static <S, I, TP> void decodeTransitionsNonDet(DataInput in,
+                                                           MutableAutomaton<S, I, ?, ?, TP> result,
+                                                           List<S> stateList,
+                                                           Alphabet<I> alphabet,
+                                                           SinglePropertyDecoder<? extends TP> tpDecoder)
+            throws IOException {
         int numStates = stateList.size();
         assert result.size() == numStates;
 
@@ -209,10 +213,11 @@ abstract class AbstractSAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I
         }
     }
 
-    private List<S> decodeStateProperties(DataInput in,
-                                          MutableAutomaton<S, ?, ?, SP, ?> result,
-                                          int numStates,
-                                          BlockPropertyDecoder<? extends SP> decoder) throws IOException {
+    private static <S, SP> List<S> decodeStateProperties(DataInput in,
+                                                         MutableAutomaton<S, ?, ?, SP, ?> result,
+                                                         int numStates,
+                                                         BlockPropertyDecoder<? extends SP> decoder)
+            throws IOException {
         List<S> stateList = new ArrayList<>(numStates);
 
         decoder.start(in);

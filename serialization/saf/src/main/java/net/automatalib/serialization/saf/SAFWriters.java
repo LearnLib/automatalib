@@ -33,8 +33,6 @@ public final class SAFWriters {
     /**
      * Returns an {@link InputModelSerializer} for writing {@link DFA}s.
      *
-     * @param <S>
-     *         state type
      * @param <I>
      *         input symbol type
      * @param <A>
@@ -42,19 +40,15 @@ public final class SAFWriters {
      *
      * @return an {@link InputModelSerializer} for writing {@link DFA}s
      */
-    public static <S, I, A extends DFA<S, I>> InputModelSerializer<I, A> dfa() {
+    public static <I, A extends DFA<?, I>> InputModelSerializer<I, A> dfa() {
         return new SAFOutput<>(AutomatonType.DFA, new AcceptanceEncoder(), SinglePropertyEncoder.nullEncoder());
     }
 
     /**
      * Returns an {@link InputModelSerializer} for writing {@link MealyMachine}s.
      *
-     * @param <S>
-     *         state type
      * @param <I>
      *         input symbol type
-     * @param <T>
-     *         transition type
      * @param <O>
      *         output symbol type
      * @param <A>
@@ -64,16 +58,13 @@ public final class SAFWriters {
      *
      * @return an {@link InputModelSerializer} for writing {@link MealyMachine}s
      */
-    public static <S, I, T, O, A extends MealyMachine<S, I, T, O>> InputModelSerializer<I, A> mealy(
-            SinglePropertyEncoder<O> encoder) {
+    public static <I, O, A extends MealyMachine<?, I, ?, O>> InputModelSerializer<I, A> mealy(SinglePropertyEncoder<O> encoder) {
         return new SAFOutput<>(AutomatonType.MEALY, BlockPropertyEncoder.noopEncoder(), encoder);
     }
 
     /**
      * Returns an {@link InputModelSerializer} for writing {@link NFA}s.
      *
-     * @param <S>
-     *         state type
      * @param <I>
      *         input symbol type
      * @param <A>
@@ -81,7 +72,7 @@ public final class SAFWriters {
      *
      * @return an {@link InputModelSerializer} for writing {@link NFA}s
      */
-    public static <S, I, A extends NFA<S, I>> InputModelSerializer<I, A> nfa() {
+    public static <I, A extends NFA<?, I>> InputModelSerializer<I, A> nfa() {
         return new SAFOutput<>(AutomatonType.NFA, new AcceptanceEncoder(), SinglePropertyEncoder.nullEncoder());
     }
 
