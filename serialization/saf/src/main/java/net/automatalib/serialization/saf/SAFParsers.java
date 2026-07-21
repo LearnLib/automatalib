@@ -57,14 +57,12 @@ public final class SAFParsers {
      *
      * @param creator
      *         the creator to construct the concrete automaton instance
-     * @param <S>
-     *         state type
      * @param <A>
      *         (concrete) automaton type
      *
      * @return an {@link InputModelDeserializer} that reads a {@link DFA} description
      */
-    public static <S, A extends MutableDFA<S, Integer>> InputModelDeserializer<Integer, A> dfa(AutomatonCreator<A, Integer> creator) {
+    public static <A extends MutableDFA<?, Integer>> InputModelDeserializer<Integer, A> dfa(AutomatonCreator<A, Integer> creator) {
         return new SAFNativeInput<>(AutomatonType.DFA,
                                     creator,
                                     new AcceptanceDecoder(),

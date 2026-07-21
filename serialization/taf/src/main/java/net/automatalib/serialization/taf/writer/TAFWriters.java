@@ -15,9 +15,6 @@
  */
 package net.automatalib.serialization.taf.writer;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import net.automatalib.automaton.FiniteAlphabetAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -36,8 +33,6 @@ public final class TAFWriters {
     /**
      * Returns an {@link InputModelSerializer} for writing {@link DFA}s.
      *
-     * @param <S>
-     *         state type
      * @param <I>
      *         input symbol type
      * @param <A>
@@ -45,19 +40,15 @@ public final class TAFWriters {
      *
      * @return an {@link InputModelSerializer} for writing {@link DFA}s
      */
-    public static <S, I, A extends DFA<S, I>> InputModelSerializer<I, A> dfa() {
-        return new TAFConcreteWriter<>("dfa", TAFWriters::extractSPDFA);
+    public static <I, A extends DFA<?, I>> InputModelSerializer<I, A> dfa() {
+        return new TAFDFAWriter<>();
     }
 
     /**
      * Returns an {@link InputModelSerializer} for writing {@link MealyMachine}s.
      *
-     * @param <S>
-     *         state type
      * @param <I>
      *         input symbol type
-     * @param <T>
-     *         transition type
      * @param <O>
      *         output symbol type
      * @param <A>
@@ -65,8 +56,8 @@ public final class TAFWriters {
      *
      * @return an {@link InputModelSerializer} for writing {@link MealyMachine}s
      */
-    public static <S, I, T, O, A extends MealyMachine<S, I, T, O>> InputModelSerializer<I, A> mealy() {
-        return new TAFConcreteWriter<>("mealy", TAFWriters::extractSPMealy);
+    public static <I, O, A extends MealyMachine<?, I, ?, O>> InputModelSerializer<I, A> mealy() {
+        return new TAFMealyWriter<>();
     }
 
     /**
@@ -74,12 +65,8 @@ public final class TAFWriters {
      * serialization, the writer checks whether the given automaton is either a {@link DFA} or a {@link MealyMachine}
      * and delegates to the respective serializers.
      *
-     * @param <S>
-     *         state type
      * @param <I>
      *         input symbol type
-     * @param <T>
-     *         transition type
      * @param <A>
      *         (concrete) automaton type
      *
@@ -88,16 +75,8 @@ public final class TAFWriters {
      * @see #dfa()
      * @see #mealy()
      */
-    public static <S, I, T, A extends FiniteAlphabetAutomaton<S, I, T>> InputModelSerializer<I, A> any() {
+    public static <I, A extends FiniteAlphabetAutomaton<?, I, ?>> InputModelSerializer<I, A> any() {
         return new TAFAnyWriter<>();
-    }
-
-    static <S> Collection<String> extractSPDFA(DFA<S, ?> dfa, S state) {
-        return dfa.isAccepting(state) ? Collections.singleton("accepting") : Collections.emptySet();
-    }
-
-    static <S> Collection<String> extractSPMealy(MealyMachine<S, ?, ?, ?> dfa, S state) {
-        return Collections.emptySet();
     }
 
 }
