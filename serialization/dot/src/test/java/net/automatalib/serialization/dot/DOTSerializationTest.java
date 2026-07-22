@@ -43,7 +43,6 @@ import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.ProceduralModalProcessGraph;
-import net.automatalib.graph.base.CompactEdge;
 import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.graph.impl.DefaultCFMPS;
 import net.automatalib.ts.modal.impl.CompactMTS;
@@ -191,7 +190,8 @@ public class DOTSerializationTest {
         ThrowingWriter writer = w -> GraphDOT.write(mmlt, w);
         checkDOTOutput(writer, DOTSerializationUtil.MMLT_RESOURCE);
 
-        ThrowingWriter writer2 = w -> GraphDOT.write(mmlt.graphView(), w, new MMLTVisualizationHelper<>(mmlt, true, true));
+        ThrowingWriter writer2 =
+                w -> GraphDOT.write(mmlt.graphView(), w, new MMLTVisualizationHelper<>(mmlt, true, true));
         checkDOTOutput(writer2, DOTSerializationUtil.MMLT_WITH_RESETS_RESOURCE);
     }
 
@@ -238,7 +238,7 @@ public class DOTSerializationTest {
 
     @Test
     public void doNotCloseOutputStreamTest() throws IOException {
-        DOTSerializationProvider.<Integer, CompactEdge<String>>getInstance()
+        DOTSerializationProvider.getInstance()
                                 .writeModel(new UnclosableOutputStream(OutputStream.nullOutputStream()),
                                             DOTSerializationUtil.GRAPH);
     }

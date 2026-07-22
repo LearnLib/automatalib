@@ -23,21 +23,20 @@ import net.automatalib.common.util.IOUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.serialization.ModelSerializer;
 
-public final class DOTSerializationProvider<N, E> implements ModelSerializer<Graph<N, E>> {
+public final class DOTSerializationProvider implements ModelSerializer<Graph<?, ?>> {
 
-    private static final DOTSerializationProvider<?, ?> INSTANCE = new DOTSerializationProvider<>();
+    private static final DOTSerializationProvider INSTANCE = new DOTSerializationProvider();
 
     private DOTSerializationProvider() {
         // prevent instantiation
     }
 
-    @SuppressWarnings("unchecked")
-    public static <N, E> DOTSerializationProvider<N, E> getInstance() {
-        return (DOTSerializationProvider<N, E>) INSTANCE;
+    public static DOTSerializationProvider getInstance() {
+        return INSTANCE;
     }
 
     @Override
-    public void writeModel(OutputStream os, Graph<N, E> model) throws IOException {
+    public void writeModel(OutputStream os, Graph<?, ?> model) throws IOException {
         try (Writer w = IOUtil.asNonClosingUTF8Writer(os)) {
             GraphDOT.write(model, w);
         }

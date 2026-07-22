@@ -19,8 +19,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableAutomaton;
 
-class SAFInput<S, I, T, SP, TP, A extends MutableAutomaton<S, I, T, SP, TP>>
-        extends AbstractSAFInput<S, I, T, SP, TP, A> {
+class SAFInput<I, SP, TP, A extends MutableAutomaton<?, I, ?, SP, TP>> extends AbstractSAFInput<I, SP, TP, A> {
 
     private final Alphabet<I> alphabet;
 

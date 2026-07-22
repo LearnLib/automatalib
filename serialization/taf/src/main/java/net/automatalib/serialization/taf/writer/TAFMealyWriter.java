@@ -17,27 +17,22 @@ package net.automatalib.serialization.taf.writer;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.FiniteAlphabetAutomaton;
-import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.serialization.InputModelSerializer;
 
-class TAFAnyWriter<I, O, A extends FiniteAlphabetAutomaton<?, I, ?>> implements InputModelSerializer<I, A> {
+class TAFMealyWriter<I, O, A extends MealyMachine<?, I, ?, O>> implements InputModelSerializer<I, A> {
 
     @Override
     public void writeModel(OutputStream os, A automaton, Alphabet<I> inputs) throws IOException {
-        if (automaton instanceof DFA) {
-            @SuppressWarnings("unchecked")
-            final DFA<?, I> dfa = (DFA<?, I>) automaton;
-            TAFDFAWriter.writeModelInternal(os, dfa, inputs);
-        } else if (automaton instanceof MealyMachine) {
-            @SuppressWarnings("unchecked")
-            final MealyMachine<?, I, ?, O> mealy = (MealyMachine<?, I, ?, O>) automaton;
-            TAFMealyWriter.writeModelInternal(os, mealy, inputs);
-        } else {
-            throw new IllegalArgumentException("Unknown type " + automaton.getClass().getSimpleName());
-        }
+        writeModelInternal(os, (MealyMachine<?, I, ?, O>) automaton, inputs);
+    }
+
+    static <I, O> void writeModelInternal(OutputStream os, MealyMachine<?, I, ?, O> automaton, Alphabet<I> inputs)
+            throws IOException {
+        TAFWriterUtil.writeModel(os, automaton, inputs, "mealy", s -> Collections.emptyList());
     }
 }
+

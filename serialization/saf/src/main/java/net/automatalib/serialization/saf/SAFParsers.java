@@ -57,14 +57,12 @@ public final class SAFParsers {
      *
      * @param creator
      *         the creator to construct the concrete automaton instance
-     * @param <S>
-     *         state type
      * @param <A>
      *         (concrete) automaton type
      *
      * @return an {@link InputModelDeserializer} that reads a {@link DFA} description
      */
-    public static <S, A extends MutableDFA<S, Integer>> InputModelDeserializer<Integer, A> dfa(AutomatonCreator<A, Integer> creator) {
+    public static <A extends MutableDFA<?, Integer>> InputModelDeserializer<Integer, A> dfa(AutomatonCreator<A, Integer> creator) {
         return new SAFNativeInput<>(AutomatonType.DFA,
                                     creator,
                                     new AcceptanceDecoder(),
@@ -98,8 +96,6 @@ public final class SAFParsers {
      *         the creator to construct the concrete automaton instance
      * @param alphabet
      *         the alphabet to use
-     * @param <S>
-     *         state type
      * @param <I>
      *         input symbol type
      * @param <A>
@@ -107,8 +103,8 @@ public final class SAFParsers {
      *
      * @return an {@link InputModelDeserializer} that reads a {@link DFA} description
      */
-    public static <S, I, A extends MutableDFA<S, I>> InputModelDeserializer<I, A> dfa(AutomatonCreator<A, I> creator,
-                                                                                      Alphabet<I> alphabet) {
+    public static <I, A extends MutableDFA<?, I>> InputModelDeserializer<I, A> dfa(AutomatonCreator<A, I> creator,
+                                                                                   Alphabet<I> alphabet) {
         return new SAFInput<>(AutomatonType.DFA,
                               creator,
                               alphabet,
@@ -139,10 +135,6 @@ public final class SAFParsers {
      * given {@link MutableMealyMachine} using the given alphabet. Input symbols are interpreted index-wise from the
      * automaton description.
      *
-     * @param <S>
-     *         state type
-     * @param <T>
-     *         transition type
      * @param <O>
      *         output symbol type
      * @param <A>
@@ -154,7 +146,7 @@ public final class SAFParsers {
      *
      * @return an {@link InputModelDeserializer} that reads a {@link MealyMachine} description
      */
-    public static <S, T, O, A extends MutableMealyMachine<S, Integer, T, O>> InputModelDeserializer<Integer, A> mealy(
+    public static <O, A extends MutableMealyMachine<?, Integer, ?, O>> InputModelDeserializer<Integer, A> mealy(
             AutomatonCreator<A, Integer> creator,
             SinglePropertyDecoder<O> decoder) {
         return new SAFNativeInput<>(AutomatonType.MEALY, creator, BlockPropertyDecoder.nullDecoder(), decoder);
@@ -188,12 +180,8 @@ public final class SAFParsers {
      * given {@link MutableMealyMachine} using the given alphabet. Input symbols are interpreted index-wise from the
      * automaton description.
      *
-     * @param <S>
-     *         state type
      * @param <I>
      *         input symbol type
-     * @param <T>
-     *         transition type
      * @param <O>
      *         output symbol type
      * @param <A>
@@ -207,10 +195,9 @@ public final class SAFParsers {
      *
      * @return an {@link InputModelDeserializer} that reads a {@link MealyMachine} description
      */
-    public static <S, I, T, O, A extends MutableMealyMachine<S, I, T, O>> InputModelDeserializer<I, A> mealy(
-            AutomatonCreator<A, I> creator,
-            Alphabet<I> alphabet,
-            SinglePropertyDecoder<O> decoder) {
+    public static <I, O, A extends MutableMealyMachine<?, I, ?, O>> InputModelDeserializer<I, A> mealy(AutomatonCreator<A, I> creator,
+                                                                                                       Alphabet<I> alphabet,
+                                                                                                       SinglePropertyDecoder<O> decoder) {
         return new SAFInput<>(AutomatonType.MEALY, creator, alphabet, BlockPropertyDecoder.nullDecoder(), decoder);
     }
 
@@ -233,14 +220,12 @@ public final class SAFParsers {
      *
      * @param creator
      *         the creator to construct the concrete automaton instance
-     * @param <S>
-     *         state type
      * @param <A>
      *         (concrete) automaton type
      *
      * @return an {@link InputModelDeserializer} that reads an {@link NFA} description
      */
-    public static <S, A extends MutableNFA<S, Integer>> InputModelDeserializer<Integer, A> nfa(AutomatonCreator<A, Integer> creator) {
+    public static <A extends MutableNFA<?, Integer>> InputModelDeserializer<Integer, A> nfa(AutomatonCreator<A, Integer> creator) {
         return new SAFNativeInput<>(AutomatonType.NFA,
                                     creator,
                                     new AcceptanceDecoder(),
@@ -274,8 +259,6 @@ public final class SAFParsers {
      *         the creator to construct the concrete automaton instance
      * @param alphabet
      *         the alphabet to use
-     * @param <S>
-     *         state type
      * @param <I>
      *         input symbol type
      * @param <A>
@@ -283,8 +266,8 @@ public final class SAFParsers {
      *
      * @return an {@link InputModelDeserializer} that reads an {@link NFA} description
      */
-    public static <S, I, A extends MutableNFA<S, I>> InputModelDeserializer<I, A> nfa(AutomatonCreator<A, I> creator,
-                                                                                      Alphabet<I> alphabet) {
+    public static <I, A extends MutableNFA<?, I>> InputModelDeserializer<I, A> nfa(AutomatonCreator<A, I> creator,
+                                                                                   Alphabet<I> alphabet) {
         return new SAFInput<>(AutomatonType.NFA,
                               creator,
                               alphabet,

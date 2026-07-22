@@ -29,7 +29,7 @@ import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.common.util.io.NonClosingOutputStream;
 import net.automatalib.serialization.InputModelSerializer;
 
-class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> implements InputModelSerializer<I, M> {
+class SAFOutput<I, SP, TP, M extends UniversalAutomaton<?, I, ?, SP, TP>> implements InputModelSerializer<I, M> {
 
     private final AutomatonType expectedType;
     private final BlockPropertyEncoder<? super SP> spEncoder;
@@ -59,12 +59,12 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         out.writeByte(type.ordinal());
     }
 
-    private void writeAutomatonBody(DataOutput out,
-                                    M automaton,
-                                    Alphabet<I> alphabet,
-                                    boolean deterministic,
-                                    BlockPropertyEncoder<? super SP> spDecoder,
-                                    SinglePropertyEncoder<? super TP> tpDecoder) throws IOException {
+    private static <I, SP, TP> void writeAutomatonBody(DataOutput out,
+                                                       UniversalAutomaton<?, I, ?, SP, TP> automaton,
+                                                       Alphabet<I> alphabet,
+                                                       boolean deterministic,
+                                                       BlockPropertyEncoder<? super SP> spDecoder,
+                                                       SinglePropertyEncoder<? super TP> tpDecoder) throws IOException {
 
         final int numStates = automaton.size();
         out.writeInt(numStates);
@@ -76,11 +76,11 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         }
     }
 
-    private void encodeBodyDet(DataOutput out,
-                               M result,
-                               Alphabet<I> alphabet,
-                               BlockPropertyEncoder<? super SP> spEncoder,
-                               SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
+    private static <S, I, SP, TP> void encodeBodyDet(DataOutput out,
+                                                     UniversalAutomaton<S, I, ?, SP, TP> result,
+                                                     Alphabet<I> alphabet,
+                                                     BlockPropertyEncoder<? super SP> spEncoder,
+                                                     SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
 
         final Set<S> initials = result.getInitialStates();
 
@@ -95,11 +95,12 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         encodeTransitionsDet(out, result, alphabet, states, tpEncoder);
     }
 
-    private void encodeBodyNonDet(DataOutput out,
-                                  M source,
-                                  Alphabet<I> alphabet,
-                                  BlockPropertyEncoder<? super SP> spEncoder,
-                                  SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
+    private static <S, I, SP, TP> void encodeBodyNonDet(DataOutput out,
+                                                        UniversalAutomaton<S, I, ?, SP, TP> source,
+                                                        Alphabet<I> alphabet,
+                                                        BlockPropertyEncoder<? super SP> spEncoder,
+                                                        SinglePropertyEncoder<? super TP> tpEncoder)
+            throws IOException {
 
         final List<S> states = new ArrayList<>(source.getStates());
         final Set<S> initials = source.getInitialStates();
@@ -108,20 +109,21 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         encodeTransitionsNonDet(out, source, alphabet, states, tpEncoder);
     }
 
-    private void encodeStatesDet(DataOutput out,
-                                 M source,
-                                 S init,
-                                 List<S> states,
-                                 BlockPropertyEncoder<? super SP> encoder) throws IOException {
+    private static <S, SP> void encodeStatesDet(DataOutput out,
+                                                UniversalAutomaton<S, ?, ?, SP, ?> source,
+                                                S init,
+                                                List<S> states,
+                                                BlockPropertyEncoder<? super SP> encoder) throws IOException {
         out.writeInt(states.indexOf(init));
         encodeStateProperties(out, source, states, encoder);
     }
 
-    private void encodeTransitionsDet(DataOutput out,
-                                      M source,
-                                      Alphabet<I> alphabet,
-                                      List<S> stateList,
-                                      SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
+    private static <S, I, T, TP> void encodeTransitionsDet(DataOutput out,
+                                                           UniversalAutomaton<S, I, T, ?, TP> source,
+                                                           Alphabet<I> alphabet,
+                                                           List<S> stateList,
+                                                           SinglePropertyEncoder<? super TP> tpEncoder)
+            throws IOException {
         for (S state : stateList) {
             for (int j = 0; j < alphabet.size(); j++) {
                 final I sym = alphabet.getSymbol(j);
@@ -150,11 +152,11 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         }
     }
 
-    private void encodeStatesNonDet(DataOutput out,
-                                    M source,
-                                    Collection<? extends S> initialStates,
-                                    List<S> states,
-                                    BlockPropertyEncoder<? super SP> encoder) throws IOException {
+    private static <S, SP> void encodeStatesNonDet(DataOutput out,
+                                                   UniversalAutomaton<S, ?, ?, SP, ?> source,
+                                                   Collection<? extends S> initialStates,
+                                                   List<S> states,
+                                                   BlockPropertyEncoder<? super SP> encoder) throws IOException {
         // 'writeInts'
         out.writeInt(initialStates.size());
 
@@ -166,11 +168,12 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         encodeStateProperties(out, source, states, encoder);
     }
 
-    private void encodeTransitionsNonDet(DataOutput out,
-                                         M source,
-                                         Alphabet<I> alphabet,
-                                         List<S> stateList,
-                                         SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
+    private static <S, I, T, TP> void encodeTransitionsNonDet(DataOutput out,
+                                                              UniversalAutomaton<S, I, T, ?, TP> source,
+                                                              Alphabet<I> alphabet,
+                                                              List<S> stateList,
+                                                              SinglePropertyEncoder<? super TP> tpEncoder)
+            throws IOException {
         for (S state : stateList) {
             for (int j = 0; j < alphabet.size(); j++) {
                 final I sym = alphabet.getSymbol(j);
@@ -188,10 +191,10 @@ class SAFOutput<S, I, T, SP, TP, M extends UniversalAutomaton<S, I, T, SP, TP>> 
         }
     }
 
-    private void encodeStateProperties(DataOutput out,
-                                       M source,
-                                       List<S> states,
-                                       BlockPropertyEncoder<? super SP> encoder) throws IOException {
+    private static <S, SP> void encodeStateProperties(DataOutput out,
+                                                      UniversalAutomaton<S, ?, ?, SP, ?> source,
+                                                      List<S> states,
+                                                      BlockPropertyEncoder<? super SP> encoder) throws IOException {
         encoder.start(out);
 
         for (S s : states) {

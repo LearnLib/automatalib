@@ -20,8 +20,8 @@ import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableAutomaton;
 
-class SAFNativeInput<S, T, SP, TP, A extends MutableAutomaton<S, Integer, T, SP, TP>>
-        extends AbstractSAFInput<S, Integer, T, SP, TP, A> {
+class SAFNativeInput<SP, TP, A extends MutableAutomaton<?, Integer, ?, SP, TP>>
+        extends AbstractSAFInput<Integer, SP, TP, A> {
 
     SAFNativeInput(AutomatonType expectedType,
                    AutomatonCreator<? extends A, Integer> creator,

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import net.automatalib.alphabet.Alphabet;
@@ -36,41 +36,37 @@ import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.string.StringUtil;
-import net.automatalib.serialization.InputModelSerializer;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class TAFConcreteWriter<S, I, T, TP, A extends UniversalDeterministicAutomaton<S, I, T, ?, TP>>
-        implements InputModelSerializer<I, A> {
+final class TAFWriterUtil {
 
     private static final Pattern ID_PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z0-9_]*");
 
-    private final String type;
-    private final BiFunction<A, S, ? extends Collection<? extends String>> spExtractor;
-
-    private int indent;
-
-    TAFConcreteWriter(String type, BiFunction<A, S, Collection<String>> spExtractor) {
-        this.type = type;
-        this.spExtractor = spExtractor;
+    private TAFWriterUtil() {
+        // prevent instantiation
     }
 
-    @Override
-    public void writeModel(OutputStream os, A automaton, Alphabet<I> inputs) throws IOException {
+    static <S, I, T, TP> void writeModel(OutputStream os,
+                                         UniversalDeterministicAutomaton<S, I, T, ?, TP> automaton,
+                                         Alphabet<I> inputs,
+                                         String type,
+                                         Function<S, Collection<String>> spExtractor) throws IOException {
 
         try (Writer out = IOUtil.asNonClosingUTF8Writer(os)) {
-            begin(out, type, inputs);
+            Indent indent = new Indent();
+            begin(out, type, inputs, indent);
 
             S init = automaton.getInitialState();
             StateIDs<S> ids = automaton.stateIDs();
             for (S state : automaton) {
-                Set<String> options = new HashSet<>(spExtractor.apply(automaton, state));
+                Set<String> options = new HashSet<>(spExtractor.apply(state));
                 if (Objects.equals(init, state)) {
                     options.add("initial");
                 }
                 int id = ids.getStateId(state);
                 String name = "s" + id;
 
-                beginState(out, name, options);
+                beginState(out, name, options, indent);
 
                 final Map<Pair<S, TP>, List<I>> groupedTransitions = new HashMap<>(HashUtil.capacity(inputs.size()));
                 for (I i : inputs) {
@@ -90,37 +86,40 @@ class TAFConcreteWriter<S, I, T, TP, A extends UniversalDeterministicAutomaton<S
                     int tgtId = ids.getStateId(tgt);
                     String tgtName = "s" + tgtId;
                     TP transProp = group.getKey().getSecond();
-                    writeTransition(out, group.getValue(), tgtName, transProp);
+                    writeTransition(out, group.getValue(), tgtName, transProp, indent);
                 }
 
-                endState(out);
+                endState(out, indent);
             }
 
-            end(out);
+            end(out, indent);
         }
     }
 
-    private void begin(Writer out, String type, Collection<?> inputs) throws IOException {
-        writeIndent(out);
+    private static void begin(Writer out, String type, Collection<?> inputs, Indent indent) throws IOException {
+        writeIndent(out, indent);
         out.append(type).append(' ');
         writeStringCollection(out, inputs);
         out.append(" {").append(System.lineSeparator());
-        indent++;
+        indent.indent++;
     }
 
-    private void beginState(Writer out, String name, Set<String> options) throws IOException {
-        writeIndent(out);
+    private static void beginState(Writer out, String name, Set<String> options, Indent indent) throws IOException {
+        writeIndent(out, indent);
         out.append(name).append(' ');
         if (!options.isEmpty()) {
             out.append(options.toString()).append(' ');
         }
         out.append('{').append(System.lineSeparator());
-        indent++;
+        indent.indent++;
     }
 
-    private void writeTransition(Writer out, Collection<?> symbols, String target, @Nullable Object output)
-            throws IOException {
-        writeIndent(out);
+    private static void writeTransition(Writer out,
+                                        Collection<?> symbols,
+                                        String target,
+                                        @Nullable Object output,
+                                        Indent indent) throws IOException {
+        writeIndent(out, indent);
         writeStringCollection(out, symbols);
         if (output != null) {
             out.append(" / ").append(StringUtil.enquoteIfNecessary(output.toString()));
@@ -128,25 +127,25 @@ class TAFConcreteWriter<S, I, T, TP, A extends UniversalDeterministicAutomaton<S
         out.append(" -> ").append(target).append(System.lineSeparator());
     }
 
-    private void endState(Writer out) throws IOException {
-        --indent;
-        writeIndent(out);
+    private static void endState(Writer out, Indent indent) throws IOException {
+        indent.indent--;
+        writeIndent(out, indent);
         out.append('}').append(System.lineSeparator());
     }
 
-    private void end(Writer out) throws IOException {
-        --indent;
-        writeIndent(out);
+    private static void end(Writer out, Indent indent) throws IOException {
+        indent.indent--;
+        writeIndent(out, indent);
         out.append('}').append(System.lineSeparator());
     }
 
-    private void writeIndent(Writer out) throws IOException {
-        for (int i = 0; i < indent; i++) {
+    private static void writeIndent(Writer out, Indent indent) throws IOException {
+        for (int i = 0; i < indent.indent; i++) {
             out.append('\t');
         }
     }
 
-    private void writeStringCollection(Writer out, Collection<?> symbols) throws IOException {
+    private static void writeStringCollection(Writer out, Collection<?> symbols) throws IOException {
         if (symbols.isEmpty()) {
             out.append("{}");
         } else if (symbols.size() == 1) {
@@ -165,5 +164,13 @@ class TAFConcreteWriter<S, I, T, TP, A extends UniversalDeterministicAutomaton<S
             }
             out.append('}');
         }
+    }
+
+    /**
+     * Utility class to share a primitive value across several static methods.
+     */
+    private static final class Indent {
+
+        int indent;
     }
 }
