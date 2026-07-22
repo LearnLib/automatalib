@@ -22,7 +22,7 @@ import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.Automaton.RegularAutomaton;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.Pair;
 import net.automatalib.ts.modal.impl.CompactMTS;
@@ -95,10 +95,9 @@ public class BisimulationTest {
         Assert.assertTrue(testBisimulationEquivalence(a, b, alphabet));
     }
 
-    private static <AS, I, AT, A extends Automaton<AS, I, AT>, BS, BT, B extends Automaton<BS, I, BT>> boolean testBisimulationEquivalence(
-            A a,
-            B b,
-            Collection<I> inputs) {
+    private static <AS, BS, I> boolean testBisimulationEquivalence(RegularAutomaton<AS, I, ?> a,
+                                                                   RegularAutomaton<BS, I, ?> b,
+                                                                   Collection<I> inputs) {
 
         Set<Pair<AS, BS>> bisim = Bisimulation.bisimulationEquivalenceRelation(a, b, inputs);
 

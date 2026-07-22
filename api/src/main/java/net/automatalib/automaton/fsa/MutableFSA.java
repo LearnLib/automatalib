@@ -15,11 +15,11 @@
  */
 package net.automatalib.automaton.fsa;
 
-import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.automaton.MutableAutomaton.RegularAutomaton;
 import net.automatalib.common.util.WrapperUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAutomaton<S, I, S, Boolean, Void> {
+public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, RegularAutomaton<S, I, S, Boolean, Void> {
 
     default void flipAcceptance() {
         for (S state : this) {

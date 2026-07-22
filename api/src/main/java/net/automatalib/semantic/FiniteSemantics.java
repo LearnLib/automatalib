@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton;
+package net.automatalib.semantic;
+
+import net.automatalib.automaton.Automaton;
 
 /**
- * A mutable deterministic automaton that also supports destructive operations, i.e., removal of states and
- * transitions.
- *
- * @param <S>
- *         state class
- * @param <I>
- *         input symbol class
- * @param <T>
- *         transition class
- * @param <SP>
- *         state property class
- * @param <TP>
- *         transition property class
+ * An interface for providing non-deterministic, finite-state semantics.
  */
-public interface ShrinkableDeterministic<S, I, T, SP, TP>
-        extends MutableDeterministic<S, I, T, SP, TP>, ShrinkableAutomaton<S, I, T, SP, TP> {
+@FunctionalInterface
+public interface FiniteSemantics extends Semantics {
+
+    @Override
+    Automaton<?, ?, ?> getSemantics();
 
 }

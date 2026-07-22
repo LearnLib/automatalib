@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
@@ -47,16 +47,15 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>,
     private final Iterable<Word<I>> suffixes;
 
     /**
-     * Convenience-constructor for {@link #WMethodTestsIterator(UniversalDeterministicAutomaton, Collection, int)} that
-     * selects {@code 0} as {@code maxDepth}.
+     * Convenience-constructor for {@link #WMethodTestsIterator(RegularAutomaton, Collection, int)} that selects
+     * {@code 0} as {@code maxDepth}.
      *
      * @param automaton
      *         the automaton for which the testing sequences should be generated
      * @param inputs
      *         the input symbols that should be considered for test sequence generation
      */
-    public WMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
-                                Collection<? extends I> inputs) {
+    public WMethodTestsIterator(RegularAutomaton<?, I, ?, ?, ?> automaton, Collection<? extends I> inputs) {
         this(automaton, inputs, 0);
     }
 
@@ -70,7 +69,7 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>,
      * @param maxDepth
      *         the maximum number of symbols that are appended to the transition-cover part of the test sequences
      */
-    public WMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+    public WMethodTestsIterator(RegularAutomaton<?, I, ?, ?, ?> automaton,
                                 Collection<? extends I> inputs,
                                 int maxDepth) {
         super(IteratorUtil.concat(IteratorUtil.singleton(Word.epsilon()),

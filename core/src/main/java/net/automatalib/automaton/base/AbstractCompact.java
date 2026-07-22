@@ -24,8 +24,8 @@ import java.util.function.IntFunction;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.MutableAutomaton;
-import net.automatalib.automaton.MutableDeterministic.FullIntAbstraction;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.concept.StateLocalInput;
 import net.automatalib.common.util.collection.CollectionUtil;
@@ -57,7 +57,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
     protected static final float DEFAULT_RESIZE_FACTOR = 1.5f;
     protected static final int DEFAULT_INIT_CAPACITY = 11;
-    protected static final int INVALID_STATE = FullIntAbstraction.INVALID_STATE;
+    protected static final int INVALID_STATE = MutableDeterministicAbstractions.FullIntAbstraction.INVALID_STATE;
 
     private final Alphabet<I> alphabet;
     private final float resizeFactor;

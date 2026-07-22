@@ -84,7 +84,7 @@ final class OneSEVPAConverter {
         final Map<BitSet, Location> signatureMap = new HashMap<>();
 
         final DefaultOneSEVPA<I> vpa = new DefaultOneSEVPA<>(alphabet);
-        final Location init = vpa.addInitialLocation(false);
+        final Location init = vpa.addInitialState(false);
 
         locationMap.put(Word.epsilon(), init);
         signatureMap.put(computeSignature(spa, contextPairs, Word.epsilon()), init);
@@ -104,7 +104,7 @@ final class OneSEVPAConverter {
 
                 Location succ = signatureMap.get(sig);
                 if (succ == null) {
-                    Location newLoc = vpa.addLocation(sig.get(0));
+                    Location newLoc = vpa.addState(sig.get(0));
                     locationMap.put(lp, newLoc);
                     signatureMap.put(sig, newLoc);
                     shortPrefixes.add(lp);
@@ -127,7 +127,7 @@ final class OneSEVPAConverter {
 
                     Location succ1 = signatureMap.get(sig1);
                     if (succ1 == null) {
-                        Location newLoc = vpa.addLocation(sig1.get(0));
+                        Location newLoc = vpa.addState(sig1.get(0));
                         locationMap.put(lp1, newLoc);
                         signatureMap.put(sig1, newLoc);
                         shortPrefixes.add(lp1);
@@ -142,7 +142,7 @@ final class OneSEVPAConverter {
 
                     Location succ2 = signatureMap.get(sig2);
                     if (succ2 == null) {
-                        Location newLoc = vpa.addLocation(sig2.get(0));
+                        Location newLoc = vpa.addState(sig2.get(0));
                         locationMap.put(lp2, newLoc);
                         signatureMap.put(sig2, newLoc);
                         shortPrefixes.add(lp2);

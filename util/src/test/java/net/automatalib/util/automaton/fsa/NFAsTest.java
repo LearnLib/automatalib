@@ -170,12 +170,12 @@ public class NFAsTest {
 
         A dfa = creator.createAutomaton(alphabet);
 
-        RandomAutomata.randomDeterministic(new Random(42),
-                                           10,
-                                           alphabet,
-                                           FiniteStateAcceptor.STATE_PROPERTIES,
-                                           FiniteStateAcceptor.TRANSITION_PROPERTIES,
-                                           dfa);
+        RandomAutomata.randomRegularDeterministic(new Random(42),
+                                                  10,
+                                                  alphabet,
+                                                  FiniteStateAcceptor.STATE_PROPERTIES,
+                                                  FiniteStateAcceptor.TRANSITION_PROPERTIES,
+                                                  dfa);
 
         CompactDFA<Integer> det = NFAs.determinize(dfa, true, false);
 

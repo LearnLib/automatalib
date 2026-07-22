@@ -101,8 +101,7 @@ public class MMLTsTest {
 
         var sepWord = MMLTs.findSeparatingWord(modelA, modelB, modelA.getSemantics().getInputAlphabet());
         Assert.assertNotNull(sepWord);
-        Assert.assertNotEquals(modelA.getSemantics().computeOutput(sepWord),
-                               modelB.getSemantics().computeOutput(sepWord));
+        Assert.assertNotEquals(modelA.computeOutput(sepWord), modelB.computeOutput(sepWord));
 
         // If we remove the timestep, should not find a counterexample:
         Set<TimedInput<String>> reducedInputs = new HashSet<>(modelA.getSemantics().getInputAlphabet());
@@ -136,8 +135,7 @@ public class MMLTsTest {
 
         var sepWord = MMLTs.findSeparatingWord(modelA, modelB, modelA.getSemantics().getInputAlphabet());
         Assert.assertNotNull(sepWord);
-        Assert.assertNotEquals(modelA.getSemantics().computeOutput(sepWord),
-                               modelB.getSemantics().computeOutput(sepWord));
+        Assert.assertNotEquals(modelA.computeOutput(sepWord), modelB.computeOutput(sepWord));
 
         // If we remove the timestep, should not find a counterexample:
         Set<TimedInput<String>> reducedInputs = new HashSet<>(modelA.getSemantics().getInputAlphabet());

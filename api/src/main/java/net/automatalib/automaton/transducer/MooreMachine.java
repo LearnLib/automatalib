@@ -17,7 +17,7 @@ package net.automatalib.automaton.transducer;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
@@ -26,9 +26,13 @@ import net.automatalib.graph.UniversalGraph;
 import net.automatalib.ts.output.MooreTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
 
-public interface MooreMachine<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, T, O, Void>,
-                                                  StateOutputAutomaton<S, I, T, O>,
-                                                  MooreTransitionSystem<S, I, T, O> {
+public interface MooreMachine<S, I, T, O>
+        extends RegularAutomaton<S, I, T, O, Void>, StateOutputAutomaton<S, I, T, O>, MooreTransitionSystem<S, I, T, O> {
+
+    @Override
+    default MooreMachine<S, I, T, O> getSemantics() {
+        return this;
+    }
 
     @Override
     default UniversalGraph<S, TransitionEdge<I, T>, O, Property<I, Void>> transitionGraphView(Collection<? extends I> inputs) {

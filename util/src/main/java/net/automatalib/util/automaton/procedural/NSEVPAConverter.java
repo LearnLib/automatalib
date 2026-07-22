@@ -111,7 +111,7 @@ final class NSEVPAConverter {
         final Map<BitSet, Location> mainSignatures = new HashMap<>();
 
         final DefaultNSEVPA<I> vpa = new DefaultNSEVPA<>(alphabet);
-        final Location init = vpa.addInitialLocation(false);
+        final Location init = vpa.addInitialState(false);
 
         mainLocations.put(Word.epsilon(), init);
         mainSignatures.put(OneSEVPAConverter.computeSignature(spa, contextPairs.get(null), Word.epsilon()), init);
@@ -149,7 +149,7 @@ final class NSEVPAConverter {
                 if (succ == null) {
                     final Location newLoc;
                     if (procedure == null) {
-                        newLoc = vpa.addLocation(sig.get(0));
+                        newLoc = vpa.addState(sig.get(0));
                     } else {
                         newLoc = vpa.addLocation(procedure, false);
                     }
@@ -182,7 +182,7 @@ final class NSEVPAConverter {
                     if (succ1 == null) {
                         final Location newLoc;
                         if (otherProcedure == null) {
-                            newLoc = vpa.addLocation(sig1.get(0));
+                            newLoc = vpa.addState(sig1.get(0));
                         } else {
                             newLoc = vpa.addLocation(otherProcedure, false);
                         }
@@ -205,7 +205,7 @@ final class NSEVPAConverter {
                     if (succ2 == null) {
                         final Location newLoc;
                         if (procedure == null) {
-                            newLoc = vpa.addLocation(sig2.get(0));
+                            newLoc = vpa.addState(sig2.get(0));
                         } else {
                             newLoc = vpa.addLocation(procedure, false);
                         }

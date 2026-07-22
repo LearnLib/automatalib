@@ -40,7 +40,8 @@ import net.automatalib.automaton.procedural.impl.StackSPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
-import net.automatalib.common.util.array.ArrayStorage;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.minimizer.HopcroftMinimizer;
 import net.automatalib.util.automaton.procedural.ATRSequences;
@@ -74,7 +75,7 @@ public final class SPAConverter {
 
         for (AI ai : alphabet.getCallAlphabet()) {
             final Map<L, CI> locationMap = new HashMap<>(HashUtil.capacity(sevpa.size()));
-            for (L l : sevpa.getLocations()) {
+            for (L l : sevpa.getStates()) {
                 final CI cc = symbolMapper.mapCallSymbol(ai);
                 locationMap.put(l, cc);
                 callAlphabet.addSymbol(cc);
@@ -100,7 +101,7 @@ public final class SPAConverter {
         final Map<L, Integer> l2sMap = new HashMap<>(HashUtil.capacity(sevpa.size()));
         final CompactDFA<CI> template = buildTemplate(sevpa, alphabet, spaAlphabet, symbolMapper, procedureMap, l2sMap);
 
-        for (L l : sevpa.getLocations()) {
+        for (L l : sevpa.getStates()) {
             final CompactDFA<CI> lCopy = new CompactDFA<>(template);
             lCopy.setAccepting(l2sMap.get(l), true);
             for (AI ai : alphabet.getCallAlphabet()) {
@@ -111,8 +112,8 @@ public final class SPAConverter {
 
         // build main procedure
         final CompactDFA<CI> mCopy = new CompactDFA<>(template);
-        for (L l : sevpa.getLocations()) {
-            if (sevpa.isAcceptingLocation(l)) {
+        for (L l : sevpa.getStates()) {
+            if (sevpa.getStateProperty(l)) {
                 mCopy.setAccepting(l2sMap.get(l), true);
             }
         }
@@ -121,7 +122,7 @@ public final class SPAConverter {
         // prepare DTs
         final Map<AI, Node<AI, CI>> dts = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
         final Collection<Pair<Word<AI>, Word<AI>>> cs = OneSEVPAs.findCharacterizingSet(sevpa, alphabet);
-        final ArrayStorage<Word<AI>> as = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
+        final Mapping<L, Word<AI>> as = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
 
         // build SPA
         StackSPA<?, CI> spa = new StackSPA<>(spaAlphabet, mainProcedure, procedures);
@@ -169,15 +170,16 @@ public final class SPAConverter {
         } else {
             // build (regular) dts
             for (AI ai : alphabet.getCallAlphabet()) {
-                final Node<AI, CI> dt = buildDT(sevpa, sevpa.getLocations(), procedureMap.get(ai), cs, as);
+                final Node<AI, CI> dt = buildDT(sevpa, sevpa.getStates(), procedureMap.get(ai), cs, as);
                 dts.put(ai, dt);
             }
         }
 
+        final DeterministicAcceptorTS<?, AI> semantics = sevpa.getSemantics();
         return new ConversionResult<>(spa,
                                       dts,
                                       reverseMapping,
-                                      new Mapper<>(alphabet, mainProcedure, dts, symbolMapper, sevpa::computeOutput));
+                                      new Mapper<>(alphabet, mainProcedure, dts, symbolMapper, semantics::accepts));
     }
 
     private static <L, AI, CI> CompactDFA<CI> buildTemplate(OneSEVPA<L, AI> sevpa,
@@ -191,14 +193,14 @@ public final class SPAConverter {
         final CompactDFA<CI> dfa = new CompactDFA<>(proceduralAlphabet, sevpa.size());
         final AI r = alphabet.getReturnSymbol(0);
 
-        final L initLoc = sevpa.getInitialLocation();
-        for (L l : sevpa.getLocations()) {
+        final L initLoc = sevpa.getInitialState();
+        for (L l : sevpa.getStates()) {
             final Integer s = dfa.addState();
             map.put(l, s);
             dfa.setInitial(s, Objects.equals(l, initLoc));
         }
 
-        for (L l : sevpa.getLocations()) {
+        for (L l : sevpa.getStates()) {
             final Integer s = map.get(l);
             for (AI ai : alphabet.getInternalAlphabet()) {
                 final CI ci = symbolMapper.mapInternalSymbol(ai);
@@ -208,7 +210,7 @@ public final class SPAConverter {
             }
 
             for (AI ai : alphabet.getCallAlphabet()) {
-                for (L l2 : sevpa.getLocations()) {
+                for (L l2 : sevpa.getStates()) {
                     final int sym = sevpa.encodeStackSym(l, ai);
                     final L succ = sevpa.getReturnSuccessor(l2, r, sym);
                     final Integer sSucc = map.get(succ);
@@ -227,17 +229,19 @@ public final class SPAConverter {
                                                     Collection<L> nodes,
                                                     Map<L, CI> l2ciMap,
                                                     Collection<Pair<Word<AI>, Word<AI>>> cSet,
-                                                    ArrayStorage<Word<AI>> as) {
+                                                    Mapping<L, Word<AI>> as) {
         if (nodes.size() == 1) {
             return new Node<>(l2ciMap.get(nodes.iterator().next()));
         }
+
+        final DeterministicAcceptorTS<?, AI> semantics = sevpa.getSemantics();
 
         for (Pair<Word<AI>, Word<AI>> cs : cSet) {
             final List<L> acc = new ArrayList<>(nodes.size());
             final List<L> rej = new ArrayList<>(nodes.size());
 
             for (L l : nodes) {
-                if (sevpa.accepts(Word.fromWords(cs.getFirst(), as.get(sevpa.getLocationId(l)), cs.getSecond()))) {
+                if (semantics.accepts(Word.fromWords(cs.getFirst(), as.get(l), cs.getSecond()))) {
                     acc.add(l);
                 } else {
                     rej.add(l);

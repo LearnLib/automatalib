@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
 import net.automatalib.common.util.collection.AbstractTwoLevelIterator;
 import net.automatalib.common.util.collection.IterableUtil;
@@ -36,7 +36,7 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>>
+class ProceduralWMethodTestsIterator<I, M extends RegularAutomaton<?, I, ?, ?, ?>>
         extends AbstractTwoLevelIterator<I, Word<I>, Word<I>> {
 
     private static final List<List<Word<?>>> EPSILON =

@@ -88,9 +88,8 @@ public final class MMLTs {
 
         Word<TimedInput<I>> separatingWord = Automata.findSeparatingWord(expandedA, expandedB, inputs);
 
-        assert separatingWord == null || !modelA.getSemantics()
-                                                .computeOutput(separatingWord)
-                                                .equals(modelB.getSemantics().computeOutput(separatingWord)) :
+        assert separatingWord == null ||
+               !modelA.computeOutput(separatingWord).equals(modelB.computeOutput(separatingWord)) :
                 "Invalid separating word";
 
         return separatingWord;

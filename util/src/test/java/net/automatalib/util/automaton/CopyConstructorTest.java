@@ -23,7 +23,7 @@ import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
@@ -86,13 +86,18 @@ public class CopyConstructorTest {
     public void testSST() {
         final CompactSST<Character, Character> sst = new CompactSST<>(INPUT_ALPHABET);
 
-        RandomAutomata.randomDeterministic(RANDOM, SIZE, INPUT_ALPHABET, Collections.emptyList(), SST_PROPERTIES, sst);
+        RandomAutomata.randomRegularDeterministic(RANDOM,
+                                                  SIZE,
+                                                  INPUT_ALPHABET,
+                                                  Collections.emptyList(),
+                                                  SST_PROPERTIES,
+                                                  sst);
         testCopyConstructor(sst, INPUT_ALPHABET, CompactSST::new);
     }
 
-    private <I, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> void testCopyConstructor(A automaton,
-                                                                                                   Alphabet<I> alphabet,
-                                                                                                   Function<A, A> copyConstructor) {
+    private <I, A extends RegularAutomaton<?, I, ?, ?, ?>> void testCopyConstructor(A automaton,
+                                                                                    Alphabet<I> alphabet,
+                                                                                    Function<A, A> copyConstructor) {
         final A copy = copyConstructor.apply(automaton);
         Assert.assertTrue(Automata.testEquivalence(automaton, copy, alphabet));
     }

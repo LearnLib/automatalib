@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton;
+package net.automatalib.automaton.concept;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,28 +21,22 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 
+import net.automatalib.automaton.MutableAutomaton;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A mutable automaton that also supports destructive modifications, i.e., removal of states and transitions.
+ * A concept for supporting destructive modifications, e.g., removal of states.
  *
  * @param <S>
  *         state class
- * @param <I>
- *         input symbol class
- * @param <T>
- *         transition class
- * @param <SP>
- *         state property class
- * @param <TP>
- *         transition property class
  */
-public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S, I, T, SP, TP> {
+@FunctionalInterface
+public interface Shrinkable<S> {
 
-    static <S, I, T, SP, TP> void unlinkState(MutableAutomaton<S, I, T, SP, TP> automaton,
-                                              S state,
-                                              @Nullable S replacement,
-                                              Collection<I> inputs) {
+    static <S, I, T> void unlinkState(MutableAutomaton<S, I, T, ?, ?> automaton,
+                                      S state,
+                                      @Nullable S replacement,
+                                      Collection<I> inputs) {
 
         for (S curr : automaton) {
             if (Objects.equals(state, curr)) {

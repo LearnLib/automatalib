@@ -19,10 +19,15 @@ import java.util.List;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.common.util.Triple;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
+import net.automatalib.semantic.DeterministicSemantics;
 import net.automatalib.symbol.time.SymbolicInput;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
+import net.automatalib.word.Word;
 
 /**
  * Base type for a Mealy Machine with Local Timers (MMLT).
@@ -40,6 +45,9 @@ import net.automatalib.symbol.time.SymbolicInput;
  * <b>Implementation note:</b> This class resembles a "structural" view on the MMLT. Timeouts can also be interpreted
  * as explicit transitions between locations. For this representation, use the {@link #graphView()} method. For a
  * semantic view that supports time-sensitive transductions, see the {@link #getSemantics()} method.
+ * <p>
+ * For convenience, this type also implements {@link SuffixOutput} which delegates computation directly to its
+ * {@link DeterministicSemantics semantics}.
  *
  * @param <S>
  *         location type
@@ -50,8 +58,11 @@ import net.automatalib.symbol.time.SymbolicInput;
  * @param <O>
  *         output symbol type
  */
-public interface MMLT<S, I, T, O>
-        extends UniversalDeterministicAutomaton<S, I, T, Void, O>, InputAlphabetHolder<I>, GraphViewable {
+public interface MMLT<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, T, Void, O>,
+                                          InputAlphabetHolder<I>,
+                                          DeterministicSemantics,
+                                          SuffixOutput<TimedInput<I>, Word<TimedOutput<O>>>,
+                                          GraphViewable {
 
     /**
      * Returns the symbol used for silent outputs.
@@ -94,7 +105,14 @@ public interface MMLT<S, I, T, O>
      *
      * @return a semantic view of this MMLT
      */
+    @Override
     MMLTSemantics<S, I, ?, O> getSemantics();
+
+    @Override
+    default Word<TimedOutput<O>> computeSuffixOutput(Iterable<? extends TimedInput<I>> prefix,
+                                                     Iterable<? extends TimedInput<I>> suffix) {
+        return getSemantics().computeSuffixOutput(prefix, suffix);
+    }
 
     @Override
     default Graph<S, Triple<SymbolicInput<I>, O, S>> graphView() {

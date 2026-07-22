@@ -15,7 +15,7 @@
  */
 package net.automatalib.ts.modal;
 
-import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.automaton.MutableAutomaton.RegularAutomaton;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 
@@ -32,7 +32,7 @@ import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
  *         (specific) transition property type
  */
 public interface MutableModalTransitionSystem<S, I, T, TP extends MutableModalEdgeProperty>
-        extends ModalTransitionSystem<S, I, T, TP>, MutableAutomaton<S, I, T, Void, TP> {
+        extends ModalTransitionSystem<S, I, T, TP>, RegularAutomaton<S, I, T, Void, TP> {
 
     T addModalTransition(S src, I input, S tgt, ModalType modalType);
 

@@ -18,17 +18,102 @@ package net.automatalib.automaton.abstraction;
 import java.util.function.IntFunction;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Default implementations for {@link UniversalDeterministicAutomaton} abstractions.
+ * Abstractions for {@link UniversalDeterministicAutomaton}s.
  */
 public interface UniversalDeterministicAbstractions {
 
-    class StateIntAbstraction<S, I, T, SP, TP, A extends UniversalDeterministicAutomaton<S, I, T, SP, TP>>
-            extends DeterministicAbstractions.StateIntAbstraction<S, I, T, A>
-            implements UniversalDeterministicAutomaton.StateIntAbstraction<I, T, SP, TP> {
+    /**
+     * Base interface for {@link DeterministicAbstractions.IntAbstraction integer abstractions} of a
+     * {@link UniversalDeterministicAutomaton}.
+     *
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     */
+    interface IntAbstraction<T, SP, TP> extends DeterministicAbstractions.IntAbstraction<T> {
 
-        public StateIntAbstraction(A automaton) {
+        /**
+         * Retrieves the state property of a given (abstracted) state.
+         *
+         * @param state
+         *         the integer representing the state of which to retrieve the property
+         *
+         * @return the property for the given state
+         */
+        SP getStateProperty(int state);
+
+        /**
+         * Retrieves the transition property of a given transition.
+         *
+         * @param transition
+         *         the transition of which to retrieve the property
+         *
+         * @return the property for the given transition
+         */
+        TP getTransitionProperty(T transition);
+    }
+
+    /**
+     * Interface for {@link DeterministicAbstractions.StateIntAbstraction state integer abstractions} of a
+     * {@link UniversalDeterministicAutomaton}.
+     *
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     */
+    interface StateIntAbstraction<I, T, SP, TP>
+            extends IntAbstraction<T, SP, TP>, DeterministicAbstractions.StateIntAbstraction<I, T> {
+
+        default @Nullable TP getTransitionProperty(int state, I input) {
+            T trans = getTransition(state, input);
+            if (trans != null) {
+                return getTransitionProperty(trans);
+            }
+            return null;
+        }
+
+    }
+
+    /**
+     * Interface for {@link DeterministicAbstractions.FullIntAbstraction full integer abstractions} of a
+     * {@link UniversalDeterministicAutomaton}.
+     *
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     */
+    interface FullIntAbstraction<T, SP, TP>
+            extends IntAbstraction<T, SP, TP>, DeterministicAbstractions.FullIntAbstraction<T> {
+
+        default @Nullable TP getTransitionProperty(int state, int input) {
+            T trans = getTransition(state, input);
+            if (trans != null) {
+                return getTransitionProperty(trans);
+            }
+            return null;
+        }
+
+    }
+
+    class StateIntAbstractionImpl<S, I, T, SP, TP, A extends UniversalDeterministicAutomaton<S, I, T, SP, TP>>
+            extends DeterministicAbstractions.StateIntAbstractionImpl<S, I, T, A>
+            implements StateIntAbstraction<I, T, SP, TP> {
+
+        public StateIntAbstractionImpl(A automaton) {
             super(automaton);
         }
 
@@ -43,11 +128,10 @@ public interface UniversalDeterministicAbstractions {
         }
     }
 
-    class FullIntAbstraction<I, T, SP, TP, A extends UniversalDeterministicAutomaton.StateIntAbstraction<I, T, SP, TP>>
-            extends DeterministicAbstractions.FullIntAbstraction<I, T, A>
-            implements UniversalDeterministicAutomaton.FullIntAbstraction<T, SP, TP> {
+    class FullIntAbstractionImpl<I, T, SP, TP, A extends StateIntAbstraction<I, T, SP, TP>>
+            extends DeterministicAbstractions.FullIntAbstractionImpl<I, T, A> implements FullIntAbstraction<T, SP, TP> {
 
-        public FullIntAbstraction(A stateAbstraction, int numInputs, IntFunction<? extends I> symMapping) {
+        public FullIntAbstractionImpl(A stateAbstraction, int numInputs, IntFunction<? extends I> symMapping) {
             super(stateAbstraction, numInputs, symMapping);
         }
 

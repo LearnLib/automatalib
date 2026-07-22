@@ -22,8 +22,10 @@
  * nondeterministic, but can be specialized to be
  * {@link net.automatalib.automaton.DeterministicAutomaton deterministic}.
  * <p>
- * The {@link net.automatalib.automaton.Automaton Automaton} interface has no inherent semantics. Special types of
- * automata, such as {@link net.automatalib.automaton.fsa.DFA DFAs} or
- * {@link net.automatalib.automaton.transducer.MealyMachine Mealy machines} can be found in the respective subpackages.
+ * The general automaton types mostly describe structural properties whereas semantic interpretations are defined in the
+ * {@link net.automatalib.semantic semantic package}. However, specific types such as
+ * {@link net.automatalib.automaton.fsa.DFA DFAs} or
+ * {@link net.automatalib.automaton.transducer.MealyMachine Mealy machines} often provide default implementations for
+ * convenience.
  */
 package net.automatalib.automaton;

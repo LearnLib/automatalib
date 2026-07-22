@@ -16,10 +16,8 @@
 package net.automatalib.automaton.vpa.impl;
 
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.vpa.SEVPA;
-import net.automatalib.automaton.vpa.StackContents;
-import net.automatalib.automaton.vpa.State;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract class for k-SEVPAs that implements functionality shared across different subtypes.
@@ -29,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input alphabet type
  */
-public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
+public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I>, StateIDs<L> {
 
     protected final VPAlphabet<I> alphabet;
 
@@ -43,33 +41,8 @@ public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
     }
 
     @Override
-    public @Nullable State<L> getTransition(State<L> state, I input) {
-        final L loc = state.getLocation();
-        final VPAlphabet.SymbolType type = alphabet.getSymbolType(input);
-        return switch (type) {
-            case CALL:
-                final int newStackElem = encodeStackSym(loc, input);
-                yield new State<>(getModuleEntry(input), StackContents.push(newStackElem, state.getStackContents()));
-            case RETURN: {
-                final StackContents contents = state.getStackContents();
-                if (contents == null) {
-                    yield null;
-                }
-                final int stackElem = contents.peek();
-                final L succ = getReturnSuccessor(loc, input, stackElem);
-                if (succ == null) {
-                    yield null;
-                }
-                yield new State<>(succ, contents.pop());
-            }
-            case INTERNAL: {
-                final L succ = getInternalSuccessor(loc, input);
-                if (succ == null) {
-                    yield null;
-                }
-                yield new State<>(succ, state.getStackContents());
-            }
-        };
+    public StateIDs<L> stateIDs() {
+        return this;
     }
 
     @Override
@@ -78,7 +51,7 @@ public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
     }
 
     public int encodeStackSym(L srcLoc, int callSymIdx) {
-        return alphabet.getNumCalls() * getLocationId(srcLoc) + callSymIdx;
+        return alphabet.getNumCalls() * getStateId(srcLoc) + callSymIdx;
     }
 
     @Override
@@ -87,7 +60,7 @@ public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
     }
 
     public L getStackLoc(int stackSym) {
-        return getLocation(stackSym / alphabet.getNumCalls());
+        return getState(stackSym / alphabet.getNumCalls());
     }
 
     public I getCallSym(int stackSym) {

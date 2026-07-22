@@ -22,6 +22,7 @@ import java.util.Map;
 
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.semantic.DeterministicSemantics;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
 /**
@@ -56,7 +57,13 @@ import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
  * @param <I>
  *         input symbol type
  */
-public interface SPA<S, I> extends ProceduralSystem<I, DFA<?, I>>, DeterministicAcceptorTS<S, I> {
+public interface SPA<S, I>
+        extends ProceduralSystem<I, DFA<?, I>>, DeterministicAcceptorTS<S, I>, DeterministicSemantics {
+
+    @Override
+    default SPA<S, I> getSemantics() {
+        return this;
+    }
 
     @Override
     default Collection<I> getProceduralInputs(Collection<I> constraints) {

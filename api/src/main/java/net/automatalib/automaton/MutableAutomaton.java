@@ -20,23 +20,25 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.automatalib.automaton.concept.Shrinkable;
+import net.automatalib.semantic.FiniteSemantics;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A mutable automaton. This interface adds support for non-destructive modifications, i.e., adding and modifying states
  * and transitions. If also removal of states and single transitions (from the set of outgoing transitions) should be
- * removed, then {@link ShrinkableAutomaton} is the adequate interface.
+ * removed, then {@link Shrinkable} is the adequate interface.
  *
  * @param <S>
- *         state class.
+ *         state type
  * @param <I>
- *         input symbol class.
+ *         input symbol type
  * @param <T>
- *         transition class.
+ *         transition type
  * @param <SP>
- *         state property.
+ *         state property type
  * @param <TP>
- *         transition property.
+ *         transition property type
  */
 public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S, I, T, SP, TP> {
 
@@ -137,4 +139,23 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
         TP property = getTransitionProperty(trans);
         return createTransition(succ, property);
     }
+
+    /**
+     * Convenience interface that describes an automaton with finite syntactic and finite semantic state space. This
+     * type links a {@link MutableAutomaton} with {@link FiniteSemantics}.
+     *
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     */
+    interface RegularAutomaton<S, I, T, SP, TP>
+            extends MutableAutomaton<S, I, T, SP, TP>, UniversalAutomaton.RegularAutomaton<S, I, T, SP, TP> {}
+
 }

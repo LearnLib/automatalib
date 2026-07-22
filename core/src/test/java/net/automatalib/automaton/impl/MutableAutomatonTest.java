@@ -138,6 +138,21 @@ public class MutableAutomatonTest {
         this.checkAutomaton(new CompactSimpleAutomaton.Creator<>(), ALPHABET, EMPTY_PROPS, EMPTY_PROPS);
     }
 
+    @Test
+    public void testCompactTransitionOutput() {
+        this.checkAutomaton(new CompactTransitionOutput.Creator<>(), ALPHABET, EMPTY_PROPS, TRANS_PROPS);
+    }
+
+    @Test
+    public void testUniversalCompactDet() {
+        this.checkAutomaton(new UniversalCompactDet.Creator<>(), ALPHABET, STATE_PROPS, TRANS_PROPS);
+    }
+
+    @Test
+    public void testUniversalCompactDetAutomaton() {
+        this.checkAutomaton(new UniversalCompactDetAutomaton.Creator<>(), ALPHABET, STATE_PROPS, TRANS_PROPS);
+    }
+
     protected <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void checkAutomaton(AutomatonCreator<M, I> creator,
                                                                                                  Alphabet<I> alphabet,
                                                                                                  List<SP> stateProps,

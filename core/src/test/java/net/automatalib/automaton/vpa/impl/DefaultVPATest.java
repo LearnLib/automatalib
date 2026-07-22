@@ -46,8 +46,8 @@ public class DefaultVPATest {
 
         final DefaultOneSEVPA<Character> vpa = new DefaultOneSEVPA<>(alphabet);
 
-        final Location init = vpa.addInitialLocation(false);
-        final Location accepting = vpa.addLocation(true);
+        final Location init = vpa.addInitialState(false);
+        final Location accepting = vpa.addState(true);
 
         vpa.setReturnSuccessor(init, ')', vpa.encodeStackSym(init, callAlphabet.getSymbolIndex('(')), accepting);
         vpa.setReturnSuccessor(init, ']', vpa.encodeStackSym(init, callAlphabet.getSymbolIndex('[')), accepting);
@@ -71,10 +71,10 @@ public class DefaultVPATest {
 
         final DefaultNSEVPA<Character> vpa = new DefaultNSEVPA<>(alphabet);
 
-        final Location init = vpa.addInitialLocation(false);
+        final Location init = vpa.addInitialState(false);
         final Location m1 = vpa.addModuleEntryLocation('(', false);
         final Location m2 = vpa.addModuleEntryLocation('[', false);
-        final Location accepting = vpa.addLocation(true);
+        final Location accepting = vpa.addState(true);
 
         vpa.setReturnSuccessor(m1, ')', vpa.encodeStackSym(init, (Character) '('), accepting);
         vpa.setReturnSuccessor(m2, ']', vpa.encodeStackSym(init, (Character) '['), accepting);
@@ -96,17 +96,17 @@ public class DefaultVPATest {
     }
 
     private void checkBracketWord(SEVPA<?, Character> sevpa) {
-        Assert.assertTrue(sevpa.accepts(Word.fromString("()")));
-        Assert.assertTrue(sevpa.accepts(Word.fromString("[]")));
-        Assert.assertTrue(sevpa.accepts(Word.fromString("(([[]]))")));
-        Assert.assertTrue(sevpa.accepts(Word.fromString("([([])])")));
-        Assert.assertTrue(sevpa.accepts(Word.fromString("[(())]")));
+        Assert.assertTrue(sevpa.getSemantics().accepts(Word.fromString("()")));
+        Assert.assertTrue(sevpa.getSemantics().accepts(Word.fromString("[]")));
+        Assert.assertTrue(sevpa.getSemantics().accepts(Word.fromString("(([[]]))")));
+        Assert.assertTrue(sevpa.getSemantics().accepts(Word.fromString("([([])])")));
+        Assert.assertTrue(sevpa.getSemantics().accepts(Word.fromString("[(())]")));
 
-        Assert.assertFalse(sevpa.accepts(Word.fromString("")));
-        Assert.assertFalse(sevpa.accepts(Word.fromString("([([")));
-        Assert.assertFalse(sevpa.accepts(Word.fromString("(((]]]")));
-        Assert.assertFalse(sevpa.accepts(Word.fromString(")(")));
-        Assert.assertFalse(sevpa.accepts(Word.fromString("()()")));
+        Assert.assertFalse(sevpa.getSemantics().accepts(Word.fromString("")));
+        Assert.assertFalse(sevpa.getSemantics().accepts(Word.fromString("([([")));
+        Assert.assertFalse(sevpa.getSemantics().accepts(Word.fromString("(((]]]")));
+        Assert.assertFalse(sevpa.getSemantics().accepts(Word.fromString(")(")));
+        Assert.assertFalse(sevpa.getSemantics().accepts(Word.fromString("()()")));
     }
 
     /**
@@ -122,8 +122,8 @@ public class DefaultVPATest {
 
         // create arbitrary VPA
         final DefaultOneSEVPA<Integer> vpa = new DefaultOneSEVPA<>(alphabet);
-        final Location init = vpa.addInitialLocation(false);
-        final Location accepting = vpa.addLocation(true);
+        final Location init = vpa.addInitialState(false);
+        final Location accepting = vpa.addState(true);
 
         // criss-cross internal successors
         for (Integer i : internalAlphabet) {
@@ -175,14 +175,14 @@ public class DefaultVPATest {
                                                          OneSEVPA<L, I> vpa,
                                                          Graph<L, SevpaViewEdge<L, I>> graph) {
 
-        Assert.assertEquals(new HashSet<>(vpa.getLocations()), new HashSet<>(graph.getNodes()));
+        Assert.assertEquals(new HashSet<>(vpa.getStates()), new HashSet<>(graph.getNodes()));
 
-        for (L loc : vpa.getLocations()) {
+        for (L loc : vpa.getStates()) {
             for (SevpaViewEdge<L, I> edge : graph.getOutgoingEdges(loc)) {
 
                 final I input = edge.input;
                 final L target = edge.target;
-                final int callLocId = edge.callLocId;
+                final L callLoc = edge.callLoc;
                 final I callSymbol = edge.callSymbol;
 
                 switch (alphabet.getSymbolType(input)) {
@@ -193,7 +193,9 @@ public class DefaultVPATest {
                         Assert.assertEquals(vpa.getInternalSuccessor(loc, input), target);
                         break;
                     case RETURN:
-                        final int stackSym = vpa.encodeStackSym(vpa.getLocation(callLocId), callSymbol);
+                        Assert.assertNotNull(callLoc);
+                        Assert.assertNotNull(callSymbol);
+                        final int stackSym = vpa.encodeStackSym(callLoc, callSymbol);
                         Assert.assertEquals(vpa.getReturnSuccessor(loc, input, stackSym), target);
                         break;
                     default:

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graph.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -32,15 +33,17 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
     private final SEVPA<L, I> sevpa;
     private final VPAlphabet<I> alphabet;
+    private final StateIDs<L> stateIDs;
 
     public SEVPAGraphView(SEVPA<L, I> sevpa) {
         this.sevpa = sevpa;
         this.alphabet = sevpa.getInputAlphabet();
+        this.stateIDs = sevpa.stateIDs();
     }
 
     @Override
     public Collection<L> getNodes() {
-        return Collections.unmodifiableCollection(sevpa.getLocations());
+        return Collections.unmodifiableCollection(sevpa.getStates());
     }
 
     @Override
@@ -66,13 +69,13 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
         // all return transitions for every possible stack contents
         for (I i : alphabet.getReturnAlphabet()) {
-            for (L loc : sevpa.getLocations()) {
+            for (L loc : sevpa.getStates()) {
                 for (I stackSymbol : alphabet.getCallAlphabet()) {
                     final int sym = sevpa.encodeStackSym(loc, stackSymbol);
                     final L succ = sevpa.getReturnSuccessor(location, i, sym);
 
                     if (succ != null) {
-                        result.add(new SevpaViewEdge<>(i, succ, sevpa.getLocationId(loc), stackSymbol));
+                        result.add(new SevpaViewEdge<>(i, succ, loc, stackSymbol, stateIDs));
                     }
                 }
             }
@@ -92,17 +95,17 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
             @Override
             protected Collection<L> initialNodes() {
-                return Collections.singleton(sevpa.getInitialLocation());
+                return Collections.unmodifiableCollection(sevpa.getInitialStates());
             }
 
             @Override
             public boolean getNodeProperties(L node, Map<String, String> properties) {
                 super.getNodeProperties(node, properties);
 
-                if (sevpa.isAcceptingLocation(node)) {
+                if (sevpa.getStateProperty(node)) {
                     properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
                 }
-                properties.put(NodeAttrs.LABEL, "L" + sevpa.getLocationId(node));
+                properties.put(NodeAttrs.LABEL, "L" + stateIDs.getStateId(node));
 
                 return true;
             }
@@ -111,12 +114,7 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
             public boolean getEdgeProperties(L src, SevpaViewEdge<L, I> edge, L tgt, Map<String, String> properties) {
                 super.getEdgeProperties(src, edge, tgt, properties);
 
-                final I input = edge.input;
-                if (alphabet.isReturnSymbol(input)) {
-                    properties.put(EdgeAttrs.LABEL, input + "/(L" + edge.callLocId + ',' + edge.callSymbol + ')');
-                } else {
-                    properties.put(EdgeAttrs.LABEL, String.valueOf(input));
-                }
+                properties.put(EdgeAttrs.LABEL, edge.label);
 
                 return true;
             }
@@ -127,19 +125,29 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
         public final I input;
         public final S target;
+        public final String label;
 
-        public final int callLocId;
+        public final @Nullable S callLoc;
         public final @Nullable I callSymbol;
 
-        SevpaViewEdge(I internalAction, S target) {
-            this(internalAction, target, -1, null);
+        private SevpaViewEdge(I input, S target, @Nullable S callLoc, @Nullable I callSymbol, String label) {
+            this.input = input;
+            this.target = target;
+            this.callLoc = callLoc;
+            this.callSymbol = callSymbol;
+            this.label = label;
         }
 
-        SevpaViewEdge(I returnAction, S target, int callLocId, @Nullable I callSymbol) {
-            this.input = returnAction;
-            this.target = target;
-            this.callLocId = callLocId;
-            this.callSymbol = callSymbol;
+        SevpaViewEdge(I internalAction, S target) {
+            this(internalAction, target, null, null, String.valueOf(internalAction));
+        }
+
+        SevpaViewEdge(I returnAction, S target, S callLoc, I callSymbol, StateIDs<S> stateIDs) {
+            this(returnAction,
+                 target,
+                 callLoc,
+                 callSymbol,
+                 returnAction + "/(L" + stateIDs.getStateId(callLoc) + ',' + callSymbol + ')');
         }
 
     }

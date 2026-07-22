@@ -19,8 +19,9 @@ import java.util.Collection;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.ShrinkableAutomaton;
+import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
+import net.automatalib.automaton.concept.Shrinkable;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.concept.StateLocalInput;
 import net.automatalib.common.util.mapping.ArrayMapping;
@@ -33,7 +34,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Shared functionality for (non-) deterministic mutable automata.
  */
 public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, SP, TP>
-        implements ShrinkableAutomaton<S, I, T, SP, TP>,
+        implements MutableAutomaton<S, I, T, SP, TP>,
+                   Shrinkable<S>,
                    UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>,
                    StateIDs<S>,
                    SupportsGrowingAlphabet<I>,
@@ -73,7 +75,7 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
 
     @Override
     public void removeState(S state, @Nullable S replacement) {
-        ShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
+        Shrinkable.unlinkState(this, state, replacement, inputAlphabet);
         states.remove(state, tracker);
     }
 

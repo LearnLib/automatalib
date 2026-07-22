@@ -20,15 +20,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;
 
-import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.automaton.DeterministicAutomaton.RegularAutomaton;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * An iterator for the state cover of an automaton. Words are computed lazily (i.e., only when request by {@link
- * #next()}).
+ * An iterator for the state cover of an automaton. Words are computed lazily (i.e., only when request by
+ * {@link #next()}).
  * <p>
  * Supports incremental computation, i.e. given a set of cover traces, only sequences for states not covered by these
  * traces are returned.
@@ -38,11 +38,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input symbol type
  *
- * @see Covers#stateCover(DeterministicAutomaton, Collection, Collection)
+ * @see Covers#stateCover(RegularAutomaton, Collection, Collection)
  */
 class IncrementalStateCoverIterator<S, I> extends AbstractSimplifiedIterator<Word<I>> {
 
-    private final DeterministicAutomaton<S, I, ?> automaton;
+    private final RegularAutomaton<S, I, ?> automaton;
     private final Collection<? extends I> inputs;
     private final Collection<? extends Word<I>> oldCover;
 
@@ -52,7 +52,7 @@ class IncrementalStateCoverIterator<S, I> extends AbstractSimplifiedIterator<Wor
     private Iterator<? extends I> inputIterator;
     private @Nullable Record<S, I> curr;
 
-    IncrementalStateCoverIterator(DeterministicAutomaton<S, I, ?> automaton,
+    IncrementalStateCoverIterator(RegularAutomaton<S, I, ?> automaton,
                                   Collection<? extends I> inputs,
                                   Collection<? extends Word<I>> oldCover) {
         this.automaton = automaton;

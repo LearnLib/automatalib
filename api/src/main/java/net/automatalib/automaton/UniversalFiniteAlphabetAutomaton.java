@@ -16,13 +16,14 @@
 package net.automatalib.automaton;
 
 import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.graph.UniversalGraph;
 
 public interface UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>
         extends UniversalAutomaton<S, I, T, SP, TP>, FiniteAlphabetAutomaton<S, I, T> {
 
     @Override
-    default UniversalGraph<S, TransitionEdge<I, T>, SP, TransitionEdge.Property<I, TP>> transitionGraphView() {
+    default UniversalGraph<S, TransitionEdge<I, T>, SP, Property<I, TP>> transitionGraphView() {
         return transitionGraphView(getInputAlphabet());
     }
 }

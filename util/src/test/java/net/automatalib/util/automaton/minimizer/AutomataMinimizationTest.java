@@ -16,8 +16,7 @@
 package net.automatalib.util.automaton.minimizer;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.MutableDeterministic.RegularAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -38,8 +37,8 @@ public class AutomataMinimizationTest extends AbstractMinimizationTest {
     }
 
     @Override
-    protected <I, SP, TP> UniversalDeterministicAutomaton<?, I, ?, SP, TP> minimizeUniversal(MutableDeterministic<?, I, ?, SP, TP> automaton,
-                                                                                             Alphabet<I> alphabet) {
+    protected <I, SP, TP> RegularAutomaton<?, I, ?, SP, TP> minimizeUniversal(RegularAutomaton<?, I, ?, SP, TP> automaton,
+                                                                              Alphabet<I> alphabet) {
         return Automata.invasiveMinimize(automaton, alphabet);
     }
 

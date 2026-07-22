@@ -39,29 +39,36 @@ public abstract class AbstractDefaultSEVPA<I> extends AbstractSEVPA<Location, I>
         this.locations = new ArrayList<>(capacity);
     }
 
-    public Location addInitialLocation(boolean accepting) {
-        final Location loc = addLocation(accepting);
-        setInitialLocation(loc);
+    public Location addInitialState(boolean accepting) {
+        final Location loc = addState(accepting);
+        setInitialState(loc);
         return loc;
     }
 
-    public Location addLocation(boolean accepting) {
+    public Location addState(boolean accepting) {
         final Location loc = new Location(alphabet, locations.size(), accepting);
         locations.add(loc);
         return loc;
     }
 
     @Override
-    public int size() {
-        return locations.size();
+    public int getStateId(Location state) {
+        return state.getIndex();
     }
 
-    public void setInternalSuccessor(Location loc, I intSym, Location succ) {
-        loc.setInternalSuccessor(alphabet.getInternalSymbolIndex(intSym), succ);
+    @Override
+    public Location getState(int id) {
+        return this.locations.get(id);
     }
 
-    public void setReturnSuccessor(Location loc, I retSym, int stackSym, Location succ) {
-        loc.setReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym, succ);
+    @Override
+    public List<Location> getStates() {
+        return locations;
+    }
+
+    @Override
+    public Boolean getStateProperty(Location state) {
+        return state.isAccepting();
     }
 
     @Override
@@ -69,19 +76,8 @@ public abstract class AbstractDefaultSEVPA<I> extends AbstractSEVPA<Location, I>
         return loc.getInternalSuccessor(alphabet.getInternalSymbolIndex(intSym));
     }
 
-    @Override
-    public Location getLocation(int id) {
-        return locations.get(id);
-    }
-
-    @Override
-    public int getLocationId(Location loc) {
-        return loc.getIndex();
-    }
-
-    @Override
-    public List<Location> getLocations() {
-        return locations;
+    public void setInternalSuccessor(Location loc, I intSym, Location succ) {
+        loc.setInternalSuccessor(alphabet.getInternalSymbolIndex(intSym), succ);
     }
 
     @Override
@@ -89,17 +85,16 @@ public abstract class AbstractDefaultSEVPA<I> extends AbstractSEVPA<Location, I>
         return loc.getReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym);
     }
 
-    @Override
-    public boolean isAcceptingLocation(Location loc) {
-        return loc.isAccepting();
+    public void setReturnSuccessor(Location loc, I retSym, int stackSym, Location succ) {
+        loc.setReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym, succ);
     }
 
     @Override
-    public Location getInitialLocation() {
+    public Location getInitialState() {
         return initLoc;
     }
 
-    public void setInitialLocation(Location loc) {
+    public void setInitialState(Location loc) {
         this.initLoc = loc;
     }
 

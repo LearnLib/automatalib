@@ -21,15 +21,106 @@ import net.automatalib.automaton.DeterministicAutomaton;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Default implementations for {@link DeterministicAutomaton} abstractions.
+ * Abstractions for {@link DeterministicAutomaton}s.
  */
 public interface DeterministicAbstractions {
 
-    class StateIntAbstraction<S, I, T, A extends DeterministicAutomaton<S, I, T>>
-            extends SimpleDeterministicAbstractions.StateIntAbstraction<S, I, A>
-            implements DeterministicAutomaton.StateIntAbstraction<I, T> {
+    /**
+     * Base interface for {@link SimpleDeterministicAbstractions.IntAbstraction integer abstractions} of a
+     * {@link DeterministicAutomaton}.
+     *
+     * @param <T>
+     *         transition type
+     */
+    interface IntAbstraction<T> extends SimpleDeterministicAbstractions.IntAbstraction {
 
-        public StateIntAbstraction(A automaton) {
+        /**
+         * Retrieves the (abstracted) successor of a transition object.
+         *
+         * @param transition
+         *         the transition object
+         *
+         * @return the integer representing the successor of the given transition
+         */
+        int getIntSuccessor(T transition);
+    }
+
+    /**
+     * Interface for {@link SimpleDeterministicAbstractions.StateIntAbstraction state integer abstractions} of a
+     * {@link DeterministicAutomaton}.
+     *
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     */
+    interface StateIntAbstraction<I, T>
+            extends IntAbstraction<T>, SimpleDeterministicAbstractions.StateIntAbstraction<I> {
+
+        @Override
+        default int getSuccessor(int state, I input) {
+            T trans = getTransition(state, input);
+            if (trans == null) {
+                return INVALID_STATE;
+            }
+            return getIntSuccessor(trans);
+        }
+
+        /**
+         * Retrieves the outgoing transition for an (abstracted) source state and input symbol, or returns {@code null}
+         * if the automaton has no transition for this state and input.
+         *
+         * @param state
+         *         the integer representing the source state
+         * @param input
+         *         the input symbol
+         *
+         * @return the outgoing transition, or {@code null}
+         */
+        @Nullable
+        T getTransition(int state, I input);
+
+    }
+
+    /**
+     * Interface for {@link SimpleDeterministicAbstractions.FullIntAbstraction full integer abstractions} of a
+     * {@link DeterministicAutomaton}.
+     *
+     * @param <T>
+     *         transition type
+     */
+    interface FullIntAbstraction<T> extends IntAbstraction<T>, SimpleDeterministicAbstractions.FullIntAbstraction {
+
+        @Override
+        default int getSuccessor(int state, int input) {
+            T trans = getTransition(state, input);
+            if (trans == null) {
+                return INVALID_STATE;
+            }
+            return getIntSuccessor(trans);
+        }
+
+        /**
+         * Retrieves the outgoing transition for an (abstracted) source state and (abstracted) input symbol, or returns
+         * {@code null} if the automaton has no transition for this state and input.
+         *
+         * @param state
+         *         the integer representing the source state
+         * @param input
+         *         the integer representing the input symbol
+         *
+         * @return the outgoing transition, or {@code null}
+         */
+        @Nullable
+        T getTransition(int state, int input);
+
+    }
+
+    class StateIntAbstractionImpl<S, I, T, A extends DeterministicAutomaton<S, I, T>>
+            extends SimpleDeterministicAbstractions.StateIntAbstractionImpl<S, I, A>
+            implements StateIntAbstraction<I, T> {
+
+        public StateIntAbstractionImpl(A automaton) {
             super(automaton);
         }
 
@@ -44,11 +135,10 @@ public interface DeterministicAbstractions {
         }
     }
 
-    class FullIntAbstraction<I, T, A extends DeterministicAutomaton.StateIntAbstraction<I, T>>
-            extends SimpleDeterministicAbstractions.FullIntAbstraction<I, A>
-            implements DeterministicAutomaton.FullIntAbstraction<T> {
+    class FullIntAbstractionImpl<I, T, A extends StateIntAbstraction<I, T>>
+            extends SimpleDeterministicAbstractions.FullIntAbstractionImpl<I, A> implements FullIntAbstraction<T> {
 
-        public FullIntAbstraction(A stateAbstraction, int numInputs, IntFunction<? extends I> symMapping) {
+        public FullIntAbstractionImpl(A stateAbstraction, int numInputs, IntFunction<? extends I> symMapping) {
             super(stateAbstraction, numInputs, symMapping);
         }
 

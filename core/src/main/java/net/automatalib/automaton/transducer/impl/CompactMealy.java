@@ -15,51 +15,35 @@
  */
 package net.automatalib.automaton.transducer.impl;
 
-import java.util.Arrays;
-
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
-import net.automatalib.automaton.base.AbstractCompact;
-import net.automatalib.automaton.base.AbstractCompactDeterministic;
 import net.automatalib.automaton.impl.CompactTransition;
+import net.automatalib.automaton.impl.CompactTransitionOutput;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactTransition<O>, Void, O> implements
-                                                                                                       MutableMealyMachine<Integer, I, CompactTransition<O>, O>,
-                                                                                                       StateLocalInputMealyMachine<Integer, I, CompactTransition<O>, O> {
-
-    private int[] transitions;
-    private @Nullable Object[] outputs;
+public class CompactMealy<I, O> extends CompactTransitionOutput<I, O>
+        implements MutableMealyMachine<Integer, I, CompactTransition<O>, O>,
+                   StateLocalInputMealyMachine<Integer, I, CompactTransition<O>, O> {
 
     public CompactMealy(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
-
-        final int size = stateCapacity * numInputs();
-
-        this.transitions = new int[size];
-        this.outputs = new Object[size];
-
-        Arrays.fill(transitions, AbstractCompact.INVALID_STATE);
     }
 
     public CompactMealy(Alphabet<I> alphabet, int stateCapacity) {
-        this(alphabet, stateCapacity, DEFAULT_RESIZE_FACTOR);
+        super(alphabet, stateCapacity);
     }
 
     public CompactMealy(Alphabet<I> alphabet) {
-        this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
+        super(alphabet);
     }
 
     public CompactMealy(CompactMealy<I, O> other) {
-        this(other.getInputAlphabet(), other);
+        super(other);
     }
 
     protected CompactMealy(Alphabet<I> alphabet, CompactMealy<?, O> other) {
         super(alphabet, other);
-        this.transitions = other.transitions.clone();
-        this.outputs = other.outputs.clone();
     }
 
     public <I2> CompactMealy<I2, O> translate(Alphabet<I2> newAlphabet) {
@@ -69,116 +53,6 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactT
                     newAlphabet.size());
         }
         return new CompactMealy<>(newAlphabet, this);
-    }
-
-    @Override
-    protected void updateTransitionStorage(Payload payload) {
-        this.transitions = updateTransitionStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
-        this.outputs = updateTransitionStorage(this.outputs, null, payload);
-    }
-
-    @Override
-    public O getTransitionOutput(CompactTransition<O> transition) {
-        return transition.getProperty();
-    }
-
-    @Override
-    public O getTransitionProperty(CompactTransition<O> transition) {
-        return transition.getProperty();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    // Overridden for performance reasons (to prevent object instantiation of default implementation)
-    public O getTransitionProperty(int state, int input) {
-        return (O) outputs[toMemoryIndex(state, input)];
-    }
-
-    @Override
-    public void setTransitionProperty(CompactTransition<O> transition, O property) {
-        transition.setProperty(property);
-
-        if (transition.isAutomatonTransition()) {
-            outputs[transition.getMemoryIdx()] = property;
-        }
-    }
-
-    @Override
-    public void setTransitionOutput(CompactTransition<O> transition, O output) {
-        setTransitionProperty(transition, output);
-    }
-
-    @Override
-    public void removeAllTransitions(Integer state) {
-        final int lower = state * numInputs();
-        final int upper = lower + numInputs();
-        Arrays.fill(transitions, lower, upper, AbstractCompact.INVALID_STATE);
-        Arrays.fill(outputs, lower, upper, null);
-    }
-
-    @Override
-    // Overridden for performance reasons (to prevent object instantiation of default implementation)
-    public int getSuccessor(int state, int input) {
-        return transitions[toMemoryIndex(state, input)];
-    }
-
-    @Override
-    public int getIntSuccessor(CompactTransition<O> transition) {
-        return transition.getSuccId();
-    }
-
-    @Override
-    public CompactTransition<O> createTransition(int succId, O property) {
-        return new CompactTransition<>(succId, property);
-    }
-
-    @Override
-    public void setStateProperty(int state, Void property) {}
-
-    @Override
-    public Void getStateProperty(int stateId) {
-        return null;
-    }
-
-    @Override
-    public void setTransition(int state, int input, @Nullable CompactTransition<O> transition) {
-        if (transition == null) {
-            setTransition(state, input, AbstractCompact.INVALID_STATE, null);
-        } else {
-            setTransition(state, input, transition.getSuccId(), transition.getProperty());
-            transition.setMemoryIdx(toMemoryIndex(state, input));
-        }
-    }
-
-    @Override
-    public void setTransition(int state, int input, int successor, @Nullable O property) {
-        final int idx = toMemoryIndex(state, input);
-        transitions[idx] = successor;
-        outputs[idx] = property;
-    }
-
-    @Override
-    public void clear() {
-        int endIdx = size() * numInputs();
-        Arrays.fill(transitions, 0, endIdx, AbstractCompact.INVALID_STATE);
-        Arrays.fill(outputs, 0, endIdx, null);
-
-        super.clear();
-    }
-
-    @Override
-    public @Nullable CompactTransition<O> getTransition(int state, int input) {
-        final int idx = toMemoryIndex(state, input);
-        final int succ = transitions[idx];
-
-        if (succ == AbstractCompact.INVALID_STATE) {
-            return null;
-        }
-
-        @SuppressWarnings("unchecked")
-        final O output = (O) outputs[idx];
-
-        return new CompactTransition<>(idx, succ, output);
     }
 
     public static final class Creator<I, O> implements AutomatonCreator<CompactMealy<I, O>, I> {

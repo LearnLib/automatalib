@@ -21,7 +21,8 @@ import java.util.Objects;
 import java.util.Queue;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstraction;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.common.util.IntDisjointSets;
@@ -41,7 +42,7 @@ public final class NearLinearEquivalenceTest {
         // prevent instantiation
     }
 
-    public static <S, I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, ?, ?, ?> target,
+    public static <S, I> @Nullable Word<I> findSeparatingWord(RegularAutomaton<S, I, ?, ?, ?> target,
                                                               S init1,
                                                               S init2,
                                                               Collection<? extends I> inputs) {
@@ -71,7 +72,7 @@ public final class NearLinearEquivalenceTest {
      *
      * @return A word separating the two states, {@code null} if no such word can be found
      */
-    public static <S, I, T> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
+    public static <S, I, T> @Nullable Word<I> findSeparatingWord(RegularAutomaton<S, I, T, ?, ?> target,
                                                                  S init1,
                                                                  S init2,
                                                                  Collection<? extends I> inputs,
@@ -173,17 +174,16 @@ public final class NearLinearEquivalenceTest {
         return wb.toWord();
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,
-                                                           UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+    public static <I> @Nullable Word<I> findSeparatingWord(RegularAutomaton<?, I, ?, ?, ?> target,
+                                                           RegularAutomaton<?, I, ?, ?, ?> other,
                                                            Collection<? extends I> inputs) {
         return findSeparatingWord(target, other, inputs, false);
     }
 
-    public static <S, S2, I, T, T2, SP, SP2, TP, TP2> @Nullable Word<I> findSeparatingWord(
-            UniversalDeterministicAutomaton<S, I, T, SP, TP> target,
-            UniversalDeterministicAutomaton<S2, I, T2, SP2, TP2> other,
-            Collection<? extends I> inputs,
-            boolean ignoreUndefinedTransitions) {
+    public static <S, S2, I, T, T2, SP, SP2, TP, TP2> @Nullable Word<I> findSeparatingWord(RegularAutomaton<S, I, T, SP, TP> target,
+                                                                                           RegularAutomaton<S2, I, T2, SP2, TP2> other,
+                                                                                           Collection<? extends I> inputs,
+                                                                                           boolean ignoreUndefinedTransitions) {
 
         if (inputs instanceof Alphabet && target instanceof InputAlphabetHolder &&
             other instanceof InputAlphabetHolder) {
@@ -305,19 +305,19 @@ public final class NearLinearEquivalenceTest {
         return wb.toWord();
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,
-                                                           UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+    public static <I> @Nullable Word<I> findSeparatingWord(RegularAutomaton<?, I, ?, ?, ?> target,
+                                                           RegularAutomaton<?, I, ?, ?, ?> other,
                                                            Alphabet<I> inputs) {
         return findSeparatingWord(target, other, inputs, false);
     }
 
-    public static <S, S2, I, T, T2, SP, SP2, TP, TP2> @Nullable Word<I> findSeparatingWord(
-            UniversalDeterministicAutomaton<S, I, T, SP, TP> target,
-            UniversalDeterministicAutomaton<S2, I, T2, SP2, TP2> other,
-            Alphabet<I> inputs,
-            boolean ignoreUndefinedTransitions) {
-        UniversalDeterministicAutomaton.FullIntAbstraction<T, SP, TP> absTarget = target.fullIntAbstraction(inputs);
-        UniversalDeterministicAutomaton.FullIntAbstraction<T2, SP2, TP2> absOther = other.fullIntAbstraction(inputs);
+    public static <S, S2, I, T, T2, SP, SP2, TP, TP2> @Nullable Word<I> findSeparatingWord(RegularAutomaton<S, I, T, SP, TP> target,
+                                                                                           RegularAutomaton<S2, I, T2, SP2, TP2> other,
+                                                                                           Alphabet<I> inputs,
+                                                                                           boolean ignoreUndefinedTransitions) {
+
+        FullIntAbstraction<T, SP, TP> absTarget = target.fullIntAbstraction(inputs);
+        FullIntAbstraction<T2, SP2, TP2> absOther = other.fullIntAbstraction(inputs);
 
         int init1 = absTarget.getIntInitialState();
         int init2 = absOther.getIntInitialState();

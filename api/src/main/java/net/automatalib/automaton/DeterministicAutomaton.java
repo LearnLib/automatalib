@@ -18,10 +18,13 @@ package net.automatalib.automaton;
 import java.util.function.IntFunction;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.abstraction.DeterministicAbstractions;
+import net.automatalib.automaton.abstraction.DeterministicAbstractions.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.DeterministicAbstractions.FullIntAbstractionImpl;
+import net.automatalib.automaton.abstraction.DeterministicAbstractions.StateIntAbstraction;
+import net.automatalib.automaton.abstraction.DeterministicAbstractions.StateIntAbstractionImpl;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
+import net.automatalib.semantic.DeterministicFiniteSemantics;
 import net.automatalib.ts.DeterministicTransitionSystem;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Basic interface for a deterministic automaton. A deterministic automaton is a {@link DeterministicTransitionSystem}
@@ -44,99 +47,32 @@ public interface DeterministicAutomaton<S, I, T>
 
     @Override
     default FullIntAbstraction<T> fullIntAbstraction(int numInputs, IntFunction<? extends I> symMapping) {
-        return new DeterministicAbstractions.FullIntAbstraction<>(stateIntAbstraction(), numInputs, symMapping);
+        return new FullIntAbstractionImpl<>(stateIntAbstraction(), numInputs, symMapping);
     }
 
     @Override
     default StateIntAbstraction<I, T> stateIntAbstraction() {
-        return new DeterministicAbstractions.StateIntAbstraction<>(this);
+        return new StateIntAbstractionImpl<>(this);
     }
 
     /**
-     * Base interface for {@link SimpleDeterministicAutomaton.IntAbstraction integer abstractions} of a {@link
-     * DeterministicAutomaton}.
+     * Convenience interface that describes an automaton with finite syntactic and finite semantic state space. This
+     * type links a {@link DeterministicAutomaton} with {@link DeterministicFiniteSemantics}.
      *
-     * @param <T>
-     *         transition type
-     */
-    interface IntAbstraction<T> extends SimpleDeterministicAutomaton.IntAbstraction {
-
-        /**
-         * Retrieves the (abstracted) successor of a transition object.
-         *
-         * @param transition
-         *         the transition object
-         *
-         * @return the integer representing the successor of the given transition
-         */
-        int getIntSuccessor(T transition);
-    }
-
-    /**
-     * Interface for {@link SimpleDeterministicAutomaton.StateIntAbstraction state integer abstractions} of a {@link
-     * DeterministicAutomaton}.
-     *
+     * @param <S>
+     *         state type
      * @param <I>
      *         input symbol type
      * @param <T>
      *         transition type
      */
-    interface StateIntAbstraction<I, T> extends IntAbstraction<T>, SimpleDeterministicAutomaton.StateIntAbstraction<I> {
+    interface RegularAutomaton<S, I, T>
+            extends DeterministicAutomaton<S, I, T>, Automaton.RegularAutomaton<S, I, T>, DeterministicFiniteSemantics {
 
         @Override
-        default int getSuccessor(int state, I input) {
-            T trans = getTransition(state, input);
-            if (trans == null) {
-                return INVALID_STATE;
-            }
-            return getIntSuccessor(trans);
+        default DeterministicAutomaton<S, I, T> getSemantics() {
+            return this;
         }
-
-        /**
-         * Retrieves the outgoing transition for an (abstracted) source state and input symbol, or returns {@code null}
-         * if the automaton has no transition for this state and input.
-         *
-         * @param state
-         *         the integer representing the source state
-         * @param input
-         *         the input symbol
-         *
-         * @return the outgoing transition, or {@code null}
-         */
-        @Nullable T getTransition(int state, I input);
-
     }
 
-    /**
-     * Interface for {@link SimpleDeterministicAutomaton.FullIntAbstraction full integer abstractions} of a {@link
-     * DeterministicAutomaton}.
-     *
-     * @param <T>
-     *         transition type
-     */
-    interface FullIntAbstraction<T> extends IntAbstraction<T>, SimpleDeterministicAutomaton.FullIntAbstraction {
-
-        @Override
-        default int getSuccessor(int state, int input) {
-            T trans = getTransition(state, input);
-            if (trans == null) {
-                return INVALID_STATE;
-            }
-            return getIntSuccessor(trans);
-        }
-
-        /**
-         * Retrieves the outgoing transition for an (abstracted) source state and (abstracted) input symbol, or returns
-         * {@code null} if the automaton has no transition for this state and input.
-         *
-         * @param state
-         *         the integer representing the source state
-         * @param input
-         *         the integer representing the input symbol
-         *
-         * @return the outgoing transition, or {@code null}
-         */
-        @Nullable T getTransition(int state, int input);
-
-    }
 }

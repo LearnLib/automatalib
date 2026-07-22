@@ -20,7 +20,7 @@ import java.util.HashSet;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.common.util.process.ProcessUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
@@ -43,8 +43,7 @@ import org.testng.annotations.Test;
  *
  * @param <A> the automaton type.
  */
-public abstract class AbstractAut2ETF2FSM2AutTest<
-        A extends UniversalDeterministicAutomaton<Integer, String, ?, ?, ?> & InputAlphabetHolder<String>> {
+public abstract class AbstractAut2ETF2FSM2AutTest<A extends RegularAutomaton<Integer, String, ?, ?, ?> & InputAlphabetHolder<String>> {
 
     @BeforeClass
     public void setupBeforeClass() {
@@ -97,9 +96,14 @@ public abstract class AbstractAut2ETF2FSM2AutTest<
         final A automatonIn = fsm2Automaton(fsm);
 
         // find the inputs that are actually used
-        final Alphabet<String> inputAlphabet = automatonOut.getInputAlphabet().stream().filter(
-                i -> automatonOut.getStates().stream().anyMatch(
-                        s -> automatonOut.getSuccessor(s, i) != null)).collect(Alphabets.collector());
+        final Alphabet<String> inputAlphabet = automatonOut.getInputAlphabet()
+                                                           .stream()
+                                                           .filter(i -> automatonOut.getStates()
+                                                                                    .stream()
+                                                                                    .anyMatch(s -> automatonOut.getSuccessor(
+                                                                                            s,
+                                                                                            i) != null))
+                                                           .collect(Alphabets.collector());
 
         // test we have the same alphabet ignoring order
         Assert.assertEquals(new HashSet<>(inputAlphabet), new HashSet<>(automatonIn.getInputAlphabet()));

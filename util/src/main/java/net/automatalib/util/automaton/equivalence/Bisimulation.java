@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.Automaton.RegularAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.collection.CollectionUtil;
@@ -33,10 +33,9 @@ public final class Bisimulation {
         // prevent instantiation
     }
 
-    public static <AS, BS, I, AT, BT> Set<Pair<AS, BS>> bisimulationEquivalenceRelation(Automaton<AS, I, AT> a,
-                                                                                        Automaton<BS, I, BT> b,
+    public static <AS, BS, I, AT, BT> Set<Pair<AS, BS>> bisimulationEquivalenceRelation(RegularAutomaton<AS, I, AT> a,
+                                                                                        RegularAutomaton<BS, I, BT> b,
                                                                                         Collection<? extends I> inputs) {
-
         final List<? extends I> alphabet = CollectionUtil.randomAccessList(inputs);
         final StateIDs<AS> aIDs = a.stateIDs();
         final StateIDs<BS> bIDs = b.stateIDs();

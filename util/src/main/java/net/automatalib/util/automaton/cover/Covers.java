@@ -24,7 +24,7 @@ import java.util.Queue;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.automaton.DeterministicAutomaton.RegularAutomaton;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
@@ -56,7 +56,7 @@ public final class Covers {
      * @param <I>
      *         input symbol type
      */
-    public static <S, I> void stateCover(DeterministicAutomaton<S, I, ?> automaton,
+    public static <S, I> void stateCover(RegularAutomaton<S, I, ?> automaton,
                                          Collection<? extends I> inputs,
                                          Collection<? super Word<I>> states) {
         cover(automaton, inputs, automaton.getInitialState(), states::add, w -> {});
@@ -75,9 +75,9 @@ public final class Covers {
      *
      * @return an iterator for the input sequences of the cover.
      *
-     * @see #stateCover(DeterministicAutomaton, Collection, Collection)
+     * @see #stateCover(RegularAutomaton, Collection, Collection)
      */
-    public static <I> Iterator<Word<I>> stateCoverIterator(DeterministicAutomaton<?, I, ?> automaton,
+    public static <I> Iterator<Word<I>> stateCoverIterator(RegularAutomaton<?, I, ?> automaton,
                                                            Collection<? extends I> inputs) {
         return new IncrementalStateCoverIterator<>(automaton, inputs, Collections.emptyList());
     }
@@ -103,7 +103,7 @@ public final class Covers {
      * @param <I>
      *         input symbol type
      */
-    public static <S, I> void transitionCover(DeterministicAutomaton<S, I, ?> automaton,
+    public static <S, I> void transitionCover(RegularAutomaton<S, I, ?> automaton,
                                               Collection<? extends I> inputs,
                                               Collection<? super Word<I>> transitions) {
         cover(automaton, inputs, automaton.getInitialState(), w -> {}, transitions::add);
@@ -122,9 +122,9 @@ public final class Covers {
      *
      * @return an iterator for the input sequences of the cover.
      *
-     * @see #transitionCover(DeterministicAutomaton, Collection, Collection)
+     * @see #transitionCover(RegularAutomaton, Collection, Collection)
      */
-    public static <I> Iterator<Word<I>> transitionCoverIterator(DeterministicAutomaton<?, I, ?> automaton,
+    public static <I> Iterator<Word<I>> transitionCoverIterator(RegularAutomaton<?, I, ?> automaton,
                                                                 Collection<? extends I> inputs) {
         return new IncrementalTransitionCoverIterator<>(automaton, inputs, Collections.emptyList());
     }
@@ -145,10 +145,10 @@ public final class Covers {
      * @param <I>
      *         input symbol type
      *
-     * @see #stateCover(DeterministicAutomaton, Collection, Collection)
-     * @see #transitionCover(DeterministicAutomaton, Collection, Collection)
+     * @see #stateCover(RegularAutomaton, Collection, Collection)
+     * @see #transitionCover(RegularAutomaton, Collection, Collection)
      */
-    public static <S, I> void structuralCover(DeterministicAutomaton<S, I, ?> automaton,
+    public static <S, I> void structuralCover(RegularAutomaton<S, I, ?> automaton,
                                               Collection<? extends I> inputs,
                                               Collection<? super Word<I>> cover) {
         cover(automaton, inputs, automaton.getInitialState(), cover::add, cover::add);
@@ -170,10 +170,10 @@ public final class Covers {
      * @param <I>
      *         input symbol type
      *
-     * @see #stateCover(DeterministicAutomaton, Collection, Collection)
-     * @see #transitionCover(DeterministicAutomaton, Collection, Collection)
+     * @see #stateCover(RegularAutomaton, Collection, Collection)
+     * @see #transitionCover(RegularAutomaton, Collection, Collection)
      */
-    public static <S, I> void cover(DeterministicAutomaton<S, I, ?> automaton,
+    public static <S, I> void cover(RegularAutomaton<S, I, ?> automaton,
                                     Collection<? extends I> inputs,
                                     Collection<? super Word<I>> states,
                                     Collection<? super Word<I>> transitions) {
@@ -210,7 +210,7 @@ public final class Covers {
      *
      * @return a mapping from automaton states to their access sequences
      */
-    public static <S, I> Mapping<S, @Nullable Word<I>> cover(DeterministicAutomaton<S, I, ?> automaton,
+    public static <S, I> Mapping<S, @Nullable Word<I>> cover(RegularAutomaton<S, I, ?> automaton,
                                                              Collection<? extends I> inputs,
                                                              @Nullable S start,
                                                              Consumer<? super Word<I>> states,
@@ -274,9 +274,9 @@ public final class Covers {
      *
      * @return {@code true} if new sequences have been added to the state cover, {@code false} otherwise.
      *
-     * @see #stateCover(DeterministicAutomaton, Collection, Collection)
+     * @see #stateCover(RegularAutomaton, Collection, Collection)
      */
-    public static <S, I> boolean incrementalStateCover(DeterministicAutomaton<S, I, ?> automaton,
+    public static <S, I> boolean incrementalStateCover(RegularAutomaton<S, I, ?> automaton,
                                                        Collection<? extends I> inputs,
                                                        Collection<? extends Word<I>> oldStates,
                                                        Collection<? super Word<I>> newStates) {
@@ -343,9 +343,9 @@ public final class Covers {
      *
      * @return an iterator for the remaining input sequences of the cover.
      *
-     * @see #incrementalStateCover(DeterministicAutomaton, Collection, Collection, Collection)
+     * @see #incrementalStateCover(RegularAutomaton, Collection, Collection, Collection)
      */
-    public static <I> Iterator<Word<I>> incrementalStateCoverIterator(DeterministicAutomaton<?, I, ?> automaton,
+    public static <I> Iterator<Word<I>> incrementalStateCoverIterator(RegularAutomaton<?, I, ?> automaton,
                                                                       Collection<? extends I> inputs,
                                                                       Collection<? extends Word<I>> stateCover) {
         return new IncrementalStateCoverIterator<>(automaton, inputs, stateCover);
@@ -368,9 +368,9 @@ public final class Covers {
      *
      * @return {@code true} if new sequences have been added to the state cover, {@code false} otherwise.
      *
-     * @see #transitionCover(DeterministicAutomaton, Collection, Collection)
+     * @see #transitionCover(RegularAutomaton, Collection, Collection)
      */
-    public static <I> boolean incrementalTransitionCover(DeterministicAutomaton<?, I, ?> automaton,
+    public static <I> boolean incrementalTransitionCover(RegularAutomaton<?, I, ?> automaton,
                                                          Collection<? extends I> inputs,
                                                          Collection<? extends Word<I>> oldTransCover,
                                                          Collection<? super Word<I>> newTransCover) {
@@ -396,9 +396,9 @@ public final class Covers {
      *
      * @return an iterator for the remaining input sequences of the cover.
      *
-     * @see #incrementalStateCover(DeterministicAutomaton, Collection, Collection, Collection)
+     * @see #incrementalStateCover(RegularAutomaton, Collection, Collection, Collection)
      */
-    public static <I> Iterator<Word<I>> incrementalTransitionCoverIterator(DeterministicAutomaton<?, I, ?> automaton,
+    public static <I> Iterator<Word<I>> incrementalTransitionCoverIterator(RegularAutomaton<?, I, ?> automaton,
                                                                            Collection<? extends I> inputs,
                                                                            Collection<? extends Word<I>> transitionCover) {
         return new IncrementalTransitionCoverIterator<>(automaton, inputs, transitionCover);
@@ -424,10 +424,10 @@ public final class Covers {
      *
      * @return {@code true} if new sequences have been added to the structural cover, {@code false} otherwise.
      *
-     * @see #incrementalStateCover(DeterministicAutomaton, Collection, Collection, Collection)
-     * @see #incrementalStateCover(DeterministicAutomaton, Collection, Collection, Collection)
+     * @see #incrementalStateCover(RegularAutomaton, Collection, Collection, Collection)
+     * @see #incrementalStateCover(RegularAutomaton, Collection, Collection, Collection)
      */
-    public static <I> boolean incrementalCover(DeterministicAutomaton<?, I, ?> automaton,
+    public static <I> boolean incrementalCover(RegularAutomaton<?, I, ?> automaton,
                                                Collection<? extends I> inputs,
                                                Collection<? extends Word<I>> oldStateCover,
                                                Collection<? extends Word<I>> oldTransCover,
@@ -441,7 +441,7 @@ public final class Covers {
         return oldStateSize < newStateCover.size() || oldTransSize < newTransCover.size();
     }
 
-    private static <S, I> void incrementalCover(DeterministicAutomaton<S, I, ?> automaton,
+    private static <S, I> void incrementalCover(RegularAutomaton<S, I, ?> automaton,
                                                 Collection<? extends I> inputs,
                                                 Collection<? extends Word<I>> oldStateCover,
                                                 Collection<? extends Word<I>> oldTransCover,
@@ -508,7 +508,7 @@ public final class Covers {
 
     static <S, I> boolean buildReachFromStateCover(MutableMapping<S, Record<S, I>> reach,
                                                    Queue<Record<S, I>> bfsQueue,
-                                                   DeterministicAutomaton<S, I, ?> automaton,
+                                                   RegularAutomaton<S, I, ?> automaton,
                                                    Collection<? extends Word<I>> oldStateCover,
                                                    BiFunction<S, Word<I>, Record<S, I>> recordBuilder) {
 
@@ -533,7 +533,7 @@ public final class Covers {
 
     static <S, I> void buildReachFromTransitionCover(MutableMapping<S, Record<S, I>> reach,
                                                      Queue<Record<S, I>> bfsQueue,
-                                                     DeterministicAutomaton<S, I, ?> automaton,
+                                                     RegularAutomaton<S, I, ?> automaton,
                                                      Collection<? extends Word<I>> oldTransCover,
                                                      BiFunction<S, Word<I>, Record<S, I>> recordBuilder,
                                                      Consumer<? super Word<I>> newStateCallback) {

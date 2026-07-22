@@ -16,6 +16,7 @@
 package net.automatalib.util.automaton.minimizer;
 
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.impl.Location;
@@ -39,6 +40,7 @@ public final class OneSEVPAMinimizer {
     }
 
     private static <L, I> void initHopcroft(Hopcroft hopcroft, OneSEVPA<L, I> sevpa, VPAlphabet<I> alphabet) {
+        final StateIDs<L> stateIDs = sevpa.stateIDs();
         final int numStates = sevpa.size();
         final int numInputs =
                 alphabet.getNumInternals() + alphabet.getNumCalls() * alphabet.getNumReturns() * sevpa.size() * 2;
@@ -55,8 +57,8 @@ public final class OneSEVPAMinimizer {
         final Block[] initBlocks = new Block[2];
 
         for (int i = 0; i < numStates; i++) {
-            final L loc = sevpa.getLocation(i);
-            final int initBlockIdx = sevpa.isAcceptingLocation(loc) ? 1 : 0;
+            final L loc = stateIDs.getState(i);
+            final int initBlockIdx = sevpa.getStateProperty(loc) ? 1 : 0;
             Block block = initBlocks[initBlockIdx];
             if (block == null) {
                 block = hopcroft.createBlock();
@@ -74,19 +76,19 @@ public final class OneSEVPAMinimizer {
                     throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
                 }
 
-                final int succId = sevpa.getLocationId(succ);
+                final int succId = stateIDs.getStateId(succ);
                 data[predCountBase + succId]++;
                 predCountBase += numStates;
             }
             for (I callSym : alphabet.getCallAlphabet()) {
                 for (I retSym : alphabet.getReturnAlphabet()) {
-                    for (L src : sevpa.getLocations()) {
+                    for (L src : sevpa.getStates()) {
                         int stackSym = sevpa.encodeStackSym(src, callSym);
                         L succ = sevpa.getReturnSuccessor(loc, retSym, stackSym);
                         if (succ == null) {
                             throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
                         }
-                        int succId = sevpa.getLocationId(succ);
+                        int succId = stateIDs.getStateId(succ);
                         data[predCountBase + succId]++;
                         predCountBase += numStates;
 
@@ -95,7 +97,7 @@ public final class OneSEVPAMinimizer {
                         if (succ == null) {
                             throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
                         }
-                        succId = sevpa.getLocationId(succ);
+                        succId = stateIDs.getStateId(succ);
                         data[predCountBase + succId]++;
                         predCountBase += numStates;
                     }
@@ -115,26 +117,26 @@ public final class OneSEVPAMinimizer {
             data[posDataLow + i] = pos;
             int predOfsBase = predOfsDataLow;
 
-            final L loc = sevpa.getLocation(i);
+            final L loc = stateIDs.getState(i);
             for (I intSym : alphabet.getInternalAlphabet()) {
                 final L succ = sevpa.getInternalSuccessor(loc, intSym);
                 if (succ == null) {
                     throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
                 }
 
-                final int succId = sevpa.getLocationId(succ);
+                final int succId = stateIDs.getStateId(succ);
                 data[--data[predOfsBase + succId]] = i;
                 predOfsBase += numStates;
             }
             for (I callSym : alphabet.getCallAlphabet()) {
                 for (I retSym : alphabet.getReturnAlphabet()) {
-                    for (L src : sevpa.getLocations()) {
+                    for (L src : sevpa.getStates()) {
                         int stackSym = sevpa.encodeStackSym(src, callSym);
                         L succ = sevpa.getReturnSuccessor(loc, retSym, stackSym);
                         if (succ == null) {
                             throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
                         }
-                        int succId = sevpa.getLocationId(succ);
+                        int succId = stateIDs.getStateId(succ);
                         data[--data[predOfsBase + succId]] = i;
                         predOfsBase += numStates;
 
@@ -143,7 +145,7 @@ public final class OneSEVPAMinimizer {
                         if (succ == null) {
                             throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
                         }
-                        succId = sevpa.getLocationId(succ);
+                        succId = stateIDs.getStateId(succ);
                         data[--data[predOfsBase + succId]] = i;
                         predOfsBase += numStates;
                     }
@@ -163,26 +165,27 @@ public final class OneSEVPAMinimizer {
                                                           OneSEVPA<L, I> original,
                                                           VPAlphabet<I> alphabet) {
 
+        final StateIDs<L> stateIDs = original.stateIDs();
         final int numBlocks = pt.getNumBlocks();
         final DefaultOneSEVPA<I> result = new DefaultOneSEVPA<>(alphabet, numBlocks);
 
         final Location[] resultLocs = new Location[numBlocks];
         for (int i = 0; i < resultLocs.length; i++) {
-            resultLocs[i] = result.addLocation(false);
+            resultLocs[i] = result.addState(false);
         }
 
         for (Block curr : pt.blockList()) {
             final int blockId = curr.id;
             final int rep = pt.getRepresentative(curr);
-            final L repLoc = original.getLocation(rep);
+            final L repLoc = stateIDs.getState(rep);
 
             final Location resultLoc = resultLocs[blockId];
-            resultLoc.setAccepting(original.isAcceptingLocation(repLoc));
+            resultLoc.setAccepting(original.getStateProperty(repLoc));
 
             for (I intSym : alphabet.getInternalAlphabet()) {
                 @SuppressWarnings("nullness") // partiality is handled during initialization
                 final @NonNull L origSucc = original.getInternalSuccessor(repLoc, intSym);
-                final int origSuccId = original.getLocationId(origSucc);
+                final int origSuccId = stateIDs.getStateId(origSucc);
                 final int resSuccId = pt.getBlockForState(origSuccId).id;
                 final Location resSucc = resultLocs[resSuccId];
                 result.setInternalSuccessor(resultLoc, intSym, resSucc);
@@ -191,13 +194,13 @@ public final class OneSEVPAMinimizer {
                 for (I retSym : alphabet.getReturnAlphabet()) {
                     for (Block b : pt.blockList()) {
                         final int stackRepId = pt.getRepresentative(b);
-                        final L stackRep = original.getLocation(stackRepId);
+                        final L stackRep = stateIDs.getState(stackRepId);
                         final Location resultStackRep = resultLocs[b.id];
 
                         final int origStackSym = original.encodeStackSym(stackRep, callSym);
                         @SuppressWarnings("nullness") // partiality is handled during initialization
                         final @NonNull L origSucc = original.getReturnSuccessor(repLoc, retSym, origStackSym);
-                        final int origSuccId = original.getLocationId(origSucc);
+                        final int origSuccId = stateIDs.getStateId(origSucc);
                         final int resSuccId = pt.getBlockForState(origSuccId).id;
                         final Location resSucc = resultLocs[resSuccId];
 
@@ -208,8 +211,8 @@ public final class OneSEVPAMinimizer {
             }
         }
 
-        final int origInit = original.getLocationId(original.getInitialLocation());
-        result.setInitialLocation(resultLocs[pt.getBlockForState(origInit).id]);
+        final int origInit = stateIDs.getStateId(original.getInitialState());
+        result.setInitialState(resultLocs[pt.getBlockForState(origInit).id]);
 
         return result;
     }

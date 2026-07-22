@@ -16,9 +16,11 @@
 package net.automatalib.util.automaton.vpa;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.impl.AbstractSEVPA;
 import net.automatalib.common.util.Pair;
@@ -43,6 +45,9 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
 
     private final AcceptanceCombiner accCombiner;
 
+    private final StateIDs<L1> stateIDs1;
+    private final StateIDs<L2> stateIDs2;
+
     public ProductOneSEVPA(VPAlphabet<I> alphabet,
                            OneSEVPA<L1, I> sevpa1,
                            OneSEVPA<L2, I> sevpa2,
@@ -51,6 +56,8 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
         this.sevpa1 = sevpa1;
         this.sevpa2 = sevpa2;
         this.accCombiner = combiner;
+        this.stateIDs1 = sevpa1.stateIDs();
+        this.stateIDs2 = sevpa2.stateIDs();
     }
 
     @Override
@@ -67,23 +74,32 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
     }
 
     @Override
-    public Pair<L1, L2> getLocation(int id) {
-        final int l1Id = id / sevpa2.size();
-        final int l2Id = id % sevpa2.size();
-        return Pair.of(sevpa1.getLocation(l1Id), sevpa2.getLocation(l2Id));
+    public Collection<Pair<L1, L2>> getTransitions(Pair<L1, L2> state, I input) {
+        final Collection<L1> t1 = sevpa1.getTransitions(state.getFirst(), input);
+        final Collection<L2> t2 = sevpa2.getTransitions(state.getSecond(), input);
+
+        final List<Pair<L1, L2>> result = new ArrayList<>(t1.size() * t2.size());
+
+        for (L1 l1 : t1) {
+            for (L2 l2 : t2) {
+                result.add(Pair.of(l1, l2));
+            }
+        }
+
+        return result;
     }
 
     @Override
-    public int getLocationId(Pair<L1, L2> loc) {
-        return sevpa1.getLocationId(loc.getFirst()) * sevpa2.size() + sevpa2.getLocationId(loc.getSecond());
+    public Pair<L1, L2> getSuccessor(Pair<L1, L2> transition) {
+        return transition;
     }
 
     @Override
-    public List<Pair<L1, L2>> getLocations() {
+    public List<Pair<L1, L2>> getStates() {
         final List<Pair<L1, L2>> locations = new ArrayList<>(sevpa1.size() * sevpa2.size());
 
-        for (L1 l1 : sevpa1.getLocations()) {
-            for (L2 l2 : sevpa2.getLocations()) {
+        for (L1 l1 : sevpa1.getStates()) {
+            for (L2 l2 : sevpa2.getStates()) {
                 locations.add(Pair.of(l1, l2));
             }
         }
@@ -107,14 +123,18 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
     }
 
     @Override
-    public boolean isAcceptingLocation(Pair<L1, L2> loc) {
-        return accCombiner.combine(sevpa1.isAcceptingLocation(loc.getFirst()),
-                                   sevpa2.isAcceptingLocation(loc.getSecond()));
+    public Boolean getStateProperty(Pair<L1, L2> loc) {
+        return accCombiner.combine(sevpa1.getStateProperty(loc.getFirst()), sevpa2.getStateProperty(loc.getSecond()));
     }
 
     @Override
-    public Pair<L1, L2> getInitialLocation() {
-        return Pair.of(sevpa1.getInitialLocation(), sevpa2.getInitialLocation());
+    public Void getTransitionProperty(Pair<L1, L2> transition) {
+        return null;
+    }
+
+    @Override
+    public Pair<L1, L2> getInitialState() {
+        return Pair.of(sevpa1.getInitialState(), sevpa2.getInitialState());
     }
 
     @Override
@@ -134,4 +154,15 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
         return sevpa1.size() * sevpa2.size();
     }
 
+    @Override
+    public int getStateId(Pair<L1, L2> state) {
+        return stateIDs1.getStateId(state.getFirst()) * sevpa2.size() + stateIDs2.getStateId(state.getSecond());
+    }
+
+    @Override
+    public Pair<L1, L2> getState(int id) {
+        final int l1Id = id / sevpa2.size();
+        final int l2Id = id % sevpa2.size();
+        return Pair.of(stateIDs1.getState(l1Id), stateIDs2.getState(l2Id));
+    }
 }

@@ -27,7 +27,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.automaton.DeterministicAutomaton.RegularAutomaton;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.collection.AbstractTwoLevelIterator;
@@ -59,11 +59,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         automaton state type
  * @param <I>
  *         input symbol type
- * @param <A>
- *         automaton type
  */
-public class KWayTransitionCoverTestsIterator<S, I, A extends DeterministicAutomaton<S, I, ?>>
-        implements Iterator<Word<I>> {
+public class KWayTransitionCoverTestsIterator<S, I> implements Iterator<Word<I>> {
 
     /**
      * The default value of k used in the k-way computations.
@@ -90,7 +87,7 @@ public class KWayTransitionCoverTestsIterator<S, I, A extends DeterministicAutom
      */
     public static final int DEFAULT_R_WALK_LEN = 10;
 
-    private final A automaton;
+    private final RegularAutomaton<S, I, ?> automaton;
     private final List<? extends I> alphabet;
     private final Random random;
     private final int randomWalkLen;
@@ -110,9 +107,9 @@ public class KWayTransitionCoverTestsIterator<S, I, A extends DeterministicAutom
      * @param inputs
      *         the inputs to consider for test case generation
      *
-     * @see #KWayTransitionCoverTestsIterator(DeterministicAutomaton, Collection, Random)
+     * @see #KWayTransitionCoverTestsIterator(RegularAutomaton, Collection, Random)
      */
-    public KWayTransitionCoverTestsIterator(A automaton, Collection<? extends I> inputs) {
+    public KWayTransitionCoverTestsIterator(RegularAutomaton<S, I, ?> automaton, Collection<? extends I> inputs) {
         this(automaton, inputs, new Random());
     }
 
@@ -130,10 +127,12 @@ public class KWayTransitionCoverTestsIterator<S, I, A extends DeterministicAutom
      * @param random
      *         the random number generator to use
      *
-     * @see #KWayTransitionCoverTestsIterator(DeterministicAutomaton, Collection, Random, int, int, int, int, int,
+     * @see #KWayTransitionCoverTestsIterator(RegularAutomaton, Collection, Random, int, int, int, int, int,
      * OptimizationMetric, GenerationMethod)
      */
-    public KWayTransitionCoverTestsIterator(A automaton, Collection<? extends I> inputs, Random random) {
+    public KWayTransitionCoverTestsIterator(RegularAutomaton<S, I, ?> automaton,
+                                            Collection<? extends I> inputs,
+                                            Random random) {
         this(automaton,
              inputs,
              random,
@@ -172,7 +171,7 @@ public class KWayTransitionCoverTestsIterator<S, I, A extends DeterministicAutom
      * @param generationMethod
      *         defines how the tests are generated
      */
-    public KWayTransitionCoverTestsIterator(A automaton,
+    public KWayTransitionCoverTestsIterator(RegularAutomaton<S, I, ?> automaton,
                                             Collection<? extends I> inputs,
                                             Random random,
                                             int randomWalkLen,
@@ -213,7 +212,7 @@ public class KWayTransitionCoverTestsIterator<S, I, A extends DeterministicAutom
         return iterator.next();
     }
 
-    private Set<Path<S, I>> generateRandomPaths(A hypothesis, S initial) {
+    private Set<Path<S, I>> generateRandomPaths(RegularAutomaton<S, I, ?> hypothesis, S initial) {
         final Set<Path<S, I>> result = new HashSet<>(HashUtil.capacity(numGeneratePaths));
 
         for (int i = 0; i < numGeneratePaths; i++) {
@@ -226,7 +225,7 @@ public class KWayTransitionCoverTestsIterator<S, I, A extends DeterministicAutom
         return result;
     }
 
-    private Path<S, I> createPath(A hypothesis, S initial, Word<I> steps) {
+    private Path<S, I> createPath(RegularAutomaton<S, I, ?> hypothesis, S initial, Word<I> steps) {
         final Set<KWayTransition<S, I>> transitions = new HashSet<>();
 
         final List<@Nullable S> prevStates = new ArrayList<>(steps.size());
@@ -253,7 +252,7 @@ public class KWayTransitionCoverTestsIterator<S, I, A extends DeterministicAutom
         return new Path<>(steps, transitions);
     }
 
-    private Iterator<Word<I>> generatePrefixSteps(A hypothesis, S initial) {
+    private Iterator<Word<I>> generatePrefixSteps(RegularAutomaton<S, I, ?> hypothesis, S initial) {
         final List<S> states = new ArrayList<>(hypothesis.getStates());
         Collections.reverse(states);
         return new PrefixStepsIterator(states.iterator(), initial);
@@ -423,9 +422,7 @@ public class KWayTransitionCoverTestsIterator<S, I, A extends DeterministicAutom
          */
         RANDOM {
             @Override
-            <S, I, A extends DeterministicAutomaton<S, I, ?>> Iterator<Word<I>> getIterator(
-                    KWayTransitionCoverTestsIterator<S, I, A> self,
-                    S initial) {
+            <S, I> Iterator<Word<I>> getIterator(KWayTransitionCoverTestsIterator<S, I> self, S initial) {
                 return self.new GreedySetCoverIterator(initial);
             }
         },
@@ -434,16 +431,12 @@ public class KWayTransitionCoverTestsIterator<S, I, A extends DeterministicAutom
          */
         PREFIX {
             @Override
-            <S, I, A extends DeterministicAutomaton<S, I, ?>> Iterator<Word<I>> getIterator(
-                    KWayTransitionCoverTestsIterator<S, I, A> self,
-                    S initial) {
+            <S, I> Iterator<Word<I>> getIterator(KWayTransitionCoverTestsIterator<S, I> self, S initial) {
                 return self.generatePrefixSteps(self.automaton, initial);
             }
         };
 
-        abstract <S, I, A extends DeterministicAutomaton<S, I, ?>> Iterator<Word<I>> getIterator(
-                KWayTransitionCoverTestsIterator<S, I, A> self,
-                S initial);
+        abstract <S, I> Iterator<Word<I>> getIterator(KWayTransitionCoverTestsIterator<S, I> self, S initial);
     }
 
     /**

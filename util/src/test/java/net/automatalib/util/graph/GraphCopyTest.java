@@ -51,12 +51,12 @@ public class GraphCopyTest {
         final Random random = new Random(42);
         source = new FastDFA<>(alphabet);
 
-        RandomAutomata.randomDeterministic(random,
-                                           20,
-                                           alphabet,
-                                           Arrays.asList(Boolean.FALSE, Boolean.TRUE),
-                                           Collections.emptyList(),
-                                           source);
+        RandomAutomata.randomRegularDeterministic(random,
+                                                  20,
+                                                  alphabet,
+                                                  Arrays.asList(Boolean.FALSE, Boolean.TRUE),
+                                                  Collections.emptyList(),
+                                                  source);
 
         sourceAsGraph = this.source.transitionGraphView();
     }

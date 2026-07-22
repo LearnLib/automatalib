@@ -15,11 +15,11 @@
  */
 package net.automatalib.automaton.transducer;
 
-import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.MutableDeterministic.RegularAutomaton;
 import net.automatalib.automaton.concept.MutableStateOutput;
 
 public interface MutableMooreMachine<S, I, T, O>
-        extends MooreMachine<S, I, T, O>, MutableDeterministic<S, I, T, O, Void>, MutableStateOutput<S, O> {
+        extends MooreMachine<S, I, T, O>, RegularAutomaton<S, I, T, O, Void>, MutableStateOutput<S, O> {
 
     @Override
     default void setStateProperty(S state, O property) {

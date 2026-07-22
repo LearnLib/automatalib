@@ -25,7 +25,7 @@ import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
-import net.automatalib.automaton.impl.UniversalCompactDet;
+import net.automatalib.automaton.impl.UniversalCompactDetAutomaton;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
@@ -156,7 +156,8 @@ public abstract class AbstractMinimizationTest {
         final char input3 = 'c';
         final char input4 = 'd';
 
-        final UniversalCompactDet<Character, Integer, Boolean> automaton = new UniversalCompactDet<>(alphabet);
+        final UniversalCompactDetAutomaton<Character, Integer, Boolean> automaton =
+                new UniversalCompactDetAutomaton<>(alphabet);
 
         // @formatter:off
         AutomatonBuilders.forAutomaton(automaton)
@@ -184,7 +185,7 @@ public abstract class AbstractMinimizationTest {
                          .create();
         // @formatter:on
 
-        final TestConfig<Character, UniversalCompactDet<Character, Integer, Boolean>> config =
+        final TestConfig<Character, UniversalCompactDetAutomaton<Character, Integer, Boolean>> config =
                 new TestConfig<>(alphabet, automaton, 5, 6);
 
         if (supportsPartial()) {
@@ -220,9 +221,10 @@ public abstract class AbstractMinimizationTest {
         }
     }
 
-    private <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> void testMinimizeUniversal(TestConfig<I, A> test) {
+    private <I, SP, TP, A extends MutableDeterministic.RegularAutomaton<?, I, ?, SP, TP>> void testMinimizeUniversal(
+            TestConfig<I, A> test) {
 
-        final UniversalDeterministicAutomaton<?, I, ?, SP, TP> result =
+        final UniversalDeterministicAutomaton.RegularAutomaton<?, I, ?, SP, TP> result =
                 minimizeUniversal(test.automaton, test.alphabet);
 
         if (isPruned()) {
@@ -239,16 +241,17 @@ public abstract class AbstractMinimizationTest {
     protected abstract <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
                                                                      Alphabet<I> alphabet);
 
-    protected abstract <I, SP, TP> UniversalDeterministicAutomaton<?, I, ?, SP, TP> minimizeUniversal(
-            MutableDeterministic<?, I, ?, SP, TP> automaton,
+    protected abstract <I, SP, TP> UniversalDeterministicAutomaton.RegularAutomaton<?, I, ?, SP, TP> minimizeUniversal(
+            MutableDeterministic.RegularAutomaton<?, I, ?, SP, TP> automaton,
             Alphabet<I> alphabet);
 
     protected abstract boolean isPruned();
 
     protected abstract boolean supportsPartial();
 
-    private static <S, I> void assertAllInequivalent(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+    private static <S, I> void assertAllInequivalent(UniversalDeterministicAutomaton.RegularAutomaton<S, I, ?, ?, ?> automaton,
                                                      Collection<? extends I> inputs) {
+
         StateIDs<S> ids = automaton.stateIDs();
         int size = automaton.size();
         for (int i = 0; i < size - 1; i++) {

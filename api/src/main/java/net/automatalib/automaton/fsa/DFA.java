@@ -17,17 +17,22 @@ package net.automatalib.automaton.fsa;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.DeterministicSuffixOutputAutomaton;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
 /**
  * Deterministic finite state acceptor.
  */
-public interface DFA<S, I> extends UniversalDeterministicAutomaton<S, I, S, Boolean, Void>,
+public interface DFA<S, I> extends RegularAutomaton<S, I, S, Boolean, Void>,
                                    DeterministicAcceptorTS<S, I>,
                                    DeterministicSuffixOutputAutomaton<S, I, S, Boolean>,
                                    NFA<S, I> {
+
+    @Override
+    default DFA<S, I> getSemantics() {
+        return this;
+    }
 
     @Override
     default boolean isAccepting(Collection<? extends S> states) {

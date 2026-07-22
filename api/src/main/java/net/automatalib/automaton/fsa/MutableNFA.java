@@ -15,6 +15,4 @@
  */
 package net.automatalib.automaton.fsa;
 
-public interface MutableNFA<S, I> extends NFA<S, I>, MutableFSA<S, I> {
-
-}
+public interface MutableNFA<S, I> extends NFA<S, I>, MutableFSA<S, I> {}

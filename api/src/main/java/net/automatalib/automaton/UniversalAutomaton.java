@@ -18,8 +18,10 @@ package net.automatalib.automaton;
 import java.util.Collection;
 
 import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.graph.UniversalGraph;
+import net.automatalib.semantic.FiniteSemantics;
 import net.automatalib.ts.UniversalTransitionSystem;
 
 /**
@@ -27,22 +29,46 @@ import net.automatalib.ts.UniversalTransitionSystem;
  * and transitions. See {@link UniversalTransitionSystem} for a further explanation of this concept.
  *
  * @param <S>
- *         state class
+ *         state type
  * @param <I>
- *         input symbol class
+ *         input symbol type
  * @param <T>
- *         transition class
+ *         transition type
  * @param <SP>
- *         state property class
+ *         state property type
  * @param <TP>
- *         transition property class
+ *         transition property type
  */
 public interface UniversalAutomaton<S, I, T, SP, TP>
         extends Automaton<S, I, T>, UniversalTransitionSystem<S, I, T, SP, TP> {
 
     @Override
-    default UniversalGraph<S, TransitionEdge<I, T>, SP, TransitionEdge.Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {
+    default UniversalGraph<S, TransitionEdge<I, T>, SP, Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {
         return new UniversalAutomatonGraphView<>(this, inputs);
+    }
+
+    /**
+     * Convenience interface that describes an automaton with finite syntactic and finite semantic state space. This
+     * type links a {@link UniversalAutomaton} with {@link FiniteSemantics}.
+     *
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     */
+    interface RegularAutomaton<S, I, T, SP, TP>
+            extends UniversalAutomaton<S, I, T, SP, TP>, Automaton.RegularAutomaton<S, I, T> {
+
+        @Override
+        default UniversalAutomaton<S, I, T, SP, TP> getSemantics() {
+            return this;
+        }
     }
 
 }

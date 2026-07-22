@@ -47,7 +47,8 @@ public class CFMPSGraphView<N, L, E, AP> implements Graph<Pair<L, N>, Pair<L, E>
 
     // cast is fine, because we make sure to only query nodes/edges belonging to the respective procedures
     @SuppressWarnings("unchecked")
-    public CFMPSGraphView(@Nullable L mainProcedure, Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, AP, ?>> pmpgs) {
+    public CFMPSGraphView(@Nullable L mainProcedure,
+                          Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, AP, ?>> pmpgs) {
         this.mainProcedure = mainProcedure;
         this.pmpgs = (Map<L, ProceduralModalProcessGraph<N, L, E, AP, ?>>) pmpgs;
     }

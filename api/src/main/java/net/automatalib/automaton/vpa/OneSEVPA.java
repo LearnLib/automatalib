@@ -16,21 +16,21 @@
 package net.automatalib.automaton.vpa;
 
 /**
- * A specialized interface for 1-SEVPAs (1-module single entry visibly push-down automata). Note that contrary to the
- * original definition of Alur et al. where 1-SEVPAs consist of one (separate) "main" module and one module for all call
- * symbols, this implementation assumes a single module for both the "main" procedure and all call symbols, i.e., the
- * initial location and all module entries coincide.
+ * A specialized interface for 1-{@link SEVPA}s. Contrary to the original definition of Alur et al. where 1-SEVPAs
+ * consist of one (separate) "main" module and one module for all call symbols, this implementation assumes a single
+ * module for both the "main" procedure and all call symbols, i.e., the initial location and all module entries
+ * coincide.
  *
  * @param <L>
  *         location type
  * @param <I>
- *         input alphabet type
+ *         input symbol type
  */
 public interface OneSEVPA<L, I> extends SEVPA<L, I> {
 
     @Override
     default L getModuleEntry(I callSym) {
-        return getInitialLocation();
+        return getInitialState();
     }
 
 }

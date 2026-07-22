@@ -23,6 +23,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.abstraction.MutableDeterministicAbstractions.StateIntAbstraction;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.impl.MutableAutomatonTest;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -80,7 +81,7 @@ public class MutableStateIntAbstractionTest extends MutableAutomatonTest {
     private static class MockUp<S, I, T, SP, TP> implements MutableDeterministic<S, I, T, SP, TP> {
 
         final MutableDeterministic<S, I, T, SP, TP> delegate;
-        final MutableDeterministic.StateIntAbstraction<I, T, SP, TP> abstraction;
+        final StateIntAbstraction<I, T, SP, TP> abstraction;
         final StateIDs<S> stateIDs;
         final Alphabet<I> alphabet;
 

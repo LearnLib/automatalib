@@ -27,13 +27,17 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.automaton.vpa.State;
 import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.IntDisjointSets;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.UnionFindRemSP;
-import net.automatalib.common.util.array.ArrayStorage;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.util.automaton.minimizer.OneSEVPAMinimizer;
 import net.automatalib.util.automaton.vpa.SPAConverter.ConversionResult;
 import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
@@ -244,7 +248,7 @@ public final class OneSEVPAs {
         final ReachResult<L, I> result = computeAccessSequences(sevpa, alphabet, true, predicate);
         L resultLoc = result.terminateLoc;
         if (resultLoc != null) {
-            return result.accessSequences.get(sevpa.getLocationId(resultLoc));
+            return result.accessSequences.get(resultLoc);
         }
         return null;
     }
@@ -261,9 +265,9 @@ public final class OneSEVPAs {
      * @param <I>
      *         input symbol type
      *
-     * @return a list of access sequences, indexed by their respective {@link OneSEVPA#getLocationId(Object) id}.
+     * @return a mapping of states to their respective access sequences.
      */
-    public static <L, I> ArrayStorage<Word<I>> computeAccessSequences(OneSEVPA<L, I> sevpa, VPAlphabet<I> alphabet) {
+    public static <L, I> Mapping<L, Word<I>> computeAccessSequences(OneSEVPA<L, I> sevpa, VPAlphabet<I> alphabet) {
         return computeAccessSequences(sevpa, alphabet, true, l -> false).accessSequences;
     }
 
@@ -271,12 +275,12 @@ public final class OneSEVPAs {
                                                                    VPAlphabet<I> alphabet,
                                                                    boolean computeAs,
                                                                    Predicate<? super L> terminatePred) {
-        final ArrayStorage<Word<I>> result = new ArrayStorage<>(sevpa.size());
+        final MutableMapping<L, Word<I>> result = sevpa.createStaticStateMapping();
 
-        final L initLoc = sevpa.getInitialLocation();
+        final L initLoc = sevpa.getInitialState();
         final List<L> reachable = new ArrayList<>();
         reachable.add(initLoc);
-        result.set(sevpa.getLocationId(initLoc), Word.epsilon());
+        result.put(initLoc, Word.epsilon());
 
         if (terminatePred.test(initLoc)) {
             return new ReachResult<>(initLoc, reachable, result);
@@ -285,19 +289,18 @@ public final class OneSEVPAs {
         int queuePtr = 0;
         while (queuePtr < reachable.size()) {
             final L curr = reachable.get(queuePtr++);
-            final Word<I> currAs = result.get(sevpa.getLocationId(curr));
+            final Word<I> currAs = result.get(curr);
 
             for (I intSym : alphabet.getInternalAlphabet()) {
                 final L succ = sevpa.getInternalSuccessor(curr, intSym);
                 if (succ == null) {
                     continue;
                 }
-                final int succIdx = sevpa.getLocationId(succ);
-                if (result.get(succIdx) != null) {
+                if (result.get(succ) != null) {
                     continue;
                 }
                 final Word<I> succAs = computeAs ? currAs.append(intSym) : Word.epsilon();
-                result.set(succIdx, succAs);
+                result.put(succ, succAs);
                 if (terminatePred.test(succ)) {
                     return new ReachResult<>(succ, reachable, result);
                 }
@@ -313,14 +316,11 @@ public final class OneSEVPAs {
                         if (succ == null) {
                             continue;
                         }
-                        int succIdx = sevpa.getLocationId(succ);
-                        if (result.get(succIdx) == null) {
+                        if (result.get(succ) == null) {
                             Word<I> succAs = computeAs ?
-                                    result.get(sevpa.getLocationId(src))
-                                          .append(callSym)
-                                          .concat(currAs.append(returnSym)) :
+                                    result.get(src).append(callSym).concat(currAs.append(returnSym)) :
                                     Word.epsilon();
-                            result.set(succIdx, succAs);
+                            result.put(succ, succAs);
                             if (terminatePred.test(succ)) {
                                 return new ReachResult<>(succ, reachable, result);
                             }
@@ -333,13 +333,11 @@ public final class OneSEVPAs {
                             if (succ == null) {
                                 continue;
                             }
-                            succIdx = sevpa.getLocationId(succ);
-                            if (result.get(succIdx) == null) {
+                            if (result.get(succ) == null) {
                                 final Word<I> succAs = computeAs ?
-                                        currAs.append(callSym)
-                                              .concat(result.get(sevpa.getLocationId(src)).append(returnSym)) :
+                                        currAs.append(callSym).concat(result.get(src).append(returnSym)) :
                                         Word.epsilon();
-                                result.set(succIdx, succAs);
+                                result.put(succ, succAs);
                                 if (terminatePred.test(succ)) {
                                     return new ReachResult<>(succ, reachable, result);
                                 }
@@ -391,7 +389,7 @@ public final class OneSEVPAs {
      * {@code sevpa.accepts(w) == true}, {@code null} if such a word does not exist.
      */
     public static <L, I> @Nullable Word<I> findAcceptedWord(OneSEVPA<L, I> sevpa, VPAlphabet<I> alphabet) {
-        return computeAccessSequence(sevpa, alphabet, sevpa::isAcceptingLocation);
+        return computeAccessSequence(sevpa, alphabet, sevpa::getStateProperty);
     }
 
     /**
@@ -410,7 +408,7 @@ public final class OneSEVPAs {
      * {@code sevpa.accepts(w) == false}, {@code null} if such a word does not exist.
      */
     public static <L, I> @Nullable Word<I> findRejectedWord(OneSEVPA<L, I> sevpa, VPAlphabet<I> alphabet) {
-        return computeAccessSequence(sevpa, alphabet, l -> !sevpa.isAcceptingLocation(l));
+        return computeAccessSequence(sevpa, alphabet, Predicate.not(sevpa::getStateProperty));
     }
 
     /**
@@ -479,13 +477,14 @@ public final class OneSEVPAs {
                                                                              L init1,
                                                                              L init2,
                                                                              VPAlphabet<I> alphabet) {
-        if (sevpa.isAcceptingLocation(init1) != sevpa.isAcceptingLocation(init2)) {
+        if (sevpa.getStateProperty(init1) != sevpa.getStateProperty(init2)) {
             return Pair.of(Word.epsilon(), Word.epsilon());
         }
 
-        final ArrayStorage<Word<I>> as = computeAccessSequences(sevpa, alphabet);
+        final Mapping<L, Word<I>> as = computeAccessSequences(sevpa, alphabet);
+        final StateIDs<L> stateIDs = sevpa.stateIDs();
         final IntDisjointSets uf = new UnionFindRemSP(sevpa.size());
-        uf.link(sevpa.getLocationId(init1), sevpa.getLocationId(init2));
+        uf.link(stateIDs.getStateId(init1), stateIDs.getStateId(init2));
 
         final Queue<Record<L, I>> queue = new ArrayDeque<>();
         queue.add(new Record<>(init1, init2));
@@ -508,12 +507,12 @@ public final class OneSEVPAs {
                     throw new IllegalArgumentException("Only total models are supported");
                 }
 
-                if (sevpa.isAcceptingLocation(succ1) != sevpa.isAcceptingLocation(succ2)) {
+                if (sevpa.getStateProperty(succ1) != sevpa.getStateProperty(succ2)) {
                     lastPair = pair;
                     break explore;
                 }
 
-                final int r1 = uf.find(sevpa.getLocationId(succ1)), r2 = uf.find(sevpa.getLocationId(succ2));
+                final int r1 = uf.find(stateIDs.getStateId(succ1)), r2 = uf.find(stateIDs.getStateId(succ2));
 
                 if (r1 == r2) {
                     continue;
@@ -531,7 +530,7 @@ public final class OneSEVPAs {
                     final Word<I> rWord = Word.fromLetter(r);
 
                     // check l as source location for l1/l2
-                    for (L l : sevpa.getLocations()) {
+                    for (L l : sevpa.getStates()) {
                         final int sym = sevpa.encodeStackSym(l, c);
                         final L rSucc1 = sevpa.getReturnSuccessor(l1, r, sym);
                         final L rSucc2 = sevpa.getReturnSuccessor(l2, r, sym);
@@ -540,15 +539,14 @@ public final class OneSEVPAs {
                             throw new IllegalArgumentException("Only total models are supported");
                         }
 
-                        final Pair<Word<I>, Word<I>> pair =
-                                Pair.of(Word.fromWords(as.get(sevpa.getLocationId(l)), cWord), rWord);
+                        final Pair<Word<I>, Word<I>> pair = Pair.of(Word.fromWords(as.get(l), cWord), rWord);
 
-                        if (sevpa.isAcceptingLocation(rSucc1) != sevpa.isAcceptingLocation(rSucc2)) {
+                        if (sevpa.getStateProperty(rSucc1) != sevpa.getStateProperty(rSucc2)) {
                             lastPair = pair;
                             break explore;
                         }
 
-                        final int r1 = uf.find(sevpa.getLocationId(rSucc1)), r2 = uf.find(sevpa.getLocationId(rSucc2));
+                        final int r1 = uf.find(stateIDs.getStateId(rSucc1)), r2 = uf.find(stateIDs.getStateId(rSucc2));
 
                         if (r1 == r2) {
                             continue;
@@ -560,7 +558,7 @@ public final class OneSEVPAs {
                     }
 
                     // check l1/l2 as source location for l
-                    for (L l : sevpa.getLocations()) {
+                    for (L l : sevpa.getStates()) {
                         final int sym1 = sevpa.encodeStackSym(l1, c);
                         final int sym2 = sevpa.encodeStackSym(l2, c);
                         final L rSucc1 = sevpa.getReturnSuccessor(l, r, sym1);
@@ -571,14 +569,14 @@ public final class OneSEVPAs {
                         }
 
                         final Pair<Word<I>, Word<I>> pair =
-                                Pair.of(Word.epsilon(), Word.fromWords(cWord, as.get(sevpa.getLocationId(l)), rWord));
+                                Pair.of(Word.epsilon(), Word.fromWords(cWord, as.get(l), rWord));
 
-                        if (sevpa.isAcceptingLocation(rSucc1) != sevpa.isAcceptingLocation(rSucc2)) {
+                        if (sevpa.getStateProperty(rSucc1) != sevpa.getStateProperty(rSucc2)) {
                             lastPair = pair;
                             break explore;
                         }
 
-                        final int r1 = uf.find(sevpa.getLocationId(rSucc1)), r2 = uf.find(sevpa.getLocationId(rSucc2));
+                        final int r1 = uf.find(stateIDs.getStateId(rSucc1)), r2 = uf.find(stateIDs.getStateId(rSucc2));
 
                         if (r1 == r2) {
                             continue;
@@ -630,12 +628,13 @@ public final class OneSEVPAs {
     public static <L, I> Collection<Pair<Word<I>, Word<I>>> findCharacterizingSet(OneSEVPA<L, I> sevpa,
                                                                                   VPAlphabet<I> alphabet) {
 
-        final ArrayStorage<Word<I>> as = computeAccessSequences(sevpa, alphabet);
+        final DeterministicAcceptorTS<State<L>, I> semantics = sevpa.getSemantics();
+        final Mapping<L, Word<I>> as = computeAccessSequences(sevpa, alphabet);
         final List<L> acceptingLocations = new ArrayList<>(sevpa.size());
         final List<L> rejectionLocations = new ArrayList<>(sevpa.size());
 
-        for (L l : sevpa.getLocations()) {
-            if (sevpa.isAcceptingLocation(l)) {
+        for (L l : sevpa.getStates()) {
+            if (sevpa.getStateProperty(l)) {
                 acceptingLocations.add(l);
             } else {
                 rejectionLocations.add(l);
@@ -672,9 +671,7 @@ public final class OneSEVPAs {
             final List<L> acceptingBucket = new ArrayList<>(block.size());
             final List<L> rejectingBucket = new ArrayList<>(block.size());
 
-            if (sevpa.accepts(Word.fromWords(sepWord.getFirst(),
-                                             as.get(sevpa.getLocationId(l1)),
-                                             sepWord.getSecond()))) {
+            if (semantics.accepts(Word.fromWords(sepWord.getFirst(), as.get(l1), sepWord.getSecond()))) {
                 acceptingBucket.add(l1);
                 rejectingBucket.add(l2);
             } else {
@@ -684,9 +681,7 @@ public final class OneSEVPAs {
 
             while (blockIter.hasNext()) {
                 final L next = blockIter.next();
-                if (sevpa.accepts(Word.fromWords(sepWord.getFirst(),
-                                                 as.get(sevpa.getLocationId(next)),
-                                                 sepWord.getSecond()))) {
+                if (semantics.accepts(Word.fromWords(sepWord.getFirst(), as.get(next), sepWord.getSecond()))) {
                     acceptingBucket.add(next);
                 } else {
                     rejectingBucket.add(next);
@@ -733,9 +728,9 @@ public final class OneSEVPAs {
 
         final @Nullable L terminateLoc;
         final List<L> reachableLocs;
-        final ArrayStorage<Word<I>> accessSequences;
+        final Mapping<L, Word<I>> accessSequences;
 
-        ReachResult(@Nullable L terminateLoc, List<L> reachableLocs, ArrayStorage<Word<I>> accessSequences) {
+        ReachResult(@Nullable L terminateLoc, List<L> reachableLocs, Mapping<L, Word<I>> accessSequences) {
             this.terminateLoc = terminateLoc;
             this.reachableLocs = reachableLocs;
             this.accessSequences = accessSequences;

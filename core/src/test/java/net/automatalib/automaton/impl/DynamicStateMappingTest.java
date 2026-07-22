@@ -18,8 +18,9 @@ package net.automatalib.automaton.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.ShrinkableAutomaton;
+import net.automatalib.automaton.concept.Shrinkable;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.util.TestUtil;
 import net.automatalib.common.util.mapping.MutableMapping;
@@ -43,7 +44,7 @@ public class DynamicStateMappingTest {
         testAutomaton(TestUtil.constructMealy(CompactMealy::new));
     }
 
-    private static <S> void testShrinkableAutomaton(ShrinkableAutomaton<S, ?, ?, ?, ?> automaton) {
+    private static <S, M extends Shrinkable<S> & MutableAutomaton<S, ?, ?, ?, ?>> void testShrinkableAutomaton(M automaton) {
 
         final List<S> states = new ArrayList<>(automaton.getStates());
 
