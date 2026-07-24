@@ -16,7 +16,6 @@
 package net.automatalib.serialization;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.ts.simple.SimpleTS;
 
 /**
  * A utility data class, that allows to pair a model that can react to input symbols with a corresponding alphabet.
@@ -26,7 +25,7 @@ import net.automatalib.ts.simple.SimpleTS;
  * @param <M>
  *         the model type
  */
-public class InputModelData<I, M extends SimpleTS<?, I>> {
+public class InputModelData<I, M> {
 
     public final M model;
     public final Alphabet<I> alphabet;

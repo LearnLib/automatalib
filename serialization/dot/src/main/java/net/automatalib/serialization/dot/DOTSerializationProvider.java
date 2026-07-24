@@ -15,30 +15,51 @@
  */
 package net.automatalib.serialization.dot;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Writer;
 
+import net.automatalib.automaton.Automaton;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.graph.Graph;
+import net.automatalib.graph.concept.GraphViewable;
+import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.serialization.ModelSerializer;
 
-public final class DOTSerializationProvider implements ModelSerializer<Graph<?, ?>> {
-
-    private static final DOTSerializationProvider INSTANCE = new DOTSerializationProvider();
+public final class DOTSerializationProvider {
 
     private DOTSerializationProvider() {
         // prevent instantiation
     }
 
-    public static DOTSerializationProvider getInstance() {
-        return INSTANCE;
+    public static ModelSerializer<Graph<?, ?>> forGraph() {
+        return (os, model) -> {
+            try (Writer w = IOUtil.asNonClosingUTF8Writer(os)) {
+                GraphDOT.write(model, w);
+            }
+        };
     }
 
-    @Override
-    public void writeModel(OutputStream os, Graph<?, ?> model) throws IOException {
-        try (Writer w = IOUtil.asNonClosingUTF8Writer(os)) {
-            GraphDOT.write(model, w);
-        }
+    public static ModelSerializer<GraphViewable> forGraphViewable() {
+        return (os, model) -> {
+            try (Writer w = IOUtil.asNonClosingUTF8Writer(os)) {
+                GraphDOT.write(model, w);
+            }
+        };
     }
+
+    public static <I, M extends GraphViewable> InputModelSerializer<I, M> forGraphViewableInput() {
+        return (os, model, alphabet) -> {
+            try (Writer w = IOUtil.asNonClosingUTF8Writer(os)) {
+                GraphDOT.write(model, w);
+            }
+        };
+    }
+
+    public static <I, M extends Automaton<?, I, ?>> InputModelSerializer<I, M> forAutomaton() {
+        return (os, model, alphabet) -> {
+            try (Writer w = IOUtil.asNonClosingUTF8Writer(os)) {
+                GraphDOT.write(model.transitionGraphView(alphabet), w);
+            }
+        };
+    }
+
 }

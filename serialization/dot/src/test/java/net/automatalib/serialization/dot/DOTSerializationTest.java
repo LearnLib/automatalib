@@ -15,17 +15,19 @@
  */
 package net.automatalib.serialization.dot;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.graph.TransitionEdge;
@@ -43,8 +45,11 @@ import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.ProceduralModalProcessGraph;
+import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.graph.impl.CompactUniversalGraph;
 import net.automatalib.graph.impl.DefaultCFMPS;
+import net.automatalib.serialization.InputModelSerializer;
+import net.automatalib.serialization.ModelSerializer;
 import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
@@ -237,10 +242,56 @@ public class DOTSerializationTest {
     }
 
     @Test
-    public void doNotCloseOutputStreamTest() throws IOException {
-        DOTSerializationProvider.getInstance()
-                                .writeModel(new UnclosableOutputStream(OutputStream.nullOutputStream()),
-                                            DOTSerializationUtil.GRAPH);
+    public void doNotCloseOutputStreamTestAutomaton() throws IOException {
+        final InputModelSerializer<String, DFA<?, String>> provider = DOTSerializationProvider.forAutomaton();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        // check that they are not closing
+        provider.writeModel(new UnclosableOutputStream(baos),
+                            DOTSerializationUtil.DFA,
+                            DOTSerializationUtil.DFA.getInputAlphabet());
+
+        // check that they are actually writing
+        checkDOTOutput(w -> w.append(baos.toString(StandardCharsets.UTF_8)), DOTSerializationUtil.DFA_RESOURCE);
+    }
+
+    @Test
+    public void doNotCloseOutputStreamTestGraph() throws IOException {
+        final ModelSerializer<Graph<?, ?>> provider = DOTSerializationProvider.forGraph();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        // check that they are not closing
+        provider.writeModel(new UnclosableOutputStream(baos), DOTSerializationUtil.SPA.graphView());
+
+        // check that they are actually writing
+        checkDOTOutput(w -> w.append(baos.toString(StandardCharsets.UTF_8)), DOTSerializationUtil.SPA_RESOURCE);
+    }
+
+    @Test
+    public void doNotCloseOutputStreamTestGraphViewable() throws IOException {
+        final ModelSerializer<GraphViewable> provider = DOTSerializationProvider.forGraphViewable();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        // check that they are not closing
+        provider.writeModel(new UnclosableOutputStream(baos), DOTSerializationUtil.SPA);
+
+        // check that they are actually writing
+        checkDOTOutput(w -> w.append(baos.toString(StandardCharsets.UTF_8)), DOTSerializationUtil.SPA_RESOURCE);
+    }
+
+    @Test
+    public void doNotCloseOutputStreamTestGraphViewableInput() throws IOException {
+        final InputModelSerializer<Character, GraphViewable> provider =
+                DOTSerializationProvider.forGraphViewableInput();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        // check that they are not closing
+        provider.writeModel(new UnclosableOutputStream(baos),
+                            DOTSerializationUtil.SPA,
+                            DOTSerializationUtil.SPA.getInputAlphabet());
+
+        // check that they are actually writing
+        checkDOTOutput(w -> w.append(baos.toString(StandardCharsets.UTF_8)), DOTSerializationUtil.SPA_RESOURCE);
     }
 
     private void checkDOTOutput(ThrowingWriter writer, String resource) throws IOException {

@@ -34,7 +34,7 @@ import net.automatalib.ts.simple.SimpleTS;
  *         the type of objects implementing classes can deserialize
  */
 @FunctionalInterface
-public interface InputModelSerializer<I, M extends SimpleTS<?, I>> extends ModelSerializer<InputModelData<I, M>> {
+public interface InputModelSerializer<I, M> extends ModelSerializer<InputModelData<I, M>> {
 
     /**
      * Writes the model to the given output stream. If the format is a textual one, the output is typically encoded in
