@@ -18,7 +18,7 @@ package net.automatalib.serialization.aut;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -44,7 +44,7 @@ public final class AUTWriter<I> implements InputModelSerializer<I, SimpleAutomat
                                              Function<I, String> inputTransformer,
                                              OutputStream os) throws IOException {
 
-        final Set<TransitionTriple<S, I>> transitions = new HashSet<>();
+        final Set<TransitionTriple<S, I>> transitions = new LinkedHashSet<>();
 
         for (S s : automaton.getStates()) {
             for (I i : alphabet) {
