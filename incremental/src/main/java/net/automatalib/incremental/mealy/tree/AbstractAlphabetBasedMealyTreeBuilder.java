@@ -91,7 +91,8 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
 
     @Override
     public Graph<Node<O>, ?> asGraph() {
-        return new MealyGraphView<>(new MealyMachineView(), inputAlphabet) {
+        return new MealyGraphView<>(new AutomatonView(), inputAlphabet) {
+
             @Override
             public VisualizationHelper<Node<O>, TransitionEdge<I, Edge<Node<O>, O>>> getVisualizationHelper() {
                 return new net.automatalib.incremental.mealy.VisualizationHelper<>(automaton);
@@ -99,8 +100,12 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
         };
     }
 
-    private final class MealyMachineView extends TransitionSystemView
-            implements MealyMachine<Node<O>, I, Edge<Node<O>, O>, O> {
+    @Override
+    public MealyMachine<?, I, ?, O> asTransitionSystem() {
+        return new AutomatonView();
+    }
+
+    private final class AutomatonView extends AbstractAutomatonView {
 
         @Override
         public Collection<Node<O>> getStates() {
@@ -108,8 +113,8 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
         }
 
         /*
-         * We need to override the default MooreMachine mapping, because its StateIDStaticMapping class requires our
-         * nodeIDs, which requires our states, which requires our nodeIDs, which requires ... infinite loop!
+         * We need to override the default MealyMachine mapping, because its StateIDStaticMapping class requires our
+         * stateIDs, which requires our states, which requires our stateIDs, which requires ... infinite loop!
          */
         @Override
         public <V> MutableMapping<Node<O>, V> createStaticStateMapping() {

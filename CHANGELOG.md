@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     * `CommonStyles`
 * `SEVPA`s have been adjusted to the new structure/semantics split, by now implementing `UniversalAutomaton` and `DeterministicSemantics`.
 * `AbstractDDSolver` no longer implements the `ModelChecker` interface to prevent possible conflicts with how systems are managed (an `AbstractDDSolver` is inherently linked to a specific CFMPS instance, whereas a `ModelChecker` should handle arbitrary ones). Instead, obtain M3C-based model checkers via the new `M3CChecker` factory.
+* `IncrementalConstruction#asTransitionSystem` now returns a finite automaton view. This is in line with `#asGraph` which already required a finite representation before.
 * The `IntAbstraction` interfaces have been moved to their respective implementations in the `net.automatalib.automaton.abstraction` package.
 * The `ShrinkableAutomaton` interface has been replaced with the `Shrinkable` concept.
 * The `compute{State,Suffix,}Output` concepts from `Det{Suffix,}OutputAutomaton` have been lifted to infinite-state transition systems. As part of this refactoring, some inconsistencies have been addressed. Previously, for `Word`-output systems, `computeSuffixOutput` threw an `UndefinedPropertyAccessException` if the prefix traversed an undefined transition but not if the suffix did (here, the output would only be cut short). Now, both methods simply early-exit output computation. Furthermore, these changes also include the following renamings:

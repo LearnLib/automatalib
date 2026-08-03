@@ -34,7 +34,6 @@ import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.moore.IncrementalMooreBuilder;
-import net.automatalib.ts.output.MooreTransitionSystem;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
@@ -202,13 +201,13 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
     }
 
     @Override
-    public MooreTransitionSystem<?, I, ?, O> asTransitionSystem() {
-        return new TransitionSystemView();
+    public MooreMachine<?, I, ?, O> asTransitionSystem() {
+        return new AutomatonView();
     }
 
     @Override
     public Graph<?, ?> asGraph() {
-        return new MooreGraphView<>(new TransitionSystemView(), alphabet) {
+        return new MooreGraphView<>(new AutomatonView(), alphabet) {
 
             @Override
             public VisualizationHelper<Node<O>, TransitionEdge<I, Node<O>>> getVisualizationHelper() {
@@ -240,7 +239,7 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
         }
     }
 
-    private final class TransitionSystemView implements MooreMachine<Node<O>, I, Node<O>, O> {
+    private final class AutomatonView implements MooreMachine<Node<O>, I, Node<O>, O> {
 
         @Override
         public @Nullable Node<O> getInitialState() {

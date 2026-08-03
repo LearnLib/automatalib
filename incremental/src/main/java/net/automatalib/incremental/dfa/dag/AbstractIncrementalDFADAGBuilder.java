@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Queue;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.graph.TransitionEdge;
@@ -37,7 +36,6 @@ import net.automatalib.graph.Graph;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
-import net.automatalib.ts.UniversalDTS;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -472,13 +470,13 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
     }
 
     @Override
-    public UniversalDTS<?, I, ?, Acceptance, Void> asTransitionSystem() {
-        return new TransitionSystemView();
+    public DFA<?, I> asTransitionSystem() {
+        return new AutomatonView();
     }
 
     @Override
     public Graph<?, ?> asGraph() {
-        return new UniversalAutomatonGraphView<>(new TransitionSystemView(), inputAlphabet) {
+        return new UniversalAutomatonGraphView<>(new AutomatonView(), inputAlphabet) {
 
             @Override
             public VisualizationHelper<State, TransitionEdge<I, State>> getVisualizationHelper() {
@@ -532,8 +530,7 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         }
     }
 
-    private final class TransitionSystemView implements UniversalDTS<State, I, State, Acceptance, Void>,
-                                                        UniversalAutomaton<State, I, State, Acceptance, Void> {
+    private final class AutomatonView implements DFA<State, I> {
 
         @Override
         public State getSuccessor(State transition) {
@@ -555,13 +552,8 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         }
 
         @Override
-        public Acceptance getStateProperty(State state) {
-            return state.getAcceptance();
-        }
-
-        @Override
-        public Void getTransitionProperty(State transition) {
-            return null;
+        public boolean isAccepting(State state) {
+            return state.getAcceptance() == Acceptance.TRUE;
         }
 
         @Override

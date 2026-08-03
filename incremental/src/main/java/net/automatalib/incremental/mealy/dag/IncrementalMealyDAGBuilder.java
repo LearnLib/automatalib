@@ -38,7 +38,6 @@ import net.automatalib.common.util.UnionFind;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
-import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -564,7 +563,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
     }
 
     @Override
-    public MealyTransitionSystem<?, I, ?, O> asTransitionSystem() {
+    public MealyMachine<?, I, ?, O> asTransitionSystem() {
         return new AutomatonView();
     }
 

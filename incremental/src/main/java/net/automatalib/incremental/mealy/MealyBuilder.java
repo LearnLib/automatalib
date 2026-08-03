@@ -21,7 +21,6 @@ import java.util.List;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.incremental.IncrementalConstruction;
-import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
@@ -63,6 +62,6 @@ public interface MealyBuilder<I, O>
     }
 
     @Override
-    MealyTransitionSystem<?, I, ?, O> asTransitionSystem();
+    MealyMachine<?, I, ?, O> asTransitionSystem();
 
 }

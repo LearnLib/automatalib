@@ -22,7 +22,6 @@ import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
-import net.automatalib.ts.output.MooreTransitionSystem;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
@@ -76,6 +75,6 @@ public interface IncrementalMooreBuilder<I, O>
     void insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
 
     @Override
-    MooreTransitionSystem<?, I, ?, O> asTransitionSystem();
+    MooreMachine<?, I, ?, O> asTransitionSystem();
 
 }

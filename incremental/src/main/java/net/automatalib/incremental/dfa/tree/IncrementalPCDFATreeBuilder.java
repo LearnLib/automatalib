@@ -29,7 +29,6 @@ import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
-import net.automatalib.ts.UniversalDTS;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -168,13 +167,13 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
     }
 
     @Override
-    public UniversalDTS<?, I, ?, Acceptance, Void> asTransitionSystem() {
-        return new TransitionSystemView();
+    public DFA<?, I> asTransitionSystem() {
+        return new AutomatonView();
     }
 
     @Override
     public Graph<?, ?> asGraph() {
-        return new UniversalAutomatonGraphView<>(new TransitionSystemView(), inputAlphabet) {
+        return new UniversalAutomatonGraphView<>(new AutomatonView(), inputAlphabet) {
 
             @Override
             public VisualizationHelper<Node, TransitionEdge<I, Node>> getVisualizationHelper() {
@@ -330,7 +329,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
         }
     }
 
-    private final class TransitionSystemView extends IncrementalDFATreeBuilder<I>.TransitionSystemView {
+    private final class AutomatonView extends IncrementalDFATreeBuilder<I>.AutomatonView {
 
         @Override
         public @Nullable Node getTransition(Node state, I input) {

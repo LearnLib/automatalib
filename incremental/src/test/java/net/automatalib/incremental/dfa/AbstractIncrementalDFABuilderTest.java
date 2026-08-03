@@ -187,16 +187,16 @@ public abstract class AbstractIncrementalDFABuilderTest {
         testTSViewInternal(incDfa.asTransitionSystem());
     }
 
-    private static <S> void testTSViewInternal(UniversalDTS<S, Character, ?, Acceptance, Void> view) {
+    private static <S> void testTSViewInternal(UniversalDTS<S, Character, ?, Boolean, Void> view) {
         final S s1 = view.getState(W_1);
         final S s2 = view.getState(W_2);
         final S s3 = view.getState(W_3);
         final S s4 = view.getState(W_4);
 
-        Assert.assertTrue(view.getStateProperty(s1).toBoolean());
-        Assert.assertFalse(view.getStateProperty(s2).toBoolean());
-        Assert.assertTrue(view.getStateProperty(s3).toBoolean());
-        Assert.assertTrue(view.getStateProperty(s4).toBoolean());
+        Assert.assertTrue(view.getStateProperty(s1));
+        Assert.assertFalse(view.getStateProperty(s2));
+        Assert.assertTrue(view.getStateProperty(s3));
+        Assert.assertTrue(view.getStateProperty(s4));
     }
 
     @Test

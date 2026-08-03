@@ -24,7 +24,6 @@ import java.util.Objects;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.incremental.mealy.MealyBuilder;
-import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -117,11 +116,6 @@ abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<I, O> {
         return null;
     }
 
-    @Override
-    public MealyTransitionSystem<?, I, ?, O> asTransitionSystem() {
-        return new TransitionSystemView();
-    }
-
     abstract @Nullable Edge<N, O> getEdge(N node, I symbol);
 
     abstract N createNode();
@@ -143,7 +137,7 @@ abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<I, O> {
         }
     }
 
-    class TransitionSystemView implements MealyTransitionSystem<N, I, Edge<N, O>, O> {
+    abstract class AbstractAutomatonView implements MealyMachine<N, I, Edge<N, O>, O> {
 
         @Override
         public @Nullable Edge<N, O> getTransition(N state, I input) {

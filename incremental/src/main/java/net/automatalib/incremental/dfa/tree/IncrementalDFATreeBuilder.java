@@ -21,7 +21,6 @@ import java.util.Deque;
 import java.util.Iterator;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
@@ -33,7 +32,6 @@ import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
-import net.automatalib.ts.UniversalDTS;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
@@ -189,13 +187,13 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
     }
 
     @Override
-    public UniversalDTS<?, I, ?, Acceptance, Void> asTransitionSystem() {
-        return new TransitionSystemView();
+    public DFA<?, I> asTransitionSystem() {
+        return new AutomatonView();
     }
 
     @Override
     public Graph<?, ?> asGraph() {
-        return new UniversalAutomatonGraphView<>(new TransitionSystemView(), inputAlphabet) {
+        return new UniversalAutomatonGraphView<>(new AutomatonView(), inputAlphabet) {
 
             @Override
             public VisualizationHelper<Node, TransitionEdge<I, Node>> getVisualizationHelper() {
@@ -225,13 +223,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
     }
 
-    class TransitionSystemView implements UniversalDTS<Node, I, Node, Acceptance, Void>,
-                                          UniversalAutomaton<Node, I, Node, Acceptance, Void> {
-
-        @Override
-        public Node getSuccessor(Node transition) {
-            return transition;
-        }
+    class AutomatonView implements DFA<Node, I> {
 
         @Override
         public @Nullable Node getTransition(Node state, I input) {
@@ -245,13 +237,8 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
 
         @Override
-        public Acceptance getStateProperty(Node state) {
-            return state.getAcceptance();
-        }
-
-        @Override
-        public Void getTransitionProperty(Node transition) {
-            return null;
+        public boolean isAccepting(Node state) {
+            return state.getAcceptance() == Acceptance.TRUE;
         }
 
         @Override
@@ -260,8 +247,8 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
 
         /*
-         * We need to override the default MooreMachine mapping, because its StateIDStaticMapping class requires our
-         * nodeIDs, which requires our states, which requires our nodeIDs, which requires ... infinite loop!
+         * We need to override the default DFA mapping, because its StateIDStaticMapping class requires our
+         * stateIDs, which requires our states, which requires our stateIDs, which requires ... infinite loop!
          */
         @Override
         public <V> MutableMapping<Node, V> createStaticStateMapping() {

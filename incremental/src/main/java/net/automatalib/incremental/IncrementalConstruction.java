@@ -17,8 +17,8 @@ package net.automatalib.incremental;
 
 import java.util.Collection;
 
+import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.graph.Graph;
-import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -74,5 +74,5 @@ public interface IncrementalConstruction<A, I> {
      *
      * @return a transition system view on the current state of the construction
      */
-    DeterministicTransitionSystem<?, I, ?> asTransitionSystem();
+    DeterministicAutomaton<?, I, ?> asTransitionSystem();
 }

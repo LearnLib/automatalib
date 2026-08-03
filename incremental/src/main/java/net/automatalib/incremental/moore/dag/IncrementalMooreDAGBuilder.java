@@ -39,7 +39,6 @@ import net.automatalib.common.util.UnionFind;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.moore.IncrementalMooreBuilder;
-import net.automatalib.ts.output.MooreTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -587,7 +586,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
     }
 
     @Override
-    public MooreTransitionSystem<?, I, ?, O> asTransitionSystem() {
+    public MooreMachine<?, I, ?, O> asTransitionSystem() {
         return new AutomatonView();
     }
 

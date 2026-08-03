@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
@@ -100,6 +101,25 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractMealyTreeB
     @Override
     public Graph<?, ?> asGraph() {
         return new GraphView();
+    }
+
+    @Override
+    public MealyMachine<?, I, ?, O> asTransitionSystem() {
+        return new AutomatonView(new GraphView());
+    }
+
+    private final class AutomatonView extends AbstractAutomatonView {
+
+        private final GraphView graphView;
+
+        private AutomatonView(GraphView graphView) {
+            this.graphView = graphView;
+        }
+
+        @Override
+        public Collection<DynamicNode<I, O>> getStates() {
+            return graphView.getNodes();
+        }
     }
 
     private final class GraphView implements Graph<DynamicNode<I, O>, Entry<I, Edge<DynamicNode<I, O>, O>>> {
