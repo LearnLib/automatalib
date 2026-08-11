@@ -89,7 +89,7 @@ public final class DOT {
             final String[] dotCheck = buildRawDOTCommand("-V");
             return ProcessUtil.invokeProcess(dotCheck) == 0;
         } catch (IOException | InterruptedException ex) {
-            LOGGER.error("Error executing dot", ex);
+            LOGGER.debug("Error executing dot", ex);
         }
         return false;
     }

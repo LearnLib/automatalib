@@ -46,6 +46,6 @@ class NoopVP implements VisualizationProvider {
                                  List<VisualizationHelper<N, ? super E>> additionalHelpers,
                                  boolean modal,
                                  Map<String, String> options) {
-        LOGGER.error("Attempted to visualize graph, but no usable visualization provider was configured.");
+        LOGGER.warn("Attempted to visualize graph, but no usable visualization provider was configured.");
     }
 }
