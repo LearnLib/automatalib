@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.13.0-SNAPSHOT] - Unreleased
+## [13.0.0-SNAPSHOT] - Unreleased
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.12.1...HEAD)
 
@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+* AutomataLib shifted version numbers to more prominently communicate breaking changes with major versions.
 * AutomataLib now requires Java 17 at runtime.
   * The following classes have been refactored to `record`s:
     * `BricsTransitionProperty`
