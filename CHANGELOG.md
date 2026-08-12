@@ -2,9 +2,15 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [13.0.0-SNAPSHOT] - Unreleased
 
-[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.12.1...HEAD)
+## [14.0.0-SNAPSHOT] - Unreleased
+
+[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-13.0.0...HEAD)
+
+
+## [13.0.0] - 2026-08-12
+
+[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.12.1...automatalib-13.0.0)
 
 ### Added
 
