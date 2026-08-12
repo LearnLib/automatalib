@@ -128,11 +128,6 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
     }
 
     @Override
-    public Void getTransitionProperty(Pair<L1, L2> transition) {
-        return null;
-    }
-
-    @Override
     public Pair<L1, L2> getInitialState() {
         return Pair.of(sevpa1.getInitialState(), sevpa2.getInitialState());
     }

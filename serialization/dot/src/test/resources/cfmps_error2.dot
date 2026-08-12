@@ -1,4 +1,4 @@
-// erroneous CFMPS with referencing nodes corss-procedure
+// erroneous CFMPS with referencing nodes cross-procedure
 
 digraph g {
 

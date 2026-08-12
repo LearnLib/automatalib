@@ -121,7 +121,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
             }
 
             @Override
-            public @Nullable String getMainProcess() {
+            public String getMainProcess() {
                 return "P";
             }
         };

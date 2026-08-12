@@ -24,8 +24,8 @@ Furthermore, a plethora of graph-/automata-based algorithms is implemented, cove
 * model-based testing (adaptive distinguishing sequences, (partial) W-method, characterizing sets, state/transition covers)
 * model verification (LTL checking (via [LTSmin][ltsmin]), CTL & µ-calculus checking (via [M3C][m3c] & [ADDlib][addlib]))
 
-While we strive to deliver code at a high quality, please note that there exist parts of the library that still need thorough testing.
-Contributions -- whether it is in the form of new features, better documentation or tests -- are welcome.
+While we strive to deliver code at a high quality, a healthy community is central to future growth.
+Contributions -- whether it is in the form of new features, improved documentation or bugfixes -- are welcome.
 
 ## Build Instructions
 
@@ -54,14 +54,14 @@ For developing the code base of AutomataLib it is suggested to use one of the ma
 
 * For [IntelliJ IDEA][intellij]:
   1. Select `File` -> `New` -> `Project from existing sources` and select the folder containing the development checkout.
-  1. Choose "Import Project from external model", select "Maven" and click `Create`.
+  2. Choose "Import Project from external model", select "Maven" and click `Create`.
 
 * For [Eclipse][eclipse]:
   1. **Note**: AutomataLib uses annotation processing on several occasions throughout the build process.
   This is usually handled correctly by Maven.
   However, for Eclipse, you may need to manually enable annotation processing under `Preferences` -> `Maven` -> `Annotation Processing`.
-  1. Select `File` -> `Import...` and select "Existing Maven Projects".
-  1. Select the folder containing the development checkout as the root directory and click `Finish`.
+  2. Select `File` -> `Import...` and select "Existing Maven Projects".
+  3. Select the folder containing the development checkout as the root directory and click `Finish`.
 
 
 ## Documentation

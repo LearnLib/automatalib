@@ -97,7 +97,7 @@ public abstract class AbstractMutableMealyTest {
         trace.add(TestUtil.IN_A);
 
         // find last state in 3-state automaton
-        S laststate = fm.getSuccessor(fm.getInitialState(), trace);
+        S lastState = fm.getSuccessor(fm.getInitialState(), trace);
 
         // prepare and execute trace
         trace.add(TestUtil.IN_A);
@@ -109,8 +109,8 @@ public abstract class AbstractMutableMealyTest {
         Assert.assertEquals(output.get(2), TestUtil.OUT_ERROR);
 
         // redefine transition with diverging output
-        fm.removeAllTransitions(laststate, TestUtil.IN_A);
-        fm.addTransition(laststate, TestUtil.IN_A, fm.getInitialState(), TestUtil.OUT_OK);
+        fm.removeAllTransitions(lastState, TestUtil.IN_A);
+        fm.addTransition(lastState, TestUtil.IN_A, fm.getInitialState(), TestUtil.OUT_OK);
 
         // retrace
         output.clear();

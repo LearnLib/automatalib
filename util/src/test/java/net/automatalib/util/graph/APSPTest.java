@@ -111,7 +111,9 @@ public class APSPTest {
                                Integer src,
                                Integer tgt,
                                Integer... expNodes) {
-        List<Integer> nodes = Graphs.toNodeList(res.getShortestPath(src, tgt), graph, src);
+        List<CompactEdge<Float>> sp = res.getShortestPath(src, tgt);
+        Assert.assertNotNull(sp);
+        List<Integer> nodes = Graphs.toNodeList(sp, graph, src);
         Assert.assertEquals(nodes, Arrays.asList(expNodes));
     }
 
