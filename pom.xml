@@ -140,7 +140,7 @@ limitations under the License.
     <modules>
         <module>adapters</module>
         <module>api</module>
-        <module>archetypes</module>
+        <module>archetype</module>
         <module>build-config</module>
         <module>build-parent</module>
         <module>commons</module>
