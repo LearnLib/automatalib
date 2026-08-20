@@ -87,7 +87,7 @@ public class MataSerializationTest {
     @Test
     public void testFailOnWrongFormat() throws IOException {
         try (InputStream is = MataSerializationTest.class.getResourceAsStream("/false-T10-lhs.mata")) {
-            final MataNFAParser<?, String, CompactNFA<String>> reader =
+            final MataNFAParser<String, CompactNFA<String>> reader =
                     new MataNFAParser<>(new CompactNFA.Creator<>(), Function.identity());
 
             Assert.assertThrows(FormatException.class, () -> reader.readModel(is));
@@ -112,7 +112,7 @@ public class MataSerializationTest {
 
         writer.writeModel(baos, nfa, nfa.getInputAlphabet());
 
-        final MataNFAParser<Integer, Integer, CompactNFA<Integer>> reader =
+        final MataNFAParser<Integer, CompactNFA<Integer>> reader =
                 new MataNFAParser<>(new CompactNFA.Creator<>(), Integer::parseInt);
 
         final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
@@ -141,8 +141,7 @@ public class MataSerializationTest {
     @Test
     public void doNotCloseInputStreamTest() throws IOException, FormatException {
         try (InputStream is = MataSerializationTest.class.getResourceAsStream("/easy_basic-01-neg-all1-0.mata")) {
-            final MataNFAParser<?, ?, ?> reader =
-                    new MataNFAParser<>(new CompactNFA.Creator<>(), Function.identity());
+            final MataNFAParser<?, ?> reader = new MataNFAParser<>(new CompactNFA.Creator<>(), Function.identity());
             // assert not throws
             reader.readModel(new UnclosableInputStream(is));
         }

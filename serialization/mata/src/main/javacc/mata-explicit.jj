@@ -61,9 +61,8 @@ class ExplicitMataParser {
 		}
 	}
 
-    public <S, I, A extends MutableNFA<S, I>> InputModelData<I, A> extract(AutomatonCreator<A, I> creator,
-																		   Function<String, I> symbolParser) {
-		Map<String, S> name2State = new HashMap<String, S>(HashUtil.capacity(this.states.size()));
+    public <I, A extends MutableNFA<?, I>> InputModelData<I, A> extract(AutomatonCreator<A, I> creator,
+																		Function<String, I> symbolParser) {
 		Map<String, I> label2Input = new HashMap<String, I>(HashUtil.capacity(this.labels.size()));
 
 		final List<I> inputs = new ArrayList<I>(this.labels.size());
@@ -75,7 +74,15 @@ class ExplicitMataParser {
 		final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
 
 		final A nfa = creator.createAutomaton(alphabet, this.states.size());
+		final MutableNFA<?, I> casted = nfa;
 
+		fillAutomaton(casted, label2Input);
+
+		return new InputModelData<>(nfa, alphabet);
+    }
+
+	private <S, I> void fillAutomaton(MutableNFA<S, I> nfa, Map<String, I> label2Input) {
+		Map<String, S> name2State = new HashMap<String, S>(HashUtil.capacity(this.states.size()));
 		for (String s : this.states) {
 			if (this.initials.contains(s)) {
 				name2State.put(s, nfa.addInitialState(this.finals.contains(s)));
@@ -88,8 +95,6 @@ class ExplicitMataParser {
 							  label2Input.get(t.getSecond()),
 							  name2State.get(t.getThird()));
         }
-
-        return new InputModelData<>(nfa, alphabet);
     }
 }
 

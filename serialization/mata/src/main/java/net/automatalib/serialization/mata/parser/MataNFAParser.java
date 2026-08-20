@@ -32,14 +32,12 @@ import net.automatalib.serialization.InputModelDeserializer;
  * Parser for reading {@link NFA}s from the <a
  * href="https://github.com/VeriFIT/mata/blob/devel/AUTOMATAFORMAT.md">NFA-explicit</a> format.
  *
- * @param <S>
- *         state type
  * @param <I>
  *         input symbol type
  * @param <A>
  *         concrete automaton type
  */
-public class MataNFAParser<S, I, A extends MutableNFA<S, I>> implements InputModelDeserializer<I, A> {
+public class MataNFAParser<I, A extends MutableNFA<?, I>> implements InputModelDeserializer<I, A> {
 
     private final AutomatonCreator<A, I> creator;
     private final Function<String, I> symbolParser;
@@ -73,8 +71,6 @@ public class MataNFAParser<S, I, A extends MutableNFA<S, I>> implements InputMod
      *         the creator of the concrete NFA instance
      * @param symbolParser
      *         the parser for transforming (string-based) labels to concrete input symbols
-     * @param <S>
-     *         state type
      * @param <I>
      *         input symbol type
      * @param <A>
@@ -85,9 +81,9 @@ public class MataNFAParser<S, I, A extends MutableNFA<S, I>> implements InputMod
      * @throws FormatException
      *         if the content of the stream was not in the expected format
      */
-    public static <S, I, A extends MutableNFA<S, I>> InputModelData<I, A> parse(Reader reader,
-                                                                                AutomatonCreator<A, I> creator,
-                                                                                Function<String, I> symbolParser)
+    public static <I, A extends MutableNFA<?, I>> InputModelData<I, A> parse(Reader reader,
+                                                                             AutomatonCreator<A, I> creator,
+                                                                             Function<String, I> symbolParser)
             throws FormatException {
 
         final ExplicitMataParser parser = new ExplicitMataParser(reader);
