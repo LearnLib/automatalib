@@ -178,7 +178,7 @@ private void initials():
 	Token t;
 }
 {
-	<INITIAL> (t = <STRING> { this.initials.add(t.toString()); })*
+	<INITIAL> (t = <STRING> { this.initials.add(t.toString()); this.states.add(t.toString()); })*
 }
 
 private void finals():
@@ -186,7 +186,7 @@ private void finals():
 	Token t;
 }
 {
-	<FINAL> (t = <STRING> { this.finals.add(t.toString()); })*
+	<FINAL> (t = <STRING> { this.finals.add(t.toString()); this.states.add(t.toString()); })*
 }
 
 private void transitions():
