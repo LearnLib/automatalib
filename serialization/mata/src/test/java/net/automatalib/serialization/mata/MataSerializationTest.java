@@ -60,8 +60,7 @@ public class MataSerializationTest {
         MataNFAWriter.write(sw, nfa, alphabet);
 
         Path path =
-                Paths.get(Objects.requireNonNull(MataSerializationTest.class.getResource("/test-output.mata"))
-                                 .toURI());
+                Paths.get(Objects.requireNonNull(MataSerializationTest.class.getResource("/test-output.mata")).toURI());
         String expected = Files.readString(path);
 
         Assert.assertEquals(sw.toString(), expected);
@@ -91,6 +90,23 @@ public class MataSerializationTest {
                     new MataNFAParser<>(new CompactNFA.Creator<>(), Function.identity());
 
             Assert.assertThrows(FormatException.class, () -> reader.readModel(is));
+        }
+    }
+
+    @Test
+    public void testNewLines() throws IOException, FormatException {
+        try (Reader r = IOUtil.asBufferedUTF8Reader(MataSerializationTest.class.getResourceAsStream(
+                "/virus.rules_virus.rules.mata"))) {
+
+            final InputModelData<String, CompactNFA<String>> model =
+                    MataNFAParser.parse(r, new CompactNFA.Creator<>(), Function.identity());
+            final Alphabet<String> alphabet = model.alphabet;
+            final CompactNFA<String> nfa = model.model;
+
+            Assert.assertEquals(nfa.size(), 1);
+            Assert.assertEquals(nfa.getInitialStates().size(), 1);
+            Assert.assertTrue(nfa.isAccepting(nfa.getState(0)));
+            Assert.assertEquals(alphabet.size(), 256);
         }
     }
 

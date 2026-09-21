@@ -143,12 +143,12 @@ private void file():
 		this.finals = new HashSet<String>();
 		this.transitions = new ArrayList<Triple<String, String, String>>();
 	}
-	section() <NEWLINE>
-	(alphabet() <NEWLINE>)?
-	(states() <NEWLINE>)?
-	(initials() <NEWLINE>)?
-	(finals() <NEWLINE>)?
-	transitions() <EOF>
+	section() ((<NEWLINE>)+ | <EOF>)?
+	(alphabet() ((<NEWLINE>)+ | <EOF>))?
+	(states() ((<NEWLINE>)+ | <EOF>))?
+	(initials() ((<NEWLINE>)+ | <EOF>))?
+	(finals() ((<NEWLINE>)+ | <EOF>))?
+	transitions()
 }
 
 private void section():
@@ -202,7 +202,7 @@ private void transition():
 	Token tgt;
 }
 {
-	src = <STRING> input = <STRING> tgt = <STRING> (<NEWLINE> | <EOF>)
+	src = <STRING> input = <STRING> tgt = <STRING> ((<NEWLINE>)+ | <EOF>)
 	{
 		String srcs = src.toString();
 		String inputs = input.toString();
