@@ -15,9 +15,7 @@
  */
 package net.automatalib.incremental.moore.tree;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +32,11 @@ import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.moore.IncrementalMooreBuilder;
+import net.automatalib.incremental.util.DFSepWordFinder;
+import net.automatalib.incremental.util.DFSepWordFinder.Visitor;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -94,62 +92,22 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
     private <S, T> @Nullable Word<I> doFindSeparatingWord(MooreMachine<S, I, T, O> target,
                                                           Collection<? extends I> inputs,
                                                           boolean omitUndefined) {
-        S init2 = target.getInitialState();
 
-        if (root == null && init2 == null) {
-            return null;
-        } else if (root == null || init2 == null) {
-            return omitUndefined ? null : Word.epsilon();
-        }
+        final Visitor<Node<O>, S, Node<O>, T> visitor = new Visitor<>() {
 
-        if (!Objects.equals(root.getOutput(), target.getStateOutput(init2))) {
-            return Word.epsilon();
-        }
-
-        // incomingInput can be null here, because we will always skip the bottom stack element below
-        @SuppressWarnings("nullness")
-        Record<@Nullable S, I, O> init = new Record<>(init2, root, null, inputs.iterator());
-
-        Deque<Record<@Nullable S, I, O>> dfsStack = new ArrayDeque<>();
-        dfsStack.push(init);
-
-        while (!dfsStack.isEmpty()) {
-            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            @NonNull Record<@Nullable S, I, O> rec = dfsStack.peek();
-            if (!rec.inputIt.hasNext()) {
-                dfsStack.pop();
-                continue;
-            }
-            I input = rec.inputIt.next();
-            int inputIdx = alphabet.getSymbolIndex(input);
-
-            Node<O> succ = rec.treeNode.getChild(inputIdx);
-            if (succ == null) {
-                continue;
+            @Override
+            public boolean initConflict(Node<O> incInit, S targetInit) {
+                return !Objects.equals(incInit.getOutput(), target.getStateOutput(targetInit));
             }
 
-            @Nullable S state = rec.automatonState;
-            @Nullable S automatonSucc = state == null ? null : target.getSuccessor(state, input);
-            if (automatonSucc == null && omitUndefined) {
-                continue;
+            @Override
+            public boolean succConflict(Node<O> incTrans, @Nullable T targetTrans) {
+                return targetTrans == null ||
+                       !Objects.equals(incTrans.getOutput(), target.getStateOutput(target.getSuccessor(targetTrans)));
             }
+        };
 
-            if (automatonSucc == null || !Objects.equals(target.getStateOutput(automatonSucc), succ.getOutput())) {
-                WordBuilder<I> wb = new WordBuilder<>(dfsStack.size());
-                wb.append(input);
-
-                dfsStack.pop();
-                while (!dfsStack.isEmpty()) {
-                    wb.append(rec.incomingInput);
-                    rec = dfsStack.pop();
-                }
-                return wb.reverse().toWord();
-            }
-
-            dfsStack.push(new Record<>(automatonSucc, succ, input, inputs.iterator()));
-        }
-
-        return null;
+        return DFSepWordFinder.findSeparatingWord(new AutomatonView(), target, inputs, omitUndefined, visitor);
     }
 
     @Override
@@ -222,21 +180,6 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
                 };
             }
         };
-    }
-
-    private static final class Record<S, I, O> {
-
-        final S automatonState;
-        final Node<O> treeNode;
-        final I incomingInput;
-        final Iterator<? extends I> inputIt;
-
-        Record(S automatonState, Node<O> treeNode, I incomingInput, Iterator<? extends I> inputIt) {
-            this.automatonState = automatonState;
-            this.treeNode = treeNode;
-            this.incomingInput = incomingInput;
-            this.inputIt = inputIt;
-        }
     }
 
     private final class AutomatonView implements MooreMachine<Node<O>, I, Node<O>, O> {

@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-13.0.0...HEAD)
 
+### Fixed
+
+* `IncrementalConstruction#findSeparatingWord` has been fixed for several DAG-based variations. Previous implementations may not have found separating words even though they existed.
+
 ### Removed
 
 * The archetype `net.automatalib.archtypes:basic` has been removed.

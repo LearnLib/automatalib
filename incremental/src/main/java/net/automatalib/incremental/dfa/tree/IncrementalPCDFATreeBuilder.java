@@ -15,24 +15,20 @@
  */
 package net.automatalib.incremental.dfa.tree;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.Deque;
-import java.util.Iterator;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
-import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
+import net.automatalib.incremental.util.DFSepWordFinder;
+import net.automatalib.incremental.util.DFSepWordFinder.Visitor;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -62,80 +58,27 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
                                                Collection<? extends I> inputs,
                                                boolean omitUndefined) {
 
-        S automatonInit = target.getInitialState();
-        if (automatonInit == null) {
-            return omitUndefined ? null : Word.epsilon();
-        }
+        final Visitor<Node, S, Node, S> visitor = new Visitor<>() {
 
-        Acceptance rootAcc = root.getAcceptance();
-        if (rootAcc.conflicts(target.isAccepting(automatonInit))) {
-            return Word.epsilon();
-        }
-        if (rootAcc == Acceptance.FALSE) {
-            return findLive(target, automatonInit, inputs, target.createStaticStateMapping());
-        }
-
-        // incomingInput can be null here, because we will always skip the bottom stack element below
-        @SuppressWarnings("nullness")
-        Record<@Nullable S, I> init = new Record<>(automatonInit, root, null, inputs.iterator());
-
-        Deque<Record<@Nullable S, I>> dfsStack = new ArrayDeque<>();
-        dfsStack.push(init);
-
-        MutableMapping<S, Boolean> deadStates = null;
-
-        while (!dfsStack.isEmpty()) {
-            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            @NonNull Record<@Nullable S, I> rec = dfsStack.peek();
-            if (!rec.inputIt.hasNext()) {
-                dfsStack.pop();
-                continue;
-            }
-            I input = rec.inputIt.next();
-            int inputIdx = inputAlphabet.getSymbolIndex(input);
-
-            Node succ = rec.treeNode.getChild(inputIdx);
-            if (succ == null) {
-                continue;
+            @Override
+            public boolean initConflict(Node incInit, S targetInit) {
+                return incInit.getAcceptance().conflicts(target.isAccepting(targetInit));
             }
 
-            Acceptance acc = succ.getAcceptance();
-
-            S automatonSucc = (rec.automatonState == null) ? null : target.getTransition(rec.automatonState, input);
-            if (automatonSucc == null && (omitUndefined || acc == Acceptance.FALSE)) {
-                continue;
+            @Override
+            public boolean succConflict(Node incTrans, @Nullable S targetTrans) {
+                return incTrans.getAcceptance().conflicts(targetTrans != null && target.isAccepting(targetTrans));
             }
 
-            boolean succAcc = automatonSucc != null && target.isAccepting(automatonSucc);
-
-            Word<I> liveSuffix = null;
-            if (automatonSucc != null && acc == Acceptance.FALSE) {
-                if (deadStates == null) {
-                    deadStates = target.createStaticStateMapping();
-                }
-                liveSuffix = findLive(target, automatonSucc, inputs, deadStates);
+            @Override
+            public boolean continueExploration(Node incSucc, @Nullable S targetSucc) {
+                // we break the DAG contract by making rejecting nodes reflexive
+                // thus we need to explicitly terminate exploration
+                return incSucc.getAcceptance() != Acceptance.FALSE || targetSucc != null;
             }
+        };
 
-            if (acc.conflicts(succAcc) || liveSuffix != null) {
-                WordBuilder<I> wb = new WordBuilder<>(dfsStack.size());
-                wb.append(input);
-
-                dfsStack.pop();
-                while (!dfsStack.isEmpty()) {
-                    wb.append(rec.incomingInput);
-                    rec = dfsStack.pop();
-                }
-                wb.reverse();
-                if (liveSuffix != null) {
-                    wb.append(liveSuffix);
-                }
-                return wb.toWord();
-            }
-
-            dfsStack.push(new Record<>(automatonSucc, succ, input, inputs.iterator()));
-        }
-
-        return null;
+        return DFSepWordFinder.findSeparatingWord(new AutomatonView(), target, inputs, omitUndefined, visitor);
     }
 
     @Override
@@ -255,78 +198,6 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
             sink = new Node(Acceptance.FALSE);
         }
         return sink;
-    }
-
-    private static <S, I> @Nullable Word<I> findLive(DFA<S, I> dfa,
-                                                     S state,
-                                                     Collection<? extends I> inputs,
-                                                     MutableMapping<S, Boolean> deadStates) {
-        if (dfa.isAccepting(state)) {
-            return Word.epsilon();
-        }
-
-        Boolean dead = deadStates.get(state);
-        if (dead != null && dead) {
-            return null;
-        }
-        deadStates.put(state, true);
-
-        // incomingInput can be null here, because we will always skip the bottom stack element below
-        @SuppressWarnings("nullness")
-        FindLiveRecord<@Nullable S, I> init = new FindLiveRecord<>(state, null, inputs.iterator());
-
-        Deque<FindLiveRecord<@Nullable S, I>> dfsStack = new ArrayDeque<>();
-        dfsStack.push(init);
-
-        while (!dfsStack.isEmpty()) {
-            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            @NonNull FindLiveRecord<@Nullable S, I> rec = dfsStack.peek();
-            if (!rec.inputIt.hasNext()) {
-                dfsStack.pop();
-                continue;
-            }
-            I input = rec.inputIt.next();
-
-            @Nullable S s = rec.state;
-            @Nullable S succ = s == null ? null : dfa.getTransition(s, input);
-            if (succ == null) {
-                continue;
-            }
-            if (dfa.isAccepting(succ)) {
-                WordBuilder<I> wb = new WordBuilder<>(dfsStack.size());
-                wb.append(input);
-
-                dfsStack.pop();
-                while (!dfsStack.isEmpty()) {
-                    wb.append(rec.incomingInput);
-                    rec = dfsStack.pop();
-                }
-                return wb.reverse().toWord();
-            }
-
-            dead = deadStates.get(succ);
-            if (dead == null) {
-                dfsStack.push(new FindLiveRecord<>(succ, input, inputs.iterator()));
-                deadStates.put(succ, true);
-            } else {
-                assert dead;
-            }
-        }
-
-        return null;
-    }
-
-    private static final class FindLiveRecord<S, I> {
-
-        final S state;
-        final I incomingInput;
-        final Iterator<? extends I> inputIt;
-
-        FindLiveRecord(S state, I incomingInput, Iterator<? extends I> inputIt) {
-            this.state = state;
-            this.incomingInput = incomingInput;
-            this.inputIt = inputIt;
-        }
     }
 
     private final class AutomatonView extends IncrementalDFATreeBuilder<I>.AutomatonView {

@@ -15,10 +15,7 @@
  */
 package net.automatalib.incremental.dfa.tree;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.Deque;
-import java.util.Iterator;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
@@ -32,11 +29,11 @@ import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
+import net.automatalib.incremental.util.DFSepWordFinder;
+import net.automatalib.incremental.util.DFSepWordFinder.Visitor;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -89,62 +86,21 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
     <S> @Nullable Word<I> doFindSeparatingWord(DFA<S, I> target,
                                                Collection<? extends I> inputs,
                                                boolean omitUndefined) {
-        S automatonInit = target.getInitialState();
 
-        if (automatonInit == null) {
-            return omitUndefined ? null : Word.epsilon();
-        }
+        final Visitor<Node, S, Node, S> visitor = new Visitor<>() {
 
-        if (root.getAcceptance().conflicts(target.isAccepting(automatonInit))) {
-            return Word.epsilon();
-        }
-
-        // incomingInput can be null here, because we will always skip the bottom stack element below
-        @SuppressWarnings("nullness")
-        Record<@Nullable S, I> init = new Record<>(automatonInit, root, null, inputs.iterator());
-
-        Deque<Record<@Nullable S, I>> dfsStack = new ArrayDeque<>();
-        dfsStack.push(init);
-
-        while (!dfsStack.isEmpty()) {
-            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            @NonNull Record<@Nullable S, I> rec = dfsStack.peek();
-            if (!rec.inputIt.hasNext()) {
-                dfsStack.pop();
-                continue;
-            }
-            I input = rec.inputIt.next();
-            int inputIdx = inputAlphabet.getSymbolIndex(input);
-
-            Node succ = rec.treeNode.getChild(inputIdx);
-            if (succ == null) {
-                continue;
+            @Override
+            public boolean initConflict(Node incInit, S targetInit) {
+                return incInit.getAcceptance().conflicts(target.isAccepting(targetInit));
             }
 
-            @Nullable S state = rec.automatonState;
-            @Nullable S automatonSucc = state == null ? null : target.getTransition(state, input);
-            if (automatonSucc == null && omitUndefined) {
-                continue;
+            @Override
+            public boolean succConflict(Node incTrans, @Nullable S targetTrans) {
+                return incTrans.getAcceptance().conflicts(targetTrans != null && target.isAccepting(targetTrans));
             }
+        };
 
-            boolean succAcc = automatonSucc != null && target.isAccepting(automatonSucc);
-
-            if (succ.getAcceptance().conflicts(succAcc)) {
-                WordBuilder<I> wb = new WordBuilder<>(dfsStack.size());
-                wb.append(input);
-
-                dfsStack.pop();
-                while (!dfsStack.isEmpty()) {
-                    wb.append(rec.incomingInput);
-                    rec = dfsStack.pop();
-                }
-                return wb.reverse().toWord();
-            }
-
-            dfsStack.push(new Record<>(automatonSucc, succ, input, inputs.iterator()));
-        }
-
-        return null;
+        return DFSepWordFinder.findSeparatingWord(new AutomatonView(), target, inputs, omitUndefined, visitor);
     }
 
     @Override
@@ -206,21 +162,6 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
                 };
             }
         };
-    }
-
-    static final class Record<S, I> {
-
-        final S automatonState;
-        final Node treeNode;
-        final I incomingInput;
-        final Iterator<? extends I> inputIt;
-
-        Record(S automatonState, Node treeNode, I incomingInput, Iterator<? extends I> inputIt) {
-            this.automatonState = automatonState;
-            this.treeNode = treeNode;
-            this.incomingInput = incomingInput;
-            this.inputIt = inputIt;
-        }
     }
 
     class AutomatonView implements DFA<Node, I> {

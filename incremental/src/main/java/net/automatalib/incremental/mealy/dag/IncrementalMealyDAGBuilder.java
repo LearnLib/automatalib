@@ -19,28 +19,24 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Queue;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
-import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MealyMachine.MealyGraphView;
-import net.automatalib.common.util.IntDisjointSets;
-import net.automatalib.common.util.UnionFind;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
+import net.automatalib.incremental.util.DFSepWordFinder;
+import net.automatalib.incremental.util.DFSepWordFinder.Visitor;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -450,111 +446,24 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
     public @Nullable Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
                                                 Collection<? extends I> inputs,
                                                 boolean omitUndefined) {
-        return doFindSeparatingWord(target, inputs, omitUndefined);
+        return doFindSeparatingWord(new AutomatonView(), target, inputs, omitUndefined);
     }
 
-    private <S, T> @Nullable Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> mealy,
-                                                          Collection<? extends I> inputs,
-                                                          boolean omitUndefined) {
-        S init2 = mealy.getInitialState();
+    private <S1, S2, T1, T2> @Nullable Word<I> doFindSeparatingWord(MealyMachine<S1, I, T1, O> tree,
+                                                                    MealyMachine<S2, I, T2, O> target,
+                                                                    Collection<? extends I> inputs,
+                                                                    boolean omitUndefined) {
 
-        if (init2 == null) {
-            return omitUndefined ? null : Word.epsilon();
-        }
+        final Visitor<S1, S2, T1, T2> visitor = new Visitor<>() {
 
-        State<O> init1 = init;
-
-        Map<State<O>, Integer> ids = new HashMap<>();
-        StateIDs<S> mealyIds = mealy.stateIDs();
-
-        int thisStates = register.size();
-        int id1 = getStateId(init1, ids), id2 = mealyIds.getStateId(init2) + thisStates;
-
-        IntDisjointSets uf = new UnionFind(thisStates + mealy.size());
-        uf.link(id1, id2);
-
-        Queue<Record<S, I, O>> queue = new ArrayDeque<>();
-
-        queue.offer(new Record<>(init1, init2));
-
-        I lastSym = null;
-
-        Record<S, I, O> current;
-
-        explore:
-        while ((current = queue.poll()) != null) {
-            State<O> state1 = current.state1;
-            S state2 = current.state2;
-
-            for (I sym : inputs) {
-                int idx = inputAlphabet.getSymbolIndex(sym);
-                State<O> succ1 = state1.getSuccessor(idx);
-                if (succ1 == null) {
-                    continue;
-                }
-
-                T trans2 = mealy.getTransition(state2, sym);
-                if (trans2 == null) {
-                    if (omitUndefined) {
-                        continue;
-                    }
-                    lastSym = sym;
-                    break explore;
-                }
-
-                Object out1 = state1.getOutput(idx);
-                Object out2 = mealy.getTransitionOutput(trans2);
-                if (!Objects.equals(out1, out2)) {
-                    lastSym = sym;
-                    break explore;
-                }
-
-                S succ2 = mealy.getSuccessor(trans2);
-
-                id1 = getStateId(succ1, ids);
-                id2 = mealyIds.getStateId(succ2) + thisStates;
-
-                int r1 = uf.find(id1), r2 = uf.find(id2);
-
-                if (r1 == r2) {
-                    continue;
-                }
-
-                uf.link(r1, r2);
-
-                queue.offer(new Record<>(succ1, succ2, current, sym));
+            @Override
+            public boolean succConflict(T1 incTrans, @Nullable T2 targetTrans) {
+                return targetTrans == null ||
+                       !Objects.equals(tree.getTransitionOutput(incTrans), target.getTransitionOutput(targetTrans));
             }
-        }
+        };
 
-        if (current == null) {
-            return null;
-        }
-
-        int ceLength = current.depth;
-        if (lastSym != null) {
-            ceLength++;
-        }
-
-        @SuppressWarnings("nullness") // we make sure to set each index to a value of type I
-        WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
-
-        int index = ceLength;
-
-        if (lastSym != null) {
-            wb.setSymbol(--index, lastSym);
-        }
-
-        while (current.reachedFrom != null) {
-            final I reachedVia = current.reachedVia;
-            wb.setSymbol(--index, reachedVia);
-            current = current.reachedFrom;
-        }
-
-        return wb.toWord();
-    }
-
-    private static <O> int getStateId(State<O> state, Map<State<O>, Integer> ids) {
-        return ids.computeIfAbsent(state, k -> ids.size());
+        return DFSepWordFinder.findSeparatingWord(tree, target, inputs, omitUndefined, visitor);
     }
 
     @Override
@@ -586,36 +495,6 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
                 };
             }
         };
-    }
-
-    // /////////////////////////////////////////////////////////////////////
-    // Equivalence test //
-    // /////////////////////////////////////////////////////////////////////
-
-    private static final class Record<S, I, O> {
-
-        private final State<O> state1;
-        private final S state2;
-        private final I reachedVia;
-        private final @Nullable Record<S, I, O> reachedFrom;
-        private final int depth;
-
-        @SuppressWarnings("nullness") // we will only access reachedVia after checking reachedFrom for null
-        Record(State<O> state1, S state2) {
-            this.state1 = state1;
-            this.state2 = state2;
-            this.reachedFrom = null;
-            this.reachedVia = null;
-            this.depth = 0;
-        }
-
-        Record(State<O> state1, S state2, Record<S, I, O> reachedFrom, I reachedVia) {
-            this.state1 = state1;
-            this.state2 = state2;
-            this.reachedFrom = reachedFrom;
-            this.reachedVia = reachedVia;
-            this.depth = reachedFrom.depth + 1;
-        }
     }
 
     private final class AutomatonView implements MealyMachine<State<O>, I, Transition<O>, O> {

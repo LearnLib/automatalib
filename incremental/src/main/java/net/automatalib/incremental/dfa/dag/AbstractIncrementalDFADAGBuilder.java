@@ -15,30 +15,25 @@
  */
 package net.automatalib.incremental.dfa.dag;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
-import net.automatalib.common.util.IntDisjointSets;
-import net.automatalib.common.util.UnionFind;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
+import net.automatalib.incremental.util.DFSepWordFinder;
+import net.automatalib.incremental.util.DFSepWordFinder.Visitor;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDFABuilder<I> {
@@ -73,132 +68,31 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
         return doFindSeparatingWord(target, inputs, omitUndefined);
     }
 
-    private <S> @Nullable Word<I> doFindSeparatingWord(DFA<S, I> target,
-                                                       Collection<? extends I> inputs,
-                                                       boolean omitUndefined) {
-        int thisStates = register.size();
-        Map<State, Integer> stateIds = new HashMap<>();
-        if (sink != null) {
-            stateIds.put(sink, 0);
-            thisStates++;
-        }
-        int targetStates = target.size();
-        if (!omitUndefined) {
-            targetStates++;
-        }
+    <S> @Nullable Word<I> doFindSeparatingWord(DFA<S, I> target,
+                                               Collection<? extends I> inputs,
+                                               boolean omitUndefined) {
 
-        S init2 = target.getInitialState();
+        final Visitor<State, S, State, S> visitor = new Visitor<>() {
 
-        if (init2 == null && omitUndefined) {
-            return null;
-        }
-
-        State init1 = init;
-
-        boolean acc = init2 != null && target.isAccepting(init2);
-        if (init1.getAcceptance().conflicts(acc)) {
-            return Word.epsilon();
-        }
-
-        IntDisjointSets uf = new UnionFind(thisStates + targetStates);
-        StateIDs<S> tgtIds = target.stateIDs();
-        int id1 = getStateId(init1, stateIds);
-        int id2 = (init2 != null ? tgtIds.getStateId(init2) : targetStates - 1) + thisStates;
-
-        uf.link(id1, id2);
-
-        Queue<Record<@Nullable S, I>> queue = new ArrayDeque<>();
-
-        queue.add(new Record<>(init1, init2));
-
-        I lastSym = null;
-
-        Record<@Nullable S, I> current;
-
-        explore:
-        while ((current = queue.poll()) != null) {
-            State state1 = current.state1;
-            @Nullable S state2 = current.state2;
-
-            for (I sym : inputs) {
-                @Nullable S succ2 = (state2 != null) ? target.getSuccessor(state2, sym) : null;
-                if (succ2 == null && omitUndefined) {
-                    continue;
-                }
-
-                int idx = inputAlphabet.getSymbolIndex(sym);
-                State succ1 = state1 == sink ? sink : state1.getSuccessor(idx);
-
-                if (succ1 == null) {
-                    continue;
-                }
-
-                id1 = getStateId(succ1, stateIds);
-                id2 = (succ2 != null ? tgtIds.getStateId(succ2) : targetStates - 1) + thisStates;
-
-                int r1 = uf.find(id1), r2 = uf.find(id2);
-
-                if (r1 == r2) {
-                    continue;
-                }
-
-                if (succ1 == sink) {
-                    if (succ2 == null) {
-                        continue;
-                    }
-                    if (target.isAccepting(succ2)) {
-                        lastSym = sym;
-                        break explore;
-                    }
-                } else {
-                    boolean succ2acc = succ2 != null && target.isAccepting(succ2);
-                    if (succ1.getAcceptance().conflicts(succ2acc)) {
-                        lastSym = sym;
-                        break explore;
-                    }
-                }
-
-                uf.link(r1, r2);
-
-                queue.add(new Record<>(succ1, succ2, sym, current));
+            @Override
+            public boolean initConflict(State incInit, S targetInit) {
+                return incInit.getAcceptance().conflicts(target.isAccepting(targetInit));
             }
-        }
 
-        if (current == null) {
-            return null;
-        }
+            @Override
+            public boolean succConflict(State incTrans, @Nullable S targetTrans) {
+                return incTrans.getAcceptance().conflicts(targetTrans != null && target.isAccepting(targetTrans));
+            }
 
-        int ceLength = current.depth;
-        if (lastSym != null) {
-            ceLength++;
-        }
+            @Override
+            public boolean continueExploration(State incSucc, @Nullable S targetSucc) {
+                // in the prefix-closed case, we break the DAG contract by making the sink reflexive
+                // thus we need to explicitly terminate exploration
+                return incSucc != sink || targetSucc != null;
+            }
+        };
 
-        @SuppressWarnings("nullness") // we make sure to set each index to a value of type I
-        WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
-
-        int index = ceLength;
-
-        if (lastSym != null) {
-            wb.setSymbol(--index, lastSym);
-        }
-
-        while (current.reachedFrom != null) {
-            final I reachedVia = current.reachedVia;
-            wb.setSymbol(--index, reachedVia);
-            current = current.reachedFrom;
-        }
-
-        return wb.toWord();
-    }
-
-    private static int getStateId(State s, Map<State, Integer> idMap) {
-        Integer id = idMap.get(s);
-        if (id != null) {
-            return id;
-        }
-        id = idMap.size();
-        idMap.put(s, id);
-        return id;
+        return DFSepWordFinder.findSeparatingWord(new AutomatonView(), target, inputs, omitUndefined, visitor);
     }
 
     abstract @Nullable State getState(Word<? extends I> word);
@@ -502,32 +396,6 @@ abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDF
                 };
             }
         };
-    }
-
-    private static final class Record<S, I> {
-
-        final State state1;
-        final S state2;
-        final I reachedVia;
-        final @Nullable Record<S, I> reachedFrom;
-        final int depth;
-
-        @SuppressWarnings("nullness") // we will only access reachedVia after checking reachedFrom for null
-        Record(State state1, S state2) {
-            this.state1 = state1;
-            this.state2 = state2;
-            this.reachedVia = null;
-            this.reachedFrom = null;
-            this.depth = 0;
-        }
-
-        Record(State state1, S state2, I reachedVia, Record<S, I> reachedFrom) {
-            this.state1 = state1;
-            this.state2 = state2;
-            this.reachedVia = reachedVia;
-            this.reachedFrom = reachedFrom;
-            this.depth = reachedFrom.depth + 1;
-        }
     }
 
     private final class AutomatonView implements DFA<State, I> {

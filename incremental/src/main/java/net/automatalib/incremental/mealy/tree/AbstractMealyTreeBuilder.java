@@ -15,18 +15,15 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.Deque;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.incremental.mealy.MealyBuilder;
+import net.automatalib.incremental.util.DFSepWordFinder;
+import net.automatalib.incremental.util.DFSepWordFinder.Visitor;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<I, O> {
@@ -57,63 +54,24 @@ abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<I, O> {
     public @Nullable Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
                                                 Collection<? extends I> inputs,
                                                 boolean omitUndefined) {
-        return doFindSeparatingWord(target, inputs, omitUndefined);
+        return doFindSeparatingWord(asTransitionSystem(), target, inputs, omitUndefined);
     }
 
-    private <S, T> @Nullable Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> target,
-                                                          Collection<? extends I> inputs,
-                                                          boolean omitUndefined) {
-        S automatonInit = target.getInitialState();
+    private <S1, S2, T1, T2> @Nullable Word<I> doFindSeparatingWord(MealyMachine<S1, I, T1, O> tree,
+                                                                    MealyMachine<S2, I, T2, O> target,
+                                                                    Collection<? extends I> inputs,
+                                                                    boolean omitUndefined) {
 
-        if (automatonInit == null) {
-            return omitUndefined ? null : Word.epsilon();
-        }
+        final Visitor<S1, S2, T1, T2> visitor = new Visitor<>() {
 
-        Deque<Record<@Nullable S, N, I>> dfsStack = new ArrayDeque<>();
-
-        // reachedFrom can be null here, because we will always skip the bottom stack element below
-        @SuppressWarnings("nullness")
-        final Record<@Nullable S, N, I> init = new Record<>(automatonInit, root, null, inputs.iterator());
-
-        dfsStack.push(init);
-
-        while (!dfsStack.isEmpty()) {
-            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            @NonNull Record<@Nullable S, N, I> rec = dfsStack.peek();
-            if (!rec.inputIt.hasNext()) {
-                dfsStack.pop();
-                continue;
+            @Override
+            public boolean succConflict(T1 incTrans, @Nullable T2 targetTrans) {
+                return targetTrans == null ||
+                       !Objects.equals(tree.getTransitionOutput(incTrans), target.getTransitionOutput(targetTrans));
             }
-            I input = rec.inputIt.next();
-            Edge<N, O> edge = getEdge(rec.treeNode, input);
-            if (edge == null) {
-                continue;
-            }
+        };
 
-            S state = rec.automatonState;
-            T trans = state == null ? null : target.getTransition(state, input);
-            if (omitUndefined && trans == null) {
-                continue;
-            }
-            if (trans == null || !Objects.equals(target.getTransitionOutput(trans), edge.getOutput())) {
-
-                WordBuilder<I> wb = new WordBuilder<>(dfsStack.size());
-                wb.append(input);
-                dfsStack.pop();
-
-                while (!dfsStack.isEmpty()) {
-                    wb.append(rec.incomingInput);
-                    rec = dfsStack.pop();
-                }
-                return wb.reverse().toWord();
-            }
-
-            final Record<@Nullable S, N, I> nextRecord =
-                    new Record<>(target.getSuccessor(trans), edge.getTarget(), input, inputs.iterator());
-            dfsStack.push(nextRecord);
-        }
-
-        return null;
+        return DFSepWordFinder.findSeparatingWord(tree, target, inputs, omitUndefined, visitor);
     }
 
     abstract @Nullable Edge<N, O> getEdge(N node, I symbol);
@@ -121,21 +79,6 @@ abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<I, O> {
     abstract N createNode();
 
     abstract N insertNode(N parent, I symIdx, O output);
-
-    private static final class Record<S, N, I> {
-
-        private final S automatonState;
-        private final N treeNode;
-        private final I incomingInput;
-        private final Iterator<? extends I> inputIt;
-
-        Record(S automatonState, N treeNode, I incomingInput, Iterator<? extends I> inputIt) {
-            this.automatonState = automatonState;
-            this.treeNode = treeNode;
-            this.inputIt = inputIt;
-            this.incomingInput = incomingInput;
-        }
-    }
 
     abstract class AbstractAutomatonView implements MealyMachine<N, I, Edge<N, O>, O> {
 

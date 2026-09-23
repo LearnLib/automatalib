@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
@@ -81,6 +82,13 @@ public abstract class AbstractIncrementalMooreBuilderTest {
         Assert.assertFalse(incMoore.hasDefinitiveInformation(W_1));
         Assert.assertFalse(incMoore.hasDefinitiveInformation(W_2));
         Assert.assertFalse(incMoore.hasDefinitiveInformation(W_3));
+
+        List<Character> outputs = new ArrayList<>();
+        Assert.assertFalse(incMoore.lookup(W_1, outputs));
+        Assert.assertFalse(incMoore.lookup(W_2, outputs));
+        Assert.assertFalse(incMoore.lookup(W_3, outputs));
+
+        Assert.assertTrue(outputs.isEmpty());
 
         incMoore.insert(W_1, W_1_O);
         Assert.assertTrue(incMoore.hasDefinitiveInformation(W_1));
@@ -255,4 +263,40 @@ public abstract class AbstractIncrementalMooreBuilderTest {
         Assert.assertEquals(growableBuilder.lookup(input2), Word.fromString("-1"));
     }
 
+    @Test
+    public void testInitialConflict() {
+        final IncrementalMooreBuilder<Character, Character> builder = createIncrementalMooreBuilder(TEST_ALPHABET);
+        final CompactMoore<Character, Character> empty = new CompactMoore<>(TEST_ALPHABET);
+        final CompactMoore<Character, Character> singleton1 = new CompactMoore<>(TEST_ALPHABET);
+        final CompactMoore<Character, Character> singleton2 = new CompactMoore<>(TEST_ALPHABET);
+        singleton1.addInitialState('x');
+        singleton2.addInitialState('y');
+
+        Word<Character> sepWord = builder.findSeparatingWord(singleton1, TEST_ALPHABET, false);
+        Assert.assertNull(sepWord);
+        sepWord = builder.findSeparatingWord(singleton1, TEST_ALPHABET, true);
+        Assert.assertNull(sepWord);
+
+        sepWord = builder.findSeparatingWord(singleton2, TEST_ALPHABET, false);
+        Assert.assertNull(sepWord);
+        sepWord = builder.findSeparatingWord(singleton2, TEST_ALPHABET, true);
+        Assert.assertNull(sepWord);
+
+        builder.insert(Word.epsilon(), Word.fromLetter('x'));
+
+        sepWord = builder.findSeparatingWord(empty, TEST_ALPHABET, false);
+        Assert.assertEquals(sepWord, Word.epsilon());
+        sepWord = builder.findSeparatingWord(empty, TEST_ALPHABET, true);
+        Assert.assertNull(sepWord);
+
+        sepWord = builder.findSeparatingWord(singleton1, TEST_ALPHABET, false);
+        Assert.assertNull(sepWord);
+        sepWord = builder.findSeparatingWord(singleton1, TEST_ALPHABET, true);
+        Assert.assertNull(sepWord);
+
+        sepWord = builder.findSeparatingWord(singleton2, TEST_ALPHABET, false);
+        Assert.assertEquals(sepWord, Word.epsilon());
+        sepWord = builder.findSeparatingWord(singleton2, TEST_ALPHABET, true);
+        Assert.assertEquals(sepWord, Word.epsilon());
+    }
 }

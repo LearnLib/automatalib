@@ -19,29 +19,25 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Queue;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
-import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.transducer.MooreMachine.MooreGraphView;
 import net.automatalib.automaton.visualization.MooreVisualizationHelper;
-import net.automatalib.common.util.IntDisjointSets;
-import net.automatalib.common.util.UnionFind;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.moore.IncrementalMooreBuilder;
+import net.automatalib.incremental.util.DFSepWordFinder;
+import net.automatalib.incremental.util.DFSepWordFinder.Visitor;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -473,111 +469,25 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
         return doFindSeparatingWord(target, inputs, omitUndefined);
     }
 
-    private <S, T> @Nullable Word<I> doFindSeparatingWord(MooreMachine<S, I, T, O> moore,
+    private <S, T> @Nullable Word<I> doFindSeparatingWord(MooreMachine<S, I, T, O> target,
                                                           Collection<? extends I> inputs,
                                                           boolean omitUndefined) {
-        State<O> init1 = init;
-        S init2 = moore.getInitialState();
 
-        if (init1 == null && init2 == null) {
-            return null;
-        } else if (init1 == null || init2 == null) {
-            return omitUndefined ? null : Word.epsilon();
-        }
+        final Visitor<State<O>, S, State<O>, T> visitor = new Visitor<>() {
 
-        if (!Objects.equals(init1.getOutput(), moore.getStateOutput(init2))) {
-            return Word.epsilon();
-        }
-
-        Map<State<O>, Integer> ids = new HashMap<>();
-        StateIDs<S> mooreIds = moore.stateIDs();
-
-        int thisStates = register.size();
-        int id1 = getStateId(init1, ids), id2 = mooreIds.getStateId(init2) + thisStates;
-
-        IntDisjointSets uf = new UnionFind(thisStates + moore.size());
-        uf.link(id1, id2);
-
-        Queue<Record<S, I, O>> queue = new ArrayDeque<>();
-
-        queue.offer(new Record<>(init1, init2));
-
-        I lastSym = null;
-
-        Record<S, I, O> current;
-
-        explore:
-        while ((current = queue.poll()) != null) {
-            State<O> state1 = current.state1;
-            S state2 = current.state2;
-
-            for (I sym : inputs) {
-                int idx = inputAlphabet.getSymbolIndex(sym);
-                State<O> succ1 = state1.getSuccessor(idx);
-                if (succ1 == null) {
-                    continue;
-                }
-
-                S succ2 = moore.getSuccessor(state2, sym);
-                if (succ2 == null) {
-                    if (omitUndefined) {
-                        continue;
-                    }
-                    lastSym = sym;
-                    break explore;
-                }
-
-                O out1 = succ1.getOutput();
-                O out2 = moore.getStateOutput(succ2);
-                if (!Objects.equals(out1, out2)) {
-                    lastSym = sym;
-                    break explore;
-                }
-
-                id1 = getStateId(succ1, ids);
-                id2 = mooreIds.getStateId(succ2) + thisStates;
-
-                int r1 = uf.find(id1), r2 = uf.find(id2);
-
-                if (r1 == r2) {
-                    continue;
-                }
-
-                uf.link(r1, r2);
-
-                queue.offer(new Record<>(succ1, succ2, current, sym));
+            @Override
+            public boolean initConflict(State<O> incInit, S targetInit) {
+                return !Objects.equals(incInit.getOutput(), target.getStateOutput(targetInit));
             }
-        }
 
-        if (current == null) {
-            return null;
-        }
+            @Override
+            public boolean succConflict(State<O> incTrans, @Nullable T targetTrans) {
+                return targetTrans == null ||
+                       !Objects.equals(incTrans.getOutput(), target.getStateOutput(target.getSuccessor(targetTrans)));
+            }
+        };
 
-        int ceLength = current.depth;
-        if (lastSym != null) {
-            ceLength++;
-        }
-
-        @SuppressWarnings("nullness") // we make sure to set each index to a value of type I
-        WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
-
-        int index = ceLength;
-
-        if (lastSym != null) {
-            wb.setSymbol(--index, lastSym);
-        }
-
-        while (current.reachedFrom != null) {
-            final I reachedVia = current.reachedVia;
-            wb.setSymbol(--index, reachedVia);
-            current = current.reachedFrom;
-        }
-
-        return wb.toWord();
-    }
-
-    private static <O> int getStateId(State<O> state, Map<State<O>, Integer> ids) {
-        return ids.computeIfAbsent(state, k -> ids.size());
+        return DFSepWordFinder.findSeparatingWord(new AutomatonView(), target, inputs, omitUndefined, visitor);
     }
 
     @Override
@@ -612,36 +522,6 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
                 };
             }
         };
-    }
-
-    // /////////////////////////////////////////////////////////////////////
-    // Equivalence test //
-    // /////////////////////////////////////////////////////////////////////
-
-    private static final class Record<S, I, O> {
-
-        private final State<O> state1;
-        private final S state2;
-        private final I reachedVia;
-        private final @Nullable Record<S, I, O> reachedFrom;
-        private final int depth;
-
-        @SuppressWarnings("nullness") // we will only access reachedVia after checking reachedFrom for null
-        Record(State<O> state1, S state2) {
-            this.state1 = state1;
-            this.state2 = state2;
-            this.reachedFrom = null;
-            this.reachedVia = null;
-            this.depth = 0;
-        }
-
-        Record(State<O> state1, S state2, Record<S, I, O> reachedFrom, I reachedVia) {
-            this.state1 = state1;
-            this.state2 = state2;
-            this.reachedFrom = reachedFrom;
-            this.reachedVia = reachedVia;
-            this.depth = reachedFrom.depth + 1;
-        }
     }
 
     private final class AutomatonView implements MooreMachine<State<O>, I, State<O>, O> {

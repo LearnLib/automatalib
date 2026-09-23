@@ -51,4 +51,5 @@ open module net.automatalib.incremental {
     exports net.automatalib.incremental.moore;
     exports net.automatalib.incremental.moore.dag;
     exports net.automatalib.incremental.moore.tree;
+    exports net.automatalib.incremental.util;
 }

@@ -16,14 +16,19 @@
 package net.automatalib.incremental.mealy;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.common.util.Pair;
+import net.automatalib.exception.FormatException;
 import net.automatalib.incremental.IntegrationUtil;
 import net.automatalib.incremental.IntegrationUtil.ParsedTraces;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
+import net.automatalib.serialization.dot.DOTParsers;
+import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -72,7 +77,7 @@ public class IncrementalMealyDAGBuilderTest extends AbstractIncrementalMealyBuil
     }
 
     /**
-     * This tests case validates a set of traces from an external system which exposed an issue in confluence
+     * This test case validates a set of traces from an external system which exposed an issue in confluence
      * propagation.
      */
     @Test
@@ -88,7 +93,45 @@ public class IncrementalMealyDAGBuilderTest extends AbstractIncrementalMealyBuil
         validateTraces("/learnlib76/mealy.gz");
     }
 
-    private void validateTraces(String pathToTraces) throws IOException {
+    /**
+     * This test case validates a bug in finding separating words which occurred in an external benchmark.
+     */
+    @Test
+    public void testSeparatingWord() throws IOException, FormatException {
+        IncrementalMealyBuilder<Integer, Integer> cache = validateTraces("/mealy/integration/mealy.gz");
+
+        var input = Word.fromSymbols(9, 0, 9, 6, 6, 1, 6, 6, 11, 11, 8, 0, 5, 0);
+        var hypOut = Word.fromSymbols(2, 3, 2, 2, 2, 2, 2, 2, 5, 5, 6, 2, 7, 0);
+        var incOut = Word.fromSymbols(2, 3, 2, 2, 2, 2, 2, 2, 5, 5, 6, 2, 7, 3);
+
+        try (InputStream is = IncrementalMealyDAGBuilderTest.class.getResourceAsStream("/mealy/integration/mealy.dot")) {
+            var model = DOTParsers.mealy(IncrementalMealyDAGBuilderTest::parseEdges).readModel(is);
+            var automaton = model.model;
+            var inputs = model.alphabet;
+
+            Assert.assertEquals(hypOut, automaton.computeOutput(input));
+            Assert.assertEquals(incOut, cache.lookup(input));
+
+            var sepWord = cache.findSeparatingWord(automaton, inputs, false);
+
+            Assert.assertNotNull(sepWord);
+            Assert.assertNotEquals(cache.lookup(sepWord), automaton.computeOutput(sepWord));
+        }
+    }
+
+    private static Pair<Integer, Integer> parseEdges(Map<String, String> attr) {
+        final String label = attr.get(EdgeAttrs.LABEL);
+
+        Assert.assertNotNull(label);
+
+        final String[] tokens = label.split("/");
+
+        Assert.assertEquals(tokens.length, 2);
+
+        return Pair.of(Integer.parseInt(tokens[0].trim()), Integer.parseInt(tokens[1].trim()));
+    }
+
+    private IncrementalMealyBuilder<Integer, Integer> validateTraces(String pathToTraces) throws IOException {
         final ParsedTraces<Integer, Word<Integer>> parsedData = IntegrationUtil.parseMealyTraces(pathToTraces);
         final Alphabet<Integer> alphabet = parsedData.alphabet;
         final List<Pair<Word<Integer>, Word<Integer>>> traces = parsedData.traces;
@@ -112,5 +155,7 @@ public class IncrementalMealyDAGBuilderTest extends AbstractIncrementalMealyBuil
 
             Assert.assertEquals(value, cache.lookup(input));
         }
+
+        return cache;
     }
 }
