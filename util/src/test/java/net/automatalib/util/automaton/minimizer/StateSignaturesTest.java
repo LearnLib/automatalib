@@ -21,7 +21,7 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
-import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
+import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.partitionrefinement.AutomatonInitialPartitioning;
 import net.automatalib.util.partitionrefinement.PruningMode;
 import net.automatalib.util.partitionrefinement.StateSignature;
@@ -91,10 +91,10 @@ public class StateSignaturesTest {
         // equivalence checks full state signature
         Assert.assertFalse(Automata.testEquivalence(dfa, stateMinimized, dfa.getInputAlphabet()));
         // when ignoring undefined transitions, they should be equivalent
-        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(dfa,
-                                                                       stateMinimized,
-                                                                       dfa.getInputAlphabet(),
-                                                                       true));
+        Assert.assertNull(DeterministicEquivalenceTest.findSeparatingWord(dfa,
+                                                                          stateMinimized,
+                                                                          dfa.getInputAlphabet(),
+                                                                          true));
 
         final CompactDFA<Character> fullMinimized = HopcroftMinimizer.minimizePartialUniversal(dfa,
                                                                                                dfa.getInputAlphabet(),

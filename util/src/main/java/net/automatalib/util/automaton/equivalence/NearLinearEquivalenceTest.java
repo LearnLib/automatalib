@@ -42,15 +42,9 @@ public final class NearLinearEquivalenceTest {
         // prevent instantiation
     }
 
-    public static <S, I> @Nullable Word<I> findSeparatingWord(RegularAutomaton<S, I, ?, ?, ?> target,
-                                                              S init1,
-                                                              S init2,
-                                                              Collection<? extends I> inputs) {
-        return findSeparatingWord(target, init1, init2, inputs, false);
-    }
-
     /**
-     * Find a separating word for two states in a given automaton.
+     * Find a separating word for two states in a given automaton. Note that undefined transitions are considered a
+     * separating feature as well.
      *
      * @param target
      *         the automaton
@@ -60,26 +54,73 @@ public final class NearLinearEquivalenceTest {
      *         the second state
      * @param inputs
      *         the inputs to consider for a separating word
-     * @param ignoreUndefinedTransitions
-     *         if {@code true}, undefined transitions are not considered to distinguish two states, if {@code false} an
-     *         undefined and defined transition are considered to distinguish two states
      * @param <S>
      *         automaton state type
      * @param <I>
-     *         input alphabet type
-     * @param <T>
-     *         automaton transition type
+     *         input symbol type
      *
-     * @return A word separating the two states, {@code null} if no such word can be found
+     * @return a word separating the two states, {@code null} if no such word can be found
      */
-    public static <S, I, T> @Nullable Word<I> findSeparatingWord(RegularAutomaton<S, I, T, ?, ?> target,
-                                                                 S init1,
-                                                                 S init2,
-                                                                 Collection<? extends I> inputs,
-                                                                 boolean ignoreUndefinedTransitions) {
+    public static <S, I> @Nullable Word<I> findSeparatingWord(RegularAutomaton<S, I, ?, ?, ?> target,
+                                                              S init1,
+                                                              S init2,
+                                                              Collection<? extends I> inputs) {
+        return doFindSeparatingWord(target, init1, init2, inputs);
+    }
 
-        Object sprop1 = target.getStateProperty(init1);
-        Object sprop2 = target.getStateProperty(init2);
+    /**
+     * Find a separating word for two given automata. Note that undefined transitions are considered a separating
+     * feature as well.
+     *
+     * @param target
+     *         the first automaton
+     * @param other
+     *         the second automaton
+     * @param inputs
+     *         the inputs to consider for a separating word
+     * @param <I>
+     *         input symbol type
+     *
+     * @return a word separating the two automata, {@code null} if no such word can be found
+     */
+    public static <I> @Nullable Word<I> findSeparatingWord(RegularAutomaton<?, I, ?, ?, ?> target,
+                                                           RegularAutomaton<?, I, ?, ?, ?> other,
+                                                           Collection<? extends I> inputs) {
+        return doFindSeparatingWord(target, other, inputs);
+    }
+
+    /**
+     * Find a separating word for two given automata. Note that undefined transitions are considered a separating
+     * feature as well.
+     *
+     * @param target
+     *         the first automaton
+     * @param other
+     *         the second automaton
+     * @param alphabet
+     *         the alphabet to consider for a separating word
+     * @param <I>
+     *         input symbol type
+     *
+     * @return a word separating the two automata, {@code null} if no such word can be found
+     */
+    public static <I> @Nullable Word<I> findSeparatingWord(RegularAutomaton<?, I, ?, ?, ?> target,
+                                                           RegularAutomaton<?, I, ?, ?, ?> other,
+                                                           Alphabet<I> alphabet) {
+        return doFindSeparatingWord(target, other, alphabet);
+    }
+
+    private static <S, I, T, SP, TP> @Nullable Word<I> doFindSeparatingWord(RegularAutomaton<S, I, T, SP, TP> target,
+                                                                            S init1,
+                                                                            S init2,
+                                                                            Collection<? extends I> inputs) {
+
+        if (Objects.equals(init1, init2)) {
+            return null;
+        }
+
+        SP sprop1 = target.getStateProperty(init1);
+        SP sprop2 = target.getStateProperty(init2);
 
         if (!Objects.equals(sprop1, sprop2)) {
             return Word.epsilon();
@@ -109,9 +150,7 @@ public final class NearLinearEquivalenceTest {
                 T trans1 = target.getTransition(state1, sym);
                 T trans2 = target.getTransition(state2, sym);
 
-                if (ignoreUndefinedTransitions && (trans1 == null || trans2 == null)) {
-                    continue;
-                } else if (trans1 == null) {
+                if (trans1 == null) {
                     if (trans2 == null) {
                         continue;
                     }
@@ -122,8 +161,8 @@ public final class NearLinearEquivalenceTest {
                     break explore;
                 }
 
-                Object tprop1 = target.getTransitionProperty(trans1);
-                Object tprop2 = target.getTransitionProperty(trans2);
+                TP tprop1 = target.getTransitionProperty(trans1);
+                TP tprop2 = target.getTransitionProperty(trans2);
 
                 if (!Objects.equals(tprop1, tprop2)) {
                     lastSym = sym;
@@ -156,34 +195,12 @@ public final class NearLinearEquivalenceTest {
             }
         }
 
-        if (current == null) {
-            return null;
-        }
-
-        int position = current.depth + 1;
-
-        @SuppressWarnings("argument") // we make sure to set each index to a value of type I
-        WordBuilder<I> wb = new WordBuilder<>(null, position);
-        wb.setSymbol(--position, lastSym);
-
-        while (current.reachedFrom != null) {
-            wb.setSymbol(--position, current.reachedBy);
-            current = current.reachedFrom;
-        }
-
-        return wb.toWord();
+        return extractSepWord(current, lastSym);
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(RegularAutomaton<?, I, ?, ?, ?> target,
-                                                           RegularAutomaton<?, I, ?, ?, ?> other,
-                                                           Collection<? extends I> inputs) {
-        return findSeparatingWord(target, other, inputs, false);
-    }
-
-    public static <S, S2, I, T, T2, SP, SP2, TP, TP2> @Nullable Word<I> findSeparatingWord(RegularAutomaton<S, I, T, SP, TP> target,
-                                                                                           RegularAutomaton<S2, I, T2, SP2, TP2> other,
-                                                                                           Collection<? extends I> inputs,
-                                                                                           boolean ignoreUndefinedTransitions) {
+    private static <S1, S2, I, T, T2, SP1, SP2, TP1, TP2> @Nullable Word<I> doFindSeparatingWord(RegularAutomaton<S1, I, T, SP1, TP1> target,
+                                                                                                 RegularAutomaton<S2, I, T2, SP2, TP2> other,
+                                                                                                 Collection<? extends I> inputs) {
 
         if (inputs instanceof Alphabet && target instanceof InputAlphabetHolder &&
             other instanceof InputAlphabetHolder) {
@@ -195,21 +212,21 @@ public final class NearLinearEquivalenceTest {
                 @SuppressWarnings("unchecked")
                 Alphabet<I> otherAlphabet = ((InputAlphabetHolder<I>) other).getInputAlphabet();
                 if (alphabet.equals(otherAlphabet)) {
-                    return findSeparatingWord(target, other, alphabet, ignoreUndefinedTransitions);
+                    return doFindSeparatingWord(target, other, alphabet);
                 }
             }
         }
 
-        S init1 = target.getInitialState();
+        S1 init1 = target.getInitialState();
         S2 init2 = other.getInitialState();
 
         if (init1 == null && init2 == null) {
             return null;
         } else if (init1 == null || init2 == null) {
-            return ignoreUndefinedTransitions ? null : Word.epsilon();
+            return Word.epsilon();
         }
 
-        SP sprop1 = target.getStateProperty(init1);
+        SP1 sprop1 = target.getStateProperty(init1);
         SP2 sprop2 = other.getStateProperty(init2);
 
         if (!Objects.equals(sprop1, sprop2)) {
@@ -219,7 +236,7 @@ public final class NearLinearEquivalenceTest {
         int targetStates = target.size();
         IntDisjointSets uf = new UnionFindRemSP(targetStates + other.size());
 
-        StateIDs<S> targetStateIds = target.stateIDs();
+        StateIDs<S1> targetStateIds = target.stateIDs();
         StateIDs<S2> otherStateIds = other.stateIDs();
 
         int id1 = targetStateIds.getStateId(init1);
@@ -227,26 +244,24 @@ public final class NearLinearEquivalenceTest {
 
         uf.link(id1, id2);
 
-        Queue<Record<S, S2, I>> queue = new ArrayDeque<>();
+        Queue<Record<S1, S2, I>> queue = new ArrayDeque<>();
 
         queue.add(new Record<>(init1, init2));
 
         I lastSym = null;
 
-        Record<S, S2, I> current;
+        Record<S1, S2, I> current;
 
         explore:
         while ((current = queue.poll()) != null) {
-            S state1 = current.state1;
+            S1 state1 = current.state1;
             S2 state2 = current.state2;
 
             for (I sym : inputs) {
                 T trans1 = target.getTransition(state1, sym);
                 T2 trans2 = other.getTransition(state2, sym);
 
-                if (ignoreUndefinedTransitions && (trans1 == null || trans2 == null)) {
-                    continue;
-                } else if (trans1 == null) {
+                if (trans1 == null) {
                     if (trans2 == null) {
                         continue;
                     }
@@ -257,7 +272,7 @@ public final class NearLinearEquivalenceTest {
                     break explore;
                 }
 
-                TP tprop1 = target.getTransitionProperty(trans1);
+                TP1 tprop1 = target.getTransitionProperty(trans1);
                 TP2 tprop2 = other.getTransitionProperty(trans2);
 
                 if (!Objects.equals(tprop1, tprop2)) {
@@ -265,7 +280,7 @@ public final class NearLinearEquivalenceTest {
                     break explore;
                 }
 
-                S succ1 = target.getSuccessor(trans1);
+                S1 succ1 = target.getSuccessor(trans1);
                 S2 succ2 = other.getSuccessor(trans2);
 
                 id1 = targetStateIds.getStateId(succ1);
@@ -287,36 +302,14 @@ public final class NearLinearEquivalenceTest {
             }
         }
 
-        if (current == null) {
-            return null;
-        }
-
-        int position = current.depth + 1;
-
-        @SuppressWarnings("argument") // we make sure to set each index to a value of type I
-        WordBuilder<I> wb = new WordBuilder<>(null, position);
-        wb.setSymbol(--position, lastSym);
-
-        while (current.reachedFrom != null) {
-            wb.setSymbol(--position, current.reachedBy);
-            current = current.reachedFrom;
-        }
-
-        return wb.toWord();
+        return extractSepWord(current, lastSym);
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(RegularAutomaton<?, I, ?, ?, ?> target,
-                                                           RegularAutomaton<?, I, ?, ?, ?> other,
-                                                           Alphabet<I> inputs) {
-        return findSeparatingWord(target, other, inputs, false);
-    }
+    private static <S1, S2, I, T1, T2, SP1, SP2, TP1, TP2> @Nullable Word<I> doFindSeparatingWord(RegularAutomaton<S1, I, T1, SP1, TP1> target,
+                                                                                                  RegularAutomaton<S2, I, T2, SP2, TP2> other,
+                                                                                                  Alphabet<I> inputs) {
 
-    public static <S, S2, I, T, T2, SP, SP2, TP, TP2> @Nullable Word<I> findSeparatingWord(RegularAutomaton<S, I, T, SP, TP> target,
-                                                                                           RegularAutomaton<S2, I, T2, SP2, TP2> other,
-                                                                                           Alphabet<I> inputs,
-                                                                                           boolean ignoreUndefinedTransitions) {
-
-        FullIntAbstraction<T, SP, TP> absTarget = target.fullIntAbstraction(inputs);
+        FullIntAbstraction<T1, SP1, TP1> absTarget = target.fullIntAbstraction(inputs);
         FullIntAbstraction<T2, SP2, TP2> absOther = other.fullIntAbstraction(inputs);
 
         int init1 = absTarget.getIntInitialState();
@@ -325,10 +318,10 @@ public final class NearLinearEquivalenceTest {
         if (init1 < 0 && init2 < 0) {
             return null;
         } else if (init1 < 0 || init2 < 0) {
-            return ignoreUndefinedTransitions ? null : Word.epsilon();
+            return Word.epsilon();
         }
 
-        SP sprop1 = absTarget.getStateProperty(init1);
+        SP1 sprop1 = absTarget.getStateProperty(init1);
         SP2 sprop2 = absOther.getStateProperty(init2);
 
         if (!Objects.equals(sprop1, sprop2)) {
@@ -358,12 +351,10 @@ public final class NearLinearEquivalenceTest {
             int state2 = current.state2;
 
             for (int sym = 0; sym < numInputs; sym++) {
-                T trans1 = absTarget.getTransition(state1, sym);
+                T1 trans1 = absTarget.getTransition(state1, sym);
                 T2 trans2 = absOther.getTransition(state2, sym);
 
-                if (ignoreUndefinedTransitions && (trans1 == null || trans2 == null)) {
-                    continue;
-                } else if (trans1 == null) {
+                if (trans1 == null) {
                     if (trans2 == null) {
                         continue;
                     }
@@ -374,7 +365,7 @@ public final class NearLinearEquivalenceTest {
                     break explore;
                 }
 
-                TP tprop1 = target.getTransitionProperty(trans1);
+                TP1 tprop1 = target.getTransitionProperty(trans1);
                 TP2 tprop2 = other.getTransitionProperty(trans2);
 
                 if (!Objects.equals(tprop1, tprop2)) {
@@ -422,20 +413,40 @@ public final class NearLinearEquivalenceTest {
         return wb.toWord();
     }
 
-    private static final class Record<S, S2, I> {
+    private static <S1, S2, I> @Nullable Word<I> extractSepWord(@Nullable Record<S1, S2, I> record, I lastSym) {
+        if (record == null) {
+            return null;
+        }
 
-        private final S state1;
+        Record<S1, S2, I> current = record;
+        int position = current.depth + 1;
+
+        @SuppressWarnings("argument") // we make sure to set each index to a value of type I
+        WordBuilder<I> wb = new WordBuilder<>(null, position);
+        wb.setSymbol(--position, lastSym);
+
+        while (current.reachedFrom != null) {
+            wb.setSymbol(--position, current.reachedBy);
+            current = current.reachedFrom;
+        }
+
+        return wb.toWord();
+    }
+
+    private static final class Record<S1, S2, I> {
+
+        private final S1 state1;
         private final S2 state2;
         private final I reachedBy;
-        private final @Nullable Record<S, S2, I> reachedFrom;
+        private final @Nullable Record<S1, S2, I> reachedFrom;
         private final int depth;
 
         @SuppressWarnings("nullness") // we will only access reachedBy after checking reachedFrom for null
-        Record(S state1, S2 state2) {
+        Record(S1 state1, S2 state2) {
             this(state1, state2, null, null);
         }
 
-        Record(S state1, S2 state2, I reachedBy, @Nullable Record<S, S2, I> reachedFrom) {
+        Record(S1 state1, S2 state2, I reachedBy, @Nullable Record<S1, S2, I> reachedFrom) {
             this.state1 = state1;
             this.state2 = state2;
             this.reachedBy = reachedBy;

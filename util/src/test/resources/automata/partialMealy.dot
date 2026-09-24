@@ -1,0 +1,36 @@
+digraph g {
+
+	init [shape="circle" label="init"];
+
+	{ rank = same;
+	l1 [shape="circle" label="l1"];
+	r1 [shape="circle" label="r1"];
+	}
+
+	l2 [shape="circle" label="l2"];
+	r2 [shape="circle" label="r2"];
+
+	l3 [shape="circle" label="l3"];
+	r3 [shape="circle" label="r3"];
+	sink [shape="circle" label="sink"];
+
+	init -> l1 [label="2 / 12"];
+	init -> r1 [label="1 / 11"];
+	init -> l1 [label="0 / 10"];
+	l1 -> l1 [label="1 / 11"];
+	l1 -> l2 [label="0 / 10"];
+	l2 -> r1 [label="1 / 11"];
+	l2 -> l3 [label="2 / 12"];
+	l3 -> sink [label="0 / 23"];
+
+	r1 -> r1 [label="1 / 11"];
+	r1 -> r2 [label="0 / 10"];
+	r2 -> l1 [label="1 / 11"];
+	r2 -> r3 [label="2 / 12"];
+	r2 -> r3 [label="0 / 10"];
+	r3 -> sink [label="0 / 42"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> init;
+
+}

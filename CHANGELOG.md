@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-13.0.0...HEAD)
 
+### Changed
+
+* `NearLinearEquivalenceTest` no longer supports the `ignoreUndefinedTransitions` option. The flag is incompatible with the underlying algorithm and the previous implementation may have missed separating words iff the flag was set to `true`.
+* `DeterministicEquivalenceTest` now supports an `ignoreUndefinedTransitions` flag for computing separating words on partial automata.
+
 ### Fixed
 
 * `IncrementalConstruction#findSeparatingWord` has been fixed for several DAG-based variations. Previous implementations may not have found separating words even though they existed.
